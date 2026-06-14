@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepVerse | Premium Shuffle Slider</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #000; color: #fff; overflow: hidden; height: 100vh; }
+
+        .as-slider {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Fullscreen Background Images */
+        .bg-images {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+        .bg-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1.2s ease-in-out;
+            transform: scale(1.1);
+        }
+        .bg-img.active {
+            opacity: 0.4;
+            transform: scale(1);
+            z-index: 2;
+        }
+
+        .as-slider:after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, #000 0%, rgba(0,0,0,0.2) 50%, #000 100%);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Layout Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            align-items: center;
+            padding: 0 5%;
+        }
+
+        /* Left Side: Pagination Dots */
+        .as-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+        }
+        .dot {
+            width: 10px; height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .dot.active {
+            background: #fff;
+            transform: scale(1.5);
+            box-shadow: 0 0 10px #fff;
+        }
+
+        /* Middle: Active Text Content */
+        .content-box {
+            position: relative;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+        }
+        .text-item {
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(40px);
+            width: 100%;
+            max-width: 500px;
+        }
+        .text-item.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        h1 { font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; }
+        p { font-size: 1.1rem; opacity: 0.7; line-height: 1.6; margin-bottom: 35px; }
+        .btn {
+            display: inline-block;
+            padding: 14px 40px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,255,255,0.3); }
+
+        /* Right Side: The Card Queue */
+        .swiper {
+            position: absolute !important;
+            right: -5%; /* Offset to make space */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1200px; /* Big enough to hold 3 cards + spacing */
+            height: 450px;
+            overflow: visible !important;
+            z-index: 20;
+            pointer-events: none;
+        }
+        
+        .swiper-slide {
+            width: 320px !important;
+            height: 420px;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            background: #111;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            pointer-events: auto;
+            /* Smooth transitions for shuffling */
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s, visibility 0.8s;
+        }
+
+        .swiper-slide img {
+            width: 100%; height: 100%; object-fit: cover;
+        }
+
+        .card-label {
+            position: absolute;
+            bottom: 30px; left: 30px;
+            z-index: 5;
+        }
+        .card-label h3 { font-size: 1.3rem; font-weight: 600; }
+
+        /* Navigation Buttons */
+        .nav-controls {
+            position: absolute;
+            bottom: 60px;
+            left: 175px;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+        .n-btn {
+            width: 55px; height: 55px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+        }
+        .n-btn:hover { background: #fff; color: #000; border-color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <div class="as-slider">
+        <!-- Backgrounds -->
+        <div class="bg-images">
+            {% for course in courses %}
+            <img src="{{ course.bg_image }}" class="bg-img {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+            {% endfor %}
+        </div>
+
+        <div class="container">
+            <!-- Left Dots -->
+            <div class="as-bar">
+                {% for course in courses %}
+                <div class="dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"></div>
+                {% endfor %}
+            </div>
+
+            <!-- Focus Content -->
+            <div class="content-box">
+                {% for course in courses %}
+                <div class="text-item {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+                    <h1>{{ course.title }}</h1>
+                    <p>{{ course.description }}</p>
+                    <a href="#" class="btn">Explore Course</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- The Queue (Swiper) -->
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                {% for course in courses %}
+                <div class="swiper-slide">
+                    <img src="{{ course.bg_image }}">
+                    <div class="card-label">
+                        <h3>{{ course.title }}</h3>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-controls">
+            <div class="n-btn prev-btn"><i class="fas fa-chevron-left"></i></div>
+            <div class="n-btn next-btn"><i class="fas fa-chevron-right"></i></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var swiper = new Swiper('.swiper', {
+                slidesPerView: 1,
+                loop: true,
+                speed: 800,
+                allowTouchMove: false,
+                watchSlidesProgress: true,
+                virtualTranslate: true, // IMPORTANT: We handle positions manually
+                navigation: {
+                    nextEl: '.next-btn',
+                    prevEl: '.prev-btn',
+                },
+                on: {
+                    slideChange: function() {
+                        updateUI(this.realIndex);
+                    },
+                    setTranslate: function() {
+                        const slides = this.slides;
+                        for (let i = 0; i < slides.length; i++) {
+                            const slide = slides[i];
+                            const progress = slide.progress;
+                            
+                            // progress 0 = Active slide (The one that just entered the focus zone)
+                            // progress 1 = 1st card in queue
+                            // progress 2 = 2nd card in queue
+                            // progress 3 = 3rd card in queue
+                            
+                            if (progress >= 1 && progress <= 3.5) {
+                                // These are the 3 cards in the queue
+                                // We calculate a fixed position for each slot
+                                const slotIndex = Math.round(progress) - 1; // 0, 1, or 2
+                                const xPos = slotIndex * 360; // Fixed spacing between slots
+                                
+                                slide.style.transform = `translateX(${xPos}px) scale(1)`;
+                                slide.style.opacity = 1;
+                                slide.style.zIndex = 10 - slotIndex;
+                                slide.style.visibility = 'visible';
+                            } 
+                            else if (progress <= 0 && progress > -1) {
+                                // The card moving from the queue to the main focus area (left)
+                                // We move it way to the left and fade it out
+                                const t = Math.abs(progress); // 0 to 1
+                                slide.style.transform = `translateX(-800px) scale(1.5)`;
+                                slide.style.opacity = 0;
+                                slide.style.zIndex = 20;
+                                slide.style.visibility = 'hidden';
+                            }
+                            else {
+                                // Cards not in the current view or queue
+                                slide.style.opacity = 0;
+                                slide.style.visibility = 'hidden';
+                                slide.style.transform = `translateX(1200px)`; // Keep them off to the right
+                            }
+                        }
+                    }
+                }
+            });
+
+            function updateUI(index) {
+                $('.dot').removeClass('active');
+                $('.dot').eq(index).addClass('active');
+
+                $('.bg-img').removeClass('active');
+                $('.bg-img').eq(index).addClass('active');
+
+                $('.text-item').removeClass('active');
+                $('.text-item').eq(index).addClass('active');
+            }
+
+            $('.dot').click(function() {
+                swiper.slideToLoop($(this).index());
+            });
+        });
+    </script>
+</body>
+</html>
