@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ module_name }} | Practice | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background: #050505; }
+    main { padding-top: 100px; }
+
+    /* Background Glows */
+    .glow {
+        position: fixed;
+        width: 500px; height: 500px;
+        background: radial-gradient(circle, rgba(42, 245, 152, 0.08) 0%, transparent 70%);
+        z-index: -1;
+        filter: blur(50px);
+    }
+    .glow-1 { top: -100px; right: -100px; }
+    .glow-2 { bottom: -100px; left: -100px; background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%); }
+
+    /* Secondary Header */
+    .practice-subheader {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 15px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 80px; /* Below the main navbar */
+        z-index: 1000;
+        margin-top: -20px;
+    }
+    .subheader-left h2 { font-size: 1rem; font-weight: 700; color: #2af598; }
+    .subheader-left p { font-size: 0.7rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 1px; }
+
+    .exit-btn {
+        color: rgba(255,255,255,0.6);
+        text-decoration: none;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.3s;
+    }
+    .exit-btn:hover { color: #ff4757; }
+
+    /* Container */
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    /* Modern Glass Question Card */
+    .question-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 40px;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .question-num { font-size: 0.8rem; font-weight: 700; color: #2af598; margin-bottom: 15px; display: block; opacity: 0.6; }
+    .question-text { font-size: 1.2rem; margin-bottom: 35px; font-weight: 400; line-height: 1.5; }
+
+    /* Options */
+    .options-list { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
+    .option-item {
+        display: flex; align-items: center; gap: 20px; cursor: pointer; padding: 18px 25px;
+        background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px; transition: 0.3s;
+    }
+    .option-item:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); }
+
+    .radio-btn {
+        width: 36px; height: 36px; background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.4);
+        flex-shrink: 0; transition: 0.3s;
+    }
+    .option-label { font-size: 1rem; opacity: 0.8; }
+
+    /* States after selection */
+    .option-item.correct { background: rgba(42, 245, 152, 0.08); border-color: rgba(42, 245, 152, 0.3); }
+    .option-item.correct .radio-btn { background: #2af598; color: #000; border-color: #2af598; box-shadow: 0 0 20px rgba(42, 245, 152, 0.4); }
+    .option-item.wrong { background: rgba(255, 71, 87, 0.08); border-color: rgba(255, 71, 87, 0.3); }
+    .option-item.wrong .radio-btn { background: #ff4757; color: #fff; border-color: #ff4757; }
+
+    /* Explanation Section */
+    .explanation-box {
+        max-height: 0; overflow: hidden; transition: all 0.5s ease;
+        background: rgba(0, 0, 0, 0.2); border-radius: 20px; opacity: 0;
+    }
+    .explanation-box.show {
+        max-height: 600px; margin-top: 30px; padding: 30px; opacity: 1;
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    .ans-header { color: #2af598; font-weight: 700; font-size: 0.9rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .exp-text { font-size: 0.9rem; opacity: 0.6; line-height: 1.7; }
+
+    /* Actions */
+    .action-bar { display: flex; gap: 12px; margin-top: 30px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .action-icon {
+        width: 44px; height: 44px; background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.05); border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s;
+    }
+    .action-icon:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #fff; transform: translateY(-2px); }
+
+    .breadcrumb-text { font-size: 0.75rem; opacity: 0.4; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+
+<header class="practice-subheader">
+    <div class="subheader-left">
+        <p>{{ topic.title }}</p>
+        <h2>{{ module_name }}</h2>
+    </div>
+    <a href="{% url 'topic_detail' course.id topic.id %}" class="exit-btn"><i class="fas fa-times"></i> Exit Practice</a>
+</header>
+
+<div class="container">
+    <div class="breadcrumb-text">
+        <span>{{ course.title }}</span> <i class="fas fa-chevron-right"></i>
+        <span>{{ topic.title }}</span> <i class="fas fa-chevron-right"></i>
+        <span style="color: #2af598; opacity: 1;">{{ module_name }}</span>
+    </div>
+
+    {% for q in questions %}
+    <div class="question-card">
+        <span class="question-num">QUESTION {{ forloop.counter }} OF {{ questions|length }}</span>
+        <div class="question-text">{{ q.text }}</div>
+
+        <div class="options-list" data-correct="{{ q.correct_index }}">
+            {% for opt in q.options %}
+            <div class="option-item" onclick="checkAnswer(this, {{ forloop.parentloop.counter0 }}, {{ forloop.counter0 }})">
+                <div class="radio-btn">
+                    {% if forloop.counter == 1 %}A{% elif forloop.counter == 2 %}B{% elif forloop.counter == 3 %}C{% else %}D{% endif %}
+                </div>
+                <span class="option-label">{{ opt }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="explanation-box" id="exp-{{ forloop.counter0 }}">
+            <div class="ans-header">
+                <i class="fas fa-check-circle"></i> Correct Answer: Option {{ q.correct_label }}
+            </div>
+            <div class="exp-text">{{ q.explanation }}</div>
+        </div>
+
+        <div class="action-bar">
+            <div class="action-icon" onclick="toggleExp({{ forloop.counter0 }})"><i class="fas fa-lightbulb"></i></div>
+            <div class="action-icon"><i class="fas fa-comments"></i></div>
+            <div class="action-icon"><i class="far fa-bookmark"></i></div>
+            <div class="action-icon"><i class="fas fa-share-nodes"></i></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function checkAnswer(element, qIndex, optIndex) {
+        const optionsList = element.parentElement;
+        if (optionsList.classList.contains('answered')) return;
+        const correctIndex = parseInt(optionsList.getAttribute('data-correct'));
+        const items = optionsList.querySelectorAll('.option-item');
+        optionsList.classList.add('answered');
+        if (optIndex === correctIndex) {
+            element.classList.add('correct');
+        } else {
+            element.classList.add('wrong');
+            items[correctIndex].classList.add('correct');
+        }
+        toggleExp(qIndex, true);
+    }
+    function toggleExp(qIndex, forceShow = false) {
+        const expBox = document.getElementById('exp-' + qIndex);
+        if (forceShow) expBox.classList.add('show');
+        else expBox.classList.toggle('show');
+    }
+</script>
+{% endblock %}

@@ -1,387 +1,401 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrepVerse | Advanced Slider</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+{% block title %}PrepVerse | Advanced Slider{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+    /* Slider specific styles */
+    body { height: 100vh; overflow: hidden; }
+    main { padding-top: 0; } /* Remove default padding for homepage as it has a full-screen slider */
     
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #000; color: #fff; overflow-x: hidden; height: 100vh; }
+    :root {
+        --radius: 20px;
+        --height: 280px;
+        --active-height: 380px;
+        --overlay: 0.6;
+        --speed: 0.8s;
+        --gap: 40px;
+    }
 
-        :root {
-            --radius: 20px;
-            --height: 380px;
-            --active-height: 480px;
-            --overlay: 0.6;
-            --speed: 0.8s;
-            --gap: 40px;
-        }
+    .as-slider {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.8s ease-in-out;
+    }
+    .as-slider.loaded {
+        opacity: 1;
+        transform: translateX(0);
+    }
 
-        .as-slider {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s ease-in-out;
-        }
-        .as-slider.loaded {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    /* Backgrounds */
+    .as-slider-background {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 1;
+        background: #000;
+    }
+    .as-slider-background img {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 1.2s ease-in-out, transform 1.5s ease-in-out;
+        transform: scale(1.1);
+    }
+    .as-slider-background img.currentForward,
+    .as-slider-background img.currentBackward {
+        z-index: 2;
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    .as-slider-background img.prev {
+        z-index: 1;
+        opacity: 0;
+        transform: scale(1.1);
+        transition: opacity 1s ease-in-out;
+    }
 
-        /* Backgrounds */
-        .as-slider-background {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-        }
-        .as-slider-background img {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: all 1s ease-in-out;
-            transform: scale(1.1);
-        }
-        .as-slider-background img.currentForward,
-        .as-slider-background img.currentBackward {
-            z-index: 1;
-            opacity: 0.4;
-            transform: scale(1);
-            animation: bgNext 1s linear;
-        }
-        .as-slider-background img.prev {
-            opacity: 0.4;
-            transform: scale(1.1);
-        }
+    .as-slider:after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(90deg, #000 0%, transparent 50%, #000 100%);
+        z-index: 3;
+        pointer-events: none;
+    }
 
-        @keyframes bgNext {
-            0% { opacity: 0; transform: scale(1.1); }
-            100% { opacity: 0.4; transform: scale(1); }
-        }
+    /* Main Grid Layout */
+    .slider-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 100px 40% 1fr;
+        align-items: center;
+        padding: 0 5%;
+    }
 
-        .as-slider:after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, #000 0%, transparent 50%, #000 100%);
-            z-index: 2;
-            pointer-events: none;
-        }
+    /* Pagination Dots */
+    .as-bar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        position: relative;
+    }
+    .as-bar:before {
+        content: "";
+        position: absolute;
+        top: 50%; left: 50%;
+        height: calc(100% + 100px);
+        width: 1px;
+        background: rgba(255,255,255,0.15);
+        transform: translate(-50%, -50%);
+    }
+    .dot {
+        width: 24px; height: 24px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 10px; font-weight: bold;
+        transform: scale(0.4);
+        z-index: 2;
+    }
+    .dot.active {
+        background: #fff;
+        color: #000;
+        transform: scale(1);
+    }
 
-        /* Main Grid Layout */
-        .slider-container {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 100px 40% 1fr;
-            align-items: center;
-            padding: 0 5%;
-        }
+    /* Text Content */
+    .as-changing-widget {
+        position: relative;
+        height: 400px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
+    .elementor-widget {
+        position: absolute;
+        width: 100%;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+    }
+    .elementor-widget.currentUp,
+    .elementor-widget.currentDown {
+        opacity: 1;
+        visibility: visible;
+        z-index: 1;
+    }
 
-        /* Pagination Dots */
-        .as-bar {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            align-items: center;
-            position: relative;
-        }
-        .as-bar:before {
-            content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            height: calc(100% + 100px);
-            width: 1px;
-            background: rgba(255,255,255,0.15);
-            transform: translate(-50%, -50%);
-        }
-        .dot {
-            width: 24px; height: 24px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: bold;
-            transform: scale(0.4);
-            z-index: 2;
-        }
-        .dot.active {
-            background: #fff;
-            color: #000;
-            transform: scale(1);
-        }
+    .elementor-widget.currentUp .text-content { animation: currentUp var(--speed) ease-in-out; }
+    .elementor-widget.currentDown .text-content { animation: currentDown var(--speed) ease-in-out; }
+    .elementor-widget.prev .text-content { animation: prev var(--speed) ease-in-out; }
+    .elementor-widget.next .text-content { animation: next var(--speed) ease-in-out; }
 
-        /* Text Content */
-        .as-changing-widget {
-            position: relative;
-            height: 400px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-        }
-        .elementor-widget {
-            position: absolute;
-            width: 100%;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease-in-out;
-        }
-        .elementor-widget.currentUp,
-        .elementor-widget.currentDown {
-            opacity: 1;
-            visibility: visible;
-            z-index: 1;
-        }
+    @keyframes currentUp {
+        0% { transform: translateY(100px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes currentDown {
+        0% { transform: translateY(-100px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes prev {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(-100px); opacity: 0; }
+    }
+    @keyframes next {
+        0% { transform: translateY(0); opacity: 1; }
+        100% { transform: translateY(100px); opacity: 0; }
+    }
 
-        .elementor-widget.currentUp .text-content { animation: currentUp var(--speed) ease-in-out; }
-        .elementor-widget.currentDown .text-content { animation: currentDown var(--speed) ease-in-out; }
-        .elementor-widget.prev .text-content { animation: prev var(--speed) ease-in-out; }
-        .elementor-widget.next .text-content { animation: next var(--speed) ease-in-out; }
+    h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; line-height: 1.1; text-transform: uppercase; }
+    p { font-size: 1.1rem; opacity: 0.6; margin-bottom: 30px; line-height: 1.6; max-width: 450px; }
+    .btn {
+        display: inline-block;
+        padding: 12px 35px;
+        background: #fff;
+        border-radius: 50px;
+        color: #000;
+        text-decoration: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        transition: 0.3s;
+    }
 
-        @keyframes currentUp {
-            0% { transform: translateY(100px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes currentDown {
-            0% { transform: translateY(-100px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes prev {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100px); opacity: 0; }
-        }
-        @keyframes next {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(100px); opacity: 0; }
-        }
+    /* Swiper Carousel */
+    .as-side-slider {
+        width: 100%;
+        height: var(--active-height);
+        display: flex;
+        align-items: center;
+    }
+    .as-side-slider .swiper-wrapper {
+        height: var(--active-height);
+        align-items: center;
+    }
+    .swiper-slide {
+        width: 240px !important;
+        height: var(--height);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: #111;
+        transition: all 0.4s ease-in-out;
+        display: flex;
+        align-items: flex-end;
+        position: relative;
+    }
+    .swiper-slide-active {
+        height: var(--active-height);
+    }
+    .swiper-slide img {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover;
+    }
+    .swiper-slide:before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(20deg, rgba(0,0,0,var(--overlay)) 0%, rgba(0,0,0,0) 100%);        
+        z-index: 1;
+    }
 
-        h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; line-height: 1.1; text-transform: uppercase; }
-        p { font-size: 1.1rem; opacity: 0.6; margin-bottom: 30px; line-height: 1.6; max-width: 450px; }
-        .btn {
-            display: inline-block;
-            padding: 12px 35px;
-            background: #fff;
-            border-radius: 50px;
-            color: #000;
-            text-decoration: none;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            transition: 0.3s;
-        }
+    .card-label {
+        z-index: 2;
+        position: relative;
+        padding: 30px;
+        width: 100%;
+    }
+    .card-label h3 { font-size: 1.2rem; font-weight: 600; margin: 0; color: #fff; }
 
-        /* Swiper Carousel */
-        .as-side-slider {
-            width: 100%;
-            height: var(--active-height);
-            display: flex;
-            align-items: center;
-        }
-        .as-side-slider .swiper-wrapper {
-            height: var(--active-height);
-            align-items: center;
-        }
-        .swiper-slide {
-            height: var(--height);
-            border-radius: var(--radius);
-            overflow: hidden;
-            background: #111;
-            transition: all 0.4s ease-in-out;
-            display: flex;
-            align-items: flex-end;
-            position: relative;
-        }
-        .swiper-slide-active {
-            height: var(--active-height);
-        }
-        .swiper-slide img {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-        }
-        .swiper-slide:before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(20deg, rgba(0,0,0,var(--overlay)) 0%, rgba(0,0,0,0) 100%);
-            z-index: 1;
-        }
+    /* Navigation & Controls */
+    .nav-btns {
+        position: absolute;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        z-index: 1000;
+        pointer-events: auto;
+    }
+    .n-btn, .toggle-autoplay {
+        width: 55px; height: 55px;
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: 0.3s;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        font-size: 1.2rem;
+        pointer-events: auto;
+    }
+    .n-btn:hover, .toggle-autoplay:hover { background: #fff; color: #000; transform: scale(1.1); }
+    
+    .toggle-autoplay {
+        width: 50px; height: 50px;
+        font-size: 1rem;
+        background: rgba(255,255,255,0.15);
+    }
 
-        .card-label {
-            z-index: 2;
-            position: relative;
-            padding: 30px;
-            width: 100%;
-        }
-        .card-label h3 { font-size: 1.2rem; font-weight: 600; margin: 0; color: #fff; }
+    @media (max-width: 1024px) {
+        :root { --height: 180px; --active-height: 240px; }
+        .slider-container { grid-template-columns: 1fr; padding-top: 50px; }
+        .as-bar, .nav-btns { display: none; }
+        h1 { font-size: 2.2rem; }
+        .swiper-slide { width: 180px !important; }
+    }
+</style>
+{% endblock %}
 
-        /* Navigation */
-        .nav-btns {
-            position: absolute;
-            bottom: 60px;
-            left: 175px;
-            display: flex;
-            gap: 20px;
-            z-index: 100;
-        }
-        .n-btn {
-            width: 55px; height: 55px;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s;
-            background: rgba(0,0,0,0.5);
-            color: #fff;
-            font-size: 1.2rem;
-        }
-        .n-btn:hover { background: #fff; color: #000; }
+{% block content %}
+<div class="as-slider" id="mainSlider">
+    <div class="as-slider-background">
+        {% for course in courses %}
+        <img src="{{ course.bg_image }}" data-index="{{ forloop.counter0 }}">
+        {% endfor %}
+    </div>
 
-        @media (max-width: 1024px) {
-            :root { --height: 250px; --active-height: 320px; }
-            .slider-container { grid-template-columns: 1fr; padding-top: 50px; }
-            .as-bar, .nav-btns { display: none; }
-            h1 { font-size: 2.5rem; }
-        }
-    </style>
-</head>
-<body>
+    <div class="slider-container">
+        <div class="as-bar">
+            <!-- Dots added via JS -->
+        </div>
 
-    <div class="as-slider" id="mainSlider">
-        <div class="as-slider-background">
+        <div class="as-changing-widget">
             {% for course in courses %}
-            <img src="{{ course.bg_image }}" data-index="{{ forloop.counter0 }}">
+            <div class="elementor-widget" data-index="{{ forloop.counter0 }}">
+                <div class="text-content">
+                    <h1>{{ course.title }}</h1>
+                    <p>{{ course.description }}</p>
+                    <a href="{% url 'course_detail' forloop.counter0 %}" class="btn">Explore Course</a>
+                </div>
+            </div>
             {% endfor %}
         </div>
 
-        <div class="slider-container">
-            <div class="as-bar">
-                <!-- Dots added via JS -->
-            </div>
-
-            <div class="as-changing-widget">
+        <div class="as-side-slider swiper">
+            <div class="swiper-wrapper">
                 {% for course in courses %}
-                <div class="elementor-widget" data-index="{{ forloop.counter0 }}">
-                    <div class="text-content">
-                        <h1>{{ course.title }}</h1>
-                        <p>{{ course.description }}</p>
-                        <a href="#" class="btn">Explore Course</a>
+                <div class="swiper-slide">
+                    <img src="{{ course.bg_image }}">
+                    <div class="card-label">
+                        <h3>{{ course.title }}</h3>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-
-            <div class="as-side-slider swiper">
-                <div class="swiper-wrapper">
-                    {% for course in courses %}
-                    <div class="swiper-slide">
-                        <img src="{{ course.bg_image }}">
-                        <div class="card-label">
-                            <h3>{{ course.title }}</h3>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <div class="nav-btns">
-            <div class="n-btn as-slider-left"><i class="fas fa-arrow-left"></i></div>
-            <div class="n-btn as-slider-right"><i class="fas fa-arrow-right"></i></div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <div class="nav-btns">
+        <div class="n-btn as-slider-left"><i class="fas fa-arrow-left"></i></div>
+        <div class="toggle-autoplay" id="autoplayToggle"><i class="fas fa-pause"></i></div>
+        <div class="n-btn as-slider-right"><i class="fas fa-arrow-right"></i></div>
+    </div>
+</div>
+{% endblock %}
 
-    <script>
-        $(document).ready(function() {
-            var $slider = $('.as-slider'),
-                currentSlide = 0,
-                previousSlide = 0,
-                slideNumber = $('.swiper-slide').length,
-                forward = true;
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var $slider = $('.as-slider'),
+            currentSlide = 0,
+            previousSlide = 0,
+            slideNumber = $('.swiper-slide').length,
+            forward = true;
 
-            // Initialize Dots
-            var barHTML = '';
-            for(var i=0; i<slideNumber; i++) {
-                barHTML += `<span class="dot">${i+1}</span>`;
-            }
-            $('.as-bar').append(barHTML);
-            $('.dot').eq(0).addClass('active');
+        // Initialize Dots
+        var barHTML = '';
+        for(var i=0; i<slideNumber; i++) {
+            barHTML += `<span class="dot">${i+1}</span>`;
+        }
+        $('.as-bar').append(barHTML);
+        $('.dot').eq(0).addClass('active');
 
-            // Initialize Text & BG
-            $('.elementor-widget').eq(0).addClass('currentUp');
-            $('.as-slider-background img').eq(0).addClass('currentForward');
+        // Initialize Text & BG
+        $('.elementor-widget').eq(0).addClass('currentUp');
+        $('.as-slider-background img').eq(0).addClass('currentForward');
 
-            // Initialize Swiper
-            var swiper = new Swiper('.as-side-slider', {
-                slidesPerView: 3,
-                spaceBetween: 30,
-                loop: true,
-                centeredSlides: false, // Changed to false to align active card to left
-                speed: 800,
-                watchSlidesProgress: true,
-                on: {
-                    init: function() {
-                        setTimeout(() => $slider.addClass('loaded'), 500);
-                    },
-                    slideChange: function() {
-                        currentSlide = this.realIndex;
-                        if (currentSlide !== previousSlide) {
-                            
-                            // Direction detection
-                            if (previousSlide < currentSlide) forward = true;
-                            if (previousSlide > currentSlide) forward = false;
-                            if (previousSlide == slideNumber - 1 && currentSlide == 0) forward = true;
-                            if (previousSlide == 0 && currentSlide == slideNumber - 1) forward = false;
+        // Initialize Swiper
+        var swiper = new Swiper('.as-side-slider', {
+            slidesPerView: 3,
+            spaceBetween: 30,
+            loop: true,
+            centeredSlides: false,
+            speed: 800,
+            watchSlidesProgress: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            on: {
+                init: function() {
+                    setTimeout(() => $slider.addClass('loaded'), 500);
+                },
+                slideChange: function() {
+                    currentSlide = this.realIndex;
+                    if (currentSlide !== previousSlide) {
+                        // Direction detection
+                        if (previousSlide < currentSlide) forward = true;
+                        if (previousSlide > currentSlide) forward = false;
+                        if (previousSlide == slideNumber - 1 && currentSlide == 0) forward = true;    
+                        if (previousSlide == 0 && currentSlide == slideNumber - 1) forward = false;   
 
-                            updateUI(currentSlide, previousSlide, forward);
-                            previousSlide = currentSlide;
-                        }
+                        updateUI(currentSlide, previousSlide, forward);
+                        previousSlide = currentSlide;
                     }
                 }
-            });
-
-            function updateUI(curr, prev, isForward) {
-                // Update Dots
-                $('.dot').removeClass('active');
-                $('.dot').eq(curr).addClass('active');
-
-                // Update Backgrounds
-                $('.as-slider-background img').removeClass('prev currentBackward currentForward');
-                $('.as-slider-background img').eq(prev).addClass('prev');
-                
-                // Update Texts
-                $('.elementor-widget').removeClass('prev next currentUp currentDown');
-                
-                if (isForward) {
-                    $('.elementor-widget').eq(prev).addClass('prev');
-                    $('.elementor-widget').eq(curr).addClass('currentUp');
-                    $('.as-slider-background img').eq(curr).addClass('currentForward');
-                } else {
-                    $('.elementor-widget').eq(prev).addClass('next');
-                    $('.elementor-widget').eq(curr).addClass('currentDown');
-                    $('.as-slider-background img').eq(curr).addClass('currentBackward');
-                }
             }
-
-            // Navigation
-            $('.as-slider-right').on('click', function() { swiper.slideNext(); });
-            $('.as-slider-left').on('click', function() { swiper.slidePrev(); });
-            $('.dot').on('click', function() { swiper.slideToLoop($(this).index()); });
         });
-    </script>
-</body>
-</html>
+
+        function updateUI(curr, prev, isForward) {
+            $('.dot').removeClass('active');
+            $('.dot').eq(curr).addClass('active');
+            $('.as-slider-background img').removeClass('prev currentBackward currentForward');        
+            $('.as-slider-background img').eq(prev).addClass('prev');
+            $('.elementor-widget').removeClass('prev next currentUp currentDown');
+
+            if (isForward) {
+                $('.elementor-widget').eq(prev).addClass('prev');
+                $('.elementor-widget').eq(curr).addClass('currentUp');
+                $('.as-slider-background img').eq(curr).addClass('currentForward');
+            } else {
+                $('.elementor-widget').eq(prev).addClass('next');
+                $('.elementor-widget').eq(curr).addClass('currentDown');
+                $('.as-slider-background img').eq(curr).addClass('currentBackward');
+            }
+        }
+
+        $('.as-slider-right').on('click', function() { swiper.slideNext(); });
+        $('.as-slider-left').on('click', function() { swiper.slidePrev(); });
+        $('.dot').on('click', function() { swiper.slideToLoop($(this).index()); });
+
+        $('#autoplayToggle').on('click', function() {
+            if (swiper.autoplay.running) {
+                swiper.autoplay.stop();
+                $(this).find('i').removeClass('fa-pause').addClass('fa-play');
+            } else {
+                swiper.autoplay.start();
+                $(this).find('i').removeClass('fa-play').addClass('fa-pause');
+            }
+        });
+    });
+</script>
+{% endblock %}

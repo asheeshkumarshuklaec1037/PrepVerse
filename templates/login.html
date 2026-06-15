@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Log In | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background: #020202; overflow: hidden; height: 100vh; }
+    main { padding-top: 0; }
+
+    /* Next-Level Animated Background */
+    .animated-bg {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 1;
+        background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+    }
+
+    /* Floating Particles / Stars */
+    .particles {
+        position: absolute;
+        width: 100%; height: 100%;
+        top: 0; left: 0;
+    }
+    .particle {
+        position: absolute;
+        background: #fff;
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: float var(--duration) infinite linear;
+    }
+
+    @keyframes float {
+        from { transform: translateY(100vh) scale(0); opacity: 0; }
+        20% { opacity: 0.5; }
+        80% { opacity: 0.5; }
+        to { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* Animated Nebulas */
+    .nebula {
+        position: absolute;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.15;
+        z-index: 2;
+        animation: pulse 10s infinite alternate;
+    }
+    .nebula-1 { top: -10%; left: -10%; background: #2af598; }
+    .nebula-2 { bottom: -10%; right: -10%; background: #009efd; animation-delay: -5s; }
+
+    @keyframes pulse {
+        from { transform: scale(1) translate(0, 0); opacity: 0.1; }
+        to { transform: scale(1.2) translate(50px, 50px); opacity: 0.2; }
+    }
+
+    /* Static Login UI Section */
+    .login-wrapper {
+        position: relative;
+        z-index: 10;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none; /* Let clicks pass through empty space */
+    }
+
+    .static-content {
+        pointer-events: auto; /* Enable clicks for actual form */
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .static-header {
+        margin-bottom: 40px;
+        animation: fadeInUp 1s forwards;
+    }
+    .static-header h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        letter-spacing: -1px;
+        background: linear-gradient(135deg, #fff 0%, #2af598 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 30px rgba(42, 245, 152, 0.2);
+    }
+    .static-header p { 
+        font-size: 1.1rem;
+        color: rgba(255,255,255,0.4);
+        font-weight: 300;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 460px;
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(30px) saturate(200%);
+        -webkit-backdrop-filter: blur(30px) saturate(200%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 40px;
+        padding: 50px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Subtle Border Glow */
+    .login-card:after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(135deg, transparent 0%, rgba(42, 245, 152, 0.05) 50%, transparent 100%);
+        pointer-events: none;
+    }
+
+    .form-group { margin-bottom: 25px; position: relative; }
+    .form-group i {
+        position: absolute;
+        left: 25px; top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.3;
+        font-size: 1.1rem;
+        transition: 0.3s;
+    }
+
+    .form-control {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 20px;
+        padding: 20px 25px 20px 65px;
+        color: #fff;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s;
+    }
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.07);
+        border-color: rgba(42, 245, 152, 0.4);
+        box-shadow: 0 0 30px rgba(42, 245, 152, 0.1);
+    }
+    .form-control:focus + i { opacity: 1; color: #2af598; }
+
+    .submit-btn {
+        width: 100%;
+        padding: 20px;
+        background: #fff;
+        color: #000;
+        border: none;
+        border-radius: 20px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin-bottom: 35px;
+        margin-top: 10px;
+    }
+    .submit-btn:hover { 
+        background: #2af598; 
+        transform: translateY(-5px); 
+        box-shadow: 0 20px 40px rgba(42, 245, 152, 0.4);
+    }
+
+    .social-divider {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 35px;
+        color: rgba(255,255,255,0.2);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    .social-divider:before, .social-divider:after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+
+    .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .social-btn {
+        padding: 15px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 18px;
+        color: #fff;
+        text-decoration: none;
+        display: flex; align-items: center; justify-content: center; gap: 12px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+    .social-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); transform: translateY(-3px); }
+
+    .footer-links {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        opacity: 0.6;
+        font-size: 0.95rem;
+    }
+    .footer-links a { color: #2af598; text-decoration: none; font-weight: 700; }
+    .footer-links a:hover { text-decoration: underline; }
+
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="animated-bg">
+    <div class="particles" id="particleContainer"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+</div>
+
+<div class="login-wrapper">
+    <div class="static-content">
+        <div class="static-header">
+            <h2>Welcome Back</h2>
+            <p>Your portal to mastery awaits.</p>
+        </div>
+
+        <div class="login-card">
+            <form action="#">
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="Email Address" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit" class="submit-btn">Continue</button>
+
+                <div class="social-divider">Secure Login With</div>
+                
+                <div class="social-btns">
+                    <a href="#" class="social-btn"><i class="fab fa-google"></i> Google</a>
+                    <a href="#" class="social-btn"><i class="fab fa-github"></i> GitHub</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer-links">
+            <span>Don't have an account? <a href="{% url 'signup' %}">Create one for free</a></span>
+            <a href="#" style="font-size: 0.8rem; opacity: 0.6; font-weight: 400;">Forgot your password?</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Generate particles for the background
+    const container = document.getElementById('particleContainer');
+    const particleCount = 60;
+
+    for (let i = 0; i < particleCount; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        
+        // Random sizes
+        const size = Math.random() * 3 + 1 + 'px';
+        p.style.width = size;
+        p.style.height = size;
+        
+        // Random positions
+        p.style.left = Math.random() * 100 + 'vw';
+        
+        // Random animation durations and delays
+        const duration = Math.random() * 20 + 10 + 's';
+        const delay = Math.random() * 20 + 's';
+        p.style.setProperty('--duration', duration);
+        p.style.animationDelay = delay;
+        
+        container.appendChild(p);
+    }
+</script>
+{% endblock %}
