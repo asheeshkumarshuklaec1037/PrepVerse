@@ -330,8 +330,9 @@
                 slidesPerView: 3,
                 spaceBetween: 30,
                 loop: true,
-                centeredSlides: true,
+                centeredSlides: false, // Changed to false to align active card to left
                 speed: 800,
+                watchSlidesProgress: true,
                 on: {
                     init: function() {
                         setTimeout(() => $slider.addClass('loaded'), 500);
