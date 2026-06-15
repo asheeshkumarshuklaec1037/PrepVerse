@@ -4,162 +4,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrepVerse | Premium Shuffle Slider</title>
+    <title>PrepVerse | Advanced Slider</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #000; color: #fff; overflow: hidden; height: 100vh; }
+        body { background: #000; color: #fff; overflow-x: hidden; height: 100vh; }
+
+        :root {
+            --radius: 20px;
+            --height: 380px;
+            --active-height: 480px;
+            --overlay: 0.6;
+            --speed: 0.8s;
+            --gap: 40px;
+        }
 
         .as-slider {
             position: relative;
             width: 100%;
             height: 100vh;
+            overflow: hidden;
             display: flex;
             align-items: center;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-in-out;
+        }
+        .as-slider.loaded {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        /* Fullscreen Background Images */
-        .bg-images {
+        /* Backgrounds */
+        .as-slider-background {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1;
         }
-        .bg-img {
+        .as-slider-background img {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover;
             opacity: 0;
-            transition: opacity 1s ease-in-out, transform 1.2s ease-in-out;
+            transition: all 1s ease-in-out;
             transform: scale(1.1);
         }
-        .bg-img.active {
+        .as-slider-background img.currentForward,
+        .as-slider-background img.currentBackward {
+            z-index: 1;
             opacity: 0.4;
             transform: scale(1);
-            z-index: 2;
+            animation: bgNext 1s linear;
+        }
+        .as-slider-background img.prev {
+            opacity: 0.4;
+            transform: scale(1.1);
+        }
+
+        @keyframes bgNext {
+            0% { opacity: 0; transform: scale(1.1); }
+            100% { opacity: 0.4; transform: scale(1); }
         }
 
         .as-slider:after {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, #000 0%, rgba(0,0,0,0.2) 50%, #000 100%);
-            z-index: 3;
+            background: linear-gradient(90deg, #000 0%, transparent 50%, #000 100%);
+            z-index: 2;
             pointer-events: none;
         }
 
-        /* Layout Container */
-        .container {
+        /* Main Grid Layout */
+        .slider-container {
             position: relative;
             z-index: 10;
             width: 100%;
-            height: 100%;
             display: grid;
-            grid-template-columns: 100px 1fr;
+            grid-template-columns: 100px 40% 1fr;
             align-items: center;
             padding: 0 5%;
         }
 
-        /* Left Side: Pagination Dots */
+        /* Pagination Dots */
         .as-bar {
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             align-items: center;
+            position: relative;
+        }
+        .as-bar:before {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            height: calc(100% + 100px);
+            width: 1px;
+            background: rgba(255,255,255,0.15);
+            transform: translate(-50%, -50%);
         }
         .dot {
-            width: 10px; height: 10px;
+            width: 24px; height: 24px;
             background: rgba(255,255,255,0.2);
             border-radius: 50%;
             cursor: pointer;
             transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: bold;
+            transform: scale(0.4);
+            z-index: 2;
         }
         .dot.active {
             background: #fff;
-            transform: scale(1.5);
-            box-shadow: 0 0 10px #fff;
+            color: #000;
+            transform: scale(1);
         }
 
-        /* Middle: Active Text Content */
-        .content-box {
+        /* Text Content */
+        .as-changing-widget {
             position: relative;
             height: 400px;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            padding-left: 20px;
         }
-        .text-item {
+        .elementor-widget {
             position: absolute;
+            width: 100%;
             opacity: 0;
             visibility: hidden;
-            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateY(40px);
-            width: 100%;
-            max-width: 500px;
+            transition: all 0.3s ease-in-out;
         }
-        .text-item.active {
+        .elementor-widget.currentUp,
+        .elementor-widget.currentDown {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            z-index: 1;
         }
-        h1 { font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; }
-        p { font-size: 1.1rem; opacity: 0.7; line-height: 1.6; margin-bottom: 35px; }
+
+        .elementor-widget.currentUp .text-content { animation: currentUp var(--speed) ease-in-out; }
+        .elementor-widget.currentDown .text-content { animation: currentDown var(--speed) ease-in-out; }
+        .elementor-widget.prev .text-content { animation: prev var(--speed) ease-in-out; }
+        .elementor-widget.next .text-content { animation: next var(--speed) ease-in-out; }
+
+        @keyframes currentUp {
+            0% { transform: translateY(100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes currentDown {
+            0% { transform: translateY(-100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes prev {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+        @keyframes next {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(100px); opacity: 0; }
+        }
+
+        h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; line-height: 1.1; text-transform: uppercase; }
+        p { font-size: 1.1rem; opacity: 0.6; margin-bottom: 30px; line-height: 1.6; max-width: 450px; }
         .btn {
             display: inline-block;
-            padding: 14px 40px;
+            padding: 12px 35px;
             background: #fff;
+            border-radius: 50px;
             color: #000;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
             font-size: 0.85rem;
-            letter-spacing: 1px;
             transition: 0.3s;
         }
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,255,255,0.3); }
 
-        /* Right Side: The Card Queue */
-        .swiper {
-            position: absolute !important;
-            right: -5%; /* Offset to make space */
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1200px; /* Big enough to hold 3 cards + spacing */
-            height: 450px;
-            overflow: visible !important;
-            z-index: 20;
-            pointer-events: none;
+        /* Swiper Carousel */
+        .as-side-slider {
+            width: 100%;
+            height: var(--active-height);
+            display: flex;
+            align-items: center;
         }
-        
+        .as-side-slider .swiper-wrapper {
+            height: var(--active-height);
+            align-items: center;
+        }
         .swiper-slide {
-            width: 320px !important;
-            height: 420px;
-            border-radius: 30px;
+            height: var(--height);
+            border-radius: var(--radius);
             overflow: hidden;
-            position: relative;
             background: #111;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            pointer-events: auto;
-            /* Smooth transitions for shuffling */
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s, visibility 0.8s;
+            transition: all 0.4s ease-in-out;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
         }
-
+        .swiper-slide-active {
+            height: var(--active-height);
+        }
         .swiper-slide img {
-            width: 100%; height: 100%; object-fit: cover;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .swiper-slide:before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(20deg, rgba(0,0,0,var(--overlay)) 0%, rgba(0,0,0,0) 100%);
+            z-index: 1;
         }
 
         .card-label {
-            position: absolute;
-            bottom: 30px; left: 30px;
-            z-index: 5;
+            z-index: 2;
+            position: relative;
+            padding: 30px;
+            width: 100%;
         }
-        .card-label h3 { font-size: 1.3rem; font-weight: 600; }
+        .card-label h3 { font-size: 1.2rem; font-weight: 600; margin: 0; color: #fff; }
 
-        /* Navigation Buttons */
-        .nav-controls {
+        /* Navigation */
+        .nav-btns {
             position: absolute;
             bottom: 60px;
             left: 175px;
@@ -173,61 +242,63 @@
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.3s;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            font-size: 1.2rem;
         }
-        .n-btn:hover { background: #fff; color: #000; border-color: #fff; }
+        .n-btn:hover { background: #fff; color: #000; }
 
+        @media (max-width: 1024px) {
+            :root { --height: 250px; --active-height: 320px; }
+            .slider-container { grid-template-columns: 1fr; padding-top: 50px; }
+            .as-bar, .nav-btns { display: none; }
+            h1 { font-size: 2.5rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="as-slider">
-        <!-- Backgrounds -->
-        <div class="bg-images">
+    <div class="as-slider" id="mainSlider">
+        <div class="as-slider-background">
             {% for course in courses %}
-            <img src="{{ course.bg_image }}" class="bg-img {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+            <img src="{{ course.bg_image }}" data-index="{{ forloop.counter0 }}">
             {% endfor %}
         </div>
 
-        <div class="container">
-            <!-- Left Dots -->
+        <div class="slider-container">
             <div class="as-bar">
-                {% for course in courses %}
-                <div class="dot {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}"></div>
-                {% endfor %}
+                <!-- Dots added via JS -->
             </div>
 
-            <!-- Focus Content -->
-            <div class="content-box">
+            <div class="as-changing-widget">
                 {% for course in courses %}
-                <div class="text-item {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
-                    <h1>{{ course.title }}</h1>
-                    <p>{{ course.description }}</p>
-                    <a href="#" class="btn">Explore Course</a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <!-- The Queue (Swiper) -->
-        <div class="swiper">
-            <div class="swiper-wrapper">
-                {% for course in courses %}
-                <div class="swiper-slide">
-                    <img src="{{ course.bg_image }}">
-                    <div class="card-label">
-                        <h3>{{ course.title }}</h3>
+                <div class="elementor-widget" data-index="{{ forloop.counter0 }}">
+                    <div class="text-content">
+                        <h1>{{ course.title }}</h1>
+                        <p>{{ course.description }}</p>
+                        <a href="#" class="btn">Explore Course</a>
                     </div>
                 </div>
                 {% endfor %}
             </div>
+
+            <div class="as-side-slider swiper">
+                <div class="swiper-wrapper">
+                    {% for course in courses %}
+                    <div class="swiper-slide">
+                        <img src="{{ course.bg_image }}">
+                        <div class="card-label">
+                            <h3>{{ course.title }}</h3>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
 
-        <!-- Navigation -->
-        <div class="nav-controls">
-            <div class="n-btn prev-btn"><i class="fas fa-chevron-left"></i></div>
-            <div class="n-btn next-btn"><i class="fas fa-chevron-right"></i></div>
+        <div class="nav-btns">
+            <div class="n-btn as-slider-left"><i class="fas fa-arrow-left"></i></div>
+            <div class="n-btn as-slider-right"><i class="fas fa-arrow-right"></i></div>
         </div>
     </div>
 
@@ -236,77 +307,79 @@
 
     <script>
         $(document).ready(function() {
-            var swiper = new Swiper('.swiper', {
-                slidesPerView: 1,
+            var $slider = $('.as-slider'),
+                currentSlide = 0,
+                previousSlide = 0,
+                slideNumber = $('.swiper-slide').length,
+                forward = true;
+
+            // Initialize Dots
+            var barHTML = '';
+            for(var i=0; i<slideNumber; i++) {
+                barHTML += `<span class="dot">${i+1}</span>`;
+            }
+            $('.as-bar').append(barHTML);
+            $('.dot').eq(0).addClass('active');
+
+            // Initialize Text & BG
+            $('.elementor-widget').eq(0).addClass('currentUp');
+            $('.as-slider-background img').eq(0).addClass('currentForward');
+
+            // Initialize Swiper
+            var swiper = new Swiper('.as-side-slider', {
+                slidesPerView: 3,
+                spaceBetween: 30,
                 loop: true,
+                centeredSlides: true,
                 speed: 800,
-                allowTouchMove: false,
-                watchSlidesProgress: true,
-                virtualTranslate: true, // IMPORTANT: We handle positions manually
-                navigation: {
-                    nextEl: '.next-btn',
-                    prevEl: '.prev-btn',
-                },
                 on: {
-                    slideChange: function() {
-                        updateUI(this.realIndex);
+                    init: function() {
+                        setTimeout(() => $slider.addClass('loaded'), 500);
                     },
-                    setTranslate: function() {
-                        const slides = this.slides;
-                        for (let i = 0; i < slides.length; i++) {
-                            const slide = slides[i];
-                            const progress = slide.progress;
+                    slideChange: function() {
+                        currentSlide = this.realIndex;
+                        if (currentSlide !== previousSlide) {
                             
-                            // progress 0 = Active slide (The one that just entered the focus zone)
-                            // progress 1 = 1st card in queue
-                            // progress 2 = 2nd card in queue
-                            // progress 3 = 3rd card in queue
-                            
-                            if (progress >= 1 && progress <= 3.5) {
-                                // These are the 3 cards in the queue
-                                // We calculate a fixed position for each slot
-                                const slotIndex = Math.round(progress) - 1; // 0, 1, or 2
-                                const xPos = slotIndex * 360; // Fixed spacing between slots
-                                
-                                slide.style.transform = `translateX(${xPos}px) scale(1)`;
-                                slide.style.opacity = 1;
-                                slide.style.zIndex = 10 - slotIndex;
-                                slide.style.visibility = 'visible';
-                            } 
-                            else if (progress <= 0 && progress > -1) {
-                                // The card moving from the queue to the main focus area (left)
-                                // We move it way to the left and fade it out
-                                const t = Math.abs(progress); // 0 to 1
-                                slide.style.transform = `translateX(-800px) scale(1.5)`;
-                                slide.style.opacity = 0;
-                                slide.style.zIndex = 20;
-                                slide.style.visibility = 'hidden';
-                            }
-                            else {
-                                // Cards not in the current view or queue
-                                slide.style.opacity = 0;
-                                slide.style.visibility = 'hidden';
-                                slide.style.transform = `translateX(1200px)`; // Keep them off to the right
-                            }
+                            // Direction detection
+                            if (previousSlide < currentSlide) forward = true;
+                            if (previousSlide > currentSlide) forward = false;
+                            if (previousSlide == slideNumber - 1 && currentSlide == 0) forward = true;
+                            if (previousSlide == 0 && currentSlide == slideNumber - 1) forward = false;
+
+                            updateUI(currentSlide, previousSlide, forward);
+                            previousSlide = currentSlide;
                         }
                     }
                 }
             });
 
-            function updateUI(index) {
+            function updateUI(curr, prev, isForward) {
+                // Update Dots
                 $('.dot').removeClass('active');
-                $('.dot').eq(index).addClass('active');
+                $('.dot').eq(curr).addClass('active');
 
-                $('.bg-img').removeClass('active');
-                $('.bg-img').eq(index).addClass('active');
-
-                $('.text-item').removeClass('active');
-                $('.text-item').eq(index).addClass('active');
+                // Update Backgrounds
+                $('.as-slider-background img').removeClass('prev currentBackward currentForward');
+                $('.as-slider-background img').eq(prev).addClass('prev');
+                
+                // Update Texts
+                $('.elementor-widget').removeClass('prev next currentUp currentDown');
+                
+                if (isForward) {
+                    $('.elementor-widget').eq(prev).addClass('prev');
+                    $('.elementor-widget').eq(curr).addClass('currentUp');
+                    $('.as-slider-background img').eq(curr).addClass('currentForward');
+                } else {
+                    $('.elementor-widget').eq(prev).addClass('next');
+                    $('.elementor-widget').eq(curr).addClass('currentDown');
+                    $('.as-slider-background img').eq(curr).addClass('currentBackward');
+                }
             }
 
-            $('.dot').click(function() {
-                swiper.slideToLoop($(this).index());
-            });
+            // Navigation
+            $('.as-slider-right').on('click', function() { swiper.slideNext(); });
+            $('.as-slider-left').on('click', function() { swiper.slidePrev(); });
+            $('.dot').on('click', function() { swiper.slideToLoop($(this).index()); });
         });
     </script>
 </body>
