@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Daily Spark | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { 
+        background: #050505; 
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Animated Background Blobs */
+    body:before, body:after {
+        content: "";
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        filter: blur(120px);
+        z-index: -1;
+        opacity: 0.15;
+        animation: float 20s infinite alternate;
+    }
+    body:before {
+        background: #2af598;
+        top: -100px;
+        left: -100px;
+    }
+    body:after {
+        background: #009efd;
+        bottom: -100px;
+        right: -100px;
+        animation-delay: -10s;
+    }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(100px, 100px) scale(1.2); }
+    }
+
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; position: relative; z-index: 1; }
+    
+    .page-header { text-align: center; margin-bottom: 60px; }
+    .page-header h1 { font-size: 4rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; letter-spacing: -2px; }
+    .page-header p { opacity: 0.6; font-size: 1.1rem; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+    .question-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 32px;
+        padding: 50px;
+        margin-bottom: 50px;
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .question-card:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .q-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .q-tag { 
+        font-size: 0.7rem; 
+        font-weight: 800; 
+        color: #fff; 
+        background: linear-gradient(90deg, #2af598, #009efd); 
+        padding: 8px 20px; 
+        border-radius: 50px; 
+        text-transform: uppercase; 
+        letter-spacing: 1px;
+    }
+    .q-diff { font-size: 0.85rem; opacity: 0.5; font-weight: 600; }
+
+    .q-text { font-size: 1.5rem; font-weight: 600; line-height: 1.5; margin-bottom: 40px; color: #fff; }
+
+    .options { display: grid; gap: 18px; }
+    .option {
+        padding: 24px 30px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 20px;
+        cursor: pointer;
+        display: flex; align-items: center; gap: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option:hover { 
+        background: rgba(255,255,255,0.08); 
+        border-color: rgba(255,255,255,0.2);
+        transform: translateX(10px);
+    }
+    .option.correct { 
+        background: rgba(42, 245, 152, 0.15); 
+        border-color: #2af598; 
+        box-shadow: 0 0 30px rgba(42, 245, 152, 0.2);
+    }
+    .option.wrong { 
+        background: rgba(255, 71, 87, 0.15); 
+        border-color: #ff4757; 
+        box-shadow: 0 0 30px rgba(255, 71, 87, 0.2);
+    }
+
+    .radio { 
+        width: 44px; height: 44px; 
+        border-radius: 14px; 
+        background: rgba(255,255,255,0.05); 
+        border: 1px solid rgba(255,255,255,0.1); 
+        display: flex; align-items: center; justify-content: center; 
+        font-weight: 800; 
+        color: rgba(255,255,255,0.4); 
+        transition: 0.3s;
+    }
+    .option.correct .radio { background: #2af598; color: #000; border-color: #2af598; }
+    .option.wrong .radio { background: #ff4757; color: #fff; border-color: #ff4757; }
+
+    .explanation { 
+        margin-top: 40px; 
+        padding: 40px; 
+        background: rgba(42, 245, 152, 0.03); 
+        border-radius: 24px; 
+        border: 1px solid rgba(42, 245, 152, 0.1);
+        display: none; 
+        animation: reveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+    }
+    @keyframes reveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Daily <span style="background: linear-gradient(90deg, #2af598, #009efd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Spark</span></h1>
+        <p>New challenges every 24 hours to keep your mind sharp and placement-ready.</p>
+    </div>
+
+    {% for q in questions %}
+    <div class="question-card" id="q-{{ q.id }}">
+        <div class="q-meta">
+            <span class="q-tag">{{ q.category }}</span>
+            <span class="q-diff">{{ q.difficulty }} • {{ q.time }}</span>
+        </div>
+        <div class="q-text">{{ q.text }}</div>
+        <div class="options" data-correct="{{ q.correct_index }}">
+            {% for opt in q.options %}
+            <div class="option" onclick="checkAnswer(this, {{ forloop.counter0 }})">
+                <div class="radio">{% if forloop.counter == 1 %}A{% elif forloop.counter == 2 %}B{% elif forloop.counter == 3 %}C{% else %}D{% endif %}</div>
+                <span>{{ opt }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="explanation">
+            <p style="color: #2af598; font-weight: 700; margin-bottom: 10px; font-size: 1.1rem;"><i class="fas fa-lightbulb"></i> Expert Explanation</p>
+            <p style="opacity: 0.7; line-height: 1.8; font-size: 1.05rem;">{{ q.explanation }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function checkAnswer(element, index) {
+        const optionsList = element.parentElement;
+        if (optionsList.classList.contains('answered')) return;
+        
+        const correctIndex = parseInt(optionsList.getAttribute('data-correct'));
+        optionsList.classList.add('answered');
+        
+        const items = optionsList.querySelectorAll('.option');
+        if (index === correctIndex) {
+            element.classList.add('correct');
+        } else {
+            element.classList.add('wrong');
+            items[correctIndex].classList.add('correct');
+        }
+        
+        const card = optionsList.closest('.question-card');
+        card.querySelector('.explanation').style.display = 'block';
+    }
+</script>
+{% endblock %}

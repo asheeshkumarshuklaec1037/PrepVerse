@@ -41,7 +41,7 @@
     @keyframes fadeInUp {
         to { opacity: 1; transform: translateY(0); }
     }
-    .hero h1 { font-size: 4rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; letter-spacing: -1px; }
+    .hero h1 { font-size: 4rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; letter-spacing: -1px; }
     .hero p { font-size: 1.2rem; opacity: 0.8; font-weight: 300; }
 
     /* Back Button */
@@ -71,8 +71,8 @@
         z-index: 20;
         padding: 0 20px;
         display: grid;
-        grid-template-columns: 1fr 350px;
-        gap: 40px;
+        grid-template-columns: 1fr 320px;
+        gap: 30px;
     }
 
     /* Glass Card */
@@ -80,78 +80,126 @@
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 30px;
-        padding: 50px;
+        border-radius: 24px;
+        padding: 30px;
         box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     }
 
-    .section-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
-    .section-title:after { content: ""; height: 2px; flex-grow: 1; background: linear-gradient(90deg, #fff, transparent); opacity: 0.2; }
+    .section-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .section-title:after { content: ""; height: 1px; flex-grow: 1; background: linear-gradient(90deg, #fff, transparent); opacity: 0.15; }
 
-    .description { font-size: 1.1rem; line-height: 1.8; opacity: 0.7; margin-bottom: 50px; }
+    .description { font-size: 1rem; line-height: 1.6; opacity: 0.7; margin-bottom: 30px; }
 
-    /* Curriculum List */
-    .curriculum { display: flex; flex-direction: column; gap: 20px; }
+    /* Curriculum Grid */
+    .curriculum { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .topic-link {
         background: rgba(255,255,255,0.02);
-        border-radius: 20px;
-        padding: 25px 30px;
+        border-radius: 16px;
+        padding: 18px 22px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         text-decoration: none;
         color: #fff;
         border: 1px solid rgba(255,255,255,0.05);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: all 0.3s ease;
     }
     .topic-link:hover {
         background: rgba(255,255,255,0.05);
         border-color: rgba(255,255,255,0.15);
-        transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
-    .topic-info h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 5px; }
-    .topic-info p { font-size: 0.9rem; opacity: 0.5; }
-    .topic-link i { font-size: 1.2rem; opacity: 0.3; transition: 0.3s; }
-    .topic-link:hover i { opacity: 1; transform: translateX(5px); color: #2af598; }
+    .topic-info h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 3px; }
+    .topic-info p { font-size: 0.8rem; opacity: 0.5; }
+    .topic-link i { font-size: 1rem; opacity: 0.3; transition: 0.3s; }
+    .topic-link:hover i { opacity: 1; transform: translateX(3px); color: #2af598; }
 
     /* Sidebar Stats */
-    .sidebar { display: flex; flex-direction: column; gap: 20px; }
+    .sidebar { display: flex; flex-direction: column; gap: 15px; }
     .stat-card {
         background: rgba(255,255,255,0.03);
         backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 30px;
+        border-radius: 18px;
+        padding: 22px;
         border: 1px solid rgba(255,255,255,0.08);
     }
-    .stat-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .stat-item { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
     .stat-item:last-child { margin-bottom: 0; }
     .stat-icon {
-        width: 40px; height: 40px;
+        width: 36px; height: 36px;
         background: rgba(255,255,255,0.05);
         border-radius: 10px;
         display: flex; align-items: center; justify-content: center;
-        font-size: 1.1rem; color: #2af598;
+        font-size: 1rem; color: #2af598;
     }
-    .stat-info span { display: block; font-size: 0.75rem; opacity: 0.5; text-transform: uppercase; }
-    .stat-info b { font-size: 1rem; }
+    .stat-info span { display: block; font-size: 0.7rem; opacity: 0.5; text-transform: uppercase; }
+    .stat-info b { font-size: 0.9rem; }
 
     .free-badge {
         display: inline-block;
-        padding: 5px 15px;
+        padding: 4px 12px;
         background: rgba(42, 245, 152, 0.1);
         color: #2af598;
         border-radius: 50px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         border: 1px solid rgba(42, 245, 152, 0.2);
     }
 
+    /* More Courses Section */
+    .more-courses {
+        max-width: 1200px;
+        margin: 0 auto 100px;
+        padding: 0 20px;
+    }
+    .more-courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    .course-tile {
+        position: relative;
+        height: 180px;
+        border-radius: 20px;
+        overflow: hidden;
+        text-decoration: none;
+        color: #fff;
+        display: flex;
+        align-items: flex-end;
+        padding: 20px;
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .course-tile:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: #2af598;
+        box-shadow: 0 15px 40px rgba(42, 245, 152, 0.15);
+    }
+    .course-tile img {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        transition: 0.6s;
+        filter: brightness(0.6);
+    }
+    .course-tile:hover img { transform: scale(1.1); filter: brightness(0.8); }
+    .course-tile:after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, transparent 60%);
+        z-index: 2;
+    }
+    .course-tile h4 { position: relative; z-index: 3; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; }
+
     @media (max-width: 1024px) {
-        .container { grid-template-columns: 1fr; margin-top: -50px; }
-        .hero h1 { font-size: 3rem; }
+        .container { grid-template-columns: 1fr; margin-top: -30px; }
+        .curriculum { grid-template-columns: 1fr; }
+        .hero h1 { font-size: 2.2rem; }
     }
 </style>
 {% endblock %}
@@ -219,4 +267,18 @@
         </div>
     </div>
 </div>
+
+<section class="more-courses">
+    <div class="section-title">Continue Learning</div>
+    <div class="more-courses-grid">
+        {% for c in courses %}
+            {% if c.id != course.id %}
+            <a href="{% url 'course_detail' c.id %}" class="course-tile">
+                <img src="{{ c.bg_image }}">
+                <h4>{{ c.title }}</h4>
+            </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}

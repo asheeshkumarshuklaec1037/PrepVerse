@@ -9,7 +9,7 @@
     .hero {
         position: relative;
         width: 100%;
-        height: 40vh;
+        height: 60vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -20,18 +20,29 @@
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         object-fit: cover;
-        filter: brightness(0.3) blur(10px);
-        transform: scale(1.1);
+        opacity: 0;
+        animation: imageReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, subtleZoom 20s ease-in-out infinite alternate 1.2s;
+    }
+    @keyframes imageReveal {
+        from { opacity: 0; transform: scale(1.25); filter: brightness(0); }
+        to { opacity: 1; transform: scale(1.1); filter: brightness(0.4); }
+    }
+    @keyframes subtleZoom {
+        from { transform: scale(1.1); filter: brightness(0.4); }
+        to { transform: scale(1.15); filter: brightness(0.4); }
     }
     .hero-content {
         position: relative;
         z-index: 10;
         text-align: center;
         max-width: 800px;
-        padding: 0 20px;
+        padding: 80px 20px 0; /* Added top padding to push content below navbar */
+        opacity: 0;
+        transform: translateY(30px);
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
     }
-    .hero h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
-    .hero p { font-size: 1.1rem; opacity: 0.6; }
+    .hero h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; letter-spacing: -1px; }
+    .hero p { font-size: 1.1rem; opacity: 0.8; font-weight: 300; }
 
     /* Back Button */
     .back-btn {
@@ -47,17 +58,29 @@
         font-size: 0.8rem;
         text-transform: uppercase;
         transition: 0.3s;
-        opacity: 0.6;
+        opacity: 0;
+        transform: translateX(10px);
+        animation: backBtnFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
     }
-    .back-btn:hover { transform: translateX(-5px); opacity: 1; }
+    @keyframes backBtnFadeIn {
+        to { opacity: 0.6; transform: translateX(0); }
+    }
+    .back-btn:hover { transform: translateX(-5px); opacity: 1 !important; }
 
     /* Main Content */
     .container {
         max-width: 1200px;
-        margin: -50px auto 100px;
+        margin: -90px auto 100px; /* Increased negative margin to pull card higher up */
         position: relative;
         z-index: 20;
         padding: 0 20px;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
+    }
+
+    @keyframes pageFadeIn {
+        to { opacity: 1; transform: translateY(0); }
     }
 
     /* Glass Card */
@@ -65,62 +88,157 @@
         background: rgba(255, 255, 255, 0.03);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 30px;
-        padding: 50px;
+        border-radius: 24px;
+        padding: 30px;
         box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
 
-    .section-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 35px; display: flex; align-items: center; gap: 15px; }
-    .section-title:after { content: ""; height: 2px; flex-grow: 1; background: linear-gradient(90deg, #2af598, transparent); opacity: 0.5; }
+    .section-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+    .section-title:after { content: ""; height: 1px; flex-grow: 1; background: linear-gradient(90deg, #2af598, transparent); opacity: 0.4; }
 
     /* Subtopics List */
     .subtopics-list {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .subtopic-item {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 
     .subtopic-card {
         background: rgba(255,255,255,0.02);
-        border-radius: 20px;
-        padding: 25px 35px;
+        border-radius: 16px;
+        padding: 15px 20px;
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 15px;
         border: 1px solid rgba(255,255,255,0.05);
         transition: 0.3s;
         cursor: pointer;
+        width: 100%;
+        text-align: left;
     }
     .subtopic-card:hover {
         background: rgba(255,255,255,0.05);
         border-color: rgba(42, 245, 152, 0.3);
-        transform: scale(1.02);
     }
+    .subtopic-card.active {
+        background: rgba(42, 245, 152, 0.05);
+        border-color: #2af598;
+    }
+
     .icon-box {
-        width: 50px; height: 50px;
+        width: 40px; height: 40px;
         background: rgba(42, 245, 152, 0.1);
         color: #2af598;
-        border-radius: 12px;
+        border-radius: 10px;
         display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
-    .subtopic-info h4 { font-size: 1.1rem; font-weight: 600; }
-    .subtopic-info p { font-size: 0.85rem; opacity: 0.5; margin-top: 3px; }
+    .subtopic-info h4 { font-size: 1rem; font-weight: 600; color: #fff; }
+    .subtopic-info p { font-size: 0.8rem; opacity: 0.5; margin-top: 2px; color: #fff; }
 
     .play-btn {
         margin-left: auto;
-        width: 40px; height: 40px;
+        width: 32px; height: 32px;
         border-radius: 50%;
         background: rgba(255,255,255,0.05);
         display: flex; align-items: center; justify-content: center;
+        font-size: 0.8rem;
         transition: 0.3s;
+        color: #fff;
     }
     .subtopic-card:hover .play-btn { background: #2af598; color: #000; }
+    .subtopic-card.active .play-btn { transform: rotate(90deg); background: #2af598; color: #000; }
 
-    @media (max-width: 768px) {
-        .hero h1 { font-size: 2rem; }
-        .glass-card { padding: 30px 20px; }
-        .subtopics-list { grid-template-columns: 1fr; }
+    /* Sets Container (Accordion Style) */
+    .sets-wrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sets-wrapper.open {
+        grid-template-rows: 1fr;
+    }
+    .sets-container {
+        overflow: hidden;
+    }
+    .sets-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        padding: 15px 0 25px 55px;
+    }
+
+    .set-link {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 20px;
+        padding: 18px 22px;
+        color: #fff;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .set-link:hover {
+        background: rgba(42, 245, 152, 0.08);
+        border-color: rgba(42, 245, 152, 0.4);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+    
+    .set-top { width: 100%; margin-bottom: 2px; }
+    .set-title { font-size: 1rem; font-weight: 700; color: #fff; }
+    
+    .set-meta { display: flex; gap: 10px; align-items: center; margin-top: 5px; }
+    .meta-item { font-size: 0.75rem; opacity: 0.6; display: flex; align-items: center; gap: 6px; }
+    
+    .level-badge {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+        display: inline-block;
+    }
+    .level-easy { background: rgba(42, 245, 152, 0.1); color: #2af598; border: 1px solid rgba(42, 245, 152, 0.2); }
+    .level-medium { background: rgba(252, 203, 144, 0.1); color: #fccb90; border: 1px solid rgba(252, 203, 144, 0.2); }
+    .level-hard { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.2); }
+
+    .set-link:after {
+        content: "\f054";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        right: -20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 0.8rem;
+        opacity: 0;
+        transition: 0.3s;
+    }
+    .set-link:hover:after { right: 20px; opacity: 0.5; }
+
+    @media (max-width: 1200px) {
+        .sets-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 992px) {
+        .sets-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+        .sets-grid { grid-template-columns: 1fr; padding-left: 0; }
+        .subtopic-card { padding: 12px 15px; }
     }
 </style>
 {% endblock %}
@@ -131,8 +249,9 @@
 <section class="hero">
     <img src="{{ course.bg_image }}" class="hero-bg">
     <div class="hero-content">
-        <p style="text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; font-weight: 600; color: #2af598;">{{ course.title }}</p>
+        <div class="topic-badge" style="display: inline-block; padding: 4px 12px; background: rgba(0, 158, 253, 0.1); color: #009efd; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; border: 1px solid rgba(0, 158, 253, 0.2);">{{ course.title }}</div>
         <h1>{{ topic.title }}</h1>
+        <p>Master the concepts of {{ topic.title }} with comprehensive modules and practice sets.</p>
     </div>
 </section>
 
@@ -142,25 +261,124 @@
         
         <div class="subtopics-list">
             {% for sub in topic.subtopics %}
-            <a href="{% url 'module_detail' course.id topic.id sub %}" class="subtopic-card" style="text-decoration: none; color: inherit;">
-                <div class="icon-box">
-                    <i class="fas fa-pen-to-square"></i>
+            <div class="subtopic-item">
+                <button class="subtopic-card" onclick="toggleSets(this)">
+                    <div class="icon-box">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="subtopic-info">
+                        <h4>{{ sub }}</h4>
+                        <p>4 Practice Sets</p>
+                    </div>
+                    <div class="play-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </button>
+                <div class="sets-wrapper">
+                    <div class="sets-container">
+                        <div class="sets-grid">
+                            <a href="{% url 'module_detail' course.id topic.id sub %}?set=1" class="set-link">
+                                <div class="set-top">
+                                    <span class="set-title">Practice Set 01</span>
+                                </div>
+                                <div class="set-meta">
+                                    <span class="level-badge level-easy">Easy</span>
+                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 10 Questions</span>
+                                </div>
+                            </a>
+                            <a href="{% url 'module_detail' course.id topic.id sub %}?set=2" class="set-link">
+                                <div class="set-top">
+                                    <span class="set-title">Practice Set 02</span>
+                                </div>
+                                <div class="set-meta">
+                                    <span class="level-badge level-medium">Medium</span>
+                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 15 Questions</span>
+                                </div>
+                            </a>
+                            <a href="{% url 'module_detail' course.id topic.id sub %}?set=3" class="set-link">
+                                <div class="set-top">
+                                    <span class="set-title">Practice Set 03</span>
+                                </div>
+                                <div class="set-meta">
+                                    <span class="level-badge level-medium">Medium</span>
+                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 15 Questions</span>
+                                </div>
+                            </a>
+                            <a href="{% url 'module_detail' course.id topic.id sub %}?set=4" class="set-link">
+                                <div class="set-top">
+                                    <span class="set-title">Practice Set 04</span>
+                                </div>
+                                <div class="set-meta">
+                                    <span class="level-badge level-hard">Hard</span>
+                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 20 Questions</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="subtopic-info">
-                    <h4>{{ sub }}</h4>
-                    <p>Practice Set • 10 Questions</p>
-                </div>
-                <div class="play-btn">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </a>
+            </div>
             {% endfor %}
         </div>
 
         <div style="margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.1);">
             <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 15px; opacity: 0.3;"></i>
-            <p style="opacity: 0.6; font-size: 0.9rem;">Content for each module will be added in the next phase. <br>This is a static preview of the learning interface.</p>
+            <p style="opacity: 0.6; font-size: 0.9rem;">Selecting a set will open the practice interface for that specific question bank.</p>
         </div>
     </div>
 </div>
+
+<section class="more-topics" style="max-width: 1200px; margin: 0 auto 100px; padding: 0 20px;">
+    <div class="section-title">Explore Other Topics</div>
+    <div class="more-topics-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+        {% for t in course.topics %}
+            {% if t.id != topic.id %}
+            <a href="{% url 'topic_detail' course.id t.id %}" class="topic-tile" style="position: relative; height: 160px; border-radius: 24px; overflow: hidden; text-decoration: none; color: #fff; display: flex; align-items: flex-end; padding: 25px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(42, 245, 152, 0.05) 0%, rgba(0, 158, 253, 0.05) 100%); z-index: 1;"></div>
+                <div style="position: relative; z-index: 2;">
+                    <span style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; letter-spacing: 1px; font-weight: 700;">Topic</span>
+                    <h4 style="font-size: 1.1rem; font-weight: 700; margin-top: 5px;">{{ t.title }}</h4>
+                </div>
+                <i class="fas fa-chevron-right" style="position: absolute; right: 25px; bottom: 25px; opacity: 0.3; z-index: 2;"></i>
+            </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
+
+<style>
+    .topic-tile:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: rgba(42, 245, 152, 0.4);
+        background: rgba(42, 245, 152, 0.05);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(42, 245, 152, 0.1);
+    }
+    .topic-tile:hover i { opacity: 1; color: #2af598; transform: translateX(5px); }
+</style>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleSets(btn) {
+        const item = btn.parentElement;
+        const wrapper = item.querySelector('.sets-wrapper');
+        const isActive = btn.classList.contains('active');
+        
+        // Close all other open sets
+        document.querySelectorAll('.subtopic-card.active').forEach(c => {
+            if (c !== btn) {
+                c.classList.remove('active');
+                c.parentElement.querySelector('.sets-wrapper').classList.remove('open');
+            }
+        });
+
+        if (isActive) {
+            btn.classList.remove('active');
+            wrapper.classList.remove('open');
+        } else {
+            btn.classList.add('active');
+            wrapper.classList.add('open');
+        }
+    }
+</script>
+{% endblock %}
+

@@ -67,3 +67,11 @@ fi
 if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
     hash -r 2> /dev/null
 fi
+
+export DEBUG=True
+export DB_NAME=prepverse
+export DB_USER=postgres
+export DB_PASSWORD=admin
+export DB_HOST=127.0.0.1
+export DB_PORT=5432
+export SECRET_KEY='django-insecure-prepverse-key'

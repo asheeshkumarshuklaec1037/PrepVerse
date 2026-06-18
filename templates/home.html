@@ -7,13 +7,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <style>
     /* Slider specific styles */
-    body { height: 100vh; overflow: hidden; }
+    body { overflow-x: hidden; }
     main { padding-top: 0; } /* Remove default padding for homepage as it has a full-screen slider */
     
     :root {
         --radius: 20px;
-        --height: 280px;
-        --active-height: 380px;
+        --height: 220px;
+        --active-height: 320px;
         --overlay: 0.6;
         --speed: 0.8s;
         --gap: 40px;
@@ -22,7 +22,7 @@
     .as-slider {
         position: relative;
         width: 100%;
-        height: 100vh;
+        height: 85vh;
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -120,7 +120,7 @@
     /* Text Content */
     .as-changing-widget {
         position: relative;
-        height: 400px;
+        height: 350px;
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -161,8 +161,8 @@
         100% { transform: translateY(100px); opacity: 0; }
     }
 
-    h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; line-height: 1.1; text-transform: uppercase; }
-    p { font-size: 1.1rem; opacity: 0.6; margin-bottom: 30px; line-height: 1.6; max-width: 450px; }
+    h1 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; line-height: 1.1; text-transform: uppercase; }
+    p { font-size: 1rem; opacity: 0.6; margin-bottom: 25px; line-height: 1.6; max-width: 450px; }
     .btn {
         display: inline-block;
         padding: 12px 35px;
@@ -187,7 +187,7 @@
         height: var(--active-height);
         align-items: center;
     }
-    .swiper-slide {
+    .as-side-slider .swiper-slide {
         width: 240px !important;
         height: var(--height);
         border-radius: var(--radius);
@@ -198,15 +198,15 @@
         align-items: flex-end;
         position: relative;
     }
-    .swiper-slide-active {
+    .as-side-slider .swiper-slide-active {
         height: var(--active-height);
     }
-    .swiper-slide img {
+    .as-side-slider .swiper-slide img {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         object-fit: cover;
     }
-    .swiper-slide:before {
+    .as-side-slider .swiper-slide:before {
         content: "";
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -258,13 +258,156 @@
         .slider-container { grid-template-columns: 1fr; padding-top: 50px; }
         .as-bar, .nav-btns { display: none; }
         h1 { font-size: 2.2rem; }
-        .swiper-slide { width: 180px !important; }
+        .as-side-slider .swiper-slide { width: 180px !important; }
+    }
+
+    /* Daily Spark Section (Redesigned) */
+    .daily-spark-section {
+        max-width: 1400px;
+        margin: 100px auto;
+        padding: 100px 5%;
+        display: grid;
+        grid-template-columns: 1fr 450px;
+        gap: 60px;
+        align-items: center;
+        position: relative;
+        background: radial-gradient(circle at 10% 20%, rgba(42, 245, 152, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 90% 80%, rgba(0, 158, 253, 0.05) 0%, transparent 40%);
+        border-radius: 60px;
+        border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .daily-spark-section:before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+        opacity: 0.1;
+        pointer-events: none;
+    }
+
+    .spark-content .refreshes {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #2af598;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+    }
+    .spark-content .refreshes:before {
+        content: "";
+        width: 8px; height: 8px;
+        background: #2af598;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #2af598;
+    }
+
+    .spark-content h2 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 25px; }
+    .spark-content p { font-size: 1.1rem; opacity: 0.6; line-height: 1.7; margin-bottom: 40px; max-width: 500px; }
+
+    .spark-stats { display: flex; gap: 40px; margin-bottom: 40px; }
+    .stat-box h3 { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 5px; }
+    .stat-box span { font-size: 0.8rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .streak-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.2);
+        padding: 10px 20px;
+        border-radius: 50px;
+        color: #ff6b6b;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    /* Mini Card Slider */
+    .spark-slider-container {
+        width: 100%;
+        position: relative;
+    }
+    .spark-mini-slider {
+        width: 100%;
+        height: 320px;
+        border-radius: 30px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(20px);
+        overflow: hidden;
+    }
+    .spark-mini-slider .swiper-slide {
+        width: 100%;
+        height: 100%;
+    }
+    .spark-card {
+        padding: 40px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .card-tag { 
+        background: rgba(255,255,255,0.05); 
+        padding: 6px 15px; 
+        border-radius: 50px; 
+        font-size: 0.7rem; 
+        font-weight: 700; 
+        color: rgba(255,255,255,0.6); 
+    }
+    
+    .spark-card h4 { font-size: 1.4rem; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
+    
+    .card-footer { display: flex; justify-content: space-between; align-items: center; }
+    .card-meta { display: flex; gap: 20px; font-size: 0.8rem; opacity: 0.5; }
+    .card-meta span { display: flex; align-items: center; gap: 8px; }
+
+    .open-btn {
+        background: rgba(255,255,255,0.05);
+        color: #fff;
+        padding: 10px 25px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: 0.3s;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .open-btn:hover { background: #fff; color: #000; }
+
+    .spark-controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 25px;
+        padding-left: 10px;
+    }
+    .s-arrow { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
+    .s-arrow:hover { border-color: #2af598; color: #2af598; }
+    
+    .s-pagination { display: flex; gap: 8px; }
+    .s-dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: 0.3s; }
+    .s-dot.active { width: 20px; background: #2af598; border-radius: 10px; }
+    .s-count { font-size: 0.85rem; opacity: 0.4; margin-left: auto; }
+
+    @media (max-width: 1024px) {
+        .daily-spark-section { grid-template-columns: 1fr; gap: 50px; text-align: center; }
+        .spark-content p { margin-left: auto; margin-right: auto; }
+        .spark-stats { justify-content: center; }
+        .spark-content .refreshes { justify-content: center; }
+        .spark-slider-container { max-width: 500px; margin: 0 auto; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="as-slider" id="mainSlider">
+    <!-- Slider content same -->
     <div class="as-slider-background">
         {% for course in courses %}
         <img src="{{ course.bg_image }}" data-index="{{ forloop.counter0 }}">
@@ -272,10 +415,7 @@
     </div>
 
     <div class="slider-container">
-        <div class="as-bar">
-            <!-- Dots added via JS -->
-        </div>
-
+        <div class="as-bar"></div>
         <div class="as-changing-widget">
             {% for course in courses %}
             <div class="elementor-widget" data-index="{{ forloop.counter0 }}">
@@ -287,27 +427,81 @@
             </div>
             {% endfor %}
         </div>
-
         <div class="as-side-slider swiper">
             <div class="swiper-wrapper">
                 {% for course in courses %}
                 <div class="swiper-slide">
                     <img src="{{ course.bg_image }}">
-                    <div class="card-label">
-                        <h3>{{ course.title }}</h3>
-                    </div>
+                    <div class="card-label"><h3>{{ course.title }}</h3></div>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-
     <div class="nav-btns">
         <div class="n-btn as-slider-left"><i class="fas fa-arrow-left"></i></div>
         <div class="toggle-autoplay" id="autoplayToggle"><i class="fas fa-pause"></i></div>
         <div class="n-btn as-slider-right"><i class="fas fa-arrow-right"></i></div>
     </div>
 </div>
+
+<section class="daily-spark-section">
+    <div class="spark-content">
+        <div class="refreshes">Refreshes Daily</div>
+        <h2>Sharpen your skills, <br>one question at a time</h2>
+        <p>Practice makes placement. Every day brings fresh questions across Aptitude, Logic, and Verbal — crafted to match real campus interview patterns.</p>
+        
+        <div class="spark-stats">
+            <div class="stat-box">
+                <h3>5</h3>
+                <span>Questions today</span>
+            </div>
+            <div class="stat-box">
+                <h3>4</h3>
+                <span>Topics covered</span>
+            </div>
+            <div class="stat-box">
+                <h3>512+</h3>
+                <span>Students solving</span>
+            </div>
+        </div>
+
+        <div class="streak-badge">
+            <i class="fas fa-fire"></i> Your streak: 7 days
+        </div>
+    </div>
+
+    <div class="spark-slider-container">
+        <div class="spark-mini-slider swiper">
+            <div class="swiper-wrapper">
+                {% for q in daily_questions %}
+                <div class="swiper-slide">
+                    <div class="spark-card">
+                        <div class="card-top">
+                            <span class="card-tag">{{ q.category }}</span>
+                        </div>
+                        <h4>{{ q.text|truncatechars:80 }}</h4>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span><i class="fas fa-circle" style="color: {% if q.difficulty == 'Medium' %}#fccb90{% else %}#ff4757{% endif %}; font-size: 8px;"></i> {{ q.difficulty }}</span>
+                                <span><i class="far fa-clock"></i> {{ q.time }}</span>
+                            </div>
+                            <a href="{% url 'daily_challenges' %}" class="open-btn">Open <i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="spark-controls">
+            <div class="s-arrow spark-prev"><i class="fas fa-chevron-left"></i></div>
+            <div class="s-pagination"></div>
+            <div class="s-arrow spark-next"><i class="fas fa-chevron-right"></i></div>
+            <div class="s-count">1/{{ daily_questions|length }}</div>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
@@ -315,25 +509,21 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     $(document).ready(function() {
-        var $slider = $('.as-slider'),
+        // Main Slider
+        var $slider = $('#mainSlider'),
             currentSlide = 0,
             previousSlide = 0,
-            slideNumber = $('.swiper-slide').length,
+            slideNumber = $slider.find('.as-side-slider .swiper-slide').not('.swiper-slide-duplicate').length,
             forward = true;
 
-        // Initialize Dots
         var barHTML = '';
-        for(var i=0; i<slideNumber; i++) {
-            barHTML += `<span class="dot">${i+1}</span>`;
-        }
-        $('.as-bar').append(barHTML);
-        $('.dot').eq(0).addClass('active');
+        for(var i=0; i<slideNumber; i++) { barHTML += `<span class="dot">${i+1}</span>`; }
+        $slider.find('.as-bar').append(barHTML);
+        $slider.find('.dot').eq(0).addClass('active');
 
-        // Initialize Text & BG
-        $('.elementor-widget').eq(0).addClass('currentUp');
-        $('.as-slider-background img').eq(0).addClass('currentForward');
+        $slider.find('.elementor-widget').eq(0).addClass('currentUp');
+        $slider.find('.as-slider-background img').eq(0).addClass('currentForward');
 
-        // Initialize Swiper
         var swiper = new Swiper('.as-side-slider', {
             slidesPerView: 3,
             spaceBetween: 30,
@@ -341,23 +531,20 @@
             centeredSlides: false,
             speed: 800,
             watchSlidesProgress: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
+            autoplay: { delay: 3000, disableOnInteraction: false },
             on: {
-                init: function() {
-                    setTimeout(() => $slider.addClass('loaded'), 500);
+                init: function() { 
+                    setTimeout(() => $slider.addClass('loaded'), 500); 
+                    // Update slideNumber if it was wrong before (though it should be correct now)
+                    slideNumber = this.slides.length - this.loopedSlides * 2;
                 },
                 slideChange: function() {
                     currentSlide = this.realIndex;
                     if (currentSlide !== previousSlide) {
-                        // Direction detection
                         if (previousSlide < currentSlide) forward = true;
                         if (previousSlide > currentSlide) forward = false;
                         if (previousSlide == slideNumber - 1 && currentSlide == 0) forward = true;    
                         if (previousSlide == 0 && currentSlide == slideNumber - 1) forward = false;   
-
                         updateUI(currentSlide, previousSlide, forward);
                         previousSlide = currentSlide;
                     }
@@ -366,26 +553,23 @@
         });
 
         function updateUI(curr, prev, isForward) {
-            $('.dot').removeClass('active');
-            $('.dot').eq(curr).addClass('active');
-            $('.as-slider-background img').removeClass('prev currentBackward currentForward');        
-            $('.as-slider-background img').eq(prev).addClass('prev');
-            $('.elementor-widget').removeClass('prev next currentUp currentDown');
-
+            $slider.find('.dot').removeClass('active').eq(curr).addClass('active');
+            $slider.find('.as-slider-background img').removeClass('prev currentBackward currentForward').eq(prev).addClass('prev');
+            $slider.find('.elementor-widget').removeClass('prev next currentUp currentDown');
             if (isForward) {
-                $('.elementor-widget').eq(prev).addClass('prev');
-                $('.elementor-widget').eq(curr).addClass('currentUp');
-                $('.as-slider-background img').eq(curr).addClass('currentForward');
+                $slider.find('.elementor-widget').eq(prev).addClass('prev');
+                $slider.find('.elementor-widget').eq(curr).addClass('currentUp');
+                $slider.find('.as-slider-background img').eq(curr).addClass('currentForward');
             } else {
-                $('.elementor-widget').eq(prev).addClass('next');
-                $('.elementor-widget').eq(curr).addClass('currentDown');
-                $('.as-slider-background img').eq(curr).addClass('currentBackward');
+                $slider.find('.elementor-widget').eq(prev).addClass('next');
+                $slider.find('.elementor-widget').eq(curr).addClass('currentDown');
+                $slider.find('.as-slider-background img').eq(curr).addClass('currentBackward');
             }
         }
 
-        $('.as-slider-right').on('click', function() { swiper.slideNext(); });
-        $('.as-slider-left').on('click', function() { swiper.slidePrev(); });
-        $('.dot').on('click', function() { swiper.slideToLoop($(this).index()); });
+        $slider.find('.as-slider-right').on('click', function() { swiper.slideNext(); });
+        $slider.find('.as-slider-left').on('click', function() { swiper.slidePrev(); });
+        $slider.find('.dot').on('click', function() { swiper.slideToLoop($(this).index()); });
 
         $('#autoplayToggle').on('click', function() {
             if (swiper.autoplay.running) {
@@ -394,6 +578,29 @@
             } else {
                 swiper.autoplay.start();
                 $(this).find('i').removeClass('fa-play').addClass('fa-pause');
+            }
+        });
+
+        // Mini Spark Slider
+        var sparkSwiper = new Swiper('.spark-mini-slider', {
+            loop: false,
+            speed: 600,
+            pagination: {
+                el: '.s-pagination',
+                clickable: true,
+                renderBullet: function (index, className) {
+                    return '<span class="' + className + ' s-dot"></span>';
+                },
+                bulletActiveClass: 'active'
+            },
+            navigation: {
+                nextEl: '.spark-next',
+                prevEl: '.spark-prev',
+            },
+            on: {
+                slideChange: function() {
+                    $('.s-count').text((this.activeIndex + 1) + '/' + this.slides.length);
+                }
             }
         });
     });
