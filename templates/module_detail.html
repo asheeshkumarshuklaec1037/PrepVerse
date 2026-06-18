@@ -15,9 +15,16 @@
         background: radial-gradient(circle, rgba(42, 245, 152, 0.08) 0%, transparent 70%);
         z-index: -1;
         filter: blur(50px);
+        opacity: 0;
+        animation: pageFadeIn 1.5s ease-out forwards;
     }
     .glow-1 { top: -100px; right: -100px; }
-    .glow-2 { bottom: -100px; left: -100px; background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%); }
+    .glow-2 { bottom: -100px; left: -100px; background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%); animation-delay: 0.5s; }
+
+    @keyframes pageFadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
     /* Secondary Header */
     .practice-subheader {
@@ -32,6 +39,8 @@
         top: 80px; /* Below the main navbar */
         z-index: 1000;
         margin-top: -20px;
+        opacity: 0;
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
     }
     .subheader-left h2 { font-size: 1rem; font-weight: 700; color: #2af598; }
     .subheader-left p { font-size: 0.7rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 1px; }
@@ -45,13 +54,15 @@
         gap: 10px;
         transition: 0.3s;
     }
-    .exit-btn:hover { color: #ff4757; }
+    .exit-btn:hover { color: #ff4757; transform: translateX(-3px); }
 
     /* Container */
     .container {
         max-width: 900px;
         margin: 25px auto;
         padding: 0 20px;
+        opacity: 0;
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
     }
 
     /* Modern Glass Question Card */
@@ -63,7 +74,22 @@
         padding: 30px;
         margin-bottom: 25px;
         position: relative;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
+    
+    /* Staggered animation delays for up to 10 cards */
+    .question-card:nth-child(1) { animation-delay: 0.5s; }
+    .question-card:nth-child(2) { animation-delay: 0.6s; }
+    .question-card:nth-child(3) { animation-delay: 0.7s; }
+    .question-card:nth-child(4) { animation-delay: 0.8s; }
+    .question-card:nth-child(5) { animation-delay: 0.9s; }
+    .question-card:nth-child(6) { animation-delay: 1.0s; }
+    .question-card:nth-child(7) { animation-delay: 1.1s; }
+    .question-card:nth-child(8) { animation-delay: 1.2s; }
+    .question-card:nth-child(9) { animation-delay: 1.3s; }
+    .question-card:nth-child(10) { animation-delay: 1.4s; }
 
     .question-num { font-size: 0.75rem; font-weight: 700; color: #2af598; margin-bottom: 12px; display: block; opacity: 0.6; }
     .question-text { font-size: 1.1rem; margin-bottom: 25px; font-weight: 400; line-height: 1.5; }
