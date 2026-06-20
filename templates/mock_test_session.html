@@ -1,0 +1,1182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mock Test Arena - Session | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #050505 !important;
+        overflow: hidden;
+        height: 100vh;
+        font-family: 'Poppins', sans-serif;
+    }
+    main { padding-top: 0 !important; }
+    .navbar { display: none !important; }
+
+    /* Theme variables same as Mock page */
+    :root {
+        --color-accent: #2af598;
+        --color-accent-glow: rgba(42, 245, 152, 0.2);
+        --color-marked: #fccb90;
+        --color-marked-glow: rgba(252, 203, 144, 0.2);
+        --color-danger: #ff4757;
+        --color-danger-glow: rgba(255, 71, 87, 0.2);
+    }
+
+    /* Test Layout Header */
+    .test-header {
+        height: 70px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        position: relative;
+        z-index: 100;
+        opacity: 0;
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .test-title-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .test-title-info h2 { font-size: 1.2rem; font-weight: 800; color: #fff; margin: 0; }
+    .test-tag {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        background: rgba(42, 245, 152, 0.1);
+        color: #2af598;
+        border: 1px solid rgba(42, 245, 152, 0.2);
+        padding: 4px 10px;
+        border-radius: 50px;
+    }
+
+    /* Timer Widget */
+    .timer-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #fff;
+        transition: 0.3s;
+    }
+    .timer-container.low-time {
+        border-color: var(--color-danger);
+        background: rgba(255, 71, 87, 0.05);
+        color: var(--color-danger);
+        animation: pulseTimer 1s infinite alternate;
+    }
+    @keyframes pulseTimer {
+        from { box-shadow: 0 0 10px rgba(255, 71, 87, 0); }
+        to { box-shadow: 0 0 15px rgba(255, 71, 87, 0.3); }
+    }
+    .timer-container i { color: #2af598; }
+    .timer-container.low-time i { color: var(--color-danger); }
+
+    .header-actions .submit-btn {
+        background: linear-gradient(135deg, var(--color-accent) 0%, #009efd 100%);
+        color: #000;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .header-actions .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(42, 245, 152, 0.4);
+    }
+
+    /* Main Split Screen Area */
+    .test-arena {
+        height: calc(100vh - 70px);
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        background: transparent;
+        position: relative;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
+    }
+
+    /* Question View Workspace */
+    .workspace {
+        padding: 40px 60px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-right: 1px solid rgba(255,255,255,0.05);
+        position: relative;
+    }
+    .question-panel {
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+    }
+    .fade-question {
+        animation: qFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    @keyframes qFadeIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .question-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    .q-number {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: rgba(255,255,255,0.4);
+    }
+    .q-number span {
+        color: #fff;
+    }
+    .q-marks {
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.05);
+        padding: 5px 12px;
+        border-radius: 8px;
+        color: rgba(255,255,255,0.6);
+    }
+    .q-marks b { color: var(--color-accent); }
+
+    .question-text {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.6;
+        margin-bottom: 35px;
+    }
+
+    /* Styled Radio Options */
+    .options-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .option-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+    .option-card:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+    .option-card.selected {
+        background: rgba(42, 245, 152, 0.03);
+        border-color: var(--color-accent);
+        box-shadow: 0 0 20px rgba(42, 245, 152, 0.05);
+    }
+    
+    .option-marker {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: rgba(255,255,255,0.6);
+        transition: 0.3s;
+    }
+    .option-card.selected .option-marker {
+        background: var(--color-accent);
+        color: #000;
+        border-color: var(--color-accent);
+        box-shadow: 0 0 15px var(--color-accent-glow);
+    }
+    .option-text {
+        font-size: 1rem;
+        color: rgba(255,255,255,0.8);
+        transition: 0.3s;
+    }
+    .option-card.selected .option-text {
+        color: #fff;
+    }
+
+    /* Workspace Footer Controls */
+    .controls-panel {
+        max-width: 900px;
+        width: 100%;
+        margin: 40px auto 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .left-controls, .right-controls {
+        display: flex;
+        gap: 15px;
+    }
+    .control-btn {
+        padding: 12px 25px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        border: none;
+    }
+    .btn-clear {
+        background: rgba(255, 71, 87, 0.05);
+        color: var(--color-danger);
+        border: 1px solid rgba(255, 71, 87, 0.15);
+    }
+    .btn-clear:hover {
+        background: var(--color-danger);
+        color: #fff;
+        box-shadow: 0 5px 15px var(--color-danger-glow);
+    }
+    .btn-mark {
+        background: rgba(252, 203, 144, 0.05);
+        color: var(--color-marked);
+        border: 1px solid rgba(252, 203, 144, 0.15);
+    }
+    .btn-mark:hover {
+        background: var(--color-marked);
+        color: #000;
+        box-shadow: 0 5px 15px var(--color-marked-glow);
+    }
+    .btn-save {
+        background: var(--color-accent);
+        color: #000;
+        box-shadow: 0 5px 15px rgba(42, 245, 152, 0.2);
+    }
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(42, 245, 152, 0.3);
+    }
+
+    /* Sidebar Navigation Dashboard */
+    .sidebar {
+        padding: 30px;
+        background: rgba(10, 15, 12, 0.15);
+        backdrop-filter: blur(80px) saturate(200%);
+        -webkit-backdrop-filter: blur(80px) saturate(200%);
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow-y: auto;
+    }
+    .palette-header h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 20px; }
+    
+    .question-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+    .q-cell {
+        aspect-ratio: 1;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: 0.3s;
+        color: rgba(255,255,255,0.5);
+    }
+    .q-cell:hover {
+        border-color: rgba(255,255,255,0.3);
+        color: #fff;
+    }
+    
+    /* Cell state colors */
+    .q-cell.active {
+        border-color: #fff !important;
+        color: #fff !important;
+    }
+    .q-cell.answered {
+        background: var(--color-accent) !important;
+        border-color: var(--color-accent) !important;
+        color: #000 !important;
+        box-shadow: 0 0 10px rgba(42, 245, 152, 0.15);
+    }
+    .q-cell.marked {
+        background: var(--color-marked) !important;
+        border-color: var(--color-marked) !important;
+        color: #000 !important;
+        box-shadow: 0 0 10px var(--color-marked-glow);
+    }
+    .q-cell.visited {
+        background: rgba(255,255,255,0.1) !important;
+        border-color: rgba(255,255,255,0.15) !important;
+        color: #fff !important;
+    }
+
+    /* Legends Panel */
+    .legend-panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        padding: 20px 0;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        margin-bottom: 30px;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.6);
+    }
+    .leg-dot {
+        width: 12px; height: 12px;
+        border-radius: 4px;
+    }
+
+    /* Sidebar Footer Button */
+    .sidebar-footer .side-submit {
+        width: 100%;
+        padding: 15px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .sidebar-footer .side-submit:hover {
+        background: var(--color-accent);
+        color: #000;
+        border-color: var(--color-accent);
+        box-shadow: 0 10px 25px rgba(42, 245, 152, 0.2);
+    }
+
+    /* Confirmation & Result Modal */
+    .modal {
+        display: flex;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+        z-index: 3000;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.35s ease, backdrop-filter 0.35s ease, visibility 0.35s ease;
+    }
+    .modal.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+    }
+    .modal-card {
+        background: rgba(15, 15, 15, 0.7);
+        backdrop-filter: blur(35px);
+        -webkit-backdrop-filter: blur(35px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 30px;
+        max-width: 600px;
+        width: 90%;
+        padding: 40px;
+        box-shadow: 0 30px 100px rgba(0,0,0,0.6), 0 0 50px rgba(138, 43, 226, 0.1);
+        max-height: 85vh;
+        overflow-y: auto;
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+        transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.45s ease;
+    }
+    .modal.active .modal-card {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-top: 35px;
+        width: 100%;
+    }
+    .modal-btn {
+        padding: 14px 28px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 160px;
+    }
+    .modal-btn-cancel {
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .modal-btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+    }
+    .modal-btn-confirm {
+        background: linear-gradient(135deg, var(--color-accent) 0%, #009efd 100%);
+        color: #000;
+        box-shadow: 0 5px 15px rgba(42, 245, 152, 0.3);
+    }
+    .modal-btn-confirm:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(42, 245, 152, 0.5);
+    }
+
+    .modal-header h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; }
+    .score-banner {
+        text-align: center;
+        background: rgba(42, 245, 152, 0.05);
+        border: 1px solid rgba(42, 245, 152, 0.15);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 25px 0;
+    }
+    .score-banner h4 { font-size: 1.1rem; opacity: 0.5; margin-bottom: 5px; text-transform: uppercase; }
+    .score-banner h1 { font-size: 3.5rem; font-weight: 900; color: var(--color-accent); margin: 0; }
+    
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    .stat-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 15px;
+        text-align: center;
+    }
+    .stat-card span { font-size: 0.75rem; opacity: 0.5; display: block; margin-bottom: 5px; text-transform: uppercase; }
+    .stat-card b { font-size: 1.2rem; }
+
+    /* Explanation Accordion */
+    .expl-section {
+        margin-top: 30px;
+        text-align: left;
+    }
+    .expl-section h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; }
+    .expl-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .expl-item {
+        background: rgba(255,255,255,0.01);
+        border: 1px solid rgba(255,255,255,0.04);
+        border-radius: 12px;
+        padding: 15px 20px;
+    }
+    .expl-q-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; }
+    .expl-text { font-size: 0.9rem; opacity: 0.8; margin-bottom: 10px; line-height: 1.5; }
+    .expl-ans { font-size: 0.85rem; color: var(--color-accent); font-weight: 600; }
+    
+    .modal-btn-full {
+        width: 100%;
+        padding: 16px;
+        border-radius: 14px;
+        font-weight: 700;
+        background: #fff;
+        color: #000;
+        cursor: pointer;
+        border: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 25px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(0);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-btn-full:hover {
+        background: linear-gradient(135deg, var(--color-accent) 0%, #009efd 100%);
+        color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(42, 245, 152, 0.4);
+    }
+    .modal-btn-full:active {
+        transform: translateY(1px);
+    }
+    @keyframes pageFadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Blurred Background Replica */
+    .session-blur-background {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: -10;
+        filter: blur(12px);
+        opacity: 0.18;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        padding: 20px 5%;
+        background: #050505;
+        overflow: hidden;
+    }
+    
+    .blurred-navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 12px 30px;
+        background: rgba(255, 255, 255, 0.03);
+    }
+    .blurred-logo {
+        font-size: 1.5rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #fff;
+    }
+    .blurred-logo i { color: #2af598; }
+    .blurred-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 35px;
+    }
+    .blurred-nav-links span {
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        font-weight: 500;
+        position: relative;
+    }
+    .blurred-nav-links span.active::after {
+        content: "";
+        position: absolute;
+        bottom: -5px; left: 0; width: 100%; height: 2px;
+        background: #2af598;
+    }
+    .blurred-login-btn {
+        padding: 10px 25px;
+        background: #fff;
+        color: #000;
+        border-radius: 14px;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+    
+    .blurred-hero {
+        text-align: center;
+        max-width: 800px;
+        margin: 40px auto 0;
+        color: #fff;
+    }
+    .blurred-hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        letter-spacing: -1px;
+    }
+    .blurred-hero p {
+        font-size: 1rem;
+        opacity: 0.7;
+        line-height: 1.6;
+    }
+    
+    .blurred-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        max-width: 1200px;
+        width: 100%;
+        margin: 20px auto 0;
+    }
+    .blurred-card {
+        height: 220px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+    }
+
+    /* Background Glows (Purple Theme) */
+    .glow {
+        position: fixed;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        z-index: -1;
+        filter: blur(80px);
+        opacity: 0;
+        animation: pageFadeIn 1.5s ease-out forwards;
+        pointer-events: none;
+    }
+    .glow-1 { 
+        top: -100px; right: -100px; 
+        background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%); 
+    }
+    .glow-2 { 
+        bottom: -100px; left: -100px; 
+        background: radial-gradient(circle, rgba(255, 0, 128, 0.15) 0%, transparent 70%); 
+        animation-delay: 0.5s; 
+    }
+    .glow-3 {
+        top: 40%; left: 30%;
+        background: radial-gradient(circle, rgba(65, 88, 208, 0.1) 0%, transparent 70%);
+        animation-delay: 1s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Blurred Background Replica of the caller page -->
+<div class="session-blur-background">
+    <div class="blurred-navbar">
+        <div class="blurred-logo">
+            <i class="fas fa-bolt"></i>
+            <span>PrepVerse</span>
+        </div>
+        <div class="blurred-nav-links">
+            <span>Home</span>
+            <span>Courses</span>
+            <span>Daily Streaks</span>
+            <span>Practice</span>
+            <span class="active">Mock Tests</span>
+        </div>
+        <div class="blurred-login-btn">Log In</div>
+    </div>
+    
+    <div class="blurred-hero">
+        <h1>Mock Test Arena</h1>
+        <p>Simulate real interview conditions. Choose your scale, select subjects, and test your problem solving potential with comprehensive mocks.</p>
+    </div>
+    
+    <div class="blurred-cards-grid">
+        <div class="blurred-card"></div>
+        <div class="blurred-card"></div>
+        <div class="blurred-card"></div>
+    </div>
+</div>
+
+<!-- Background Glows -->
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+
+<!-- Test Header -->
+<div class="test-header">
+    <div class="test-title-info">
+        <h2>{{ mode }} ({{ test_name }})</h2>
+        <span class="test-tag">{{ subject }}</span>
+    </div>
+    
+    <!-- Timer -->
+    <div class="timer-container" id="timerBox">
+        <i class="far fa-clock"></i> <span id="timerText">--:--</span>
+    </div>
+
+    <div class="header-actions">
+        <button class="submit-btn" onclick="confirmSubmit()">Submit Test</button>
+    </div>
+</div>
+
+<!-- Test Main Arena -->
+<div class="test-arena">
+    
+    <!-- Question Workspace -->
+    <div class="workspace">
+        <div class="question-panel" id="questionPanel">
+            <div class="question-meta">
+                <span class="q-number">Question <span id="currentQNum">1</span> of {{ questions|length }}</span>
+                <span class="q-marks">Single Choice (Marks: <b>+4</b>, Negative: <b>-1</b>)</span>
+            </div>
+            
+            <div class="question-text" id="qText">
+                <!-- Question Text -->
+            </div>
+            
+            <div class="options-list" id="optionsContainer">
+                <!-- Custom Radio options loaded dynamically -->
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="left-controls">
+                <button class="control-btn btn-clear" onclick="clearResponse()">Clear Response</button>
+                <button class="control-btn btn-mark" onclick="markForReview()">Mark for Review</button>
+            </div>
+            <div class="right-controls">
+                <button id="btn-prev" class="control-btn" onclick="prevQuestion()" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1);"><i class="fas fa-chevron-left"></i> Prev</button>
+                <button class="control-btn btn-save" onclick="saveAndNext()">Save & Next</button>
+                <button id="btn-next" class="control-btn" onclick="nextQuestion()" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1);">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Info and Grid -->
+    <div class="sidebar">
+        <div>
+            <div class="palette-header">
+                <h3>Question Palette</h3>
+            </div>
+            
+            <div class="question-grid" id="questionPaletteGrid">
+                {% for q in questions %}
+                <div class="q-cell" onclick="jumpToQuestion({{ forloop.counter0 }})">{{ forloop.counter }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <!-- Legends -->
+            <div class="legend-panel">
+                <div class="legend-item">
+                    <div class="leg-dot" style="background: var(--color-accent);"></div>
+                    <span>Answered (<span id="leg-ans-count">0</span>)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="leg-dot" style="background: var(--color-marked);"></div>
+                    <span>Marked (<span id="leg-mrk-count">0</span>)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="leg-dot" style="background: rgba(255,255,255,0.1);"></div>
+                    <span>Visited (<span id="leg-vis-count">0</span>)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="leg-dot" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);"></div>
+                    <span>Unvisited (<span id="leg-unv-count">{{ questions|length }}</span>)</span>
+                </div>
+            </div>
+
+            <!-- Submit footer -->
+            <div class="sidebar-footer">
+                <button class="side-submit" onclick="confirmSubmit()">Finish & Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmation & Scorecard -->
+<div class="modal" id="submitModal">
+    <div class="modal-card">
+        <div class="modal-header" style="text-align: center;">
+            <h3>Submit Test</h3>
+            <p>Ready to lock responses? Review your stats below.</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <span>Answered</span>
+                <b id="stats-ans" style="color: var(--color-accent);">-</b>
+            </div>
+            <div class="stat-card">
+                <span>Marked</span>
+                <b id="stats-mrk" style="color: var(--color-marked);">-</b>
+            </div>
+            <div class="stat-card">
+                <span>Unvisited</span>
+                <b id="stats-unv">-</b>
+            </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top: 30px;">
+            <button class="modal-btn modal-btn-cancel" onclick="closeSubmitModal()">Go Back</button>
+            <button class="modal-btn modal-btn-confirm" onclick="submitTestActual()">Confirm Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- Score report modal -->
+<div class="modal" id="scorecardModal">
+    <div class="modal-card" style="max-width: 850px; width: 95%;">
+        <div class="modal-header" style="text-align: center;">
+            <h3 style="color: #fff;">Test Performance Report</h3>
+            <p>Mock test completed successfully. Check your detailed scorecard.</p>
+        </div>
+
+        <div class="score-banner">
+            <h4>Total Score Achieved</h4>
+            <h1 id="score-val">0 / 40</h1>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <span>Correct Answers</span>
+                <b id="rpt-correct" style="color: var(--color-accent);">0</b>
+            </div>
+            <div class="stat-card">
+                <span>Incorrect Answers</span>
+                <b id="rpt-wrong" style="color: var(--color-danger);">0</b>
+            </div>
+            <div class="stat-card">
+                <span>Accuracy Rate</span>
+                <b id="rpt-accuracy">0%</b>
+            </div>
+        </div>
+
+        <!-- Detailed Explanations Accordion -->
+        <div class="expl-section">
+            <h4>Solutions & Explanations</h4>
+            <div class="expl-list" id="solutionsSheet">
+                <!-- Solutions injected here -->
+            </div>
+        </div>
+
+        <button class="modal-btn-full" onclick="exitSession()">Return to Test Arena</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Load question data parsed from views
+    const questions = {{ questions_json|safe }};
+    
+    // User Session states
+    let currentIdx = 0;
+    const answers = new Array(questions.length).fill(null); // stores selected option index
+    const states = new Array(questions.length).fill('unvisited'); // unvisited, visited, answered, marked
+    
+    // Timer details
+    let timeLeft = {{ duration_seconds }};
+    const timerText = document.getElementById("timerText");
+    const timerBox = document.getElementById("timerBox");
+
+    // Initialize Timer
+    const timerInterval = setInterval(function() {
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerText.innerText = "00:00";
+            // Auto submit when time runs out
+            alert("Time's up! Your mock test is being auto-submitted.");
+            calculateAndSubmit();
+        } else {
+            timeLeft--;
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            const displayMins = mins < 10 ? "0" + mins : mins;
+            const displaySecs = secs < 10 ? "0" + secs : secs;
+            timerText.innerText = displayMins + ":" + displaySecs;
+
+            // Low time warning (under 2 minutes / 120 seconds)
+            if (timeLeft < 120) {
+                timerBox.classList.add("low-time");
+            }
+        }
+    }, 1000);
+
+    // Document load - initialize first question
+    document.addEventListener("DOMContentLoaded", function() {
+        renderQuestion(0);
+        updateProgressCounts();
+    });
+
+    function renderQuestion(idx) {
+        currentIdx = idx;
+        
+        const panel = document.getElementById("questionPanel");
+        panel.classList.remove("fade-question");
+        void panel.offsetWidth; // Trigger browser reflow
+        panel.classList.add("fade-question");
+        
+        // If current state is unvisited, change it to visited (red/grey highlight)
+        if (states[idx] === 'unvisited') {
+            states[idx] = 'visited';
+        }
+        
+        // Update active palette indicator
+        const cells = document.querySelectorAll(".q-cell");
+        cells.forEach((cell, i) => {
+            cell.className = "q-cell"; // clear
+            if (states[i] === 'answered') cell.classList.add("answered");
+            else if (states[i] === 'marked') cell.classList.add("marked");
+            else if (states[i] === 'visited') cell.classList.add("visited");
+            
+            if (i === idx) cell.classList.add("active");
+        });
+
+        // Set meta and text
+        document.getElementById("currentQNum").innerText = idx + 1;
+        document.getElementById("qText").innerText = `${idx + 1}. ${questions[idx].text}`;
+
+        // Render options list
+        const optionsList = document.getElementById("optionsContainer");
+        optionsList.innerHTML = '';
+        
+        const optionLabels = ["A", "B", "C", "D"];
+        questions[idx].options.forEach((opt, oIdx) => {
+            const isSelected = answers[idx] === oIdx;
+            optionsList.innerHTML += `
+                <div class="option-card ${isSelected ? 'selected' : ''}" onclick="selectOption(${oIdx})">
+                    <div class="option-marker">${optionLabels[oIdx]}</div>
+                    <div class="option-text">${opt}</div>
+                </div>
+            `;
+        });
+
+        updateProgressCounts();
+
+        // Enable/Disable navigation buttons based on boundary index
+        const prevBtn = document.getElementById("btn-prev");
+        const nextBtn = document.getElementById("btn-next");
+        
+        if (idx === 0) {
+            prevBtn.disabled = true;
+            prevBtn.style.opacity = "0.3";
+            prevBtn.style.cursor = "not-allowed";
+        } else {
+            prevBtn.disabled = false;
+            prevBtn.style.opacity = "1";
+            prevBtn.style.cursor = "pointer";
+        }
+
+        if (idx === questions.length - 1) {
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = "0.3";
+            nextBtn.style.cursor = "not-allowed";
+        } else {
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = "1";
+            nextBtn.style.cursor = "pointer";
+        }
+    }
+
+    function selectOption(optIdx) {
+        answers[currentIdx] = optIdx;
+        states[currentIdx] = 'answered'; // update to answered state
+        
+        // Refresh options cards highlighting
+        const cards = document.querySelectorAll(".option-card");
+        cards.forEach((card, i) => {
+            if (i === optIdx) card.classList.add("selected");
+            else card.classList.remove("selected");
+        });
+
+        // Update palette status
+        const activeCell = document.querySelector(`.q-cell:nth-child(${currentIdx + 1})`);
+        activeCell.className = "q-cell active answered";
+
+        updateProgressCounts();
+    }
+
+    function clearResponse() {
+        answers[currentIdx] = null;
+        states[currentIdx] = 'visited'; // Reset to visited, not answered
+        
+        const cards = document.querySelectorAll(".option-card");
+        cards.forEach(card => card.classList.remove("selected"));
+
+        const activeCell = document.querySelector(`.q-cell:nth-child(${currentIdx + 1})`);
+        activeCell.className = "q-cell active visited";
+
+        updateProgressCounts();
+    }
+
+    function markForReview() {
+        // Mark current as marked
+        states[currentIdx] = 'marked';
+        
+        const activeCell = document.querySelector(`.q-cell:nth-child(${currentIdx + 1})`);
+        activeCell.className = "q-cell active marked";
+
+        // Move to next if possible
+        if (currentIdx < questions.length - 1) {
+            renderQuestion(currentIdx + 1);
+        } else {
+            updateProgressCounts();
+        }
+    }
+
+    function saveAndNext() {
+        // If answered was null but we clicked save, mark as visited
+        if (answers[currentIdx] === null) {
+            states[currentIdx] = 'visited';
+        } else {
+            states[currentIdx] = 'answered';
+        }
+
+        // Move to next question or notify completed
+        if (currentIdx < questions.length - 1) {
+            renderQuestion(currentIdx + 1);
+        } else {
+            updateProgressCounts();
+            alert("You have reached the end of the test. You can review your questions or click Submit to finish.");
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIdx > 0) {
+            renderQuestion(currentIdx - 1);
+        }
+    }
+
+    function nextQuestion() {
+        if (currentIdx < questions.length - 1) {
+            renderQuestion(currentIdx + 1);
+        }
+    }
+
+    function jumpToQuestion(idx) {
+        renderQuestion(idx);
+    }
+
+    function updateProgressCounts() {
+        let ansCount = 0;
+        let mrkCount = 0;
+        let visCount = 0;
+        let unvCount = 0;
+
+        states.forEach(state => {
+            if (state === 'answered') ansCount++;
+            else if (state === 'marked') mrkCount++;
+            else if (state === 'visited') visCount++;
+            else if (state === 'unvisited') unvCount++;
+        });
+
+        document.getElementById("leg-ans-count").innerText = ansCount;
+        document.getElementById("leg-mrk-count").innerText = mrkCount;
+        document.getElementById("leg-vis-count").innerText = visCount;
+        document.getElementById("leg-unv-count").innerText = unvCount;
+    }
+
+    // Modal submit workflow
+    function confirmSubmit() {
+        let ansCount = 0;
+        let mrkCount = 0;
+        let unvCount = 0;
+
+        states.forEach(state => {
+            if (state === 'answered') ansCount++;
+            else if (state === 'marked') mrkCount++;
+            else unvCount++;
+        });
+
+        document.getElementById("stats-ans").innerText = ansCount;
+        document.getElementById("stats-mrk").innerText = mrkCount;
+        document.getElementById("stats-unv").innerText = unvCount;
+
+        document.getElementById("submitModal").classList.add("active");
+    }
+
+    function closeSubmitModal() {
+        document.getElementById("submitModal").classList.remove("active");
+    }
+
+    function submitTestActual() {
+        closeSubmitModal();
+        clearInterval(timerInterval);
+        calculateAndSubmit();
+    }
+
+    function calculateAndSubmit() {
+        let correctCount = 0;
+        let wrongCount = 0;
+        let unansweredCount = 0;
+
+        const solutionsSheet = document.getElementById("solutionsSheet");
+        solutionsSheet.innerHTML = '';
+
+        questions.forEach((q, idx) => {
+            const userAnsIdx = answers[idx];
+            const isCorrect = userAnsIdx === q.correct_index;
+            const explanationLabels = ["A", "B", "C", "D"];
+
+            if (userAnsIdx === null) {
+                unansweredCount++;
+            } else if (isCorrect) {
+                correctCount++;
+            } else {
+                wrongCount++;
+            }
+
+            // Append dynamic explanations to modal solutions list
+            solutionsSheet.innerHTML += `
+                <div class="expl-item" style="border-left: 4px solid ${userAnsIdx === null ? 'rgba(255,255,255,0.2)' : isCorrect ? 'var(--color-accent)' : 'var(--color-danger)'};">
+                    <div class="expl-q-header">
+                        <span>Question ${idx + 1}</span>
+                        <span style="color: ${userAnsIdx === null ? 'rgba(255,255,255,0.4)' : isCorrect ? 'var(--color-accent)' : 'var(--color-danger)'};">
+                            ${userAnsIdx === null ? 'Unanswered (0 Marks)' : isCorrect ? 'Correct (+4 Marks)' : 'Incorrect (-1 Mark)'}
+                        </span>
+                    </div>
+                    <div class="expl-text">${q.text}</div>
+                    <div class="expl-ans">
+                        Your Answer: <b>${userAnsIdx === null ? 'None' : explanationLabels[userAnsIdx] + ') ' + q.options[userAnsIdx]}</b><br>
+                        Correct Answer: <b>${explanationLabels[q.correct_index] + ') ' + q.options[q.correct_index]}</b>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Compute scores (+4 for correct, -1 for wrong)
+        const finalScore = (correctCount * 4) - (wrongCount * 1);
+        const accuracy = questions.length - unansweredCount > 0 
+            ? Math.round((correctCount / (questions.length - unansweredCount)) * 100) 
+            : 0;
+
+        // Render scorecard modal fields
+        document.getElementById("score-val").innerText = `${finalScore} / 40`;
+        document.getElementById("rpt-correct").innerText = correctCount;
+        document.getElementById("rpt-wrong").innerText = wrongCount;
+        document.getElementById("rpt-accuracy").innerText = accuracy + "%";
+
+        // Trigger scorecard modal
+        document.getElementById("scorecardModal").classList.add("active");
+    }
+
+    function exitSession() {
+        window.location.href = "{% url 'mock_test' %}";
+    }
+</script>
+{% endblock %}
