@@ -71,6 +71,75 @@ def home(request):
         'daily_questions': daily_questions
     })
 
+def courses_view(request):
+    courses = [
+        {
+            'id': 0,
+            'title': 'Aptitude Mastery',
+            'description': 'Master logical and numerical problem solving for top company placements with our expert-led modules.',
+            'icon': 'fa-brain',
+            'gradient': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'bg_image': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop',
+            'tags': ['Best Seller', '12 Modules', 'Beginner']
+        },
+        {
+            'id': 1,
+            'title': 'Logical Reasoning',
+            'description': 'Enhance your critical thinking and logical analysis skills for competitive exams through interactive challenges.',
+            'icon': 'fa-puzzle-piece',
+            'gradient': 'linear-gradient(135deg, #2af598 0%, #009efd 100%)',
+            'bg_image': 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2104&auto=format&fit=crop',
+            'tags': ['New', '8 Modules', 'Intermediate']
+        },
+        {
+            'id': 2,
+            'title': 'English Proficiency',
+            'description': 'Improve your vocabulary, grammar, and comprehension for verbal ability tests with daily practice sets.',
+            'icon': 'fa-book-open',
+            'gradient': 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+            'bg_image': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1973&auto=format&fit=crop',
+            'tags': ['Essential', '15 Modules', 'All Levels']
+        },
+        {
+            'id': 3,
+            'title': 'Quantitative Aptitude',
+            'description': 'Advanced mathematics and quantitative techniques for data-driven success in every competitive field.',
+            'icon': 'fa-calculator',
+            'gradient': 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)',
+            'bg_image': 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2070&auto=format&fit=crop',
+            'tags': ['Advanced', '20 Modules', 'Hard']
+        }
+    ]
+    return render(request, 'courses.html', {'courses': courses})
+
+def practice_view(request):
+    # Mock data for the Practice Dashboard
+    stats = {
+        'questions_solved': 342,
+        'accuracy': '85%',
+        'current_streak': 12,
+        'global_rank': 1450
+    }
+    
+    categories = [
+        {'title': 'Quantitative Aptitude', 'icon': 'fa-calculator', 'color': '#fccb90', 'count': 450, 'progress': 45},
+        {'title': 'Logical Reasoning', 'icon': 'fa-puzzle-piece', 'color': '#2af598', 'count': 320, 'progress': 60},
+        {'title': 'Verbal Ability', 'icon': 'fa-book-open', 'color': '#ff9a9e', 'count': 280, 'progress': 30},
+        {'title': 'Data Interpretation', 'icon': 'fa-chart-pie', 'color': '#009efd', 'count': 150, 'progress': 15},
+    ]
+
+    recent_challenges = [
+        {'title': 'Time, Speed & Distance Masterclass', 'type': 'Quant', 'difficulty': 'Hard', 'time': '15 min'},
+        {'title': 'Syllogism Tricks & Shortcuts', 'type': 'Logic', 'difficulty': 'Medium', 'time': '10 min'},
+        {'title': 'Reading Comprehension Advanced', 'type': 'Verbal', 'difficulty': 'Hard', 'time': '20 min'},
+    ]
+
+    return render(request, 'practice_dashboard.html', {
+        'stats': stats,
+        'categories': categories,
+        'recent_challenges': recent_challenges
+    })
+
 def daily_challenges(request):
     # This page will show the detailed daily challenges
     daily_questions = [

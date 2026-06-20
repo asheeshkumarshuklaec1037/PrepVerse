@@ -5,21 +5,36 @@
 
 {% block extra_css %}
 <style>
-    body { background: #050505; }
+    body { 
+        background: linear-gradient(135deg, #0f0518 0%, #1a0b2e 100%);
+        background-attachment: fixed;
+    }
     main { padding-top: 100px; }
 
-    /* Background Glows */
+    /* Background Glows (Purple Theme) */
     .glow {
         position: fixed;
-        width: 500px; height: 500px;
-        background: radial-gradient(circle, rgba(42, 245, 152, 0.08) 0%, transparent 70%);
+        width: 600px; height: 600px;
+        border-radius: 50%;
         z-index: -1;
-        filter: blur(50px);
+        filter: blur(80px);
         opacity: 0;
         animation: pageFadeIn 1.5s ease-out forwards;
     }
-    .glow-1 { top: -100px; right: -100px; }
-    .glow-2 { bottom: -100px; left: -100px; background: radial-gradient(circle, rgba(102, 126, 234, 0.08) 0%, transparent 70%); animation-delay: 0.5s; }
+    .glow-1 { 
+        top: -100px; right: -100px; 
+        background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%); 
+    }
+    .glow-2 { 
+        bottom: -100px; left: -100px; 
+        background: radial-gradient(circle, rgba(255, 0, 128, 0.15) 0%, transparent 70%); 
+        animation-delay: 0.5s; 
+    }
+    .glow-3 {
+        top: 40%; left: 30%;
+        background: radial-gradient(circle, rgba(65, 88, 208, 0.1) 0%, transparent 70%);
+        animation-delay: 1s;
+    }
 
     @keyframes pageFadeIn {
         from { opacity: 0; transform: translateY(20px); }
@@ -58,12 +73,62 @@
 
     /* Container */
     .container {
-        max-width: 900px;
+        max-width: 1000px;
         margin: 25px auto;
         padding: 0 20px;
         opacity: 0;
         animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
     }
+
+    /* Study Materials Section */
+    .materials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+    .material-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        color: #fff;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    .material-card:hover {
+        background: rgba(42, 245, 152, 0.05);
+        border-color: rgba(42, 245, 152, 0.2);
+        transform: translateY(-5px);
+    }
+    .m-icon {
+        width: 50px; height: 50px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; color: #009efd;
+    }
+    .material-card:hover .m-icon { background: #009efd; color: #fff; }
+    
+    /* Alternate color for second card */
+    .material-card:nth-child(2) .m-icon { color: #ff6b6b; }
+    .material-card:nth-child(2):hover { background: rgba(255, 107, 107, 0.05); border-color: rgba(255, 107, 107, 0.2); }
+    .material-card:nth-child(2):hover .m-icon { background: #ff6b6b; color: #fff; }
+
+    .m-info h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 5px; }
+    .m-info p { font-size: 0.75rem; opacity: 0.5; display: flex; gap: 10px; }
+    .m-download { margin-left: auto; color: rgba(255,255,255,0.3); transition: 0.3s; }
+    .material-card:hover .m-download { color: #fff; transform: translateY(3px); }
+
+    .section-title {
+        font-size: 1.2rem; font-weight: 800; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; color: #fff;
+    }
+    .section-title i { color: #2af598; }
 
     /* Modern Glass Question Card */
     .question-card {

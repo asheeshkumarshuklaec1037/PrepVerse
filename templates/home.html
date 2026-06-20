@@ -80,7 +80,7 @@
         top: 0; left: 0; width: 100%; height: 100%;
         /* Soft vignette effect to blend edges smoothly */
         background: radial-gradient(ellipse at center, transparent 50%, rgba(5,5,5,0.7) 100%),
-                    linear-gradient(to bottom, rgba(5,5,5,0.9) 0%, transparent 10%, transparent 90%, rgba(5,5,5,0.9) 100%);
+                    linear-gradient(to bottom, rgba(5,5,5,0.95) 0%, transparent 10%, transparent 90%, rgba(5,5,5,0.95) 100%);
         box-shadow: inset 0 0 40px 10px rgba(5,5,5,0.5);
         z-index: 3;
         pointer-events: none;
@@ -411,12 +411,212 @@
     .s-dot.active { width: 20px; background: #2af598; border-radius: 10px; }
     .s-count { font-size: 0.85rem; opacity: 0.4; margin-left: auto; }
 
-    @media (max-width: 1024px) {
-        .daily-spark-section { grid-template-columns: 1fr; gap: 50px; text-align: center; }
-        .spark-content p { margin-left: auto; margin-right: auto; }
-        .spark-stats { justify-content: center; }
-        .spark-content .refreshes { justify-content: center; }
-        .spark-slider-container { max-width: 500px; margin: 0 auto; }
+    /* Learning Path Section */
+    .learning-path-section {
+        max-width: 1400px;
+        margin: 100px auto 150px;
+        padding: 80px 5%;
+        opacity: 0;
+        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.6s;
+        position: relative;
+        background: rgba(255, 255, 255, 0.01);
+        border-radius: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        overflow: hidden;
+    }
+
+    /* Subtle Dot Pattern Background */
+    .learning-path-section::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 30px 30px;
+        opacity: 0.3;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* Soft Glow behind the section */
+    .learning-path-section::before {
+        content: "";
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 60%; height: 60%;
+        background: radial-gradient(circle, rgba(42, 245, 152, 0.05) 0%, transparent 70%);
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        filter: blur(50px);
+        pointer-events: none;
+    }
+
+    .section-heading, .path-grid {
+        position: relative;
+        z-index: 2;
+    }
+
+    .section-heading {
+        text-align: center;
+        margin-bottom: 70px;
+    }
+    .section-heading h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 15px;
+    }
+    .section-heading p {
+        font-size: 1.1rem;
+        opacity: 0.6;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    .path-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        position: relative;
+    }
+    /* Connecting Line */
+    .path-grid::before {
+        content: "";
+        position: absolute;
+        top: 60px; /* Align with center of the icon */
+        left: 10%;
+        width: 80%;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(42, 245, 152, 0) 0%, rgba(42, 245, 152, 0.3) 50%, rgba(42, 245, 152, 0) 100%);
+        z-index: 1;
+    }
+
+    .path-step {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 30px;
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        backdrop-filter: blur(20px);
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .path-step:hover {
+        transform: translateY(-10px);
+        background: rgba(42, 245, 152, 0.03);
+        border-color: rgba(42, 245, 152, 0.2);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .step-number {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+        font-size: 4rem;
+        font-weight: 900;
+        color: rgba(255,255,255,0.03);
+        line-height: 1;
+        transition: 0.4s;
+    }
+    .path-step:hover .step-number {
+        color: rgba(42, 245, 152, 0.1);
+    }
+
+    .step-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 30px;
+        background: #050505;
+        border: 2px solid rgba(42, 245, 152, 0.2);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #2af598;
+        box-shadow: 0 0 30px rgba(42, 245, 152, 0.1);
+        transition: 0.4s;
+    }
+    .path-step:hover .step-icon {
+        background: #2af598;
+        color: #000;
+        box-shadow: 0 0 40px rgba(42, 245, 152, 0.3);
+        transform: scale(1.1);
+    }
+
+    .path-step h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+    .path-step p {
+        font-size: 0.95rem;
+        opacity: 0.6;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Testimonials Section */
+    .testimonials-section {
+        max-width: 1400px;
+        margin: 0 auto 150px;
+        padding: 0 5%;
+        opacity: 0;
+        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.8s;
+    }
+    .testimonial-slider {
+        padding: 40px 0 80px;
+        overflow: hidden;
+    }
+    .testimonial-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 30px;
+        padding: 40px;
+        backdrop-filter: blur(20px);
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: auto;
+    }
+    .testimonial-card:hover {
+        transform: translateY(-10px);
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .t-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    .t-avatar {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(42, 245, 152, 0.2), rgba(0, 158, 253, 0.2));
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; font-weight: 800; color: #fff;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .t-info h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
+    .t-info p { font-size: 0.85rem; color: #2af598; margin: 0; font-weight: 600; opacity: 1; }
+    
+    .t-body { position: relative; }
+    .t-body i { font-size: 1.5rem; color: rgba(255,255,255,0.1); position: absolute; top: -10px; left: -10px; }
+    .t-body p { font-size: 1rem; line-height: 1.7; opacity: 0.7; position: relative; z-index: 2; padding-left: 15px; font-style: italic; }
+
+    .t-pagination {
+        display: flex; justify-content: center; gap: 8px; margin-top: 20px;
+    }
+
+    @media (max-width: 1200px) {
+        .path-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        .path-grid::before { display: none; } /* Hide line on smaller screens */
+    }
+    @media (max-width: 600px) {
+        .path-grid { grid-template-columns: 1fr; }
     }
 </style>
 {% endblock %}
@@ -518,6 +718,125 @@
         </div>
     </div>
 </section>
+
+<!-- Learning Path Section -->
+<section class="learning-path-section">
+    <div class="section-heading">
+        <h2>Your Journey to Placement</h2>
+        <p>A proven, structured roadmap designed by industry experts to take you from a beginner to a top-tier candidate.</p>
+    </div>
+
+    <div class="path-grid">
+        <div class="path-step">
+            <div class="step-number">1</div>
+            <div class="step-icon"><i class="fas fa-book-reader"></i></div>
+            <h3>Learn Concepts</h3>
+            <p>Dive deep into our curated study materials, cheat sheets, and video lectures to build a strong foundation.</p>
+        </div>
+
+        <div class="path-step">
+            <div class="step-number">2</div>
+            <div class="step-icon"><i class="fas fa-dumbbell"></i></div>
+            <h3>Practice Daily</h3>
+            <p>Solve targeted module-wise questions and maintain your Daily Spark streak to sharpen your problem-solving skills.</p>
+        </div>
+
+        <div class="path-step">
+            <div class="step-number">3</div>
+            <div class="step-icon"><i class="fas fa-laptop-code"></i></div>
+            <h3>Assess Yourself</h3>
+            <p>Take full-length, company-specific mock tests in a simulated environment to identify and work on your weak areas.</p>
+        </div>
+
+        <div class="path-step">
+            <div class="step-number">4</div>
+            <div class="step-icon"><i class="fas fa-trophy"></i></div>
+            <h3>Conquer Interviews</h3>
+            <p>Walk into your campus placements with confidence, armed with the right knowledge and extensive practice.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+    <div class="section-heading">
+        <h2>Wall of Love</h2>
+        <p>See what our successful candidates have to say about their journey with PrepVerse.</p>
+    </div>
+
+    <div class="testimonial-slider swiper">
+        <div class="swiper-wrapper">
+            <!-- Testimonial 1 -->
+            <div class="swiper-slide">
+                <div class="testimonial-card">
+                    <div class="t-header">
+                        <div class="t-avatar">AS</div>
+                        <div class="t-info">
+                            <h4>Amit Sharma</h4>
+                            <p>Placed at Amazon</p>
+                        </div>
+                    </div>
+                    <div class="t-body">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"The Daily Spark feature is a game-changer. Practicing just 5 questions every day kept me consistent, and the detailed explanations helped me clear the Amazon OA."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial 2 -->
+            <div class="swiper-slide">
+                <div class="testimonial-card">
+                    <div class="t-header">
+                        <div class="t-avatar" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(252, 203, 144, 0.2));">PR</div>
+                        <div class="t-info">
+                            <h4>Priya Reddy</h4>
+                            <p>Placed at TCS Digital</p>
+                        </div>
+                    </div>
+                    <div class="t-body">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"I was really weak in Quantitative Aptitude. The structured modules and practice sets on PrepVerse helped me build my logic from scratch. Highly recommended!"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="swiper-slide">
+                <div class="testimonial-card">
+                    <div class="t-header">
+                        <div class="t-avatar" style="background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(65, 88, 208, 0.2));">VK</div>
+                        <div class="t-info">
+                            <h4>Vikas Kumar</h4>
+                            <p>Placed at Infosys</p>
+                        </div>
+                    </div>
+                    <div class="t-body">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"The UI is just so premium and distraction-free! It doesn't feel like studying. The curated cheat sheets and video explanations are top-notch."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 4 -->
+            <div class="swiper-slide">
+                <div class="testimonial-card">
+                    <div class="t-header">
+                        <div class="t-avatar" style="background: linear-gradient(135deg, rgba(42, 245, 152, 0.2), rgba(0, 158, 253, 0.2));">SM</div>
+                        <div class="t-info">
+                            <h4>Sneha Mishra</h4>
+                            <p>Placed at Cognizant</p>
+                        </div>
+                    </div>
+                    <div class="t-body">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"I followed the 4-step journey exactly as laid out here. From learning concepts to giving mocks, PrepVerse was my only companion for campus placements."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="t-pagination"></div>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
@@ -617,6 +936,29 @@
                 slideChange: function() {
                     $('.s-count').text((this.activeIndex + 1) + '/' + this.slides.length);
                 }
+            }
+        });
+
+        // Testimonial Slider
+        var testimonialSwiper = new Swiper('.testimonial-slider', {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.t-pagination',
+                clickable: true,
+                renderBullet: function (index, className) {
+                    return '<span class="' + className + ' s-dot"></span>';
+                },
+                bulletActiveClass: 'active'
+            },
+            breakpoints: {
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 }
             }
         });
     });

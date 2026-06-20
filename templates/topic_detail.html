@@ -179,6 +179,59 @@
     .sets-container {
         overflow: hidden;
     }
+    
+    /* Study Materials (Inside Accordion) */
+    .materials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        padding: 15px 0 25px 55px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        margin-bottom: 15px;
+    }
+    .material-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        color: #fff;
+        transition: 0.3s;
+    }
+    .material-card:hover {
+        background: rgba(42, 245, 152, 0.05);
+        border-color: rgba(42, 245, 152, 0.2);
+        transform: translateY(-3px);
+    }
+    .m-icon {
+        width: 40px; height: 40px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; color: #009efd;
+    }
+    .material-card:hover .m-icon { background: #009efd; color: #fff; }
+    
+    .m-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; }
+    .m-info p { font-size: 0.7rem; opacity: 0.5; display: flex; gap: 10px; }
+    .m-download { margin-left: auto; color: rgba(255,255,255,0.3); transition: 0.3s; font-size: 0.9rem; }
+    .material-card:hover .m-download { color: #fff; transform: translateY(2px); }
+
+    .inner-section-title {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        color: rgba(255,255,255,0.4);
+        padding-left: 55px;
+        margin-top: 20px;
+        margin-bottom: -5px;
+    }
+
+    /* Practice Sets Grid */
     .sets-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -288,6 +341,28 @@
                 </button>
                 <div class="sets-wrapper">
                     <div class="sets-container">
+                        <!-- Study Materials (Inside Accordion) -->
+                        <div class="inner-section-title">Study Materials</div>
+                        <div class="materials-grid">
+                            <a href="#" class="material-card" onclick="openViewer('{{ sub }} Notes', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 'pdf'); return false;">
+                                <div class="m-icon"><i class="fas fa-file-pdf"></i></div>
+                                <div class="m-info">
+                                    <h4>{{ sub }} Notes</h4>
+                                    <p><span><i class="fas fa-file-alt"></i> PDF</span> <span><i class="fas fa-eye"></i> View</span></p>
+                                </div>
+                                <div class="m-download"><i class="fas fa-external-link-alt"></i></div>
+                            </a>
+                            <a href="#" class="material-card" onclick="openViewer('Formula Sheet', 'https://calibre-ebook.com/downloads/demos/demo.docx', 'doc'); return false;">
+                                <div class="m-icon" style="color: #fccb90;"><i class="fas fa-file-word"></i></div>
+                                <div class="m-info">
+                                    <h4>Formula Sheet</h4>
+                                    <p><span><i class="fas fa-file-alt"></i> DOCX</span> <span><i class="fas fa-eye"></i> View</span></p>
+                                </div>
+                                <div class="m-download"><i class="fas fa-external-link-alt"></i></div>
+                            </a>
+                        </div>
+                        
+                        <div class="inner-section-title" style="margin-top: 5px;">Practice Sets</div>
                         <div class="sets-grid">
                             <a href="{% url 'module_detail' course.id topic.id sub %}?set=1" class="set-link">
                                 <div class="set-top">
@@ -357,6 +432,124 @@
     </div>
 </section>
 
+<!-- Universal Document Viewer Modal -->
+<div class="viewer-modal" id="viewerModal">
+    <div class="viewer-overlay" onclick="closeViewer()"></div>
+    <div class="viewer-content">
+        <div class="viewer-header">
+            <div class="v-title">
+                <i class="fas fa-file-alt" id="vIcon"></i>
+                <span id="vTitle">Document Viewer</span>
+            </div>
+            <div class="v-actions">
+                <a href="#" id="vDownload" download class="v-btn"><i class="fas fa-download"></i> Download</a>
+                <button class="v-btn close" onclick="closeViewer()"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="viewer-body" id="viewerBody">
+            <!-- Content will be injected here via JS -->
+            <div class="loader"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Viewer Modal Styles */
+    .viewer-modal {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .viewer-modal.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .viewer-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+    }
+    .viewer-content {
+        position: relative;
+        width: 90%;
+        max-width: 1200px;
+        height: 85vh;
+        background: rgba(20, 20, 20, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transform: translateY(50px) scale(0.95);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+    .viewer-modal.active .viewer-content {
+        transform: translateY(0) scale(1);
+    }
+    .viewer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        background: rgba(0, 0, 0, 0.5);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .v-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.1rem; }
+    .v-title i { color: #2af598; }
+    .v-actions { display: flex; gap: 15px; }
+    .v-btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex; align-items: center; gap: 8px;
+        transition: 0.3s;
+    }
+    .v-btn:hover { background: rgba(255,255,255,0.1); }
+    .v-btn.close:hover { background: #ff4757; border-color: #ff4757; color: #fff; }
+    
+    .viewer-body {
+        flex-grow: 1;
+        position: relative;
+        background: #111; /* Default dark background */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .viewer-body.doc-mode { background: #fff; } /* White background only for docs */
+    
+    .viewer-body iframe, .viewer-body embed, .viewer-body video {
+        width: 100%;
+        height: 100%;
+        border: none;
+        position: relative;
+        z-index: 2;
+    }
+    .loader {
+        color: rgba(255,255,255,0.5);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: absolute;
+        z-index: 1;
+    }
+    .viewer-body.doc-mode .loader { color: #000; }
+</style>
+
 <style>
     .topic-tile:hover {
         transform: translateY(-10px) scale(1.02);
@@ -390,6 +583,54 @@
             btn.classList.add('active');
             wrapper.classList.add('open');
         }
+    }
+
+    // Universal Document Viewer Logic
+    function openViewer(title, url, type) {
+        const modal = document.getElementById('viewerModal');
+        const vTitle = document.getElementById('vTitle');
+        const vIcon = document.getElementById('vIcon');
+        const vDownload = document.getElementById('vDownload');
+        const vBody = document.getElementById('viewerBody');
+        
+        // Set metadata
+        vTitle.textContent = title;
+        vDownload.href = url;
+        vBody.innerHTML = '<div class="loader"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>';
+        
+        // Reset classes
+        vBody.classList.remove('doc-mode');
+        vIcon.className = '';
+
+        if (type === 'pdf') {
+            vIcon.className = 'fas fa-file-pdf';
+            vBody.innerHTML += `<embed src="${url}" type="application/pdf" />`;
+        } else if (type === 'doc') {
+            vIcon.className = 'fas fa-file-word';
+            vBody.classList.add('doc-mode');
+            // Using Google Docs Viewer for Office documents
+            const gViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+            vBody.innerHTML += `<iframe src="${gViewerUrl}"></iframe>`;
+        } else if (type === 'video') {
+            vIcon.className = 'fas fa-play-circle';
+            vBody.innerHTML += `<video controls autoplay name="media"><source src="${url}" type="video/mp4"></video>`;
+        }
+
+        // Show modal
+        modal.classList.add('active');
+    }
+
+    function closeViewer() {
+        const modal = document.getElementById('viewerModal');
+        const vBody = document.getElementById('viewerBody');
+        
+        // Hide modal
+        modal.classList.remove('active');
+        
+        // Clear content to stop video playback or iframe loading
+        setTimeout(() => {
+            vBody.innerHTML = '';
+        }, 400); // Wait for transition to finish
     }
 </script>
 {% endblock %}
