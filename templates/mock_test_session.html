@@ -880,9 +880,10 @@
 {% endblock %}
 
 {% block extra_js %}
+{{ questions|json_script:"questions-data-json" }}
 <script>
     // Load question data parsed from views
-    const questions = {{ questions_json|safe }};
+    const questions = JSON.parse(document.getElementById('questions-data-json').textContent);
     
     // User Session states
     let currentIdx = 0;
@@ -890,7 +891,7 @@
     const states = new Array(questions.length).fill('unvisited'); // unvisited, visited, answered, marked
     
     // Timer details
-    let timeLeft = {{ duration_seconds }};
+    let timeLeft = parseInt("{{ duration_seconds }}");
     const timerText = document.getElementById("timerText");
     const timerBox = document.getElementById("timerBox");
 

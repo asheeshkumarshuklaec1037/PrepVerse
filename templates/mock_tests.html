@@ -52,6 +52,7 @@
         margin-bottom: 15px;
         background: linear-gradient(90deg, #fff, #2af598);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
     .hero p {
@@ -793,6 +794,7 @@
     .instruction-header h3 span {
         background: linear-gradient(90deg, #fff, #2af598);
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
     
@@ -1154,8 +1156,9 @@
 {% endblock %}
 
 {% block extra_js %}
+{{ subjects|json_script:"subjects-data-json" }}
 <script>
-    const subjectsData = {{ subjects_json|safe }};
+    const subjectsData = JSON.parse(document.getElementById('subjects-data-json').textContent);
     let currentSelectedConfig = {};
  
     function toggleModeAccordion(modeNum) {
