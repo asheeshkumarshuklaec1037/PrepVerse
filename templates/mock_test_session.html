@@ -10,9 +10,17 @@
         overflow: hidden;
         height: 100vh;
         font-family: 'Poppins', sans-serif;
+        padding-left: 0 !important;
     }
     main { padding-top: 0 !important; }
     .navbar { display: none !important; }
+
+    /* Hide sidebar and launcher during active test session */
+    .sidebar-menu,
+    .sidebar-launcher,
+    .sidebar-overlay {
+        display: none !important;
+    }
 
     /* Theme variables same as Mock page */
     :root {

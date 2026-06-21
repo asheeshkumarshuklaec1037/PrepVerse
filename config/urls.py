@@ -16,17 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import home, course_detail, topic_detail, module_detail, login_view, signup_view, daily_challenges, courses_view, practice_view, mock_tests_view, start_test_session_view, blog_view
+from .views import home, course_detail, topic_detail, module_detail, login_view, signup_view, logout_view, daily_challenges, courses_view, practice_view, mock_tests_view, start_test_session_view, blog_view, dashboard_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
+    path('dashboard/', dashboard_view, name='dashboard'),
     path('courses/', courses_view, name='courses'),
     path('practice/', practice_view, name='practice'),
     path('mock-test/', mock_tests_view, name='mock_test'),
     path('mock-test/start/', start_test_session_view, name='start_test_session'),
     path('login/', login_view, name='login'),
     path('signup/', signup_view, name='signup'),
+    path('logout/', logout_view, name='logout'),
     path('course/<int:course_id>/', course_detail, name='course_detail'),
     path('course/<int:course_id>/topic/<int:topic_id>/', topic_detail, name='topic_detail'),
     path('course/<int:course_id>/topic/<int:topic_id>/module/<str:module_name>/', module_detail, name='module_detail'),

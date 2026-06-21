@@ -1,0 +1,2187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Practice Arena & Dashboard | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    body {
+        background: #030307 !important;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0),
+            radial-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 0);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+        color: #ffffff !important;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Background Glow Effects */
+    .dash-glow {
+        position: fixed;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        z-index: -1;
+        filter: blur(140px);
+        opacity: 0.12;
+        pointer-events: none;
+        animation: pulseGlow 20s infinite alternate;
+    }
+    .dash-glow-1 { top: -150px; right: 10%; background: radial-gradient(circle, #8b5cf6 0%, transparent 70%); }
+    .dash-glow-2 { bottom: -150px; left: 10%; background: radial-gradient(circle, #00f2fe 0%, transparent 70%); animation-delay: 6s; }
+    .dash-glow-3 { top: 35%; left: 35%; background: radial-gradient(circle, #ff0844 0%, transparent 70%); animation-delay: 12s; }
+
+    @keyframes pulseGlow {
+        0% { transform: scale(1) translate(0, 0); opacity: 0.12; }
+        50% { transform: scale(1.15) translate(40px, -30px); opacity: 0.18; }
+        100% { transform: scale(0.9) translate(-30px, 40px); opacity: 0.08; }
+    }
+
+    /* Layout Container */
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 4% 80px;
+        opacity: 0;
+        animation: dashFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes dashFadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Premium Glass Panels */
+    .glass-panel {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.005) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 24px;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-panel:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+        transform: translateY(-4px);
+    }
+
+    /* Top Greeting & Streak Section */
+    .hero-grid {
+        display: grid;
+        grid-template-columns: 1.85fr 1.15fr;
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    /* Interactive Greeting Card */
+    .greeting-card {
+        padding: 35px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: background-image 0.8s ease-in-out;
+    }
+
+    .greeting-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.1) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .greeting-card::after {
+        content: "";
+        position: absolute;
+        width: 150px; height: 150px;
+        background: linear-gradient(135deg, #00f2fe, #4facfe);
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.15;
+        top: -45px; right: -45px;
+        pointer-events: none;
+    }
+
+    .greeting-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(139, 92, 246, 0.12);
+        border: 1px solid rgba(139, 92, 246, 0.22);
+        color: #c084fc;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        align-self: flex-start;
+        margin-bottom: 18px;
+    }
+
+    .greeting-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.4rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        line-height: 1.25;
+        background: linear-gradient(90deg, #ffffff 40%, rgba(255, 255, 255, 0.75));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .greeting-desc {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.55);
+        line-height: 1.6;
+        margin-bottom: 25px;
+        max-width: 92%;
+    }
+
+    /* Daily Quest Checklists inside Greeting Card */
+    .quest-box {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 25px;
+        margin-top: auto;
+    }
+
+    .quest-list-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 12px;
+    }
+
+    .quest-checklist {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .quest-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.82rem;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+    }
+    
+    .quest-item:hover {
+        color: #ffffff;
+    }
+
+    .quest-item input {
+        display: none;
+    }
+
+    .quest-checkbox {
+        width: 18px; height: 18px;
+        border-radius: 6px;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        flex-shrink: 0;
+    }
+
+    .quest-item input:checked + .quest-checkbox {
+        border-color: #2af598;
+        background: rgba(42, 245, 152, 0.1);
+        color: #2af598;
+    }
+
+    .quest-checkbox i {
+        font-size: 0.68rem;
+        transform: scale(0);
+        transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .quest-item input:checked + .quest-checkbox i {
+        transform: scale(1);
+    }
+
+    .quest-item.checked span {
+        text-decoration: line-through;
+        color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* Quest Progress Circle widget */
+    .quest-progress-widget {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-left: 1px solid rgba(255, 255, 255, 0.06);
+        padding-left: 25px;
+    }
+
+    .progress-circle-container {
+        position: relative;
+        width: 80px; height: 80px;
+    }
+
+    .progress-svg {
+        transform: rotate(-90deg);
+        width: 80px; height: 80px;
+    }
+
+    .progress-bg-circle {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.04);
+        stroke-width: 6;
+    }
+
+    .progress-bar-circle {
+        fill: none;
+        stroke: url(#progressGradient);
+        stroke-width: 6;
+        stroke-dasharray: 226;
+        stroke-dashoffset: 226;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-percentage {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #ffffff;
+        text-align: center;
+        line-height: 1.1;
+    }
+    
+    .progress-percentage span {
+        font-size: 0.6rem;
+        display: block;
+        color: rgba(255, 255, 255, 0.4);
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+
+    .quest-xp-earned {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #2af598;
+        margin-top: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+        min-height: 15px;
+        transition: opacity 0.3s;
+    }
+
+    /* Streak Card Redesign */
+    .streak-card {
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .streak-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at 15% 85%, rgba(255, 8, 68, 0.08) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .streak-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .streak-badge {
+        background: rgba(255, 8, 68, 0.12);
+        border: 1px solid rgba(255, 8, 68, 0.22);
+        color: #ff4757;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 6px 14px;
+        border-radius: 20px;
+        letter-spacing: 0.8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    @keyframes flamePulse {
+        0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255, 71, 87, 0.5)); }
+        100% { transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(255, 71, 87, 0.8)); }
+    }
+
+    .streak-badge i {
+        animation: flamePulse 1.2s infinite alternate ease-in-out;
+    }
+
+    .streak-days-display {
+        margin: 20px 0;
+    }
+
+    .streak-count {
+        font-family: 'Outfit', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1;
+        color: #ffffff;
+        margin-bottom: 5px;
+    }
+
+    .streak-count span {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.4);
+        margin-left: 5px;
+    }
+
+    /* Week streak checkpoints visual */
+    .streak-week {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .streak-day-dot {
+        flex: 1;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 12px 4px;
+        border-radius: 14px;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .streak-day-dot.active {
+        background: rgba(255, 8, 68, 0.12);
+        border-color: rgba(255, 8, 68, 0.35);
+        box-shadow: 0 4px 15px rgba(255, 8, 68, 0.15);
+    }
+
+    .streak-day-dot i {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.15);
+        transition: all 0.3s;
+    }
+
+    .streak-day-dot.active i {
+        color: #ff4757;
+    }
+
+    .streak-day-label {
+        font-size: 0.68rem;
+        color: rgba(255, 255, 255, 0.4);
+        display: block;
+        margin-top: 6px;
+        font-weight: 700;
+    }
+
+    .streak-day-dot.active .streak-day-label {
+        color: #ff4757;
+    }
+
+    /* Stats Grid */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .stat-box {
+        padding: 22px 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .stat-icon-wrapper {
+        width: 50px; height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .stat-value {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: #ffffff;
+        line-height: 1.2;
+        margin-bottom: 2px;
+    }
+
+    .stat-label {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.45);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        font-weight: 700;
+    }
+
+    /* Layout Columns Split */
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1.95fr 1.05fr;
+        gap: 35px;
+    }
+
+    .dashboard-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .dashboard-title i {
+        color: #2af598;
+        font-size: 1.1rem;
+    }
+
+    /* Quick Action Hub box */
+    .quick-actions-box {
+        margin-bottom: 40px;
+    }
+
+    .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+
+    .action-btn {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 18px;
+        border-radius: 16px;
+        text-align: center;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.75);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #ffffff;
+        transform: translateY(-3px);
+    }
+
+    .action-btn i {
+        font-size: 1.25rem;
+        color: #2af598;
+        transition: transform 0.3s;
+    }
+
+    .action-btn:hover i {
+        transform: scale(1.15);
+    }
+
+    /* Practice by category grid */
+    .categories-box {
+        margin-bottom: 40px;
+    }
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .category-card {
+        padding: 24px;
+        text-decoration: none;
+        color: #ffffff;
+        display: block;
+    }
+
+    .category-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 22px;
+    }
+
+    .category-details {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .category-icon {
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .category-info h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+
+    .category-info p {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin: 0;
+    }
+
+    .category-play-btn {
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.75rem;
+        transition: all 0.3s;
+    }
+
+    .category-card:hover .category-play-btn {
+        background: #ffffff;
+        color: #030307;
+        transform: rotate(360deg) scale(1.05);
+    }
+
+    .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 6px;
+    }
+
+    .progress-bar {
+        width: 100%; height: 5px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Recent challenges list */
+    .recent-box {
+        margin-bottom: 40px;
+    }
+
+    .recent-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .recent-card {
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+    .recent-card:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.12);
+        transform: translateX(5px) translateY(0);
+    }
+
+    .recent-meta-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .recent-tag {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+    }
+    .tag-quant { background: rgba(252, 203, 144, 0.1); color: #fccb90; }
+    .tag-logic { background: rgba(42, 245, 152, 0.1); color: #2af598; }
+    .tag-verbal { background: rgba(255, 154, 158, 0.1); color: #ff9a9e; }
+    .tag-data { background: rgba(0, 158, 253, 0.1); color: #009efd; }
+
+    .recent-card h5 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .recent-meta-right {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .recent-difficulty {
+        font-size: 0.72rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: rgba(255, 255, 255, 0.45);
+        font-weight: 600;
+    }
+
+    .difficulty-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+    }
+    .diff-easy { background: #10b981; }
+    .diff-medium { background: #fccb90; }
+    .diff-hard { background: #ef4444; }
+
+    .recent-card-arrow {
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.75rem;
+        transition: all 0.3s;
+    }
+
+    .recent-card:hover .recent-card-arrow {
+        background: #2af598;
+        color: #030307;
+    }
+
+    /* Right column widgets styling */
+    .widget-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .dashboard-widget-card {
+        padding: 24px;
+    }
+
+    .widget-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .widget-header i {
+        color: #2af598;
+        font-size: 1rem;
+    }
+
+    /* Tips Box */
+    .tip-content-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 15px;
+        min-height: 100px;
+        display: flex;
+        align-items: center;
+    }
+
+    #studyTipText {
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.7);
+        font-style: italic;
+        margin: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .tip-rotate-btn {
+        background: none;
+        border: none;
+        color: #2af598;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 0;
+        transition: all 0.2s;
+    }
+    
+    .tip-rotate-btn:hover {
+        color: #ffffff;
+    }
+
+    /* Leaderboard rank list */
+    .leaderboard-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .leader-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.01);
+        border: 1px solid rgba(255,255,255,0.02);
+        transition: all 0.3s;
+    }
+
+    .leader-row:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .leader-row.gold { border-left: 3px solid #ffd700; }
+    .leader-row.silver { border-left: 3px solid #c0c0c0; }
+    .leader-row.bronze { border-left: 3px solid #cd7f32; }
+
+    .leader-row.user-row {
+        background: rgba(42, 245, 152, 0.06);
+        border: 1px solid rgba(42, 245, 152, 0.22);
+        box-shadow: 0 4px 20px rgba(42, 245, 152, 0.05);
+    }
+
+    .leader-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .leader-rank {
+        font-size: 0.75rem;
+        font-weight: 800;
+        width: 16px;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .leader-row.gold .leader-rank { color: #ffd700; }
+    .leader-row.silver .leader-rank { color: #c0c0c0; }
+    .leader-row.bronze .leader-rank { color: #cd7f32; }
+
+    .leader-avatar {
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .leader-row.user-row .leader-avatar {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    }
+
+    .leader-name {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .leader-score {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .leader-row.user-row .leader-score {
+        color: #2af598;
+    }
+
+    /* Placement tracker drives timeline list */
+    .company-tracker-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .company-tracker-item {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-left: 3px solid #2af598;
+        padding: 14px 16px;
+        border-radius: 0 16px 16px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s;
+    }
+    
+    .company-tracker-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.07);
+        border-left-width: 5px;
+    }
+
+    .company-tracker-item.amazon { border-left-color: #ff9900; }
+    .company-tracker-item.tcs { border-left-color: #3b82f6; }
+    .company-tracker-item.accenture { border-left-color: #a855f7; }
+
+    .company-name {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 2px;
+    }
+
+    .company-desc {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .company-deadline {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #ff4757;
+        text-align: right;
+    }
+
+    /* Responsive Edits */
+    @media (max-width: 1100px) {
+        .main-grid { grid-template-columns: 1fr; gap: 40px; }
+        .hero-grid { grid-template-columns: 1fr; }
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 650px) {
+        .stats-row { grid-template-columns: 1fr; }
+        .categories-grid { grid-template-columns: 1fr; }
+        .quick-actions-grid { grid-template-columns: repeat(2, 1fr); }
+        .quest-box { grid-template-columns: 1fr; }
+        .quest-progress-widget { border-left: none; padding-left: 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+    }
+
+    /* Compact stats layout updates */
+    .stat-box {
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+    .stat-meta-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .stat-sparkline {
+        width: 60px;
+        height: 30px;
+        opacity: 0.8;
+    }
+    .action-btn-vertical {
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .action-btn-vertical:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.25) !important;
+    }
+    /* Subject mastery styling */
+    .subject-mastery-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    .subject-mastery-card {
+        padding: 24px;
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .subject-mastery-card:hover {
+        transform: translateY(-4px);
+    }
+    .subject-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .subject-icon-wrapper {
+        width: 42px; height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+    .subject-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+    .subject-questions {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.4);
+    }
+    .subject-resume-btn {
+        transition: all 0.2s;
+    }
+    .subject-mastery-card:hover .subject-resume-btn {
+        background: #ffffff !important;
+        color: #030307 !important;
+        border-color: #ffffff !important;
+    }
+    @media (max-width: 650px) {
+        .subject-mastery-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Spark Option Styles */
+    .spark-option input[type="radio"] {
+        display: none;
+    }
+    .spark-option {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.01);
+        transition: all 0.2s ease;
+    }
+    .spark-option:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+    .spark-option.selected {
+        background: rgba(42, 245, 152, 0.08);
+        border-color: rgba(42, 245, 152, 0.35);
+        box-shadow: 0 0 10px rgba(42, 245, 152, 0.1);
+    }
+    .spark-option.correct {
+        background: rgba(42, 245, 152, 0.15) !important;
+        border-color: #2af598 !important;
+        color: #2af598 !important;
+    }
+    .spark-option.incorrect {
+        background: rgba(239, 68, 68, 0.15) !important;
+        border-color: #ef4444 !important;
+        color: #ef4444 !important;
+    }
+
+    /* 3D Flashcard Styles */
+    .flashcard-scene {
+        perspective: 1000px;
+    }
+    .flashcard-inner {
+        transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-style: preserve-3d;
+    }
+    .flashcard-inner.flipped {
+        transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+    }
+    
+    @media (max-width: 900px) {
+        .mastery-flashcard-grid { grid-template-columns: 1fr !important; }
+        .mastery-flashcard-grid > div:last-child { border-left: none !important; padding-left: 0 !important; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.06); }
+    }
+
+    /* XP Bubble Floating Animation */
+    @keyframes floatUpFade {
+        0% { transform: translateY(0) scale(0.8); opacity: 0; }
+        20% { opacity: 1; }
+        100% { transform: translateY(-50px) scale(1.1); opacity: 0; }
+    }
+    .xp-bubble {
+        position: absolute;
+        z-index: 10000;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 0.85rem;
+        color: #2af598;
+        text-shadow: 0 0 10px rgba(42, 245, 152, 0.6);
+        pointer-events: none;
+        animation: floatUpFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Confetti Particle Animation */
+    @keyframes particleExplode {
+        0% { transform: translate(0, 0) scale(1); opacity: 1; }
+        100% { transform: translate(var(--x), var(--y)) scale(0.3); opacity: 0; }
+    }
+    .confetti-particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10001;
+        animation: particleExplode 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+
+    /* Leaderboard transitions */
+    .leader-row {
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes rankGlow {
+        0% { transform: scale(1); box-shadow: 0 0 0 rgba(42, 245, 152, 0); }
+        50% { transform: scale(1.03); box-shadow: 0 0 15px rgba(42, 245, 152, 0.4); border-color: rgba(42, 245, 152, 0.5); }
+        100% { transform: scale(1); box-shadow: 0 0 0 rgba(42, 245, 152, 0); }
+    }
+    .rank-glow-active {
+        animation: rankGlow 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Background Glow Effects -->
+<div class="dash-glow dash-glow-1"></div>
+<div class="dash-glow dash-glow-2"></div>
+<div class="dash-glow dash-glow-3"></div>
+
+<div class="dashboard-container">
+    
+    <!-- Top Greeting & Streak Section -->
+    <div class="hero-grid">
+        <!-- Interactive Welcome Card -->
+        <div class="glass-panel greeting-card">
+            <div>
+                <span class="greeting-badge">
+                    <i class="fas fa-graduation-cap"></i> PrepVerse Candidate
+                </span>
+                <h1 class="greeting-title" id="dynamicGreeting">Namaste, {{ user.first_name }}! 👋</h1>
+                <p class="greeting-desc" id="dynamicGreetingSubtitle">Syncing your personal study goals... You are in the top 12% candidates list this week. Let's make it count today!</p>
+                
+                <!-- XP LEVEL PROGRESS BAR -->
+                <div class="xp-level-container" style="margin-top: 15px; margin-bottom: 5px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="level-badge" id="levelBadge" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: #fff; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; transition: all 0.3s;">Level 4</span>
+                            <span class="level-title" id="levelTitle" style="font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.8);">Formula Apprentice</span>
+                        </div>
+                        <span class="xp-ratio" id="xpRatio" style="font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 700; color: #2af598;">450 / 500 XP</span>
+                    </div>
+                    <div class="xp-progress-bar" style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; position: relative;">
+                        <div class="xp-progress-fill" id="xpProgressFill" style="width: 90%; height: 100%; background: linear-gradient(90deg, #8b5cf6, #2af598); border-radius: 10px; transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Daily Interactive Quests Checklist -->
+            <div class="quest-box">
+                <div>
+                    <div class="quest-list-title">Today's Spark Quests</div>
+                    <div class="quest-checklist">
+                        <label class="quest-item">
+                            <input type="checkbox" class="quest-checkbox-input" id="quest0" disabled>
+                            <div class="quest-checkbox"><i class="fas fa-lock" id="quest0Icon"></i></div>
+                            <span>Solve Daily Spark Challenge (+15 XP)</span>
+                        </label>
+                        <label class="quest-item">
+                            <input type="checkbox" class="quest-checkbox-input" id="quest1">
+                            <div class="quest-checkbox"><i class="fas fa-check"></i></div>
+                            <span>Read Conceptual Study Tip (+5 XP)</span>
+                        </label>
+                        <label class="quest-item">
+                            <input type="checkbox" class="quest-checkbox-input" id="quest2">
+                            <div class="quest-checkbox"><i class="fas fa-check"></i></div>
+                            <span>Take an active mock test (+15 XP)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Circular Quest Progress Ring -->
+                <div class="quest-progress-widget">
+                    <div class="progress-circle-container">
+                        <svg class="progress-svg">
+                            <defs>
+                                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#2af598" />
+                                    <stop offset="100%" stop-color="#009efd" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-bg-circle" cx="40" cy="40" r="36" />
+                            <circle class="progress-bar-circle" id="progressBarCircle" cx="40" cy="40" r="36" />
+                        </svg>
+                        <div class="progress-percentage" id="progressPercentageValue">
+                            0%
+                            <span>Goal</span>
+                        </div>
+                    </div>
+                    <div class="quest-xp-earned" id="questXpEarned">Complete quests to earn XP</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Streak Card -->
+        <div class="glass-panel streak-card">
+            <div class="streak-header">
+                <span class="streak-badge"><i class="fas fa-fire"></i> Active Streak</span>
+                <span style="font-size: 0.72rem; color: rgba(255, 255, 255, 0.4); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Milestones</span>
+            </div>
+            
+            <div class="streak-days-display">
+                <div class="streak-count" id="streakCounterDisplay">{{ stats.current_streak }} <span>Days Streak</span></div>
+            </div>
+
+            <!-- Weekly Checkpoints -->
+            <div class="streak-week">
+                <div class="streak-day-dot active">
+                    <i class="fas fa-circle-check"></i>
+                    <span class="streak-day-label">M</span>
+                </div>
+                <div class="streak-day-dot active">
+                    <i class="fas fa-circle-check"></i>
+                    <span class="streak-day-label">T</span>
+                </div>
+                <div class="streak-day-dot active">
+                    <i class="fas fa-circle-check"></i>
+                    <span class="streak-day-label">W</span>
+                </div>
+                <div class="streak-day-dot active">
+                    <i class="fas fa-circle-check"></i>
+                    <span class="streak-day-label">T</span>
+                </div>
+                <div class="streak-day-dot active">
+                    <i class="fas fa-circle-check"></i>
+                    <span class="streak-day-label">F</span>
+                </div>
+                <div class="streak-day-dot active">
+                    <i class="fas fa-circle-check"></i>
+                    <span class="streak-day-label">S</span>
+                </div>
+                <div class="streak-day-dot" id="streakSundayDot">
+                    <i class="far fa-circle" id="streakSundayIcon"></i>
+                    <span class="streak-day-label">S</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Subject Mastery & Flashcard Arena -->
+    <div class="glass-panel dashboard-widget-card" style="margin-bottom: 40px; padding: 30px;">
+        <div class="mastery-flashcard-grid" style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 35px; align-items: center;">
+            
+            <!-- Left Side: Subject Mastery Status Grid -->
+            <div>
+                <div class="widget-header" style="margin-bottom: 25px;">
+                    <i class="fas fa-chart-line" style="color: #2af598;"></i>
+                    <span>Subject Mastery Index</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                    <!-- Quant -->
+                    <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.04); padding: 15px 10px; border-radius: 18px; transition: all 0.3s;" class="action-btn-vertical">
+                        <div style="position: relative; width: 70px; height: 70px; margin-bottom: 12px;">
+                            <svg style="width: 70px; height: 70px; transform: rotate(-90deg);">
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="4" />
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="#fccb90" stroke-width="4" stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="103.6" style="filter: drop-shadow(0 0 5px rgba(252, 203, 144, 0.45));" />
+                            </svg>
+                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.82rem; font-weight: 800; color: #ffffff;">45%</span>
+                        </div>
+                        <span style="font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 3px;">Quant</span>
+                        <span style="font-size: 0.65rem; color: #fccb90; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Apprentice</span>
+                    </div>
+
+                    <!-- Logical Reasoning -->
+                    <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.04); padding: 15px 10px; border-radius: 18px; transition: all 0.3s;" class="action-btn-vertical">
+                        <div style="position: relative; width: 70px; height: 70px; margin-bottom: 12px;">
+                            <svg style="width: 70px; height: 70px; transform: rotate(-90deg);">
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="4" />
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="#2af598" stroke-width="4" stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="75.4" style="filter: drop-shadow(0 0 5px rgba(42, 245, 152, 0.45));" />
+                            </svg>
+                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.82rem; font-weight: 800; color: #ffffff;">60%</span>
+                        </div>
+                        <span style="font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 3px;">Reasoning</span>
+                        <span style="font-size: 0.65rem; color: #2af598; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Expert</span>
+                    </div>
+
+                    <!-- Verbal Ability -->
+                    <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.04); padding: 15px 10px; border-radius: 18px; transition: all 0.3s;" class="action-btn-vertical">
+                        <div style="position: relative; width: 70px; height: 70px; margin-bottom: 12px;">
+                            <svg style="width: 70px; height: 70px; transform: rotate(-90deg);">
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="4" />
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="#ff9a9e" stroke-width="4" stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="131.9" style="filter: drop-shadow(0 0 5px rgba(255, 154, 158, 0.45));" />
+                            </svg>
+                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.82rem; font-weight: 800; color: #ffffff;">30%</span>
+                        </div>
+                        <span style="font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 3px;">Verbal</span>
+                        <span style="font-size: 0.65rem; color: #ff9a9e; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Novice</span>
+                    </div>
+
+                    <!-- Data Interpretation -->
+                    <div style="display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.04); padding: 15px 10px; border-radius: 18px; transition: all 0.3s;" class="action-btn-vertical">
+                        <div style="position: relative; width: 70px; height: 70px; margin-bottom: 12px;">
+                            <svg style="width: 70px; height: 70px; transform: rotate(-90deg);">
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="4" />
+                                <circle cx="35" cy="35" r="30" fill="none" stroke="#009efd" stroke-width="4" stroke-linecap="round" stroke-dasharray="188.4" stroke-dashoffset="160.1" style="filter: drop-shadow(0 0 5px rgba(0, 158, 253, 0.45));" />
+                            </svg>
+                            <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.82rem; font-weight: 800; color: #ffffff;">15%</span>
+                        </div>
+                        <span style="font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 3px;">Data Int.</span>
+                        <span style="font-size: 0.65rem; color: #009efd; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Beginner</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Interactive 3D Flashcard Deck -->
+            <div style="display: flex; flex-direction: column; align-items: center; border-left: 1px solid rgba(255,255,255,0.06); padding-left: 35px;" id="flashcardDeckSection">
+                <div class="widget-header" style="align-self: flex-start; margin-bottom: 15px; display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-clone" style="color: #c084fc;"></i>
+                        <span>Aptitude Flashcard Deck</span>
+                    </div>
+                    <span id="flashcardDeckCounter" style="font-size: 0.72rem; color: rgba(255,255,255,0.4); font-weight: 700;">Card 1/4</span>
+                </div>
+                
+                <!-- Flashcard Container (3D transform wrapper) -->
+                <div class="flashcard-scene" style="width: 100%; height: 160px; perspective: 600px; cursor: pointer; margin-bottom: 18px;" id="flashcardWidget">
+                    <div class="flashcard-inner" id="flashcardInner" style="position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d;">
+                        
+                        <!-- Front Face -->
+                        <div class="flashcard-front" style="position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); border: 1px solid rgba(255,255,255,0.06); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 10px 20px rgba(0,0,0,0.35);">
+                            <span class="recent-tag tag-quant" id="flashcardCategory" style="margin-bottom: 10px;">Quantitative Aptitude</span>
+                            <h4 id="flashcardQuestion" style="font-size: 1.05rem; font-weight: 700; color: #ffffff; line-height: 1.45; max-width: 90%; text-align: center;">What is the formula for the Sum of first 'n' natural numbers?</h4>
+                            <span style="font-size: 0.65rem; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-top: 10px; font-weight: 700; letter-spacing: 0.5px;"><i class="fas fa-rotate"></i> Click to reveal answer</span>
+                        </div>
+
+                        <!-- Back Face -->
+                        <div class="flashcard-back" style="position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(3,3,7,0.98) 100%); border: 1px solid rgba(139, 92, 246, 0.35); box-shadow: 0 10px 25px rgba(139,92,246,0.15); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; transform: rotateY(180deg);">
+                            <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #2af598; margin-bottom: 8px; letter-spacing: 0.8px;">Answer & Quick Concept</span>
+                            <h3 id="flashcardAnswer" style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 800; color: #2af598; text-shadow: 0 0 10px rgba(42,245,152,0.3); margin-bottom: 8px;">n * (n + 1) / 2</h3>
+                            <p id="flashcardExplanation" style="font-size: 0.78rem; color: rgba(255,255,255,0.65); line-height: 1.4; max-width: 90%; text-align: center;">Example: For n = 10, sum is 10 * 11 / 2 = 55.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Flashcard Action Buttons -->
+                <div style="display: flex; gap: 15px; width: 100%;">
+                    <button class="action-btn-vertical" id="flashcardReviewBtn" style="flex: 1; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.8); padding: 10px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-rotate-left"></i> Needs Review (+2 XP)
+                    </button>
+                    <button class="action-btn-vertical" id="flashcardMasteredBtn" style="flex: 1; border: none; background: linear-gradient(135deg, #8b5cf6, #3b82f6); color: #fff; padding: 10px; border-radius: 12px; font-weight: 700; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                        <i class="fas fa-check-circle"></i> Mastered (+5 XP)
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Unified Key Stats Row with Sparkline Graphs -->
+    <div class="stats-row">
+        <div class="glass-panel stat-box">
+            <div class="stat-meta-left">
+                <div class="stat-icon-wrapper" style="color: #2af598; background: rgba(42, 245, 152, 0.08); border: 1px solid rgba(42, 245, 152, 0.15);">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ stats.questions_solved }}</div>
+                    <div class="stat-label">Solved Problems</div>
+                </div>
+            </div>
+            <svg class="stat-sparkline" viewBox="0 0 60 30">
+                <path d="M0,25 Q15,5 30,20 T60,5" fill="none" stroke="#2af598" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        
+        <div class="glass-panel stat-box">
+            <div class="stat-meta-left">
+                <div class="stat-icon-wrapper" style="color: #009efd; background: rgba(0, 158, 253, 0.08); border: 1px solid rgba(0, 158, 253, 0.15);">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ stats.accuracy }}</div>
+                    <div class="stat-label">Accuracy Rate</div>
+                </div>
+            </div>
+            <svg class="stat-sparkline" viewBox="0 0 60 30">
+                <path d="M0,15 L15,10 L30,20 L45,8 L60,12" fill="none" stroke="#009efd" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+
+        <div class="glass-panel stat-box">
+            <div class="stat-meta-left">
+                <div class="stat-icon-wrapper" style="color: #ff9a9e; background: rgba(255, 154, 158, 0.08); border: 1px solid rgba(255, 154, 158, 0.15);">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div>
+                    <div class="stat-value">{{ stats.current_streak }} Days</div>
+                    <div class="stat-label">Active Streak</div>
+                </div>
+            </div>
+            <svg class="stat-sparkline" viewBox="0 0 60 30">
+                <path d="M0,28 L10,24 L20,20 L30,12 L40,16 L50,8 L60,4" fill="none" stroke="#ff9a9e" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+
+        <div class="glass-panel stat-box">
+            <div class="stat-meta-left">
+                <div class="stat-icon-wrapper" style="color: #fccb90; background: rgba(252, 203, 144, 0.08); border: 1px solid rgba(252, 203, 144, 0.15);">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div>
+                    <div class="stat-value">#{{ stats.global_rank }}</div>
+                    <div class="stat-label">Global Rank</div>
+                </div>
+            </div>
+            <svg class="stat-sparkline" viewBox="0 0 60 30">
+                <path d="M0,22 Q12,18 24,10 T48,6 T60,2" fill="none" stroke="#fccb90" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Main Section -->
+    <div class="main-grid">
+        
+        <!-- Left Side: Active Subjects Progress & Leaderboard -->
+        <div class="content-col">
+            
+            <!-- Subject Mastery Center -->
+            <div class="glass-panel dashboard-widget-card" style="margin-bottom: 35px;">
+                <div class="widget-header">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Active Study Subjects Progress</span>
+                </div>
+                <div class="subject-mastery-grid">
+                    {% for cat in categories %}
+                    <a href="{% url 'courses' %}" class="glass-panel subject-mastery-card">
+                        <div class="subject-header">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div class="subject-icon-wrapper" style="color: {{ cat.color }}; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
+                                    <i class="fas {{ cat.icon }}"></i>
+                                </div>
+                                <div>
+                                    <h4 class="subject-title">{{ cat.title }}</h4>
+                                    <p class="subject-questions">{{ cat.count }} Questions Available</p>
+                                </div>
+                            </div>
+                            <div class="subject-resume-btn" style="color: {{ cat.color }}; background: rgba(255, 255, 255, 0.02); border: 1px solid {{ cat.color }}; padding: 6px 12px; border-radius: 10px; font-size: 0.72rem; font-weight: 700;">Study</div>
+                        </div>
+                        <div class="progress-wrapper" style="margin-top: 18px;">
+                            <div class="progress-meta" style="display: flex; justify-content: space-between; font-size: 0.7rem; color: rgba(255, 255, 255, 0.4); margin-bottom: 6px;">
+                                <span>Mastery Progress</span>
+                                <span style="color: {{ cat.color }}; font-weight: 700;">{{ cat.progress }}%</span>
+                            </div>
+                            <div class="progress-bar" style="width: 100%; height: 5px; background: rgba(255, 255, 255, 0.04); border-radius: 10px; overflow: hidden;">
+                                <div class="progress-fill" style="width: {{ cat.progress }}%; background: {{ cat.color }}; height: 100%; border-radius: 10px; box-shadow: 0 0 10px {{ cat.color }}; transition: width 1s;"></div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Leaderboard Rank Widget -->
+            <div class="glass-panel dashboard-widget-card">
+                <div class="widget-header">
+                    <i class="fas fa-ranking-star"></i>
+                    <span>Weekly Rank Board</span>
+                </div>
+                <div class="leaderboard-list" id="leaderboardList">
+                    <div class="leader-row" id="leader-rohan" data-xp="520" data-name="Rohan Verma" data-rank="7">
+                        <div class="leader-left">
+                            <span class="leader-rank">7</span>
+                            <div class="leader-avatar">R</div>
+                            <span class="leader-name">Rohan Verma</span>
+                        </div>
+                        <span class="leader-score">520 XP</span>
+                    </div>
+                    
+                    <div class="leader-row" id="leader-vikram" data-xp="480" data-name="Vikram Singh" data-rank="8">
+                        <div class="leader-left">
+                            <span class="leader-rank">8</span>
+                            <div class="leader-avatar">V</div>
+                            <span class="leader-name">Vikram Singh</span>
+                        </div>
+                        <span class="leader-score">480 XP</span>
+                    </div>
+
+                    <div class="leader-row user-row" id="leader-user" data-xp="450" data-name="You" data-rank="9">
+                        <div class="leader-left">
+                            <span class="leader-rank" id="leaderUserRankText">9</span>
+                            <div class="leader-avatar">{{ user.first_name|slice:":1"|upper }}</div>
+                            <span class="leader-name">{{ user.first_name }} (You)</span>
+                        </div>
+                        <span class="leader-score" id="leaderUserScoreText">450 XP</span>
+                    </div>
+                    
+                    <div class="leader-row" id="leader-priya" data-xp="410" data-name="Priya Sharma" data-rank="10">
+                        <div class="leader-left">
+                            <span class="leader-rank">10</span>
+                            <div class="leader-avatar">P</div>
+                            <span class="leader-name">Priya Sharma</span>
+                        </div>
+                        <span class="leader-score">410 XP</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Side: Sidebar Launcher Actions & study tips -->
+        <div class="widget-col">
+            <div class="widget-stack">
+                
+                <!-- Quick Launcher Hub -->
+                <div class="glass-panel dashboard-widget-card">
+                    <div class="widget-header">
+                        <i class="fas fa-rocket"></i>
+                        <span>Study Navigation</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <a href="{% url 'practice' %}" class="action-btn-vertical" style="background: linear-gradient(135deg, rgba(42, 245, 152, 0.1) 0%, rgba(0, 158, 253, 0.03) 100%); border: 1px solid rgba(42, 245, 152, 0.2); text-decoration: none; color: #ffffff; padding: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <i class="fas fa-brain" style="color: #2af598; font-size: 1.3rem;"></i>
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; font-size: 0.88rem;">Practice Arena</div>
+                                    <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 2px;">Practice modules & strength index</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.3); font-size: 0.8rem;"></i>
+                        </a>
+
+                        <a href="{% url 'courses' %}" class="action-btn-vertical" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(217, 70, 239, 0.03) 100%); border: 1px solid rgba(139, 92, 246, 0.2); text-decoration: none; color: #ffffff; padding: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <i class="fas fa-graduation-cap" style="color: #c084fc; font-size: 1.3rem;"></i>
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; font-size: 0.88rem;">Study Courses</div>
+                                    <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 2px;">Access modules, topics, and MCQs</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.3); font-size: 0.8rem;"></i>
+                        </a>
+
+                        <a href="{% url 'daily_challenges' %}" class="action-btn-vertical" style="background: linear-gradient(135deg, rgba(255, 71, 87, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(255, 71, 87, 0.22); text-decoration: none; color: #ffffff; padding: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <i class="fas fa-fire" style="color: #ff4757; font-size: 1.3rem;"></i>
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; font-size: 0.88rem;">Daily Spark Question</div>
+                                    <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 2px;">Solve daily problem to keep streak</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.3); font-size: 0.8rem;"></i>
+                        </a>
+
+                        <a href="{% url 'blog' %}" class="action-btn-vertical" style="background: linear-gradient(135deg, rgba(252, 203, 144, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid rgba(252, 203, 144, 0.22); text-decoration: none; color: #ffffff; padding: 20px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <i class="fas fa-newspaper" style="color: #fccb90; font-size: 1.3rem;"></i>
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; font-size: 0.88rem;">Study Journals</div>
+                                    <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 2px;">Read conceptual guides & tutorials</div>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="color: rgba(255,255,255,0.3); font-size: 0.8rem;"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Daily Spark Challenge Widget -->
+                <div class="glass-panel dashboard-widget-card" id="dailySparkWidget" style="transition: all 0.4s ease;">
+                    <div class="widget-header">
+                        <i class="fas fa-bolt" style="color: #ff9a9e;"></i>
+                        <span>Today's Daily Spark Challenge</span>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 20px; margin-bottom: 15px; position: relative;">
+                        <span class="recent-tag tag-logic" style="margin-bottom: 10px; display: inline-block;">Logical Reasoning</span>
+                        <h5 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 12px; line-height: 1.45;" id="sparkQuestionText">Which letter replaces the question mark in the sequence: A, C, F, J, O, ?</h5>
+                        
+                        <div class="spark-options-list" style="display: flex; flex-direction: column; gap: 8px;">
+                            <label class="spark-option" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="spark_option" value="T">
+                                <span style="font-size: 0.82rem; color: rgba(255,255,255,0.85);">T</span>
+                            </label>
+                            <label class="spark-option" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="spark_option" value="U">
+                                <span style="font-size: 0.82rem; color: rgba(255,255,255,0.85);">U</span>
+                            </label>
+                            <label class="spark-option" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="spark_option" value="V">
+                                <span style="font-size: 0.82rem; color: rgba(255,255,255,0.85);">V</span>
+                            </label>
+                            <label class="spark-option" style="display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="spark_option" value="W">
+                                <span style="font-size: 0.82rem; color: rgba(255,255,255,0.85);">W</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button class="action-btn-vertical" id="submitSparkBtn" style="width: 100%; border: none; background: linear-gradient(135deg, #2af598, #009efd); color: #030307; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.3s;">Submit Answer</button>
+                    <div id="sparkFeedback" style="font-size: 0.8rem; margin-top: 12px; font-weight: 600; text-align: center; display: none;"></div>
+                </div>
+
+                <!-- Interactive Rotatable Study Tip Card -->
+                <div class="glass-panel dashboard-widget-card">
+                    <div class="widget-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Conceptual Study Tip</span>
+                    </div>
+                    <div class="tip-content-box">
+                        <p id="studyTipText">Vedic maths multiplication techniques (like criss-cross method) can save up to 40% of time in Quant sections.</p>
+                    </div>
+                    <button class="tip-rotate-btn" id="tipRotateBtn"><i class="fas fa-rotate"></i> Next Study Tip</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+
+</div>
+
+<!-- LEVEL UP CELEBRATION OVERLAY -->
+<div id="levelUpOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3,3,7,0.85); backdrop-filter: blur(8px); z-index: 10000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;">
+    <div class="glass-panel" style="padding: 40px; text-align: center; max-width: 400px; border-color: rgba(217,70,239,0.3); box-shadow: 0 0 40px rgba(217,70,239,0.25); background: linear-gradient(135deg, rgba(217,70,239,0.05) 0%, rgba(3,3,7,0.95) 100%); border-radius: 28px; transform: scale(0.9); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        <div style="font-size: 3.5rem; margin-bottom: 15px;">🏆</div>
+        <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; background: linear-gradient(90deg, #d946ef, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px;">LEVEL UP!</h2>
+        <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 15px;" id="levelUpNewTitle">Level 5: Equation Master</div>
+        <p style="font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 25px;">Amazing consistency! You have unlocked Level 5 conceptual resources. Keep pushing your limits!</p>
+        <button onclick="dismissLevelUp()" class="action-btn-vertical" style="border: none; background: linear-gradient(135deg, #d946ef, #8b5cf6); color: #fff; padding: 10px 30px; border-radius: 12px; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: all 0.3s;">Awesome!</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Global functions
+    window.dismissLevelUp = function() {
+        const overlay = document.getElementById("levelUpOverlay");
+        if (overlay) {
+            overlay.style.pointerEvents = "none";
+            overlay.style.opacity = "0";
+            const modal = overlay.querySelector(".glass-panel");
+            if (modal) modal.style.transform = "scale(0.9)";
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // 1. Dynamic Greeting based on current local hour
+        const hours = new Date().getHours();
+        let greeting = "Namaste";
+        let subText = "Your curriculum is ready.";
+        let bgImage = "";
+        
+        if (hours < 12) {
+            greeting = "Good Morning";
+            subText = "Wake up, refresh your mind, and fuel your learning goal. Ready to tackle today's aptitude spark?";
+            bgImage = "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=1000&auto=format&fit=crop"; // Morning Mist Sunrise
+        } else if (hours < 17) {
+            greeting = "Good Afternoon";
+            subText = "Stay hydrated and keep grinding! Try a quick mock test session or review reasoning concepts.";
+            bgImage = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop"; // Afternoon Sun
+        } else {
+            greeting = "Good Evening";
+            subText = "Time to wrap up the day! Polish your formulas and complete your target check-ins.";
+            bgImage = "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1000&auto=format&fit=crop"; // Starry Night
+        }
+        
+        const greetingEl = document.getElementById("dynamicGreeting");
+        if (greetingEl) {
+            greetingEl.innerHTML = `${greeting}, {{ user.first_name }}! 👋`;
+        }
+
+        const subTextEl = document.getElementById("dynamicGreetingSubtitle");
+        if (subTextEl) {
+            subTextEl.innerHTML = `${subText} You are currently in the top <strong>12%</strong> of candidates this week.`;
+        }
+
+        const greetingCard = document.querySelector(".greeting-card");
+        if (greetingCard && bgImage) {
+            greetingCard.style.backgroundImage = `linear-gradient(135deg, rgba(15, 10, 25, 0.86) 0%, rgba(3, 3, 7, 0.94) 100%), url('${bgImage}')`;
+        }
+
+        // 2. XP Progression and Leveling Logic
+        let baseXP = 450;
+        let currentLevel = 4;
+        const levelData = {
+            4: { title: "Formula Apprentice", max: 500 },
+            5: { title: "Equation Master", max: 1000 }
+        };
+
+        function updateXP(addedXP) {
+            let totalXP = baseXP + addedXP;
+            let level = currentLevel;
+            let title = levelData[level].title;
+            let max = levelData[level].max;
+            
+            const levelBadge = document.getElementById("levelBadge");
+            const levelTitle = document.getElementById("levelTitle");
+            const xpRatio = document.getElementById("xpRatio");
+            const xpProgressFill = document.getElementById("xpProgressFill");
+
+            if (totalXP >= max) {
+                level = 5;
+                title = levelData[5].title;
+                let pct = Math.round(((totalXP - 500) / (1000 - 500)) * 100);
+                
+                if (levelBadge) {
+                    levelBadge.textContent = "Level 5";
+                    levelBadge.style.background = "linear-gradient(135deg, #d946ef, #8b5cf6)";
+                    if (!levelBadge.classList.contains("level-up-animate")) {
+                        levelBadge.classList.add("level-up-animate");
+                        triggerLevelUpEffects();
+                    }
+                }
+                if (levelTitle) levelTitle.textContent = title;
+                if (xpRatio) xpRatio.textContent = `${totalXP} / 1000 XP`;
+                if (xpProgressFill) xpProgressFill.style.width = `${pct}%`;
+            } else {
+                level = 4;
+                title = levelData[4].title;
+                let pct = Math.round((totalXP / max) * 100);
+                
+                if (levelBadge) {
+                    levelBadge.textContent = "Level 4";
+                    levelBadge.style.background = "linear-gradient(135deg, #8b5cf6, #3b82f6)";
+                    levelBadge.classList.remove("level-up-animate");
+                }
+                if (levelTitle) levelTitle.textContent = title;
+                if (xpRatio) xpRatio.textContent = `${totalXP} / 500 XP`;
+                if (xpProgressFill) xpProgressFill.style.width = `${pct}%`;
+            }
+            
+            // Re-sort Leaderboard rank board
+            updateLeaderboard(totalXP);
+        }
+
+        function triggerLevelUpEffects() {
+            const overlay = document.getElementById("levelUpOverlay");
+            if (overlay) {
+                overlay.style.pointerEvents = "auto";
+                overlay.style.opacity = "1";
+                const modal = overlay.querySelector(".glass-panel");
+                if (modal) modal.style.transform = "scale(1)";
+            }
+        }
+
+        // 3. Leaderboard Rank Update & Reordering (CSS order sorting with visual animation)
+        let lastRanks = {};
+        function updateLeaderboard(userXP) {
+            const leaderboardList = document.getElementById("leaderboardList");
+            if (!leaderboardList) return;
+            
+            const userRow = document.getElementById("leader-user");
+            if (userRow) {
+                userRow.setAttribute("data-xp", userXP);
+                const scoreText = document.getElementById("leaderUserScoreText");
+                if (scoreText) scoreText.textContent = `${userXP} XP`;
+            }
+            
+            const rows = Array.from(leaderboardList.querySelectorAll(".leader-row"));
+            rows.sort((a, b) => parseInt(b.getAttribute("data-xp")) - parseInt(a.getAttribute("data-xp")));
+            
+            const rankMap = [7, 8, 9, 10];
+            rows.forEach((row, index) => {
+                row.style.order = index;
+                const newRank = rankMap[index];
+                const rankText = row.querySelector(".leader-rank");
+                if (rankText) {
+                    rankText.textContent = newRank;
+                }
+                
+                const rowId = row.id;
+                if (lastRanks[rowId] !== undefined && lastRanks[rowId] !== newRank) {
+                    // Rank changed! Flash a beautiful highlight glow
+                    row.classList.add("rank-glow-active");
+                    setTimeout(() => {
+                        row.classList.remove("rank-glow-active");
+                    }, 1000);
+                }
+                lastRanks[rowId] = newRank;
+            });
+        }
+
+        // 4. Interactive Flashcard Deck Logic
+        const flashcardDeck = [
+            {
+                category: "Quantitative Aptitude",
+                class: "tag-quant",
+                question: "What is the formula for the Sum of first 'n' natural numbers?",
+                answer: "n * (n + 1) / 2",
+                explanation: "Example: For n = 10, the sum is 10 * 11 / 2 = 55."
+            },
+            {
+                category: "Logical Reasoning",
+                class: "tag-logic",
+                question: "In blood relations, what is your father's sister's husband to you?",
+                answer: "Uncle (Fufa)",
+                explanation: "Your father's sister is your Aunt (Bua), and her husband is your Uncle (Fufa)."
+            },
+            {
+                category: "Quantitative Aptitude",
+                class: "tag-quant",
+                question: "How do you convert Speed from km/hr to m/s?",
+                answer: "Multiply speed by 5 / 18",
+                explanation: "For example, 72 km/hr = 72 * 5/18 = 20 m/s."
+            },
+            {
+                category: "Verbal Ability",
+                class: "tag-verbal",
+                question: "What is the meaning of the idiom: 'To spill the beans'?",
+                answer: "To reveal a secret",
+                explanation: "Example: She accidentally spilled the beans about the surprise test."
+            }
+        ];
+
+        let currentCardIdx = 0;
+        const flashcardWidget = document.getElementById("flashcardWidget");
+        const flashcardInner = document.getElementById("flashcardInner");
+        const flashcardCat = document.getElementById("flashcardCategory");
+        const flashcardQuest = document.getElementById("flashcardQuestion");
+        const flashcardAns = document.getElementById("flashcardAnswer");
+        const flashcardExpl = document.getElementById("flashcardExplanation");
+        const flashcardCounter = document.getElementById("flashcardDeckCounter");
+        
+        const reviewBtn = document.getElementById("flashcardReviewBtn");
+        const masteredBtn = document.getElementById("flashcardMasteredBtn");
+
+        let flipped = false;
+
+        function loadCard(index) {
+            const card = flashcardDeck[index];
+            if (!card) return;
+            
+            flashcardCat.textContent = card.category;
+            flashcardCat.className = `recent-tag ${card.class}`;
+            flashcardQuest.textContent = card.question;
+            flashcardAns.textContent = card.answer;
+            flashcardExpl.textContent = card.explanation;
+            
+            if (flashcardCounter) {
+                flashcardCounter.textContent = `Card ${index + 1}/${flashcardDeck.length}`;
+            }
+        }
+
+        if (flashcardWidget && flashcardInner) {
+            flashcardWidget.addEventListener("click", () => {
+                flipped = !flipped;
+                if (flipped) {
+                    flashcardInner.classList.add("flipped");
+                } else {
+                    flashcardInner.classList.remove("flipped");
+                }
+            });
+        }
+
+        function handleCardAction(addedXP, btnElement) {
+            spawnXPBubble(btnElement, `+${addedXP} XP`);
+            baseXP += addedXP;
+            updateQuests();
+            
+            if (flipped) {
+                flipped = false;
+                flashcardInner.classList.remove("flipped");
+                setTimeout(() => {
+                    currentCardIdx = (currentCardIdx + 1) % flashcardDeck.length;
+                    loadCard(currentCardIdx);
+                }, 300);
+            } else {
+                currentCardIdx = (currentCardIdx + 1) % flashcardDeck.length;
+                loadCard(currentCardIdx);
+            }
+        }
+
+        if (reviewBtn) {
+            reviewBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                handleCardAction(2, reviewBtn);
+            });
+        }
+
+        if (masteredBtn) {
+            masteredBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                handleCardAction(5, masteredBtn);
+            });
+        }
+
+        loadCard(currentCardIdx);
+
+        // 5. Interactive Quests Checklist & Progress Ring
+        const checkboxes = document.querySelectorAll(".quest-checkbox-input");
+        const progressCircle = document.getElementById("progressBarCircle");
+        const percentageText = document.getElementById("progressPercentageValue");
+        const xpEarnedEl = document.getElementById("questXpEarned");
+        
+        const streakDisplayVal = document.getElementById("streakCounterDisplay");
+        const streakSundayDot = document.getElementById("streakSundayDot");
+        const streakSundayIcon = document.getElementById("streakSundayIcon");
+        const initialStreak = parseInt("{{ stats.current_streak }}") || 12;
+
+        const strokeDasharray = 226;
+
+        function updateQuests() {
+            let checkedCount = 0;
+            let xpEarned = 0;
+
+            checkboxes.forEach((cb, idx) => {
+                const questItem = cb.closest(".quest-item");
+                if (cb.checked) {
+                    checkedCount++;
+                    questItem.classList.add("checked");
+                    
+                    if (idx === 0) xpEarned += 15;
+                    if (idx === 1) xpEarned += 5;
+                    if (idx === 2) xpEarned += 15;
+                    
+                    localStorage.setItem(`prepverse-quest-${idx}`, "true");
+                    if (idx === 0) {
+                        const icon = document.getElementById("quest0Icon");
+                        if (icon) icon.className = "fas fa-check";
+                    }
+                } else {
+                    questItem.classList.remove("checked");
+                    localStorage.removeItem(`prepverse-quest-${idx}`);
+                    if (idx === 0) {
+                        const icon = document.getElementById("quest0Icon");
+                        if (icon) icon.className = "fas fa-lock";
+                    }
+                }
+            });
+
+            const total = checkboxes.length;
+            const percentage = Math.round((checkedCount / total) * 100);
+
+            if (percentageText) {
+                percentageText.innerHTML = `${percentage}% <span>Goal</span>`;
+            }
+
+            if (progressCircle) {
+                const offset = strokeDasharray - (strokeDasharray * percentage) / 100;
+                progressCircle.style.strokeDashoffset = offset;
+
+                if (percentage === 100) {
+                    progressCircle.style.stroke = "#2af598";
+                    progressCircle.style.filter = "drop-shadow(0 0 8px rgba(42, 245, 152, 0.6))";
+                    
+                    xpEarned += 30; // bonus
+                    
+                    if (xpEarnedEl) {
+                        xpEarnedEl.textContent = "🏆 All quests completed! +30 XP Bonus";
+                        xpEarnedEl.style.color = "#2af598";
+                    }
+
+                    if (streakSundayDot && streakSundayIcon) {
+                        streakSundayDot.classList.add("active");
+                        streakSundayIcon.className = "fas fa-circle-check";
+                        streakSundayIcon.style.color = "#ff4757";
+                    }
+                    if (streakDisplayVal) {
+                        streakDisplayVal.innerHTML = `${initialStreak + 1} <span>Days Streak</span>`;
+                    }
+                } else {
+                    progressCircle.style.stroke = "url(#progressGradient)";
+                    progressCircle.style.filter = "none";
+                    
+                    if (xpEarnedEl) {
+                        if (xpEarned > 0) {
+                            xpEarnedEl.textContent = `Earned +${xpEarned} XP Today`;
+                            xpEarnedEl.style.color = "rgba(42, 245, 152, 0.85)";
+                        } else {
+                            xpEarnedEl.textContent = "Complete quests to earn XP";
+                            xpEarnedEl.style.color = "rgba(255, 255, 255, 0.4)";
+                        }
+                    }
+
+                    if (streakSundayDot && streakSundayIcon) {
+                        streakSundayDot.classList.remove("active");
+                        streakSundayIcon.className = "far fa-circle";
+                        streakSundayIcon.style.color = "rgba(255, 255, 255, 0.15)";
+                    }
+                    if (streakDisplayVal) {
+                        streakDisplayVal.innerHTML = `${initialStreak} <span>Days Streak</span>`;
+                    }
+                }
+            }
+
+            // Update XP progress
+            updateXP(xpEarned);
+        }
+
+        // Particle Floating XP Bubble
+        function spawnXPBubble(element, xpText) {
+            const rect = element.getBoundingClientRect();
+            const bubble = document.createElement("div");
+            bubble.className = "xp-bubble";
+            bubble.textContent = xpText;
+            
+            bubble.style.left = `${rect.left + window.scrollX + rect.width / 2}px`;
+            bubble.style.top = `${rect.top + window.scrollY - 10}px`;
+            
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 1200);
+        }
+
+        // Confetti Explosion Particle helper
+        function triggerConfetti() {
+            const btn = document.getElementById("submitSparkBtn");
+            if (!btn) return;
+            const rect = btn.getBoundingClientRect();
+            const btnCenterX = rect.left + window.scrollX + rect.width / 2;
+            const btnCenterY = rect.top + window.scrollY + rect.height / 2;
+            
+            const colors = ["#2af598", "#009efd", "#ff9a9e", "#fccb90", "#8b5cf6", "#d946ef"];
+            for (let i = 0; i < 45; i++) {
+                const particle = document.createElement("div");
+                particle.className = "confetti-particle";
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 40 + Math.random() * 130;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance - 15;
+                
+                particle.style.setProperty("--x", `${x}px`);
+                particle.style.setProperty("--y", `${y}px`);
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = `${btnCenterX}px`;
+                particle.style.top = `${btnCenterY}px`;
+                
+                const size = 5 + Math.random() * 7;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1200);
+            }
+        }
+
+        // Checkbox listeners
+        checkboxes.forEach((cb, idx) => {
+            const saved = localStorage.getItem(`prepverse-quest-${idx}`);
+            if (saved === "true") {
+                cb.checked = true;
+            }
+            
+            cb.addEventListener("change", (e) => {
+                if (cb.checked) {
+                    let val = "+5 XP";
+                    if (idx === 0) val = "+15 XP";
+                    if (idx === 2) val = "+15 XP";
+                    
+                    const checkboxVisual = cb.nextElementSibling;
+                    if (checkboxVisual) spawnXPBubble(checkboxVisual, val);
+                }
+                updateQuests();
+            });
+        });
+
+        // 6. Interactive Daily Spark Challenge Widget Logic
+        const sparkOptions = document.querySelectorAll(".spark-option");
+        const submitSparkBtn = document.getElementById("submitSparkBtn");
+        const sparkFeedback = document.getElementById("sparkFeedback");
+        let selectedOption = null;
+
+        sparkOptions.forEach(opt => {
+            opt.addEventListener("click", () => {
+                if (localStorage.getItem("prepverse-spark-solved") === "true") return;
+                
+                sparkOptions.forEach(o => o.classList.remove("selected"));
+                opt.classList.add("selected");
+                
+                const radio = opt.querySelector('input[type="radio"]');
+                if (radio) radio.checked = true;
+                selectedOption = radio.value;
+            });
+        });
+
+        if (submitSparkBtn) {
+            submitSparkBtn.addEventListener("click", () => {
+                if (localStorage.getItem("prepverse-spark-solved") === "true") return;
+                
+                if (!selectedOption) {
+                    if (sparkFeedback) {
+                        sparkFeedback.textContent = "⚠️ Please select an option first!";
+                        sparkFeedback.style.color = "#fccb90";
+                        sparkFeedback.style.display = "block";
+                    }
+                    return;
+                }
+                
+                if (selectedOption === "U") {
+                    localStorage.setItem("prepverse-spark-solved", "true");
+                    
+                    const quest0 = document.getElementById("quest0");
+                    if (quest0) {
+                        quest0.checked = true;
+                        localStorage.setItem("prepverse-quest-0", "true");
+                        
+                        const quest0Visual = quest0.nextElementSibling;
+                        if (quest0Visual) {
+                            quest0Visual.innerHTML = '<i class="fas fa-check"></i>';
+                            spawnXPBubble(quest0Visual, "+15 XP");
+                        }
+                    }
+                    
+                    const selectedLabel = document.querySelector(".spark-option.selected");
+                    if (selectedLabel) {
+                        selectedLabel.classList.remove("selected");
+                        selectedLabel.classList.add("correct");
+                    }
+                    
+                    if (sparkFeedback) {
+                        sparkFeedback.innerHTML = "🎉 Correct! <strong>+15 XP</strong> earned and Spark Quest unlocked!";
+                        sparkFeedback.style.color = "#2af598";
+                        sparkFeedback.style.display = "block";
+                    }
+                    
+                    submitSparkBtn.textContent = "Solved Successfully";
+                    submitSparkBtn.disabled = true;
+                    submitSparkBtn.style.background = "rgba(42, 245, 152, 0.2)";
+                    submitSparkBtn.style.color = "#2af598";
+                    submitSparkBtn.style.cursor = "default";
+                    
+                    triggerConfetti();
+                    updateQuests();
+                } else {
+                    const selectedLabel = document.querySelector(".spark-option.selected");
+                    if (selectedLabel) {
+                        selectedLabel.classList.add("incorrect");
+                        setTimeout(() => {
+                            selectedLabel.classList.remove("incorrect");
+                        }, 1200);
+                    }
+                    
+                    if (sparkFeedback) {
+                        sparkFeedback.textContent = "❌ Incorrect option. Hint: Analyze the letter sequence offsets (+2, +3, +4...)";
+                        sparkFeedback.style.color = "#ff4757";
+                        sparkFeedback.style.display = "block";
+                    }
+                }
+            });
+        }
+
+        // Restore Daily Spark State on load
+        if (localStorage.getItem("prepverse-spark-solved") === "true") {
+            const quest0 = document.getElementById("quest0");
+            if (quest0) {
+                quest0.checked = true;
+                quest0.disabled = true;
+                const quest0Visual = quest0.nextElementSibling;
+                if (quest0Visual) {
+                    quest0Visual.innerHTML = '<i class="fas fa-check"></i>';
+                }
+            }
+            
+            const correctOptionLabel = document.querySelector('.spark-option input[value="U"]');
+            if (correctOptionLabel) {
+                const label = correctOptionLabel.closest(".spark-option");
+                if (label) label.classList.add("correct");
+            }
+            
+            if (sparkFeedback) {
+                sparkFeedback.innerHTML = "🎉 Daily Spark Solved! You earned <strong>+15 XP</strong> today.";
+                sparkFeedback.style.color = "#2af598";
+                sparkFeedback.style.display = "block";
+            }
+            
+            if (submitSparkBtn) {
+                submitSparkBtn.textContent = "Solved Successfully";
+                submitSparkBtn.disabled = true;
+                submitSparkBtn.style.background = "rgba(42, 245, 152, 0.2)";
+                submitSparkBtn.style.color = "#2af598";
+                submitSparkBtn.style.cursor = "default";
+            }
+        }
+
+        // 7. Interactive Tip rotation & Checkoff quest 1
+        const tipsList = [
+            "Vedic maths multiplication techniques (like criss-cross method) can save up to 40% of time in Quant sections.",
+            "In Syllogism questions, draw Venn diagrams immediately. Do not guess statements visually.",
+            "For reading comprehension, read the questions *before* reading the passage to frame key search-anchors.",
+            "Remember that the base method for squaring numbers close to 100 makes calculations instantaneous.",
+            "When solving 'Time and Work' problems, convert efficiencies into ratios. It reduces equations.",
+            "Competitive aptitude exams heavily penalize lack of speed. Set a timer of 1 minute per practice question."
+        ];
+
+        let currentTipIndex = 0;
+        const rotateBtn = document.getElementById("tipRotateBtn");
+        const tipTextEl = document.getElementById("studyTipText");
+
+        if (rotateBtn && tipTextEl) {
+            rotateBtn.addEventListener("click", () => {
+                const icon = rotateBtn.querySelector("i");
+                if (icon) {
+                    icon.style.transform = "rotate(360deg)";
+                    icon.style.transition = "transform 0.5s ease";
+                    setTimeout(() => { icon.style.transform = "none"; icon.style.transition = "none"; }, 500);
+                }
+
+                // Check quest 1 automatically
+                const quest1 = document.getElementById("quest1");
+                if (quest1 && !quest1.checked) {
+                    quest1.checked = true;
+                    localStorage.setItem("prepverse-quest-1", "true");
+                    const quest1Visual = quest1.nextElementSibling;
+                    if (quest1Visual) {
+                        spawnXPBubble(quest1Visual, "+5 XP");
+                    }
+                }
+
+                tipTextEl.style.opacity = "0";
+                setTimeout(() => {
+                    currentTipIndex = (currentTipIndex + 1) % tipsList.length;
+                    tipTextEl.textContent = tipsList[currentTipIndex];
+                    tipTextEl.style.opacity = "1";
+                    updateQuests();
+                }, 300);
+            });
+        }
+
+        // Initialize state
+        updateQuests();
+    });
+</script>
+{% endblock %}

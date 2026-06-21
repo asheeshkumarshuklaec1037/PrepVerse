@@ -1,0 +1,685 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Practice Hub | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    body {
+        background: #030307 !important;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0),
+            radial-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 0);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+        color: #ffffff !important;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Ambient Glows */
+    .dash-glow {
+        position: fixed;
+        width: 500px; height: 500px;
+        border-radius: 50%;
+        z-index: -1;
+        filter: blur(130px);
+        opacity: 0.12;
+        pointer-events: none;
+        animation: pulseGlow 18s infinite alternate;
+    }
+    .dash-glow-1 { top: -100px; right: 15%; background: radial-gradient(circle, #2af598 0%, transparent 70%); }
+    .dash-glow-2 { bottom: -150px; left: 10%; background: radial-gradient(circle, #8b5cf6 0%, transparent 70%); animation-delay: 5s; }
+
+    @keyframes pulseGlow {
+        0% { transform: scale(1) translate(0, 0); opacity: 0.12; }
+        50% { transform: scale(1.1) translate(30px, -20px); opacity: 0.18; }
+        100% { transform: scale(0.9) translate(-20px, 30px); opacity: 0.08; }
+    }
+
+    .practice-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 4% 80px;
+        opacity: 0;
+        animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Glass Panels */
+    .glass-panel {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0.005) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 24px;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-panel:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.01) 100%);
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+        transform: translateY(-4px);
+    }
+
+    /* Hero Banner layout */
+    .practice-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 45px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 40px;
+    }
+
+    .practice-hero::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at 90% 50%, rgba(42, 245, 152, 0.1) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .hero-main-text h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.6rem;
+        font-weight: 800;
+        margin-bottom: 12px;
+        background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.75));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-main-text p {
+        font-size: 0.98rem;
+        color: rgba(255, 255, 255, 0.55);
+        max-width: 600px;
+        line-height: 1.6;
+    }
+
+    .hero-action-btn {
+        background: #ffffff;
+        color: #030307;
+        padding: 14px 30px;
+        border-radius: 16px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hero-action-btn:hover {
+        background: #2af598;
+        color: #030307;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(42, 245, 152, 0.3);
+    }
+
+    /* Quick Practice stats */
+    .practice-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .p-stat-card {
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .p-stat-icon {
+        width: 46px; height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .p-stat-info h3 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 2px;
+    }
+
+    .p-stat-info p {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.45);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Split column layouts */
+    .practice-split {
+        display: grid;
+        grid-template-columns: 1.95fr 1.05fr;
+        gap: 35px;
+    }
+
+    .section-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-title i {
+        color: #2af598;
+    }
+
+    /* Category Grids */
+    .cat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .cat-card {
+        padding: 26px;
+        color: #ffffff;
+        text-decoration: none;
+        display: block;
+    }
+
+    .cat-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 25px;
+    }
+
+    .cat-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .cat-icon-box {
+        width: 44px; height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .cat-title-text h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+
+    .cat-title-text p {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .cat-action-circle {
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.75rem;
+        transition: all 0.3s;
+    }
+
+    .cat-card:hover .cat-action-circle {
+        background: #ffffff;
+        color: #030307;
+        transform: rotate(360deg) scale(1.05);
+    }
+
+    /* Mastery Progress Bars */
+    .mastery-progress {
+        margin-top: 15px;
+    }
+
+    .mastery-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 6px;
+    }
+
+    .mastery-bar-bg {
+        width: 100%; height: 5px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .mastery-bar-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Recent lists */
+    .recent-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .recent-item-card {
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+    .recent-item-card:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.12);
+        transform: translateX(6px);
+    }
+
+    .ri-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .ri-tag {
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+    }
+    .ri-tag.tag-quant { background: rgba(252, 203, 144, 0.1); color: #fccb90; }
+    .ri-tag.tag-logic { background: rgba(42, 245, 152, 0.1); color: #2af598; }
+    .ri-tag.tag-verbal { background: rgba(255, 154, 158, 0.1); color: #ff9a9e; }
+
+    .ri-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .ri-right {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .ri-difficulty {
+        font-size: 0.72rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: rgba(255, 255, 255, 0.45);
+        font-weight: 600;
+    }
+
+    .ri-dot {
+        width: 6px; height: 6px;
+        border-radius: 50%;
+    }
+    .ri-dot.easy { background: #10b981; }
+    .ri-dot.medium { background: #fccb90; }
+    .ri-dot.hard { background: #ef4444; }
+
+    .ri-arrow {
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 0.75rem;
+        transition: all 0.3s;
+    }
+
+    .recent-item-card:hover .ri-arrow {
+        background: #2af598;
+        color: #030307;
+    }
+
+    /* Right column feedback insights */
+    .practice-widget-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .widget-panel {
+        padding: 24px;
+    }
+
+    .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .panel-header i {
+        color: #2af598;
+    }
+
+    /* Weakness Analysis Progress */
+    .analysis-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .analysis-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .analysis-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+    .analysis-bar {
+        width: 100%; height: 6px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        position: relative;
+    }
+
+    .analysis-fill {
+        height: 100%;
+        border-radius: 10px;
+    }
+
+    .analysis-hint {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 2px;
+    }
+
+    /* Arena challenge */
+    .arena-challenge-card {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(255, 255, 255, 0.005) 100%);
+        border-color: rgba(139, 92, 246, 0.2);
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .arena-badge {
+        background: rgba(139, 92, 246, 0.15);
+        color: #c084fc;
+        font-size: 0.65rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+
+    .arena-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    .arena-desc {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .arena-btn {
+        background: linear-gradient(90deg, #8b5cf6, #d946ef);
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        transition: all 0.3s;
+    }
+
+    .arena-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+        .practice-split { grid-template-columns: 1fr; gap: 40px; }
+        .practice-hero { flex-direction: column; text-align: center; gap: 25px; }
+        .hero-main-text p { margin: 0 auto; }
+        .practice-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 650px) {
+        .practice-stats { grid-template-columns: 1fr; }
+        .cat-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dash-glow dash-glow-1"></div>
+<div class="dash-glow dash-glow-2"></div>
+
+<div class="practice-container">
+    
+    <!-- Hero Header -->
+    <div class="glass-panel practice-hero">
+        <div class="hero-main-text">
+            <h1>Practice Arena</h1>
+            <p>Master specific categories through curated modules, monitor your overall stats, and push your logical limits dynamically.</p>
+        </div>
+        <div>
+            <a href="{% url 'daily_challenges' %}" class="hero-action-btn">
+                <i class="fas fa-bolt"></i> Start Daily Spark
+            </a>
+        </div>
+    </div>
+
+    <!-- Practice Performance stats -->
+    <div class="practice-stats">
+        <div class="glass-panel p-stat-card">
+            <div class="p-stat-icon" style="color: #2af598;"><i class="fas fa-check-double"></i></div>
+            <div class="p-stat-info">
+                <h3>{{ stats.questions_solved }}</h3>
+                <p>Problems Solved</p>
+            </div>
+        </div>
+        
+        <div class="glass-panel p-stat-card">
+            <div class="p-stat-icon" style="color: #009efd;"><i class="fas fa-bullseye"></i></div>
+            <div class="p-stat-info">
+                <h3>{{ stats.accuracy }}</h3>
+                <p>Solve Accuracy</p>
+            </div>
+        </div>
+
+        <div class="glass-panel p-stat-card">
+            <div class="p-stat-icon" style="color: #ff9a9e;"><i class="fas fa-fire"></i></div>
+            <div class="p-stat-info">
+                <h3>{{ stats.current_streak }} Days</h3>
+                <p>Active Streak</p>
+            </div>
+        </div>
+
+        <div class="glass-panel p-stat-card">
+            <div class="p-stat-icon" style="color: #fccb90;"><i class="fas fa-trophy"></i></div>
+            <div class="p-stat-info">
+                <h3>#{{ stats.global_rank }}</h3>
+                <p>Aptitude Rank</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout Columns -->
+    <div class="practice-split">
+        
+        <!-- Left Side: Grids & lists -->
+        <div class="practice-left-col">
+            
+            <!-- Category Practice list -->
+            <div class="categories-box">
+                <div class="section-title"><i class="fas fa-layer-group"></i> Choose a Practice Domain</div>
+                <div class="cat-grid">
+                    {% for cat in categories %}
+                    <a href="{% url 'courses' %}" class="glass-panel cat-card">
+                        <div class="cat-header">
+                            <div class="cat-meta">
+                                <div class="cat-icon-box" style="color: {{ cat.color }}; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
+                                    <i class="fas {{ cat.icon }}"></i>
+                                </div>
+                                <div class="cat-title-text">
+                                    <h4>{{ cat.title }}</h4>
+                                    <p>{{ cat.count }} Problems</p>
+                                </div>
+                            </div>
+                            <div class="cat-action-circle"><i class="fas fa-play"></i></div>
+                        </div>
+                        <div class="mastery-progress">
+                            <div class="mastery-meta">
+                                <span>Mastery Level</span>
+                                <span style="color: {{ cat.color }}; font-weight: 700;">{{ cat.progress }}%</span>
+                            </div>
+                            <div class="mastery-bar-bg">
+                                <div class="mastery-bar-fill" style="width: {{ cat.progress }}%; background: {{ cat.color }}; box-shadow: 0 0 10px {{ cat.color }};"></div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Resume recent list -->
+            <div class="recent-box">
+                <div class="section-title"><i class="fas fa-history"></i> Jump Back In</div>
+                <div class="recent-list">
+                    {% for challenge in recent_challenges %}
+                    <a href="{% url 'courses' %}" class="glass-panel recent-item-card">
+                        <div class="ri-left">
+                            <div class="ri-tag tag-{{ challenge.type|lower }}">{{ challenge.type }}</div>
+                            <h5 class="ri-title">{{ challenge.title }}</h5>
+                        </div>
+                        <div class="ri-right">
+                            <div class="ri-difficulty">
+                                <span class="ri-dot {% if challenge.difficulty == 'Easy' %}easy{% elif challenge.difficulty == 'Medium' %}medium{% else %}hard{% endif %}"></span>
+                                {{ challenge.difficulty }}
+                            </div>
+                            <div class="ri-arrow"><i class="fas fa-arrow-right"></i></div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Side: Cognitive Insights widgets -->
+        <div class="practice-right-col">
+            <div class="practice-widget-stack">
+                
+                <!-- Purple Arena Card -->
+                <div class="glass-panel arena-challenge-card">
+                    <span class="arena-badge">Weekly Blitz</span>
+                    <h4 class="arena-title">Logical Reasoning Arena</h4>
+                    <p class="arena-desc">Compare your puzzle solving speed with global candidates in real-time under pressure. New challenge live!</p>
+                    <a href="{% url 'mock_test' %}" class="arena-btn">
+                        <i class="fas fa-gamepad"></i> Join Arena Quiz
+                    </a>
+                </div>
+
+                <!-- Strengths / Weakness Analysis progress -->
+                <div class="glass-panel widget-panel">
+                    <div class="panel-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Domain Strength Index</span>
+                    </div>
+                    <div class="analysis-list">
+                        <div class="analysis-item">
+                            <div class="analysis-meta">
+                                <span>Quantitative Aptitude</span>
+                                <span style="color: #fccb90;">82% (Strong)</span>
+                            </div>
+                            <div class="analysis-bar">
+                                <div class="analysis-fill" style="width: 82%; background: #fccb90; box-shadow: 0 0 8px #fccb90;"></div>
+                            </div>
+                            <span class="analysis-hint">Excellent speed in Arithmetic. Focus on modern math equations.</span>
+                        </div>
+                        
+                        <div class="analysis-item">
+                            <div class="analysis-meta">
+                                <span>Logical Reasoning</span>
+                                <span style="color: #2af598;">64% (Average)</span>
+                            </div>
+                            <div class="analysis-bar">
+                                <div class="analysis-fill" style="width: 64%; background: #2af598; box-shadow: 0 0 8px #2af598;"></div>
+                            </div>
+                            <span class="analysis-hint">Practice seating arrangement and syllogism schemas.</span>
+                        </div>
+
+                        <div class="analysis-item">
+                            <div class="analysis-meta">
+                                <span>Verbal Ability</span>
+                                <span style="color: #ff9a9e;">48% (Weak)</span>
+                            </div>
+                            <div class="analysis-bar">
+                                <div class="analysis-fill" style="width: 48%; background: #ff9a9e; box-shadow: 0 0 8px #ff9a9e;"></div>
+                            </div>
+                            <span class="analysis-hint">Take daily reading comprehension sets to build speed.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

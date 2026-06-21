@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 import json
 
 def home(request):
@@ -112,8 +114,11 @@ def courses_view(request):
     ]
     return render(request, 'courses.html', {'courses': courses})
 
-def practice_view(request):
-    # Mock data for the Practice Dashboard
+def dashboard_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+        
+    # Mock data for the Dashboard
     stats = {
         'questions_solved': 342,
         'accuracy': '85%',
@@ -134,7 +139,38 @@ def practice_view(request):
         {'title': 'Reading Comprehension Advanced', 'type': 'Verbal', 'difficulty': 'Hard', 'time': '20 min'},
     ]
 
-    return render(request, 'practice_dashboard.html', {
+    return render(request, 'dashboard.html', {
+        'stats': stats,
+        'categories': categories,
+        'recent_challenges': recent_challenges
+    })
+
+def practice_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+        
+    # Mock data for the Practice Arena
+    stats = {
+        'questions_solved': 342,
+        'accuracy': '85%',
+        'current_streak': 12,
+        'global_rank': 1450
+    }
+    
+    categories = [
+        {'title': 'Quantitative Aptitude', 'icon': 'fa-calculator', 'color': '#fccb90', 'count': 450, 'progress': 45},
+        {'title': 'Logical Reasoning', 'icon': 'fa-puzzle-piece', 'color': '#2af598', 'count': 320, 'progress': 60},
+        {'title': 'Verbal Ability', 'icon': 'fa-book-open', 'color': '#ff9a9e', 'count': 280, 'progress': 30},
+        {'title': 'Data Interpretation', 'icon': 'fa-chart-pie', 'color': '#009efd', 'count': 150, 'progress': 15},
+    ]
+
+    recent_challenges = [
+        {'title': 'Time, Speed & Distance Masterclass', 'type': 'Quant', 'difficulty': 'Hard', 'time': '15 min'},
+        {'title': 'Syllogism Tricks & Shortcuts', 'type': 'Logic', 'difficulty': 'Medium', 'time': '10 min'},
+        {'title': 'Reading Comprehension Advanced', 'type': 'Verbal', 'difficulty': 'Hard', 'time': '20 min'},
+    ]
+
+    return render(request, 'practice.html', {
         'stats': stats,
         'categories': categories,
         'recent_challenges': recent_challenges
@@ -330,10 +366,71 @@ def module_detail(request, course_id, topic_id, module_name):
     })
 
 def login_view(request):
+    print("DEBUG: login_view called with method:", request.method)
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip().lower()
+        password = request.POST.get('password', '')
+
+        if not email or not password:
+            return render(request, 'login.html', {'error': 'Please fill in all fields.'})
+
+        # Authenticate user. Since username = email:
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            # Check if user exists to give more specific error
+            if not User.objects.filter(email=email).exists():
+                return render(request, 'login.html', {'error': 'No account found with this email address.'})
+            else:
+                return render(request, 'login.html', {'error': 'Incorrect password. Please try again.'})
+
     return render(request, 'login.html')
 
 def signup_view(request):
+    print("DEBUG: signup_view called with method:", request.method)
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+        
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        email = request.POST.get('email', '').strip().lower()
+        password = request.POST.get('password', '')
+
+        # Basic validations
+        if not first_name or not last_name or not email or not password:
+            return render(request, 'signup.html', {'error': 'All fields are required.'})
+            
+        if User.objects.filter(email=email).exists():
+            return render(request, 'signup.html', {'error': 'An account with this email already exists.'})
+            
+        # Create user
+        try:
+            # We set both username and email to the email address
+            user = User.objects.create_user(
+                username=email,
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name
+            )
+            # Log the user in directly after signup
+            login(request, user)
+            return redirect('dashboard')
+        except Exception as e:
+            return render(request, 'signup.html', {'error': f'Something went wrong: {str(e)}'})
+
     return render(request, 'signup.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
 
 def mock_tests_view(request):
     subjects_data = [

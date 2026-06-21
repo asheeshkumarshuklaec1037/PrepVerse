@@ -38,6 +38,32 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Background Glows (Purple/Pink Theme matching EternaCloud design) */
+    .glow {
+        position: fixed;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        z-index: -1;
+        filter: blur(80px);
+        opacity: 0;
+        animation: pageFadeIn 1.5s ease-out forwards;
+        pointer-events: none;
+    }
+    .glow-1 { 
+        top: -100px; right: -100px; 
+        background: radial-gradient(circle, rgba(138, 43, 226, 0.12) 0%, transparent 70%); 
+    }
+    .glow-2 { 
+        bottom: -100px; left: -100px; 
+        background: radial-gradient(circle, rgba(255, 0, 128, 0.12) 0%, transparent 70%); 
+        animation-delay: 0.5s; 
+    }
+    .glow-3 {
+        top: 50%; left: 10%;
+        background: radial-gradient(circle, rgba(65, 88, 208, 0.08) 0%, transparent 70%);
+        animation-delay: 1.0s;
+    }
+
     /* Backgrounds */
     .as-slider-background {
         position: absolute;
@@ -275,7 +301,7 @@
         .as-side-slider .swiper-slide { width: 180px !important; }
     }
 
-    /* Daily Spark Section (Redesigned) */
+    /* Daily Spark Section (Redesigned with EternaCloud Theme) */
     .daily-spark-section {
         max-width: 1400px;
         margin: 100px auto;
@@ -285,10 +311,10 @@
         gap: 60px;
         align-items: center;
         position: relative;
-        background: radial-gradient(circle at 10% 20%, rgba(42, 245, 152, 0.05) 0%, transparent 40%),
-                    radial-gradient(circle at 90% 80%, rgba(0, 158, 253, 0.05) 0%, transparent 40%);
+        background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%);
         border-radius: 60px;
-        border: 1px solid rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.04);
         opacity: 0;
         animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
     }
@@ -298,48 +324,80 @@
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-        opacity: 0.1;
+        opacity: 0.05;
         pointer-events: none;
     }
 
-    .spark-content .refreshes {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #2af598;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 20px;
-    }
-    .spark-content .refreshes:before {
-        content: "";
-        width: 8px; height: 8px;
-        background: #2af598;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #2af598;
-    }
-
-    .spark-content h2 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 25px; }
-    .spark-content p { font-size: 1.1rem; opacity: 0.6; line-height: 1.7; margin-bottom: 40px; max-width: 500px; }
-
-    .spark-stats { display: flex; gap: 40px; margin-bottom: 40px; }
-    .stat-box h3 { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 5px; }
-    .stat-box span { font-size: 0.8rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    .streak-badge {
+    /* EternaCloud Style Pills */
+    .pill-badge {
         display: inline-flex;
         align-items: center;
-        gap: 12px;
-        background: rgba(255, 107, 107, 0.1);
-        border: 1px solid rgba(255, 107, 107, 0.2);
-        padding: 10px 20px;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 6px 14px;
         border-radius: 50px;
-        color: #ff6b6b;
-        font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s;
+        backdrop-filter: blur(5px);
     }
+    .pill-badge::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        box-shadow: 0 0 8px currentColor;
+    }
+    .badge-blue { color: #3b82f6 !important; border-color: rgba(59, 130, 246, 0.25) !important; background: rgba(59, 130, 246, 0.05) !important; }
+    .badge-blue::before { background: #3b82f6; }
+    .badge-purple { color: #a855f7 !important; border-color: rgba(168, 85, 247, 0.25) !important; background: rgba(168, 85, 247, 0.05) !important; }
+    .badge-purple::before { background: #a855f7; }
+    .badge-pink { color: #ec4899 !important; border-color: rgba(236, 72, 153, 0.25) !important; background: rgba(236, 72, 153, 0.05) !important; }
+    .badge-pink::before { background: #ec4899; }
+    .badge-green { color: #10b981 !important; border-color: rgba(16, 185, 129, 0.25) !important; background: rgba(16, 185, 129, 0.05) !important; }
+    .badge-green::before { background: #10b981; }
+
+    /* Gradient Typography */
+    .gradient-text {
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline;
+    }
+
+    .spark-content h2 { 
+        font-size: 3rem; 
+        font-weight: 800; 
+        line-height: 1.15; 
+        margin-bottom: 25px;
+        color: #ffffff;
+    }
+    .spark-content p { font-size: 1.1rem; opacity: 0.6; line-height: 1.7; margin-bottom: 40px; max-width: 500px; }
+
+    .spark-stats { 
+        display: flex; 
+        gap: 40px; 
+        margin-bottom: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 30px;
+    }
+    .stat-box h3 { 
+        font-size: 2.2rem; 
+        font-weight: 800; 
+        color: #fff; 
+        margin-bottom: 5px;
+        background: linear-gradient(135deg, #ffffff, #a5b4fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .stat-box span { font-size: 0.8rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* Mini Card Slider */
     .spark-slider-container {
@@ -350,10 +408,16 @@
         width: 100%;
         height: 320px;
         border-radius: 30px;
-        background: rgba(255,255,255,0.02);
-        border: 1px solid rgba(255,255,255,0.08);
-        backdrop-filter: blur(20px);
+        background: rgba(12, 12, 28, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(25px);
         overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s, box-shadow 0.4s;
+    }
+    .spark-mini-slider:hover {
+        transform: translateY(-8px);
+        border-color: rgba(139, 92, 246, 0.4);
+        box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05);
     }
     .spark-mini-slider .swiper-slide {
         width: 100%;
@@ -367,34 +431,31 @@
         justify-content: space-between;
     }
     .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .card-tag { 
-        background: rgba(255,255,255,0.05); 
-        padding: 6px 15px; 
-        border-radius: 50px; 
-        font-size: 0.7rem; 
-        font-weight: 700; 
-        color: rgba(255,255,255,0.6); 
-    }
     
-    .spark-card h4 { font-size: 1.4rem; font-weight: 700; line-height: 1.4; margin-bottom: 20px; }
+    .spark-card h4 { font-size: 1.4rem; font-weight: 700; line-height: 1.4; margin-bottom: 20px; color: #ffffff; }
     
     .card-footer { display: flex; justify-content: space-between; align-items: center; }
     .card-meta { display: flex; gap: 20px; font-size: 0.8rem; opacity: 0.5; }
     .card-meta span { display: flex; align-items: center; gap: 8px; }
 
     .open-btn {
-        background: rgba(255,255,255,0.05);
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
         color: #fff;
-        padding: 10px 25px;
-        border-radius: 12px;
+        padding: 10px 24px;
+        border-radius: 50px;
         text-decoration: none;
         font-size: 0.85rem;
         font-weight: 600;
-        border: 1px solid rgba(255,255,255,0.1);
-        transition: 0.3s;
-        display: flex; align-items: center; gap: 10px;
+        border: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex; align-items: center; gap: 8px;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
     }
-    .open-btn:hover { background: #fff; color: #000; }
+    .open-btn:hover { 
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    }
 
     .spark-controls {
         display: flex;
@@ -403,13 +464,13 @@
         margin-top: 25px;
         padding-left: 10px;
     }
-    .s-arrow { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
-    .s-arrow:hover { border-color: #2af598; color: #2af598; }
+    .s-arrow { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); }
+    .s-arrow:hover { border-color: #8b5cf6; color: #8b5cf6; }
     
     .s-pagination { display: flex; gap: 8px; }
     .s-dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: 0.3s; }
-    .s-dot.active { width: 20px; background: #2af598; border-radius: 10px; }
-    .s-count { font-size: 0.85rem; opacity: 0.4; margin-left: auto; }
+    .s-dot.active { width: 20px; background: #8b5cf6; border-radius: 10px; }
+    .s-count { font-size: 0.85rem; opacity: 0.4; margin-left: auto; color: #fff; }
 
     /* Learning Path Section */
     .learning-path-section {
@@ -419,9 +480,9 @@
         opacity: 0;
         animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.6s;
         position: relative;
-        background: rgba(255, 255, 255, 0.01);
+        background: rgba(8, 8, 16, 0.6);
         border-radius: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.04);
         overflow: hidden;
     }
 
@@ -430,7 +491,7 @@
         content: "";
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
         background-size: 30px 30px;
         opacity: 0.3;
         z-index: 0;
@@ -442,11 +503,11 @@
         content: "";
         position: absolute;
         top: 50%; left: 50%;
-        width: 60%; height: 60%;
-        background: radial-gradient(circle, rgba(42, 245, 152, 0.05) 0%, transparent 70%);
+        width: 80%; height: 80%;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(139, 92, 246, 0.04) 50%, transparent 100%);
         transform: translate(-50%, -50%);
         z-index: 0;
-        filter: blur(50px);
+        filter: blur(80px);
         pointer-events: none;
     }
 
@@ -464,6 +525,8 @@
         font-weight: 800;
         letter-spacing: -1px;
         margin-bottom: 15px;
+        color: #ffffff;
+        line-height: 1.15;
     }
     .section-heading p {
         font-size: 1.1rem;
@@ -483,77 +546,123 @@
     .path-grid::before {
         content: "";
         position: absolute;
-        top: 60px; /* Align with center of the icon */
-        left: 10%;
-        width: 80%;
+        top: 70px; /* Align with center of the icon */
+        left: 12.5%;
+        width: 75%;
         height: 2px;
-        background: linear-gradient(90deg, rgba(42, 245, 152, 0) 0%, rgba(42, 245, 152, 0.3) 50%, rgba(42, 245, 152, 0) 100%);
+        background: linear-gradient(90deg, 
+            rgba(59, 130, 246, 0) 0%, 
+            rgba(59, 130, 246, 0.3) 20%, 
+            rgba(168, 85, 247, 0.3) 50%, 
+            rgba(236, 72, 153, 0.3) 80%, 
+            rgba(16, 185, 129, 0) 100%
+        );
         z-index: 1;
     }
 
     .path-step {
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(12, 12, 28, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 30px;
         padding: 40px 30px;
-        text-align: center;
+        text-align: left;
         position: relative;
         z-index: 2;
-        backdrop-filter: blur(20px);
-        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(25px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 320px;
     }
     .path-step:hover {
-        transform: translateY(-10px);
-        background: rgba(42, 245, 152, 0.03);
-        border-color: rgba(42, 245, 152, 0.2);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        transform: translateY(-8px);
+    }
+    .path-step.step-1:hover {
+        border-color: rgba(59, 130, 246, 0.4);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.12), inset 0 0 15px rgba(59, 130, 246, 0.05);
+    }
+    .path-step.step-2:hover {
+        border-color: rgba(168, 85, 247, 0.4);
+        box-shadow: 0 15px 35px rgba(168, 85, 247, 0.12), inset 0 0 15px rgba(168, 85, 247, 0.05);
+    }
+    .path-step.step-3:hover {
+        border-color: rgba(236, 72, 153, 0.4);
+        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.12), inset 0 0 15px rgba(236, 72, 153, 0.05);
+    }
+    .path-step.step-4:hover {
+        border-color: rgba(16, 185, 129, 0.4);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.12), inset 0 0 15px rgba(16, 185, 129, 0.05);
     }
 
     .step-number {
         position: absolute;
-        top: 20px;
-        right: 25px;
-        font-size: 4rem;
-        font-weight: 900;
-        color: rgba(255,255,255,0.03);
-        line-height: 1;
-        transition: 0.4s;
-    }
-    .path-step:hover .step-number {
-        color: rgba(42, 245, 152, 0.1);
-    }
-
-    .step-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 30px;
-        background: #050505;
-        border: 2px solid rgba(42, 245, 152, 0.2);
-        border-radius: 20px;
+        top: 40px;
+        right: 30px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.04);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
-        color: #2af598;
-        box-shadow: 0 0 30px rgba(42, 245, 152, 0.1);
-        transition: 0.4s;
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }
+
+    .step-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.4s ease;
+    }
+    .step-1 .step-icon { color: #3b82f6; }
+    .step-2 .step-icon { color: #a855f7; }
+    .step-3 .step-icon { color: #ec4899; }
+    .step-4 .step-icon { color: #10b981; }
+
     .path-step:hover .step-icon {
-        background: #2af598;
-        color: #000;
-        box-shadow: 0 0 40px rgba(42, 245, 152, 0.3);
         transform: scale(1.1);
+    }
+    .step-1:hover .step-icon {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    }
+    .step-2:hover .step-icon {
+        background: rgba(168, 85, 247, 0.1);
+        border-color: rgba(168, 85, 247, 0.3);
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+    }
+    .step-3:hover .step-icon {
+        background: rgba(236, 72, 153, 0.1);
+        border-color: rgba(236, 72, 153, 0.3);
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+    }
+    .step-4:hover .step-icon {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.3);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
     }
 
     .path-step h3 {
-        font-size: 1.4rem;
+        font-size: 1.35rem;
         font-weight: 700;
-        margin-bottom: 15px;
+        margin: 15px 0 10px;
         color: #fff;
+        letter-spacing: -0.3px;
     }
     .path-step p {
         font-size: 0.95rem;
-        opacity: 0.6;
+        color: rgba(255, 255, 255, 0.6);
         line-height: 1.6;
         margin: 0;
     }
@@ -565,25 +674,53 @@
         padding: 0 5%;
         opacity: 0;
         animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.8s;
+        position: relative;
     }
+    .testimonials-section::before {
+        content: "";
+        position: absolute;
+        bottom: -50px; left: 30%;
+        width: 500px; height: 500px;
+        background: radial-gradient(circle, rgba(236, 72, 153, 0.05) 0%, transparent 70%);
+        z-index: -1;
+        filter: blur(80px);
+        pointer-events: none;
+    }
+
     .testimonial-slider {
         padding: 40px 0 80px;
         overflow: hidden;
     }
     .testimonial-card {
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(12, 12, 28, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 30px;
         padding: 40px;
-        backdrop-filter: blur(20px);
-        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        height: auto;
+        backdrop-filter: blur(25px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     .testimonial-card:hover {
-        transform: translateY(-10px);
-        background: rgba(255, 255, 255, 0.04);
-        border-color: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        transform: translateY(-8px);
+    }
+    .testimonial-card.card-glow-purple:hover {
+        border-color: rgba(168, 85, 247, 0.4);
+        box-shadow: 0 15px 35px rgba(168, 85, 247, 0.12), inset 0 0 15px rgba(168, 85, 247, 0.05);
+    }
+    .testimonial-card.card-glow-pink:hover {
+        border-color: rgba(236, 72, 153, 0.4);
+        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.12), inset 0 0 15px rgba(236, 72, 153, 0.05);
+    }
+    .testimonial-card.card-glow-blue:hover {
+        border-color: rgba(59, 130, 246, 0.4);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.12), inset 0 0 15px rgba(59, 130, 246, 0.05);
+    }
+    .testimonial-card.card-glow-green:hover {
+        border-color: rgba(16, 185, 129, 0.4);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.12), inset 0 0 15px rgba(16, 185, 129, 0.05);
     }
     
     .t-header {
@@ -595,17 +732,34 @@
     .t-avatar {
         width: 60px; height: 60px;
         border-radius: 50%;
-        background: linear-gradient(135deg, rgba(42, 245, 152, 0.2), rgba(0, 158, 253, 0.2));
         display: flex; align-items: center; justify-content: center;
-        font-size: 1.5rem; font-weight: 800; color: #fff;
-        border: 1px solid rgba(255,255,255,0.1);
+        font-size: 1.3rem; font-weight: 800; color: #fff;
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: all 0.3s;
     }
-    .t-info h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; }
-    .t-info p { font-size: 0.85rem; color: #2af598; margin: 0; font-weight: 600; opacity: 1; }
+    .t-avatar.avatar-purple {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.05));
+        border-color: rgba(168, 85, 247, 0.3);
+    }
+    .t-avatar.avatar-pink {
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));
+        border-color: rgba(236, 72, 153, 0.3);
+    }
+    .t-avatar.avatar-blue {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    .t-avatar.avatar-green {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .t-info h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; color: #fff; }
     
     .t-body { position: relative; }
-    .t-body i { font-size: 1.5rem; color: rgba(255,255,255,0.1); position: absolute; top: -10px; left: -10px; }
-    .t-body p { font-size: 1rem; line-height: 1.7; opacity: 0.7; position: relative; z-index: 2; padding-left: 15px; font-style: italic; }
+    .t-body i { font-size: 1.5rem; color: rgba(168, 85, 247, 0.06); position: absolute; top: -10px; left: -10px; transition: color 0.4s; }
+    .testimonial-card:hover .t-body i { color: rgba(168, 85, 247, 0.15); }
+    .t-body p { font-size: 1rem; line-height: 1.7; opacity: 0.7; position: relative; z-index: 2; padding-left: 15px; font-style: italic; color: rgba(255, 255, 255, 0.8); }
 
     .t-pagination {
         display: flex; justify-content: center; gap: 8px; margin-top: 20px;
@@ -622,6 +776,11 @@
 {% endblock %}
 
 {% block content %}
+<!-- Background Glows -->
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+
 <div class="as-slider" id="mainSlider">
     <!-- Slider content same -->
     <div class="as-slider-background">
@@ -663,8 +822,8 @@
 
 <section class="daily-spark-section">
     <div class="spark-content">
-        <div class="refreshes">Refreshes Daily</div>
-        <h2>Sharpen your skills, <br>one question at a time</h2>
+        <div class="pill-badge badge-purple" style="margin-bottom: 20px;">Refreshes Daily</div>
+        <h2>Sharpen your skills, <br><span class="gradient-text">one question at a time</span></h2>
         <p>Practice makes placement. Every day brings fresh questions across Aptitude, Logic, and Verbal — crafted to match real campus interview patterns.</p>
         
         <div class="spark-stats">
@@ -682,8 +841,8 @@
             </div>
         </div>
 
-        <div class="streak-badge">
-            <i class="fas fa-fire"></i> Your streak: 7 days
+        <div class="pill-badge badge-pink">
+            <i class="fas fa-fire" style="margin-right: 5px;"></i> Your streak: 7 days
         </div>
     </div>
 
@@ -694,7 +853,7 @@
                 <div class="swiper-slide">
                     <div class="spark-card">
                         <div class="card-top">
-                            <span class="card-tag">{{ q.category }}</span>
+                            <span class="pill-badge badge-blue">{{ q.category }}</span>
                         </div>
                         <h4>{{ q.text|truncatechars:80 }}</h4>
                         <div class="card-footer">
@@ -722,34 +881,38 @@
 <!-- Learning Path Section -->
 <section class="learning-path-section">
     <div class="section-heading">
-        <h2>Your Journey to Placement</h2>
+        <h2>Your Journey to <span class="gradient-text">Placement</span></h2>
         <p>A proven, structured roadmap designed by industry experts to take you from a beginner to a top-tier candidate.</p>
     </div>
 
     <div class="path-grid">
-        <div class="path-step">
+        <div class="path-step step-1">
             <div class="step-number">1</div>
+            <span class="pill-badge badge-blue">Concept</span>
             <div class="step-icon"><i class="fas fa-book-reader"></i></div>
             <h3>Learn Concepts</h3>
             <p>Dive deep into our curated study materials, cheat sheets, and video lectures to build a strong foundation.</p>
         </div>
 
-        <div class="path-step">
+        <div class="path-step step-2">
             <div class="step-number">2</div>
+            <span class="pill-badge badge-purple">Daily Spark</span>
             <div class="step-icon"><i class="fas fa-dumbbell"></i></div>
             <h3>Practice Daily</h3>
             <p>Solve targeted module-wise questions and maintain your Daily Spark streak to sharpen your problem-solving skills.</p>
         </div>
 
-        <div class="path-step">
+        <div class="path-step step-3">
             <div class="step-number">3</div>
+            <span class="pill-badge badge-pink">Mock Tests</span>
             <div class="step-icon"><i class="fas fa-laptop-code"></i></div>
             <h3>Assess Yourself</h3>
             <p>Take full-length, company-specific mock tests in a simulated environment to identify and work on your weak areas.</p>
         </div>
 
-        <div class="path-step">
+        <div class="path-step step-4">
             <div class="step-number">4</div>
+            <span class="pill-badge badge-green">Placements</span>
             <div class="step-icon"><i class="fas fa-trophy"></i></div>
             <h3>Conquer Interviews</h3>
             <p>Walk into your campus placements with confidence, armed with the right knowledge and extensive practice.</p>
@@ -760,7 +923,7 @@
 <!-- Testimonials Section -->
 <section class="testimonials-section">
     <div class="section-heading">
-        <h2>Wall of Love</h2>
+        <h2>Wall of <span class="gradient-text">Love</span></h2>
         <p>See what our successful candidates have to say about their journey with PrepVerse.</p>
     </div>
 
@@ -768,12 +931,12 @@
         <div class="swiper-wrapper">
             <!-- Testimonial 1 -->
             <div class="swiper-slide">
-                <div class="testimonial-card">
+                <div class="testimonial-card card-glow-purple">
                     <div class="t-header">
-                        <div class="t-avatar">AS</div>
+                        <div class="t-avatar avatar-purple">AS</div>
                         <div class="t-info">
                             <h4>Amit Sharma</h4>
-                            <p>Placed at Amazon</p>
+                            <span class="pill-badge badge-purple" style="margin-top: 5px;">Placed at Amazon</span>
                         </div>
                     </div>
                     <div class="t-body">
@@ -785,12 +948,12 @@
             
             <!-- Testimonial 2 -->
             <div class="swiper-slide">
-                <div class="testimonial-card">
+                <div class="testimonial-card card-glow-pink">
                     <div class="t-header">
-                        <div class="t-avatar" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(252, 203, 144, 0.2));">PR</div>
+                        <div class="t-avatar avatar-pink">PR</div>
                         <div class="t-info">
                             <h4>Priya Reddy</h4>
-                            <p>Placed at TCS Digital</p>
+                            <span class="pill-badge badge-pink" style="margin-top: 5px;">Placed at TCS Digital</span>
                         </div>
                     </div>
                     <div class="t-body">
@@ -802,12 +965,12 @@
 
             <!-- Testimonial 3 -->
             <div class="swiper-slide">
-                <div class="testimonial-card">
+                <div class="testimonial-card card-glow-blue">
                     <div class="t-header">
-                        <div class="t-avatar" style="background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(65, 88, 208, 0.2));">VK</div>
+                        <div class="t-avatar avatar-blue">VK</div>
                         <div class="t-info">
                             <h4>Vikas Kumar</h4>
-                            <p>Placed at Infosys</p>
+                            <span class="pill-badge badge-blue" style="margin-top: 5px;">Placed at Infosys</span>
                         </div>
                     </div>
                     <div class="t-body">
@@ -819,12 +982,12 @@
 
             <!-- Testimonial 4 -->
             <div class="swiper-slide">
-                <div class="testimonial-card">
+                <div class="testimonial-card card-glow-green">
                     <div class="t-header">
-                        <div class="t-avatar" style="background: linear-gradient(135deg, rgba(42, 245, 152, 0.2), rgba(0, 158, 253, 0.2));">SM</div>
+                        <div class="t-avatar avatar-green">SM</div>
                         <div class="t-info">
                             <h4>Sneha Mishra</h4>
-                            <p>Placed at Cognizant</p>
+                            <span class="pill-badge badge-green" style="margin-top: 5px;">Placed at Cognizant</span>
                         </div>
                     </div>
                     <div class="t-body">
