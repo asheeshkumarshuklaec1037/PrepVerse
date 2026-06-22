@@ -285,17 +285,27 @@
     /* Subject Cards List Grid */
     .subject-cards-grid {
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+    @media (max-width: 1200px) {
+        .subject-cards-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 640px) {
+        .subject-cards-grid {
+            grid-template-columns: 1fr;
+        }
     }
     .subject-card {
-        padding: 20px;
+        padding: 14px;
         cursor: pointer;
         border-radius: 20px;
     }
     .subject-cover-img-box {
         width: 100%;
-        height: 115px;
+        height: 95px;
         border-radius: 16px;
         position: relative;
         overflow: hidden;
@@ -313,13 +323,13 @@
         position: absolute;
         top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        width: 44px; height: 44px;
+        width: 36px; height: 36px;
         border-radius: 50%;
         background: rgba(7, 4, 18, 0.8);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.15rem;
+        font-size: 0.95rem;
         backdrop-filter: blur(4px);
         z-index: 2;
     }
@@ -398,10 +408,9 @@
         font-family: 'Outfit', sans-serif;
     }
 
-    /* 3D Concept Flashcards */
     .concept-card-wrapper {
         perspective: 1000px;
-        height: 160px;
+        height: 210px;
         cursor: pointer;
         width: 100%;
     }
@@ -678,8 +687,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        border-radius: 10px;
-        font-size: 0.7rem;
+        border-radius: 8px;
+        font-size: 0.65rem;
         font-weight: 700;
         cursor: pointer;
         position: relative;
@@ -725,8 +734,8 @@
     .event-list-item {
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(255, 255, 255, 0.04);
-        border-radius: 16px;
-        padding: 10px 14px;
+        border-radius: 12px;
+        padding: 6px 12px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -909,51 +918,160 @@
         </div>
     </div>
 
+    <!-- Subject Preparations Horizontal Row -->
+    <div class="glass-card p-6 mt-8" data-aos="fade-up" data-aos-delay="150">
+        <div class="widget-header">
+            <i class="fas fa-book-open text-[#c084fc]"></i>
+            <span>Subject Preparations</span>
+        </div>
+        
+        <div class="subject-cards-grid">
+            {% for cat in categories %}
+            <div class="glass-card subject-card" style="background: rgba(13, 11, 29, 0.35);" onclick="location.href='{% url 'courses' %}'">
+                <div class="subject-cover-img-box mb-4">
+                    <img src="{{ cat.image }}" alt="{{ cat.title }}">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#070412] via-transparent to-transparent"></div>
+                    <div class="subject-icon-badge" style="color: {{ cat.color }}; border: 1px solid {{ cat.color }}44; box-shadow: 0 0 10px {{ cat.color }}33;">
+                        <i class="fas {{ cat.icon }}"></i>
+                    </div>
+                </div>
+                <h4 class="font-extrabold text-sm text-white">{{ cat.title }}</h4>
+                <p class="text-[10px] text-gray-400 font-bold mb-4">
+                    {% if cat.title == "Quantitative Aptitude" %}Prof. Arun Sharma
+                    {% elif cat.title == "Logical Reasoning" %}Prof. R.S. Aggarwal
+                    {% elif cat.title == "Verbal Ability" %}Prof. Wren & Martin
+                    {% else %}Prof. Jonathan Reyes{% endif %}
+                </p>
+                <div class="mb-4">
+                    <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
+                        <span>{% if cat.progress == 45 %}6 lessons left{% elif cat.progress == 60 %}4 lessons left{% elif cat.progress == 30 %}8 lessons left{% else %}9 lessons left{% endif %}</span>
+                        <span style="color: {{ cat.color }};">{{ cat.progress }}% Complete</span>
+                    </div>
+                    <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width: {{ cat.progress }}%; background-color: {{ cat.color }};"></div>
+                    </div>
+                </div>
+                <div class="flex gap-3" onclick="event.stopPropagation();">
+                    <a href="{% url 'courses' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90" style="background: {{ cat.color }}; text-decoration: none;">Study Course</a>
+                    <a href="{% url 'practice' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-white border border-white/5 bg-white/2 transition-all hover:bg-white/5" style="text-decoration: none;">Practice Meter</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Mock Tests Overview Section -->
+    <div class="glass-card p-6 mt-8" data-aos="fade-up" data-aos-delay="180">
+        <div class="widget-header">
+            <i class="fas fa-graduation-cap text-[#fb7185]"></i>
+            <span>Mock Test Performance Overview</span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1: Module Blitz -->
+            <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between bg-[#0d0b1d]/35 border border-white/5" style="background: rgba(13, 11, 29, 0.35);">
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-extrabold text-sm text-white">Module Blitz</h4>
+                            <span class="text-[9px] text-[#2af598] font-bold uppercase tracking-wider bg-[#2af598]/10 border border-[#2af598]/20 px-2 py-0.5 rounded">15 Mins | 10 MCQs</span>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-[#2af598]/15 border border-[#2af598]/30 flex items-center justify-center text-[#2af598] text-xs">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">Focus deeply on a single, isolated module within a topic. Highly recommended for drilling specific weak concepts.</p>
+                </div>
+                <div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
+                            <span>Completed: <strong class="text-white" id="blitzTakenVal">0</strong> / 15</span>
+                            <span class="text-[#2af598]" id="blitzPctVal">0%</span>
+                        </div>
+                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-[#2af598]" id="blitzProgressFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-bold mb-4">
+                        <span id="blitzRemainingVal">Remaining: 15</span>
+                        <span>Baseline: 3</span>
+                    </div>
+                    <a href="{% url 'mock_test' %}" class="w-full text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90 block" style="background: #2af598; text-decoration: none;">Configure & Start</a>
+                </div>
+            </div>
+
+            <!-- Card 2: Topic Master -->
+            <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between bg-[#0d0b1d]/35 border border-white/5" style="background: rgba(13, 11, 29, 0.35);">
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-extrabold text-sm text-white">Topic Master</h4>
+                            <span class="text-[9px] text-[#fbcd0b] font-bold uppercase tracking-wider bg-[#fbcd0b]/10 border border-[#fbcd0b]/20 px-2 py-0.5 rounded">30 Mins | 25 MCQs</span>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-[#fbcd0b]/15 border border-[#fbcd0b]/30 flex items-center justify-center text-[#fbcd0b] text-xs">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">Covers all modules under a selected topic. Ideal for testing overall grasp of a composite topic category.</p>
+                </div>
+                <div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
+                            <span>Completed: <strong class="text-white" id="topicTakenVal">0</strong> / 10</span>
+                            <span class="text-[#fbcd0b]" id="topicPctVal">0%</span>
+                        </div>
+                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-[#fbcd0b]" id="topicProgressFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-bold mb-4">
+                        <span id="topicRemainingVal">Remaining: 10</span>
+                        <span>Baseline: 3</span>
+                    </div>
+                    <a href="{% url 'mock_test' %}" class="w-full text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90 block" style="background: #fbcd0b; text-decoration: none;">Configure & Start</a>
+                </div>
+            </div>
+
+            <!-- Card 3: Subject Marathon -->
+            <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between bg-[#0d0b1d]/35 border border-white/5" style="background: rgba(13, 11, 29, 0.35);">
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-extrabold text-sm text-white">Subject Marathon</h4>
+                            <span class="text-[9px] text-[#fb7185] font-bold uppercase tracking-wider bg-[#fb7185]/10 border border-[#fb7185]/20 px-2 py-0.5 rounded">60 Mins | 50 MCQs</span>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-[#fb7185]/15 border border-[#fb7185]/30 flex items-center justify-center text-[#fb7185] text-xs">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">A full scope test covering all topics and modules inside a major subject. Prepares you for general aptitude rounds.</p>
+                </div>
+                <div>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
+                            <span>Completed: <strong class="text-white" id="marathonTakenVal">0</strong> / 5</span>
+                            <span class="text-[#fb7185]" id="marathonPctVal">0%</span>
+                        </div>
+                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full bg-[#fb7185]" id="marathonProgressFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-bold mb-4">
+                        <span id="marathonRemainingVal">Remaining: 5</span>
+                        <span>Baseline: 3</span>
+                    </div>
+                    <a href="{% url 'mock_test' %}" class="w-full text-center py-2 text-[10px] font-black rounded-lg text-white transition-all hover:opacity-90 block" style="background: linear-gradient(135deg, #fb7185, #f43f5e); text-decoration: none;">Configure & Start</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 3. Dashboard Main Grid Blocks (3-Column Layout) -->
     <div class="dashboard-grid">
 
         <!-- COLUMN 1: Subject Cards Grid & Navigation -->
         <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="glass-card p-6">
-                <div class="widget-header">
-                    <i class="fas fa-book-open text-[#c084fc]"></i>
-                    <span>Subject Preparations</span>
-                </div>
-                
-                <div class="subject-cards-grid">
-                    {% for cat in categories %}
-                    <div class="glass-card subject-card" style="background: rgba(13, 11, 29, 0.35);" onclick="location.href='{% url 'courses' %}'">
-                        <div class="subject-cover-img-box mb-4">
-                            <img src="{{ cat.image }}" alt="{{ cat.title }}">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#070412] via-transparent to-transparent"></div>
-                            <div class="subject-icon-badge" style="color: {{ cat.color }}; border: 1px solid {{ cat.color }}44; box-shadow: 0 0 10px {{ cat.color }}33;">
-                                <i class="fas {{ cat.icon }}"></i>
-                            </div>
-                        </div>
-                        <h4 class="font-extrabold text-sm text-white">{{ cat.title }}</h4>
-                        <p class="text-[10px] text-gray-400 font-bold mb-4">
-                            {% if cat.title == "Quantitative Aptitude" %}Prof. Arun Sharma
-                            {% elif cat.title == "Logical Reasoning" %}Prof. R.S. Aggarwal
-                            {% elif cat.title == "Verbal Ability" %}Prof. Wren & Martin
-                            {% else %}Prof. Jonathan Reyes{% endif %}
-                        </p>
-                        <div class="mb-4">
-                            <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
-                                <span>{% if cat.progress == 45 %}6 lessons left{% elif cat.progress == 60 %}4 lessons left{% elif cat.progress == 30 %}8 lessons left{% else %}9 lessons left{% endif %}</span>
-                                <span style="color: {{ cat.color }};">{{ cat.progress }}% Complete</span>
-                            </div>
-                            <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
-                                <div class="h-full rounded-full" style="width: {{ cat.progress }}%; background-color: {{ cat.color }};"></div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3" onclick="event.stopPropagation();">
-                            <a href="{% url 'courses' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90" style="background: {{ cat.color }}; text-decoration: none;">Study Course</a>
-                            <a href="{% url 'practice' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-white border border-white/5 bg-white/2 transition-all hover:bg-white/5" style="text-decoration: none;">Practice Meter</a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+
 
             <!-- Quick Navigation Menu -->
             <div class="glass-card p-6">
@@ -978,6 +1096,58 @@
                         <span class="flex items-center gap-2"><i class="fas fa-newspaper text-[#fb7185]"></i> Study Journals</span>
                         <i class="fas fa-chevron-right text-gray-500 text-[10px]"></i>
                     </a>
+                </div>
+            </div>
+
+            <!-- Weekly ranking Leaderboard widget -->
+            <div class="glass-card p-6 flex flex-col justify-between flex-1">
+                <div>
+                    <div class="widget-header">
+                        <i class="fas fa-ranking-star text-[#c084fc]"></i>
+                        <span>Weekly Leaderboard</span>
+                    </div>
+
+                    <div class="flex flex-col gap-3" id="leaderboardList">
+                        <!-- Rohan -->
+                        <div class="leader-row-card" id="leader-rohan" data-xp="520" data-name="Rohan Verma" data-rank="7">
+                            <div class="flex items-center gap-3">
+                                <span class="leader-rank text-xs font-black text-gray-500 w-4">7</span>
+                                <div class="leaderboard-avatar-circle">R</div>
+                                <span class="text-xs font-bold text-white">Rohan Verma</span>
+                            </div>
+                            <span class="text-xs font-black text-[#c084fc]">520 XP</span>
+                        </div>
+
+                        <!-- Vikram -->
+                        <div class="leader-row-card" id="leader-vikram" data-xp="480" data-name="Vikram Singh" data-rank="8">
+                            <div class="flex items-center gap-3">
+                                <span class="leader-rank text-xs font-black text-gray-500 w-4">8</span>
+                                <div class="leaderboard-avatar-circle">V</div>
+                                <span class="text-xs font-bold text-white">Vikram Singh</span>
+                            </div>
+                            <span class="text-xs font-black text-[#c084fc]">480 XP</span>
+                        </div>
+
+                        <!-- User -->
+                        <div class="leader-row-card user-row" id="leader-user" data-xp="450" data-name="You" data-rank="9">
+                            <div class="flex items-center gap-3">
+                                <span class="leader-rank text-xs font-black text-[#c084fc] w-4" id="leaderUserRankText">9</span>
+                                <div class="leaderboard-avatar-circle bg-[#c084fc]/20 text-[#c084fc]">{{ user.first_name|slice:":1"|upper }}</div>
+                                <span class="text-xs font-black text-white">{{ user.first_name }} (You)</span>
+                            </div>
+                            <span class="text-xs font-black text-[#c084fc]" id="leaderUserScoreText">450 XP</span>
+                        </div>
+
+                        <!-- Priya -->
+                        <div class="leader-row-card" id="leader-priya" data-xp="410" data-name="Priya Sharma" data-rank="10">
+                            <div class="flex items-center gap-3">
+                                <span class="leader-rank text-xs font-black text-gray-500 w-4">10</span>
+                                <div class="leaderboard-avatar-circle">P</div>
+                                <span class="text-xs font-bold text-white">Priya Sharma</span>
+                            </div>
+                            <span class="text-xs font-black text-[#c084fc]">410 XP</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1044,35 +1214,37 @@
             </div>
 
             <!-- Concept Flashcards Deck Widget -->
-            <div class="glass-card p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-clone text-[#c084fc]"></i>
-                        <span class="font-extrabold text-sm text-white">Interactive Concept Cards</span>
-                    </div>
-                    <span id="flashcardDeckCounter" class="text-[10px] text-gray-500 font-bold">Card 1/4</span>
-                </div>
-
-                <!-- 3D Transform flashcard wrapper -->
-                <div class="concept-card-wrapper mb-5" id="flashcardWidget">
-                    <div class="concept-card-inner" id="flashcardInner">
-                        <!-- Front face -->
-                        <div class="concept-card-face concept-card-front">
-                            <span class="recent-tag tag-quant text-[8px]" id="flashcardCategory">Quantitative Aptitude</span>
-                            <h4 id="flashcardQuestion" class="font-extrabold text-xs text-white text-center mt-3 leading-relaxed">
-                                What is the formula for the Sum of first 'n' natural numbers?
-                            </h4>
-                            <span class="text-[9px] text-gray-500 uppercase mt-5 font-bold tracking-wider">
-                                <i class="fas fa-rotate mr-1"></i> Tap Card to Reveal
-                            </span>
+            <div class="glass-card p-6 flex flex-col justify-between flex-1">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-clone text-[#c084fc]"></i>
+                            <span class="font-extrabold text-sm text-white">Interactive Concept Cards</span>
                         </div>
-                        <!-- Back face -->
-                        <div class="concept-card-face concept-card-back">
-                            <span class="text-[9px] text-[#2af598] uppercase font-black tracking-wider mb-2">Answer & Concept</span>
-                            <h3 id="flashcardAnswer" class="font-extrabold text-lg text-[#2af598] mb-2 text-center">n * (n + 1) / 2</h3>
-                            <p id="flashcardExplanation" class="text-[10px] text-gray-400 text-center leading-relaxed">
-                                Example: For n = 10, the sum is 10 * 11 / 2 = 55.
-                            </p>
+                        <span id="flashcardDeckCounter" class="text-[10px] text-gray-500 font-bold">Card 1/4</span>
+                    </div>
+
+                    <!-- 3D Transform flashcard wrapper -->
+                    <div class="concept-card-wrapper mb-5" id="flashcardWidget">
+                        <div class="concept-card-inner" id="flashcardInner">
+                            <!-- Front face -->
+                            <div class="concept-card-face concept-card-front">
+                                <span class="recent-tag tag-quant text-[8px]" id="flashcardCategory">Quantitative Aptitude</span>
+                                <h4 id="flashcardQuestion" class="font-extrabold text-xs text-white text-center mt-3 leading-relaxed">
+                                    What is the formula for the Sum of first 'n' natural numbers?
+                                </h4>
+                                <span class="text-[9px] text-gray-500 uppercase mt-5 font-bold tracking-wider">
+                                    <i class="fas fa-rotate mr-1"></i> Tap Card to Reveal
+                                </span>
+                            </div>
+                            <!-- Back face -->
+                            <div class="concept-card-face concept-card-back">
+                                <span class="text-[9px] text-[#2af598] uppercase font-black tracking-wider mb-2">Answer & Concept</span>
+                                <h3 id="flashcardAnswer" class="font-extrabold text-lg text-[#2af598] mb-2 text-center">n * (n + 1) / 2</h3>
+                                <p id="flashcardExplanation" class="text-[10px] text-gray-400 text-center leading-relaxed">
+                                    Example: For n = 10, the sum is 10 * 11 / 2 = 55.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1114,28 +1286,22 @@
                 </div>
             </div>
 
+            <!-- Scheduled Events Widget -->
+            <div class="glass-card p-6 flex flex-col justify-between flex-1" id="eventsWidget">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-tasks text-[#c084fc]"></i>
+                            <span class="font-extrabold text-sm text-white">Scheduled Activity</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button id="filterSelectedDayBtn" class="text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all">Today</button>
+                            <button id="filterAllBtn" class="text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all">All</button>
+                        </div>
+                    </div>
 
-            <!-- Interactive Study Calendar Widget -->
-            <div class="glass-card p-6" id="calendarWidget">
-                <div class="widget-header flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-calendar-alt text-[#38bdf8]"></i>
-                        <span class="font-extrabold text-sm text-white">Study Calendar</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button id="prevMonthBtn" class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs hover:bg-white/10 text-white transition-all"><i class="fas fa-chevron-left"></i></button>
-                        <span id="calendarMonthYear" class="text-xs font-black text-white min-w-[70px] text-center">June 2026</span>
-                        <button id="nextMonthBtn" class="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-xs hover:bg-white/10 text-white transition-all"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                </div>
-
-                <!-- Calendar grid -->
-                <div class="calendar-container mb-4">
-                    <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-black text-gray-500 uppercase tracking-wider mb-2">
-                        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-                    </div>
-                    <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1.5 text-center">
-                        <!-- Dynamic calendar days -->
+                    <div id="eventsListContainer" class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1 mb-4">
+                        <!-- Dynamic events list items -->
                     </div>
                 </div>
 
@@ -1144,92 +1310,11 @@
                 </button>
             </div>
 
-            <!-- Scheduled Events Widget -->
-            <div class="glass-card p-6" id="eventsWidget">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2">
-                        <i class="fas fa-tasks text-[#c084fc]"></i>
-                        <span class="font-extrabold text-sm text-white">Scheduled Events</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <button id="filterSelectedDayBtn" class="text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all">Selected Day</button>
-                        <button id="filterAllBtn" class="text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all">All</button>
-                    </div>
-                </div>
-
-                <div id="eventsListContainer" class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1">
-                    <!-- Dynamic events list items -->
-                </div>
-            </div>
-
-            <!-- Conceptual study tip card (rotatable) -->
-            <div class="glass-card p-6">
-                <div class="widget-header">
-                    <i class="fas fa-lightbulb text-[#fbcd0b]"></i>
-                    <span>Conceptual Study Tip</span>
-                </div>
-                <div class="p-4 rounded-xl bg-white/2 border border-white/5 mb-4">
-                    <p id="studyTipText" class="text-xs text-gray-300 italic leading-relaxed min-h-[40px] transition-opacity duration-300">
-                        Vedic maths multiplication techniques (like criss-cross method) can save up to 40% of time in Quant sections.
-                    </p>
-                </div>
-                <button class="w-full py-2 text-[10px] font-bold rounded-lg border border-white/5 bg-white/2 hover:bg-white/5 text-gray-300 transition-all flex items-center justify-center gap-1.5" id="tipRotateBtn">
-                    <i class="fas fa-rotate"></i> Next Study Tip
-                </button>
-            </div>
-
-            <!-- Weekly ranking Leaderboard widget -->
-            <div class="glass-card p-6">
-                <div class="widget-header">
-                    <i class="fas fa-ranking-star text-[#c084fc]"></i>
-                    <span>Weekly Leaderboard</span>
-                </div>
-
-                <div class="flex flex-col gap-3" id="leaderboardList">
-                    <!-- Rohan -->
-                    <div class="leader-row-card" id="leader-rohan" data-xp="520" data-name="Rohan Verma" data-rank="7">
-                        <div class="flex items-center gap-3">
-                            <span class="leader-rank text-xs font-black text-gray-500 w-4">7</span>
-                            <div class="leaderboard-avatar-circle">R</div>
-                            <span class="text-xs font-bold text-white">Rohan Verma</span>
-                        </div>
-                        <span class="text-xs font-black text-[#c084fc]">520 XP</span>
-                    </div>
-
-                    <!-- Vikram -->
-                    <div class="leader-row-card" id="leader-vikram" data-xp="480" data-name="Vikram Singh" data-rank="8">
-                        <div class="flex items-center gap-3">
-                            <span class="leader-rank text-xs font-black text-gray-500 w-4">8</span>
-                            <div class="leaderboard-avatar-circle">V</div>
-                            <span class="text-xs font-bold text-white">Vikram Singh</span>
-                        </div>
-                        <span class="text-xs font-black text-[#c084fc]">480 XP</span>
-                    </div>
-
-                    <!-- User -->
-                    <div class="leader-row-card user-row" id="leader-user" data-xp="450" data-name="You" data-rank="9">
-                        <div class="flex items-center gap-3">
-                            <span class="leader-rank text-xs font-black text-[#c084fc] w-4" id="leaderUserRankText">9</span>
-                            <div class="leaderboard-avatar-circle bg-[#c084fc]/20 text-[#c084fc]">{{ user.first_name|slice:":1"|upper }}</div>
-                            <span class="text-xs font-black text-white">{{ user.first_name }} (You)</span>
-                        </div>
-                        <span class="text-xs font-black text-[#c084fc]" id="leaderUserScoreText">450 XP</span>
-                    </div>
-
-                    <!-- Priya -->
-                    <div class="leader-row-card" id="leader-priya" data-xp="410" data-name="Priya Sharma" data-rank="10">
-                        <div class="flex items-center gap-3">
-                            <span class="leader-rank text-xs font-black text-gray-500 w-4">10</span>
-                            <div class="leaderboard-avatar-circle">P</div>
-                            <span class="text-xs font-bold text-white">Priya Sharma</span>
-                        </div>
-                        <span class="text-xs font-black text-[#c084fc]">410 XP</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>
+
+
 </div>
 
 <!-- CELEBRATION LEVEL UP OVERLAY -->
@@ -1275,7 +1360,7 @@
                 </div>
                 <div>
                     <h3 class="font-black text-sm text-white font-['Outfit']">Add Study Event</h3>
-                    <span id="selectedEventDateLabel" class="text-[9px] text-gray-500 uppercase font-black tracking-widest">22 Jun 2026</span>
+                    <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">Plan your milestone</span>
                 </div>
             </div>
             <button onclick="closeAddEventModal()" class="text-gray-500 hover:text-white transition-all text-base"><i class="fas fa-times"></i></button>
@@ -1289,18 +1374,23 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Date</label>
+                    <input type="date" id="eventDateInput" required class="w-full bg-white/3 border border-white/8 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
+                </div>
+                <div class="flex flex-col gap-1.5">
                     <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Time</label>
                     <input type="time" id="eventTimeInput" required class="w-full bg-white/3 border border-white/8 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
                 </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Type</label>
-                    <select id="eventTypeInput" class="w-full bg-white/3 border border-white/8 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
-                        <option value="test" class="bg-[#0f0b24] text-white">Mock Test</option>
-                        <option value="revision" class="bg-[#0f0b24] text-white">Revision</option>
-                        <option value="study" class="bg-[#0f0b24] text-white">Study Session</option>
-                        <option value="mcq" class="bg-[#0f0b24] text-white">MCQ Practice</option>
-                    </select>
-                </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Type</label>
+                <select id="eventTypeInput" class="w-full bg-white/3 border border-white/8 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
+                    <option value="test" class="bg-[#0f0b24] text-white">Mock Test</option>
+                    <option value="revision" class="bg-[#0f0b24] text-white">Revision</option>
+                    <option value="study" class="bg-[#0f0b24] text-white">Study Session</option>
+                    <option value="mcq" class="bg-[#0f0b24] text-white">MCQ Practice</option>
+                </select>
             </div>
 
             <div class="flex gap-3 mt-2">
@@ -2057,42 +2147,7 @@
             });
         }
 
-        // 10. Study tips rotatable widget
-        const tips = [
-            "Vedic maths multiplication techniques (like criss-cross method) can save up to 40% of time in Quant sections.",
-            "In Syllogism questions, draw Venn diagrams immediately. Do not guess statements visually.",
-            "For reading comprehension, read the questions *before* reading the passage to frame key search-anchors.",
-            "Remember that the base method for squaring numbers close to 100 makes calculations instantaneous.",
-            "When solving 'Time and Work' problems, convert efficiencies into ratios. It reduces equations.",
-            "Competitive aptitude exams heavily penalize lack of speed. Set a timer of 1 minute per practice question."
-        ];
-
-        let tipIdx = 0;
-        const rotateBtn = document.getElementById("tipRotateBtn");
-        const tipTextEl = document.getElementById("studyTipText");
-
-        if (rotateBtn && tipTextEl) {
-            rotateBtn.addEventListener("click", () => {
-                // Auto check quest 1 if not checked
-                const quest1 = document.getElementById("quest1");
-                if (quest1 && !quest1.checked) {
-                    quest1.checked = true;
-                    localStorage.setItem("prepverse-quest-1", "true");
-                    const visual = quest1.nextElementSibling;
-                    if (visual) spawnXPBubble(visual, "+5 XP");
-                }
-
-                // Rotate tip text
-                tipTextEl.style.opacity = "0";
-                setTimeout(() => {
-                    tipIdx = (tipIdx + 1) % tips.length;
-                    tipTextEl.textContent = tips[tipIdx];
-                    tipTextEl.style.opacity = "1";
-                    updateQuests();
-                    updateAchievementsUI();
-                }, 300);
-            });
-        }
+        // 10. Study tips rotatable widget removed
 
         // Weekly Hours Bar Fill animations after layout rendered
         setTimeout(() => {
@@ -2101,16 +2156,17 @@
             });
         }, 500);
 
-        // 11. Interactive Study Calendar & Scheduled Events logic
-        let calendarDate = new Date(); // current visible month
-        let selectedDate = new Date(); // clicked day
-        let filterMode = 'selected'; // 'selected' or 'all'
+        // 11. Scheduled Events logic
+        let filterMode = 'selected'; // 'selected' (today) or 'all'
 
         // Load events
         let studyEvents = [];
         try {
-            studyEvents = JSON.parse(localStorage.getItem('prepverse-study-events')) || [];
+            studyEvents = JSON.parse(localStorage.getItem('prepverse-study-events'));
         } catch(e) {
+            studyEvents = [];
+        }
+        if (!Array.isArray(studyEvents)) {
             studyEvents = [];
         }
 
@@ -2136,15 +2192,9 @@
             return `${y}-${m}-${d}`;
         }
 
-        const prevBtn = document.getElementById("prevMonthBtn");
-        const nextBtn = document.getElementById("nextMonthBtn");
-        const monthYearLabel = document.getElementById("calendarMonthYear");
-        const daysGrid = document.getElementById("calendarDaysGrid");
         const openAddModalBtn = document.getElementById("openAddEventModalBtn");
         const addModal = document.getElementById("addEventModal");
-        const selectedDateLabel = document.getElementById("selectedEventDateLabel");
         const eventForm = document.getElementById("addEventForm");
-        
         const listContainer = document.getElementById("eventsListContainer");
         const filterSelBtn = document.getElementById("filterSelectedDayBtn");
         const filterAllBtn = document.getElementById("filterAllBtn");
@@ -2165,92 +2215,13 @@
             });
         }
 
-        // Render calendar
-        function renderCalendar() {
-            if (!daysGrid || !monthYearLabel) return;
-            daysGrid.innerHTML = "";
-
-            const year = calendarDate.getFullYear();
-            const month = calendarDate.getMonth();
-
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            monthYearLabel.textContent = `${monthNames[month]} ${year}`;
-
-            // First day of month (Mon=0, Tue=1, ..., Sun=6)
-            let firstDay = new Date(year, month, 1).getDay();
-            // Convert standard JS getDay (Sun=0, Mon=1...) to Mon=0...
-            firstDay = firstDay === 0 ? 6 : firstDay - 1;
-
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            // Render empty slots for padding before first day
-            for (let i = 0; i < firstDay; i++) {
-                const emptyCell = document.createElement("div");
-                emptyCell.className = "calendar-day-box empty";
-                daysGrid.appendChild(emptyCell);
-            }
-
-            // Render actual days
-            const today = new Date();
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dayCell = document.createElement("div");
-                dayCell.className = "calendar-day-box";
-                dayCell.textContent = day;
-
-                const thisDate = new Date(year, month, day);
-                const dateKey = formatDateISO(thisDate);
-
-                // Add today highlight
-                if (thisDate.toDateString() === today.toDateString()) {
-                    dayCell.classList.add("today");
-                }
-
-                // Add selected highlight
-                if (thisDate.toDateString() === selectedDate.toDateString()) {
-                    dayCell.classList.add("selected");
-                }
-
-                // Check for event dots
-                const hasEvent = studyEvents.some(evt => evt.date === dateKey);
-                if (hasEvent) {
-                    const dot = document.createElement("span");
-                    dot.className = "calendar-event-dot";
-                    dayCell.appendChild(dot);
-                }
-
-                // Click event
-                dayCell.addEventListener("click", () => {
-                    selectedDate = thisDate;
-                    // Render selected day highlight
-                    document.querySelectorAll(".calendar-day-box").forEach(el => el.classList.remove("selected"));
-                    dayCell.classList.add("selected");
-                    
-                    // Trigger events list refresh
-                    renderEventsList();
-                });
-
-                daysGrid.appendChild(dayCell);
-            }
-        }
-
-        if (prevBtn && nextBtn) {
-            prevBtn.addEventListener("click", () => {
-                calendarDate.setMonth(calendarDate.getMonth() - 1);
-                renderCalendar();
-            });
-            nextBtn.addEventListener("click", () => {
-                calendarDate.setMonth(calendarDate.getMonth() + 1);
-                renderCalendar();
-            });
-        }
-
         // Open modal
         if (openAddModalBtn && addModal) {
             openAddModalBtn.addEventListener("click", () => {
-                if (selectedDateLabel) {
-                    const options = { day: 'numeric', month: 'short', year: 'numeric' };
-                    selectedDateLabel.textContent = selectedDate.toLocaleDateString('en-US', options);
-                }
+                const todayStr = formatDateISO(new Date());
+                const dateInput = document.getElementById("eventDateInput");
+                if (dateInput) dateInput.value = todayStr;
+                
                 document.getElementById("eventTitleInput").value = "";
                 document.getElementById("eventTimeInput").value = "10:00";
                 addModal.classList.add("active");
@@ -2265,15 +2236,15 @@
         window.handleSaveEvent = function(e) {
             e.preventDefault();
             const titleInput = document.getElementById("eventTitleInput");
+            const dateInput = document.getElementById("eventDateInput");
             const timeInput = document.getElementById("eventTimeInput");
             const typeInput = document.getElementById("eventTypeInput");
 
-            if (!titleInput || !timeInput || !typeInput) return;
+            if (!titleInput || !dateInput || !timeInput || !typeInput) return;
 
-            const dateKey = formatDateISO(selectedDate);
             const newEvent = {
                 id: Date.now(),
-                date: dateKey,
+                date: dateInput.value,
                 title: titleInput.value.trim(),
                 time: timeInput.value,
                 type: typeInput.value
@@ -2283,7 +2254,6 @@
             localStorage.setItem('prepverse-study-events', JSON.stringify(studyEvents));
 
             closeAddEventModal();
-            renderCalendar();
             renderEventsList();
 
             // Spawn success bubble
@@ -2292,9 +2262,8 @@
 
         // Delete event
         window.handleDeleteEvent = function(id) {
-            studyEvents = studyEvents.filter(evt => evt.id !== id);
+            studyEvents = (studyEvents || []).filter(evt => evt && evt.id !== id);
             localStorage.setItem('prepverse-study-events', JSON.stringify(studyEvents));
-            renderCalendar();
             renderEventsList();
         };
 
@@ -2303,18 +2272,22 @@
             if (!listContainer) return;
             listContainer.innerHTML = "";
 
-            const selectedKey = formatDateISO(selectedDate);
+            const todayKey = formatDateISO(new Date());
 
-            // Filter
-            let filtered = studyEvents;
+            // Filter out null/undefined and ensure valid date/time properties exist
+            let filtered = (studyEvents || []).filter(evt => evt && typeof evt.date === 'string' && typeof evt.time === 'string');
             if (filterMode === 'selected') {
-                filtered = studyEvents.filter(evt => evt.date === selectedKey);
+                filtered = filtered.filter(evt => evt.date === todayKey);
             }
 
-            // Sort by date, then by time
+            // Sort safely by date, then by time
             filtered.sort((a, b) => {
-                if (a.date !== b.date) return a.date.localeCompare(b.date);
-                return a.time.localeCompare(b.time);
+                const dateA = a.date || "";
+                const dateB = b.date || "";
+                if (dateA !== dateB) return dateA.localeCompare(dateB);
+                const timeA = a.time || "";
+                const timeB = b.time || "";
+                return timeA.localeCompare(timeB);
             });
 
             if (filtered.length === 0) {
@@ -2331,9 +2304,9 @@
                 const item = document.createElement("div");
                 item.className = "event-list-item";
 
-                // Format display date
-                const dateParts = evt.date.split('-');
-                const displayDate = filterMode === 'all' ? `${dateParts[2]} ${getMonthShortName(parseInt(dateParts[1])-1)}` : '';
+                // Format display date safely
+                const dateParts = evt.date ? evt.date.split('-') : [];
+                const displayDate = (filterMode === 'all' && dateParts.length === 3) ? `${dateParts[2]} ${getMonthShortName(parseInt(dateParts[1])-1)}` : '';
 
                 // Event type label styles
                 let typeText = "Study";
@@ -2345,10 +2318,10 @@
                     <div class="flex flex-col gap-1 text-left">
                         <div class="flex items-center gap-2">
                             <span class="event-type-badge event-badge-${evt.type}">${typeText}</span>
-                            <span class="text-[10px] font-black text-gray-400">${evt.time}</span>
+                            <span class="text-[10px] font-black text-gray-400">${evt.time || ''}</span>
                             ${displayDate ? `<span class="text-[9px] font-black text-[#38bdf8] uppercase bg-white/5 border border-white/8 px-1.5 py-0.5 rounded">${displayDate}</span>` : ''}
                         </div>
-                        <span class="text-xs font-bold text-white leading-normal">${evt.title}</span>
+                        <span class="text-xs font-bold text-white leading-normal">${evt.title || ''}</span>
                     </div>
                     <button onclick="handleDeleteEvent(${evt.id})" class="text-gray-500 hover:text-rose-500 transition-all text-xs p-1"><i class="fas fa-trash-alt"></i></button>
                 `;
@@ -2362,13 +2335,94 @@
             return names[idx] || "";
         }
 
-        // Initialize Calendar & Events List
-        renderCalendar();
+        // Initialize Events List
         renderEventsList();
 
         // Initial setup run
         updateQuests();
         updateAchievementsUI();
+
+        // Initialize Mock Tests Stats
+        function updateMockStats() {
+            const dbAttempts = [
+                { id: 'mock-01', mode: 'Module Blitz' },
+                { id: 'mock-01b', mode: 'Module Blitz' },
+                { id: 'mock-01c', mode: 'Module Blitz' },
+                { id: 'mock-02', mode: 'Topic Master' },
+                { id: 'mock-02b', mode: 'Topic Master' },
+                { id: 'mock-02c', mode: 'Topic Master' },
+                { id: 'mock-03', mode: 'Subject Marathon' },
+                { id: 'mock-03b', mode: 'Subject Marathon' },
+                { id: 'mock-03c', mode: 'Subject Marathon' }
+            ];
+
+            let localHistory = [];
+            try {
+                localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history')) || [];
+            } catch(e) {
+                localHistory = [];
+            }
+            if (!Array.isArray(localHistory)) { localHistory = []; }
+
+            const allAttempts = [...localHistory, ...dbAttempts];
+            // Deduplicate
+            const uniqueAttempts = [];
+            const seen = new Set();
+            allAttempts.forEach(item => {
+                if (item && item.id && !seen.has(item.id)) {
+                    seen.add(item.id);
+                    uniqueAttempts.push(item);
+                }
+            });
+
+            // Count modes safely
+            const countByMode = (modeName) => {
+                return uniqueAttempts.filter(item => {
+                    const m = item.mode || '';
+                    return m.toLowerCase().trim() === modeName.toLowerCase().trim();
+                }).length;
+            };
+
+            const blitzTaken = countByMode('Module Blitz');
+            const topicTaken = countByMode('Topic Master');
+            const marathonTaken = countByMode('Subject Marathon');
+
+            const blitzTotal = 15;
+            const topicTotal = 10;
+            const marathonTotal = 5;
+
+            // Blitz UI update
+            const blitzTakenEl = document.getElementById("blitzTakenVal");
+            const blitzPctEl = document.getElementById("blitzPctVal");
+            const blitzFillEl = document.getElementById("blitzProgressFill");
+            const blitzRemainingEl = document.getElementById("blitzRemainingVal");
+            if (blitzTakenEl) blitzTakenEl.textContent = blitzTaken;
+            if (blitzPctEl) blitzPctEl.textContent = Math.round((blitzTaken / blitzTotal) * 100) + "%";
+            if (blitzFillEl) blitzFillEl.style.width = Math.min(100, Math.round((blitzTaken / blitzTotal) * 100)) + "%";
+            if (blitzRemainingEl) blitzRemainingEl.textContent = "Remaining: " + Math.max(0, blitzTotal - blitzTaken);
+
+            // Topic UI update
+            const topicTakenEl = document.getElementById("topicTakenVal");
+            const topicPctEl = document.getElementById("topicPctVal");
+            const topicFillEl = document.getElementById("topicProgressFill");
+            const topicRemainingEl = document.getElementById("topicRemainingVal");
+            if (topicTakenEl) topicTakenEl.textContent = topicTaken;
+            if (topicPctEl) topicPctEl.textContent = Math.round((topicTaken / topicTotal) * 100) + "%";
+            if (topicFillEl) topicFillEl.style.width = Math.min(100, Math.round((topicTaken / topicTotal) * 100)) + "%";
+            if (topicRemainingEl) topicRemainingEl.textContent = "Remaining: " + Math.max(0, topicTotal - topicTaken);
+
+            // Marathon UI update
+            const marathonTakenEl = document.getElementById("marathonTakenVal");
+            const marathonPctEl = document.getElementById("marathonPctVal");
+            const marathonFillEl = document.getElementById("marathonProgressFill");
+            const marathonRemainingEl = document.getElementById("marathonRemainingVal");
+            if (marathonTakenEl) marathonTakenEl.textContent = marathonTaken;
+            if (marathonPctEl) marathonPctEl.textContent = Math.round((marathonTaken / marathonTotal) * 100) + "%";
+            if (marathonFillEl) marathonFillEl.style.width = Math.min(100, Math.round((marathonTaken / marathonTotal) * 100)) + "%";
+            if (marathonRemainingEl) marathonRemainingEl.textContent = "Remaining: " + Math.max(0, marathonTotal - marathonTaken);
+        }
+
+        updateMockStats();
     });
 </script>
 {% endblock %}
