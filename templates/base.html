@@ -201,118 +201,128 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* Sidebar Menu - Logged In User */
+        /* Modern Narrow Sidebar Styles */
+        :root {
+            --sidebar-width: 80px;
+        }
+        @media (max-width: 992px) {
+            :root {
+                --sidebar-width: 70px;
+            }
+        }
+
         .sidebar-menu {
             position: fixed;
             top: 0;
-            left: -280px; /* Completely offscreen */
+            left: 0;
             height: 100vh;
-            width: 260px;
-            background: rgba(10, 10, 15, 0.65) !important;
+            width: var(--sidebar-width);
+            background: rgba(10, 10, 15, 0.75) !important;
             border-right: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(25px) saturate(180%) !important;
             -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
-            z-index: 2200; /* above navbar and floating launcher */
+            z-index: 2200;
             display: flex;
             flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            align-items: flex-start;
+            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             overflow-x: hidden;
-            box-shadow: none;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
         }
-        
-        /* When expanded/active */
-        .sidebar-menu.active {
-            left: 0;
+
+        .sidebar-menu:hover {
+            width: 260px;
             box-shadow: 15px 0 50px rgba(0,0,0,0.6);
         }
 
         .sidebar-header {
-            padding: 24px 20px;
+            padding: 30px 0 20px 0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
         }
         
         .sidebar-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: flex-start;
             text-decoration: none;
             color: #ffffff;
-            font-weight: 800;
-            font-size: 1.3rem;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
+            padding-left: 28px;
+            gap: 20px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar-brand {
+                padding-left: 23px;
+            }
         }
         
         .sidebar-brand i {
             color: #2af598;
-            font-size: 1.4rem;
+            font-size: 1.8rem;
+            filter: drop-shadow(0 0 8px rgba(42, 245, 152, 0.6));
+            animation: boltPulse 2s infinite alternate;
+            flex-shrink: 0;
+            width: 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .sidebar-brand span {
+            font-weight: 800;
+            font-size: 1.3rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .sidebar-menu:hover .sidebar-brand span {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0.1s;
+        }
+
+        @keyframes boltPulse {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 4px rgba(42, 245, 152, 0.4));
+            }
+            100% {
+                transform: scale(1.15);
+                filter: drop-shadow(0 0 12px rgba(42, 245, 152, 0.8));
+            }
         }
 
         .sidebar-toggle-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .sidebar-toggle-btn:hover {
-            background: #ffffff;
-            color: #000000;
-            transform: scale(1.1);
+            display: none !important;
         }
 
-        /* Floating 9-Dots App Launcher */
-        .sidebar-launcher {
-            position: fixed;
-            top: 20px;
-            left: 25px;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: rgba(15, 15, 20, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.3rem;
-            cursor: pointer;
-            z-index: 2150; /* below open sidebar, but above navbar */
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        
-        .sidebar-launcher:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #2af598;
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(42, 245, 152, 0.3);
-        }
-
-        /* User Quick Info */
+        /* User Info & Avatar */
         .sidebar-user {
-            padding: 20px;
+            padding: 20px 0;
             display: flex;
+            justify-content: flex-start;
             align-items: center;
+            width: 100%;
+            padding-left: 18px;
             gap: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar-user {
+                padding-left: 13px;
+            }
         }
 
         .sidebar-user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             color: #ffffff;
@@ -321,238 +331,345 @@
             justify-content: center;
             font-weight: 700;
             font-size: 1.1rem;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
             flex-shrink: 0;
         }
 
+        .sidebar-user-avatar:hover {
+            transform: scale(1.08);
+            border-color: #2af598;
+            box-shadow: 0 0 12px rgba(42, 245, 152, 0.4);
+        }
+
         .sidebar-user-info {
-            display: flex;
+            display: flex !important;
             flex-direction: column;
-            overflow: hidden;
-            transition: opacity 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            white-space: nowrap;
         }
 
         .sidebar-user-name {
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .sidebar-user-role {
             font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.4);
-            white-space: nowrap;
+        }
+
+        .sidebar-menu:hover .sidebar-user-info {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0.1s;
         }
 
         /* Nav links */
         .sidebar-nav {
-            padding: 20px 10px;
+            padding: 25px 12px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            align-items: flex-start;
+            gap: 12px;
             flex-grow: 1;
+            width: 100%;
         }
 
         .sidebar-link {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 14px 15px;
-            color: rgba(255, 255, 255, 0.6);
+            justify-content: flex-start;
+            width: 100%;
+            padding: 12px 16px;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
             white-space: nowrap;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        @media (max-width: 992px) {
+            .sidebar-link {
+                padding: 10px 11px;
+                border-radius: 12px;
+            }
         }
 
         .sidebar-link i {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             width: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
             text-align: center;
-            transition: color 0.3s;
+        }
+
+        .sidebar-link span {
+            font-weight: 600;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            display: inline-block !important;
+        }
+
+        .sidebar-menu:hover .sidebar-link span {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0.1s;
         }
 
         .sidebar-link:hover, .sidebar-link.active {
-            background: rgba(255, 255, 255, 0.05);
             color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
         }
 
-        .sidebar-link.active i, .sidebar-link:hover i {
-            color: #2af598;
+        /* Neon Theme Glows for Sidebar Routes */
+        .sidebar-link[data-sidebar-route="dashboard"].active, 
+        .sidebar-link[data-sidebar-route="dashboard"]:hover {
+            color: #00ffcc;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2), inset 0 0 8px rgba(0, 255, 204, 0.1);
+            border-color: rgba(0, 255, 204, 0.3);
+        }
+        .sidebar-link[data-sidebar-route="mock-history"].active, 
+        .sidebar-link[data-sidebar-route="mock-history"]:hover {
+            color: #3b82f6;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2), inset 0 0 8px rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .sidebar-link[data-sidebar-route="practice"].active, 
+        .sidebar-link[data-sidebar-route="practice"]:hover {
+            color: #a855f7;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2), inset 0 0 8px rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        .sidebar-link[data-sidebar-route="courses"].active, 
+        .sidebar-link[data-sidebar-route="courses"]:hover {
+            color: #ec4899;
+            text-shadow: 0 0 10px rgba(236, 72, 153, 0.6);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.2), inset 0 0 8px rgba(236, 72, 153, 0.1);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+        .sidebar-link[data-sidebar-route="mock-test"].active, 
+        .sidebar-link[data-sidebar-route="mock-test"]:hover {
+            color: #f59e0b;
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2), inset 0 0 8px rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .sidebar-link[data-sidebar-route="daily-challenges"].active, 
+        .sidebar-link[data-sidebar-route="daily-challenges"]:hover {
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2), inset 0 0 8px rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        .sidebar-link[data-sidebar-route="blog"].active, 
+        .sidebar-link[data-sidebar-route="blog"]:hover {
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2), inset 0 0 8px rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
         }
 
         /* Footer logout */
         .sidebar-footer {
-            padding: 20px 10px;
+            padding: 20px 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
         }
 
         .sidebar-logout {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 14px 15px;
-            color: #ef4444;
+            justify-content: flex-start;
+            width: 100%;
+            padding: 12px 16px;
+            gap: 20px;
+            color: rgba(239, 68, 68, 0.6);
             text-decoration: none;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
             white-space: nowrap;
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+
+        @media (max-width: 992px) {
+            .sidebar-logout {
+                padding: 10px 11px;
+                border-radius: 12px;
+            }
         }
 
         .sidebar-logout i {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             width: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
             text-align: center;
         }
 
-        .sidebar-logout:hover {
-            background: rgba(239, 68, 68, 0.1);
+        .sidebar-logout span {
+            font-weight: 600;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            display: inline-block !important;
         }
 
-        /* Adjustments for layouts - No shifts since overlay */
-        /* Transition properties on body and navbar */
+        .sidebar-menu:hover .sidebar-logout span {
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0.1s;
+        }
+
+        .sidebar-logout:hover {
+            color: #ffffff;
+            background: #ef4444;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Layout Shifts */
         body {
             transition: padding-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
         body.has-sidebar {
-            padding-left: 0;
+            padding-left: 80px;
         }
         
         body.has-sidebar .navbar {
-            left: 50% !important;
-            width: 90% !important;
+            left: calc(50% + 40px) !important;
+            width: calc(90% - 80px) !important;
             transform: translateX(-50%) !important;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         body.has-sidebar .navbar.scrolled {
-            left: 0 !important;
-            width: 100% !important;
+            left: 80px !important;
+            width: calc(100% - 80px) !important;
             transform: none !important;
             padding: 15px 5% !important;
         }
 
-        /* Non-overlapping Desktop Shift styles when sidebar is active */
-        @media (min-width: 993px) {
-            body.sidebar-active {
-                padding-left: 260px;
+        /* Responsive Mobile Layout Shifts */
+        @media (max-width: 992px) {
+            body.has-sidebar {
+                padding-left: 70px;
             }
-            body.sidebar-active .navbar {
-                left: calc(50% + 130px) !important;
-                width: calc(90% - 260px) !important;
+            body.has-sidebar .navbar {
+                left: calc(50% + 35px) !important;
+                width: calc(95% - 70px) !important;
+                transform: translateX(-50%) !important;
             }
-            body.sidebar-active .navbar.scrolled {
-                left: 260px !important;
-                width: calc(100% - 260px) !important;
+            body.has-sidebar .navbar.scrolled {
+                left: 70px !important;
+                width: calc(100% - 70px) !important;
                 transform: none !important;
+                padding: 12px 4% !important;
+            }
+            .mobile-sidebar-toggle-btn {
+                display: none !important; /* Always visible narrow sidebar, no toggle needed */
             }
         }
 
-        /* Responsive Mobile Sidebar overrides */
-        @media (max-width: 992px) {
-            .sidebar-menu {
-                left: -280px;
-            }
-            .sidebar-menu.active {
-                left: 0;
-                width: 260px;
-            }
-            .mobile-sidebar-toggle-btn {
-                display: block !important;
-            }
-            .sidebar-launcher {
-                display: none !important; /* Hide floating launcher on mobile, use navbar menu button */
-            }
-            /* Add Mobile Overlay */
-            .sidebar-overlay {
-                position: fixed;
-                top: 0; left: 0; width: 100vw; height: 100vh;
-                background: rgba(0, 0, 0, 0.4);
-                backdrop-filter: blur(5px);
-                -webkit-backdrop-filter: blur(5px);
-                z-index: 2050;
-                display: none;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            .sidebar-overlay.active {
-                display: block;
-                opacity: 1;
-            }
+        /* Styles to hide sidebar during mock-test/start sessions */
+        body.sidebar-hidden {
+            padding-left: 0 !important;
+        }
+        body.sidebar-hidden .sidebar-menu {
+            transform: translateX(-100%) !important;
+            pointer-events: none !important;
+        }
+        body.sidebar-hidden .navbar {
+            left: 50% !important;
+            width: 90% !important;
+            transform: translateX(-50%) !important;
+        }
+        body.sidebar-hidden .navbar.scrolled {
+            left: 0 !important;
+            width: 100% !important;
+            transform: none !important;
         }
     </style>
 </head>
 <body {% if user.is_authenticated %}class="has-sidebar"{% endif %}>
 
     {% if user.is_authenticated %}
-    <!-- Floating 9-dots App Launcher -->
-    <div class="sidebar-launcher" id="sidebarLauncher" title="Open Menu">
-        <i class="fa-solid fa-grip"></i>
-    </div>
-
     <!-- Sidebar Menu drawer -->
     <aside class="sidebar-menu" id="sidebarMenu">
         <div class="sidebar-header">
             <a href="{% url 'home' %}" class="sidebar-brand">
-                <i class="fas fa-bolt"></i>
-                <span>PrepVerse</span>
+                <i class="fa-solid fa-bolt-lightning"></i>
             </a>
-            <button class="sidebar-toggle-btn" id="sidebarToggle" title="Toggle Sidebar">
-                <i class="fas fa-chevron-left"></i>
-            </button>
         </div>
         
         <div class="sidebar-user">
-            <div class="sidebar-user-avatar">
+            <div class="sidebar-user-avatar" data-title="{{ user.first_name }} {{ user.last_name }}">
                 {{ user.first_name|slice:":1"|upper }}
-            </div>
-            <div class="sidebar-user-info">
-                <span class="sidebar-user-name">{{ user.first_name }} {{ user.last_name }}</span>
-                <span class="sidebar-user-role">Student Account</span>
             </div>
         </div>
 
         <nav class="sidebar-nav">
-            <a href="{% url 'dashboard' %}" class="sidebar-link" data-sidebar-route="dashboard">
-                <i class="fas fa-tachometer-alt"></i>
+            <a href="{% url 'dashboard' %}" class="sidebar-link" data-sidebar-route="dashboard" data-title="Dashboard">
+                <i class="fa-solid fa-compass"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="{% url 'mock_history' %}" class="sidebar-link" data-sidebar-route="mock-history">
-                <i class="fas fa-chart-line"></i>
+            <a href="{% url 'mock_history' %}" class="sidebar-link" data-sidebar-route="mock-history" data-title="Test Performance">
+                <i class="fa-solid fa-chart-line"></i>
                 <span>Test Performance</span>
             </a>
-            <a href="{% url 'practice' %}" class="sidebar-link" data-sidebar-route="practice">
-                <i class="fas fa-brain"></i>
+            <a href="{% url 'practice' %}" class="sidebar-link" data-sidebar-route="practice" data-title="Practice Arena">
+                <i class="fa-solid fa-brain"></i>
                 <span>Practice Arena</span>
             </a>
-            <a href="{% url 'courses' %}" class="sidebar-link" data-sidebar-route="courses">
-                <i class="fas fa-graduation-cap"></i>
+            <a href="{% url 'courses' %}" class="sidebar-link" data-sidebar-route="courses" data-title="Courses">
+                <i class="fa-solid fa-book-open"></i>
                 <span>Courses</span>
             </a>
-            <a href="{% url 'mock_test' %}" class="sidebar-link" data-sidebar-route="mock-test">
-                <i class="fas fa-file-alt"></i>
+            <a href="{% url 'mock_test' %}" class="sidebar-link" data-sidebar-route="mock-test" data-title="Mock Tests">
+                <i class="fa-solid fa-file-signature"></i>
                 <span>Mock Tests</span>
             </a>
-            <a href="{% url 'daily_challenges' %}" class="sidebar-link" data-sidebar-route="daily-challenges">
-                <i class="fas fa-fire"></i>
+            <a href="{% url 'daily_challenges' %}" class="sidebar-link" data-sidebar-route="daily-challenges" data-title="Daily Challenges">
+                <i class="fa-solid fa-bolt-lightning"></i>
                 <span>Daily Challenges</span>
             </a>
-            <a href="{% url 'blog' %}" class="sidebar-link" data-sidebar-route="blog">
-                <i class="fas fa-newspaper"></i>
+            <a href="{% url 'blog' %}" class="sidebar-link" data-sidebar-route="blog" data-title="Journal / Blog">
+                <i class="fa-solid fa-pen-nib"></i>
                 <span>Journal / Blog</span>
             </a>
         </nav>
 
         <div class="sidebar-footer">
-            <a href="{% url 'logout' %}" class="sidebar-logout">
-                <i class="fas fa-sign-out-alt"></i>
+            <a href="{% url 'logout' %}" class="sidebar-logout" data-title="Log Out">
+                <i class="fa-solid fa-power-off"></i>
                 <span>Log Out</span>
             </a>
         </div>
@@ -641,85 +758,10 @@
             });
         }
 
-        // Collapsible Sidebar Drawer Logic
-        const sidebarMenu = document.getElementById('sidebarMenu');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarLauncher = document.getElementById('sidebarLauncher');
-        const mobileSidebarToggleBtn = document.getElementById('mobileSidebarToggleBtn');
-        
-        // Create Sidebar Overlay if not exists
-        let overlay = document.querySelector('.sidebar-overlay');
-        if (!overlay && sidebarMenu) {
-            overlay = document.createElement('div');
-            overlay.className = 'sidebar-overlay';
-            document.body.appendChild(overlay);
-        }
-
-        function openSidebarDrawer() {
-            if (!sidebarMenu) return;
-            sidebarMenu.classList.add('active');
-            document.body.classList.add('sidebar-active');
-            if (overlay) {
-                // Only activate background blur overlay on mobile screens
-                if (window.innerWidth <= 992) {
-                    overlay.classList.add('active');
-                }
-            }
-            if (sidebarLauncher) {
-                sidebarLauncher.style.opacity = '0';
-                sidebarLauncher.style.pointerEvents = 'none';
-            }
-            localStorage.setItem('sidebar-active', 'true');
-        }
-
-        function closeSidebarDrawer() {
-            if (sidebarMenu) sidebarMenu.classList.remove('active');
-            document.body.classList.remove('sidebar-active');
-            if (overlay) overlay.classList.remove('active');
-            if (sidebarLauncher) {
-                sidebarLauncher.style.opacity = '1';
-                sidebarLauncher.style.pointerEvents = 'auto';
-            }
-            localStorage.setItem('sidebar-active', 'false');
-        }
-
-        // Toggle handlers
-        if (sidebarLauncher) {
-            sidebarLauncher.addEventListener('click', openSidebarDrawer);
-        }
-
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', closeSidebarDrawer);
-        }
-
-        if (overlay) {
-            overlay.addEventListener('click', closeSidebarDrawer);
-        }
-
-        if (mobileSidebarToggleBtn) {
-            mobileSidebarToggleBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openSidebarDrawer();
-            });
-        }
-
-        // Restore sidebar state on page load (if was active previously and not in mock test session)
+        // Collapsible Sidebar Drawer Logic (Always visible narrow layout, hidden in mock test start)
         const isMockTestSession = window.location.pathname.includes('/mock-test/start/');
         if (isMockTestSession) {
-            closeSidebarDrawer();
-            if (sidebarLauncher) {
-                sidebarLauncher.style.display = 'none';
-            }
-        } else if (sidebarMenu) {
-            const wasActive = localStorage.getItem('sidebar-active') === 'true';
-            if (wasActive) {
-                openSidebarDrawer();
-            } else {
-                closeSidebarDrawer();
-            }
-        } else {
-            // Ensure logged out users do not get sidebar shifts or gaps
-            document.body.classList.remove('sidebar-active');
+            document.body.classList.add('sidebar-hidden');
         }
 
         // Highlight active sidebar route
