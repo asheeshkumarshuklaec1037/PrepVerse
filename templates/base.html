@@ -524,6 +524,10 @@
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Dashboard</span>
             </a>
+            <a href="{% url 'mock_history' %}" class="sidebar-link" data-sidebar-route="mock-history">
+                <i class="fas fa-chart-line"></i>
+                <span>Test Performance</span>
+            </a>
             <a href="{% url 'practice' %}" class="sidebar-link" data-sidebar-route="practice">
                 <i class="fas fa-brain"></i>
                 <span>Practice Arena</span>
@@ -613,15 +617,6 @@
 
     {% block extra_js %}{% endblock %}
     <script>
-        window.addEventListener('scroll', function() {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        });
-
         // Set active nav link dynamically
         document.querySelectorAll('.nav-links a').forEach(link => {
             const href = link.getAttribute('href');

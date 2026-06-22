@@ -1,0 +1,1578 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Test Performance & Analytics | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #0A0915 !important;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.02) 1.2px, transparent 1.2px),
+            linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+            radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15), transparent 45%),
+            radial-gradient(circle at 90% 80%, rgba(20, 184, 166, 0.12), transparent 50%),
+            linear-gradient(135deg, #0A0915 0%, #121124 55%, #1A183A 100%);
+        background-size: 32px 32px, 32px 32px, 32px 32px, 100% 100%, 100% 100%, 100% 100%;
+        background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+        background-attachment: scroll, scroll, scroll, fixed, fixed, fixed;
+        color: #ffffff;
+    }
+    
+    /* Background Glows */
+    .glow {
+        position: fixed;
+        width: 650px; height: 650px;
+        border-radius: 50%;
+        z-index: -1;
+        filter: blur(130px);
+        opacity: 0.22;
+        pointer-events: none;
+        transition: transform 0.2s ease-out;
+    }
+    .glow-1 { 
+        top: -150px; right: 5%; 
+        background: radial-gradient(circle, rgba(157, 141, 241, 0.35) 0%, transparent 70%); 
+        transform: translate(calc(var(--mx, 0) * -15px), calc(var(--my, 0) * -15px));
+    }
+    .glow-2 { 
+        bottom: -150px; left: 5%; 
+        background: radial-gradient(circle, rgba(95, 168, 160, 0.3) 0%, transparent 70%); 
+        transform: translate(calc(var(--mx, 0) * 15px), calc(var(--my, 0) * 15px));
+    }
+    .glow-3 {
+        top: 30%; left: 35%;
+        width: 500px; height: 500px;
+        background: radial-gradient(circle, rgba(232, 159, 159, 0.25) 0%, transparent 70%);
+        transform: translate(calc(var(--mx, 0) * 8px), calc(var(--my, 0) * -8px));
+    }
+
+    /* 3D Parallax Tilt Class */
+    .parallax-tilt-card {
+        transition: transform 0.1s ease-out, box-shadow 0.2s ease;
+        transform-style: preserve-3d;
+        will-change: transform;
+    }
+    
+    /* Hero Section */
+    .hero {
+        position: relative;
+        width: 100%;
+        padding: 70px 20px 30px;
+        text-align: center;
+        opacity: 0;
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
+    }
+    .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, #EDE8F5 30%, #7091E6 70%, #3D52A0 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+        font-size: 1.05rem;
+        opacity: 0.6;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Container */
+    .history-container {
+        max-width: 1400px;
+        margin: 0 auto 80px;
+        padding: 0 4%;
+        display: grid;
+        grid-template-columns: 1.8fr 1.2fr;
+        gap: 30px;
+        opacity: 0;
+        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
+    }
+
+    @media (max-width: 1024px) {
+        .history-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Glass Cards */
+    .glass-card {
+        background: linear-gradient(135deg, rgba(61, 82, 160, 0.12) 0%, rgba(15, 18, 35, 0.45) 100%);
+        border: 1px solid rgba(134, 151, 196, 0.16);
+        border-radius: 24px;
+        padding: 28px;
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        transition: all 0.3s ease;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    }
+    
+    .section-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: #ffffff;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Segment Mode Switcher Tabs */
+    .mode-tabs-wrapper {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 25px;
+        background: rgba(255, 255, 255, 0.01);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        padding: 6px;
+        border-radius: 16px;
+    }
+    .mode-tab-btn {
+        flex: 1;
+        background: none;
+        border: 1px solid transparent;
+        padding: 12px 18px;
+        font-family: 'Outfit', sans-serif;
+        color: rgba(255,255,255,0.4);
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        border-radius: 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .mode-tab-btn:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .mode-tab-btn.active-blitz {
+        color: #7091E6;
+        background: rgba(112, 145, 230, 0.15);
+        border: 1px solid rgba(112, 145, 230, 0.35);
+        box-shadow: 0 0 15px rgba(112, 145, 230, 0.05);
+    }
+    .mode-tab-btn.active-master {
+        color: #3D52A0;
+        background: rgba(61, 82, 160, 0.15);
+        border: 1px solid rgba(61, 82, 160, 0.35);
+        box-shadow: 0 0 15px rgba(61, 82, 160, 0.05);
+    }
+    .mode-tab-btn.active-marathon {
+        color: #8697C4;
+        background: rgba(134, 151, 196, 0.15);
+        border: 1px solid rgba(134, 151, 196, 0.35);
+        box-shadow: 0 0 15px rgba(134, 151, 196, 0.05);
+    }
+
+    /* Attempts Table */
+    .attempts-table-wrapper {
+        overflow-x: auto;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.01);
+        border: 1px solid rgba(255,255,255,0.03);
+    }
+    .attempts-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 0.85rem;
+    }
+    .attempts-table th {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 14px 18px;
+        color: rgba(255,255,255,0.4);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .attempts-table td {
+        padding: 16px 18px;
+        border-bottom: 1px solid rgba(255,255,255,0.02);
+        color: rgba(255,255,255,0.85);
+    }
+    .attempts-table tr {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .attempts-table tr:hover {
+        background: rgba(255,255,255,0.03);
+    }
+    .attempts-table tr.selected {
+        background: rgba(255,255,255,0.04);
+    }
+    .attempts-table tr.selected-blitz {
+        background: rgba(112, 145, 230, 0.08);
+        border-left: 3px solid #7091E6;
+    }
+    .attempts-table tr.selected-master {
+        background: rgba(61, 82, 160, 0.08);
+        border-left: 3px solid #3D52A0;
+    }
+    .attempts-table tr.selected-marathon {
+        background: rgba(134, 151, 196, 0.08);
+        border-left: 3px solid #8697C4;
+    }
+
+    .badge {
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+    }
+    .badge-quant { color: #fccb90; background: rgba(252, 203, 144, 0.1); border: 1px solid rgba(252, 203, 144, 0.2); }
+    .badge-logic { color: #2af598; background: rgba(42, 245, 152, 0.1); border: 1px solid rgba(42, 245, 152, 0.2); }
+    .badge-verbal { color: #ff9a9e; background: rgba(255, 154, 158, 0.1); border: 1px solid rgba(255, 154, 158, 0.2); }
+    .badge-di { color: #009efd; background: rgba(0, 158, 253, 0.1); border: 1px solid rgba(0, 158, 253, 0.2); }
+
+    /* Accordion Sheet for detailed report */
+    .diagnostic-panel {
+        margin-top: 30px;
+        display: none;
+    }
+    
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    @media (max-width: 580px) {
+        .metric-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    .metric-box {
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 14px;
+        padding: 15px;
+        text-align: center;
+    }
+    .metric-box .val {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #ffffff;
+        font-family: 'Outfit', sans-serif;
+    }
+    .metric-box .label {
+        font-size: 0.68rem;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+        margin-top: 4px;
+        font-weight: 700;
+    }
+
+    .topic-indicator {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 14px;
+        border-radius: 14px;
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Accordion item */
+    .q-accord-item {
+        background: rgba(255, 255, 255, 0.01);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        overflow: hidden;
+    }
+    .q-accord-header {
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.2s;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+    .q-accord-header:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .q-accord-body {
+        padding: 18px;
+        background: rgba(3, 3, 7, 0.4);
+        border-top: 1px solid rgba(255, 255, 255, 0.02);
+        display: none;
+        font-size: 0.8rem;
+        line-height: 1.55;
+    }
+
+    .opt-pill {
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.04);
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .opt-pill.correct {
+        background: rgba(42, 245, 152, 0.06);
+        border-color: rgba(42, 245, 152, 0.25);
+        color: #2af598;
+    }
+    .opt-pill.incorrect {
+        background: rgba(255, 71, 87, 0.06);
+        border-color: rgba(255, 71, 87, 0.25);
+        color: #ff4757;
+    }
+    .opt-pill-marker {
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        font-weight: 800;
+        background: rgba(255,255,255,0.05);
+    }
+    .opt-pill.correct .opt-pill-marker {
+        background: #2af598;
+        color: #030307;
+    }
+    .opt-pill.incorrect .opt-pill-marker {
+        background: #ff4757;
+        color: #ffffff;
+    }
+
+    /* Graphical Stats Right Column */
+    .stat-radial-container {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 25px;
+    }
+    .radial-widget {
+        text-align: center;
+        position: relative;
+    }
+    .radial-widget svg {
+        width: 80px; height: 80px;
+        transform: rotate(-90deg);
+    }
+    .radial-widget circle {
+        fill: none;
+        stroke-width: 5;
+    }
+    .radial-widget .bg-circle {
+        stroke: rgba(255, 255, 255, 0.03);
+    }
+    .radial-widget .fill-circle {
+        stroke-dasharray: 220;
+        stroke-dashoffset: 220;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1s ease-out;
+    }
+    .radial-widget .percentage-text {
+        position: absolute;
+        top: 26px; left: 0; width: 80px;
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #ffffff;
+        font-family: 'Outfit', sans-serif;
+    }
+    .radial-widget .label {
+        font-size: 0.65rem;
+        color: rgba(255,255,255,0.4);
+        margin-top: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    /* SVG Chart */
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        background: rgba(255,255,255,0.01);
+        border: 1px solid rgba(255,255,255,0.03);
+        border-radius: 16px;
+        padding: 10px;
+    }
+    .chart-tooltip {
+        position: absolute;
+        background: rgba(15,15,25,0.95);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 0.68rem;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        z-index: 100;
+    }
+
+    /* Animation Keyframes */
+    @keyframes pageFadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       GLOBAL GLASSMORPHISM OVERRIDES - JEFF KOONS: MOON PHASES SLATE/TEAL THEME
+       ========================================================================== */
+    body {
+        background: #171D22 !important;
+        color: #D3D9D4 !important;
+        background-image: 
+            linear-gradient(rgba(116, 141, 146, 0.025) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(116, 141, 146, 0.025) 1px, transparent 1px) !important;
+        background-size: 32px 32px !important;
+    }
+    
+    /* Background glows */
+    .glow {
+        opacity: 0.25 !important;
+    }
+    .glow-1 { background: radial-gradient(circle, rgba(18, 78, 102, 0.4) 0%, transparent 70%) !important; }
+    .glow-2 { background: radial-gradient(circle, rgba(116, 141, 146, 0.3) 0%, transparent 70%) !important; }
+
+    /* Hero header */
+    .hero h1 {
+        background: linear-gradient(90deg, #ffffff 30%, #D3D9D4 70%, #748D92 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    .hero p {
+        color: rgba(211, 217, 212, 0.6) !important;
+    }
+
+    /* Glass Cards styling */
+    .glass-card {
+        background: linear-gradient(135deg, rgba(46, 57, 68, 0.22) 0%, rgba(33, 42, 49, 0.45) 100%) !important;
+        border: 1px solid rgba(116, 141, 146, 0.18) !important;
+        backdrop-filter: blur(25px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(160%) !important;
+        box-shadow: 0 15px 35px rgba(10, 14, 18, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.02) !important;
+        color: #D3D9D4 !important;
+    }
+    .glass-card:hover {
+        background: linear-gradient(135deg, rgba(46, 57, 68, 0.32) 0%, rgba(33, 42, 49, 0.55) 100%) !important;
+        border-color: rgba(18, 78, 102, 0.45) !important;
+        box-shadow: 0 20px 40px rgba(5, 7, 10, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+    }
+    .section-title {
+        color: #ffffff !important;
+    }
+
+    /* Segment tab switcher */
+    .mode-tabs-wrapper {
+        background: rgba(255, 255, 255, 0.015) !important;
+        border-color: rgba(116, 141, 146, 0.15) !important;
+    }
+    .mode-tab-btn {
+        color: rgba(211, 217, 212, 0.6) !important;
+    }
+    .mode-tab-btn:hover {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+    }
+    .mode-tab-btn.active-blitz {
+        background: rgba(116, 141, 146, 0.15) !important;
+        color: #ffffff !important;
+        border-color: rgba(116, 141, 146, 0.3) !important;
+    }
+    .mode-tab-btn.active-master {
+        background: rgba(18, 78, 102, 0.15) !important;
+        color: #ffffff !important;
+        border-color: rgba(18, 78, 102, 0.3) !important;
+    }
+    .mode-tab-btn.active-marathon {
+        background: rgba(46, 57, 68, 0.15) !important;
+        color: #ffffff !important;
+        border-color: rgba(46, 57, 68, 0.3) !important;
+    }
+
+    /* Table listing attempts */
+    .attempts-table-wrapper {
+        background: rgba(255, 255, 255, 0.01) !important;
+        border-color: rgba(116, 141, 146, 0.12) !important;
+    }
+    .attempts-table th {
+        background: rgba(255, 255, 255, 0.02) !important;
+        color: rgba(211, 217, 212, 0.45) !important;
+        border-bottom-color: rgba(116, 141, 146, 0.15) !important;
+    }
+    .attempts-table td {
+        color: #D3D9D4 !important;
+        border-bottom-color: rgba(116, 141, 146, 0.1) !important;
+    }
+    .attempts-table tr:hover {
+        background: rgba(255, 255, 255, 0.02) !important;
+    }
+    .attempts-table tr.selected-blitz {
+        background: rgba(116, 141, 146, 0.08) !important;
+        border-left: 3px solid #748D92 !important;
+    }
+    .attempts-table tr.selected-master {
+        background: rgba(18, 78, 102, 0.08) !important;
+        border-left: 3px solid #124E66 !important;
+    }
+    .attempts-table tr.selected-marathon {
+        background: rgba(46, 57, 68, 0.08) !important;
+        border-left: 3px solid #2E3944 !important;
+    }
+
+    /* Diagnostics Report Panel details */
+    .metric-box {
+        background: rgba(255, 255, 255, 0.015) !important;
+        border-color: rgba(116, 141, 146, 0.12) !important;
+    }
+    .metric-box .val {
+        color: #ffffff !important;
+    }
+    .metric-box .label {
+        color: rgba(211, 217, 212, 0.45) !important;
+    }
+    .topic-indicator {
+        background: rgba(255, 255, 255, 0.015) !important;
+        border-color: rgba(116, 141, 146, 0.12) !important;
+    }
+    .topic-indicator div div {
+        color: rgba(211, 217, 212, 0.45) !important;
+    }
+    
+    /* Accordion analysis question elements */
+    .q-accord-header {
+        background: rgba(255, 255, 255, 0.015) !important;
+        border: 1px solid rgba(116, 141, 146, 0.12) !important;
+    }
+    .q-accord-header:hover {
+        background: rgba(255, 255, 255, 0.03) !important;
+    }
+    .q-accord-header span {
+        color: #D3D9D4 !important;
+    }
+    .q-accord-body {
+        background: rgba(255, 255, 255, 0.005) !important;
+        border-color: rgba(116, 141, 146, 0.08) !important;
+    }
+    .q-accord-body p {
+        color: #ffffff !important;
+    }
+    .opt-pill {
+        background: rgba(255, 255, 255, 0.015) !important;
+        border-color: rgba(116, 141, 146, 0.1) !important;
+        color: #D3D9D4 !important;
+    }
+    .opt-pill-marker {
+        background: rgba(255, 255, 255, 0.03) !important;
+        color: #D3D9D4 !important;
+    }
+    .opt-pill.correct {
+        background: rgba(16, 185, 129, 0.06) !important;
+        border-color: rgba(16, 185, 129, 0.25) !important;
+        color: #10b981 !important;
+    }
+    .opt-pill.correct .opt-pill-marker {
+        background: #10b981 !important;
+        color: #ffffff !important;
+    }
+    .opt-pill.incorrect {
+        background: rgba(239, 68, 68, 0.06) !important;
+        border-color: rgba(239, 68, 68, 0.25) !important;
+        color: #ef4444 !important;
+    }
+    .opt-pill.incorrect .opt-pill-marker {
+        background: #ef4444 !important;
+        color: #ffffff !important;
+    }
+
+    /* Graphical SVG score progression trend chart */
+    .chart-container {
+        background: rgba(255, 255, 255, 0.01) !important;
+        border: 1px solid rgba(116, 141, 146, 0.12) !important;
+    }
+    .chart-tooltip {
+        background: rgba(15, 20, 25, 0.95) !important;
+        border: 1px solid rgba(116, 141, 146, 0.2) !important;
+        color: #ffffff !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Radial circle metrics */
+    .percentage-text {
+        color: #ffffff !important;
+    }
+    .radial-widget .label {
+        color: rgba(211, 217, 212, 0.45) !important;
+    }
+    .radial-widget svg .bg-circle {
+        stroke: rgba(116, 141, 146, 0.1) !important;
+    }
+
+    /* Dynamic element override selectors */
+    .attempts-table-wrapper + div, .glass-card strong {
+        color: #ffffff !important;
+    }
+    .glass-card span {
+        color: rgba(30, 31, 41, 0.6) !important;
+    }
+    
+    /* Override dynamic row elements injected inside questions list */
+    #diagnosticQuestionsList .q-accord-header span {
+        color: #1E1F29 !important;
+    }
+
+    /* Theme Overrides for Light Beige glassmorphism style */
+    body {
+        background-color: #EDE8F5 !important;
+        background-image: 
+            radial-gradient(rgba(0, 0, 0, 0.06) 1.2px, transparent 1.2px),
+            linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px) !important;
+        background-size: 32px 32px !important;
+        background-position: 0 0, 0 0, 0 0 !important;
+        color: #1E1F29 !important;
+    }
+    .glow-1 {
+        background: radial-gradient(circle, rgba(197, 160, 89, 0.25) 0%, transparent 70%) !important;
+    }
+    .glow-2 {
+        background: radial-gradient(circle, rgba(157, 141, 241, 0.22) 0%, transparent 70%) !important;
+    }
+    .hero h1 {
+        background: linear-gradient(90deg, #1E1F29 30%, #3D52A0 70%, #C5A059 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    .hero p {
+        color: #5A5B6A !important;
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.65) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        color: #1E1F29 !important;
+        box-shadow: 0 10px 30px 0 rgba(31, 38, 135, 0.04) !important;
+    }
+    .section-title {
+        color: #1E1F29 !important;
+    }
+    .mode-tabs-wrapper {
+        background: rgba(255, 255, 255, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+    .mode-tab-btn {
+        color: #5A5B6A !important;
+    }
+    .mode-tab-btn:hover {
+        color: #1E1F29 !important;
+        background: rgba(0, 0, 0, 0.02) !important;
+    }
+    .mode-tab-btn.active-blitz {
+        color: #3D52A0 !important;
+        background: rgba(61, 82, 160, 0.1) !important;
+        border-color: rgba(61, 82, 160, 0.25) !important;
+    }
+    .mode-tab-btn.active-master {
+        color: #1E1F29 !important;
+        background: rgba(30, 31, 41, 0.08) !important;
+        border-color: rgba(30, 31, 41, 0.2) !important;
+    }
+    .mode-tab-btn.active-marathon {
+        color: #C5A059 !important;
+        background: rgba(197, 160, 89, 0.1) !important;
+        border-color: rgba(197, 160, 89, 0.25) !important;
+    }
+    .attempts-table-wrapper {
+        background: rgba(255, 255, 255, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+    .attempts-table th {
+        color: #5A5B6A !important;
+        border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+        background: rgba(0, 0, 0, 0.01) !important;
+    }
+    .attempts-table td {
+        color: #1E1F29 !important;
+        border-bottom-color: rgba(0, 0, 0, 0.03) !important;
+    }
+    .attempts-table tr:hover {
+        background: rgba(0, 0, 0, 0.02) !important;
+    }
+    .attempts-table tr.selected-blitz {
+        background: rgba(112, 145, 230, 0.08) !important;
+    }
+    .attempts-table tr.selected-master {
+        background: rgba(61, 82, 160, 0.08) !important;
+    }
+    .attempts-table tr.selected-marathon {
+        background: rgba(197, 160, 89, 0.06) !important;
+    }
+    .metric-box {
+        background: rgba(0, 0, 0, 0.02) !important;
+        border-color: rgba(0, 0, 0, 0.04) !important;
+    }
+    .metric-box .val {
+        color: #1E1F29 !important;
+    }
+    .metric-box .label {
+        color: #5A5B6A !important;
+    }
+    .bar-segment-track {
+        background: rgba(0, 0, 0, 0.03) !important;
+    }
+    .bar-segment-label, .bar-segment-pct {
+        color: #1E1F29 !important;
+    }
+    .radar-ring {
+        stroke: rgba(0, 0, 0, 0.06) !important;
+    }
+    .radar-axis {
+        stroke: rgba(0, 0, 0, 0.08) !important;
+    }
+    .radar-axis-lbl {
+        fill: #1E1F29 !important;
+        font-weight: 700 !important;
+    }
+    .radar-poly-bg {
+        fill: rgba(157, 141, 241, 0.15) !important;
+    }
+    .radar-poly {
+        stroke: #9D8DF1 !important;
+        stroke-width: 2.5px !important;
+    }
+    .legend-item span {
+        color: #5A5B6A !important;
+    }
+    .diagnostic-radar-widget {
+        background: rgba(255, 255, 255, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+    .question-card {
+        background: rgba(255, 255, 255, 0.45) !important;
+        border-color: rgba(255, 255, 255, 0.55) !important;
+        color: #1E1F29 !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02) !important;
+    }
+    .question-card .q-header {
+        border-bottom-color: rgba(0, 0, 0, 0.04) !important;
+    }
+    .question-card .q-title {
+        color: #1E1F29 !important;
+    }
+    .question-card .q-text {
+        color: #1E1F29 !important;
+    }
+    .q-option {
+        background: rgba(0, 0, 0, 0.015) !important;
+        border-color: rgba(0, 0, 0, 0.04) !important;
+        color: #1E1F29 !important;
+    }
+    .q-option.correct-option {
+        background: rgba(95, 168, 160, 0.15) !important;
+        border-color: #5FA8A0 !important;
+        color: #5FA8A0 !important;
+    }
+    .q-option.wrong-option {
+        background: rgba(232, 159, 159, 0.15) !important;
+        border-color: #E89F9F !important;
+        color: #E89F9F !important;
+    }
+    .explanation-box {
+        background: rgba(0, 0, 0, 0.02) !important;
+        border-color: rgba(0, 0, 0, 0.04) !important;
+        color: #1E1F29 !important;
+    }
+    .explanation-box .title {
+        color: #1E1F29 !important;
+    }
+    .explanation-box .body-text {
+        color: #5A5B6A !important;
+    }
+
+    /* Scroll Reveal Entrance Animations */
+    .history-container .glass-card, 
+    .hero {
+        opacity: 0;
+        transform: translateY(35px) scale(0.97);
+        transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), 
+                    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                    background-color 0.3s ease,
+                    border-color 0.3s ease,
+                    box-shadow 0.3s ease;
+        will-change: transform, opacity;
+    }
+    
+    .history-container .glass-card.revealed, 
+    .hero.revealed {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="glow glow-1"></div>
+<div class="glow glow-2"></div>
+<div class="glow glow-3"></div>
+
+<div class="hero">
+    <h1>Test Performance</h1>
+    <p>Select a test mode category below to review your completed attempts, inspect diagnostic question sheets, and analyze graphical trend metrics.</p>
+</div>
+
+<!-- Mode tabs segment switcher -->
+<div style="max-width: 1400px; margin: 0 auto; padding: 0 4% 10px;">
+    <div class="mode-tabs-wrapper">
+        <button class="mode-tab-btn active-blitz" id="tab-blitz" onclick="filterByMode('Module Blitz')">
+            <i class="fas fa-puzzle-piece"></i>
+            <span>Module Blitz</span>
+        </button>
+        <button class="mode-tab-btn" id="tab-master" onclick="filterByMode('Topic Master')">
+            <i class="fas fa-layer-group"></i>
+            <span>Topic Master</span>
+        </button>
+        <button class="mode-tab-btn" id="tab-marathon" onclick="filterByMode('Subject Marathon')">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Subject Marathon</span>
+        </button>
+    </div>
+</div>
+
+<div class="history-container">
+    
+    <!-- Left Column: History list and reports -->
+    <div style="display: flex; flex-direction: column; gap: 30px;">
+        
+        <!-- Attempts List Card -->
+        <div class="glass-card parallax-tilt-card">
+            <h3 class="section-title">
+                <i class="fas fa-history" id="modeHeaderIcon" style="color: #7091E6;"></i>
+                <span>Attempts: <span id="modeHeaderTitle" style="text-transform: capitalize;">Module Blitz</span></span>
+            </h3>
+            
+            <div class="attempts-table-wrapper">
+                <table class="attempts-table">
+                    <thead>
+                        <tr>
+                            <th>Test Session</th>
+                            <th>Subject Category</th>
+                            <th>Date Attempted</th>
+                            <th>Score Achieved</th>
+                            <th>Accuracy</th>
+                            <th>Percentile</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attemptsTableBody">
+                        <!-- Populated dynamically via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Detailed Report Panel -->
+        <div class="glass-card diagnostic-panel parallax-tilt-card" id="reportPanel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px;">
+                <h3 class="section-title" style="margin-bottom: 0;">
+                    <i class="fas fa-file-medical-alt" id="reportIcon" style="color: #7091E6;"></i>
+                    <span>Detailed Diagnostics: <span id="reportTestName" style="color: #ffffff;"></span></span>
+                </h3>
+                <span class="badge badge-quant" id="reportSubject"></span>
+            </div>
+
+            <!-- Report stats row -->
+            <div class="metric-grid">
+                <div class="metric-box">
+                    <div class="val" id="rptScore">0/40</div>
+                    <div class="label">Total Score</div>
+                </div>
+                <div class="metric-box">
+                    <div class="val" id="rptCorrect" style="color: #7091E6;">0</div>
+                    <div class="label">Correct Answers</div>
+                </div>
+                <div class="metric-box">
+                    <div class="val" id="rptWrong" style="color: #ff4757;">0</div>
+                    <div class="label">Wrong Answers</div>
+                </div>
+                <div class="metric-box">
+                    <div class="val" id="rptTime">00:00</div>
+                    <div class="label">Time Spent</div>
+                </div>
+            </div>
+
+            <!-- Highlights boxes -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                <div class="topic-indicator">
+                    <div>
+                        <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Subject Strength</div>
+                        <strong id="rptStrong" style="color: #7091E6;">-</strong>
+                    </div>
+                    <i class="fas fa-check-circle" style="color: #7091E6; font-size: 1.2rem;"></i>
+                </div>
+                <div class="topic-indicator">
+                    <div>
+                        <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Subject Focus Area</div>
+                        <strong id="rptWeak" style="color: #ff7675;">-</strong>
+                    </div>
+                    <i class="fas fa-exclamation-triangle" style="color: #ff7675; font-size: 1.2rem;"></i>
+                </div>
+            </div>
+
+            <!-- Diagnostic Questions Accordion List -->
+            <div style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Question Analysis Sheet</div>
+            <div id="diagnosticQuestionsList">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right Column: Performance Analytics Dashboard -->
+    <div style="display: flex; flex-direction: column; gap: 30px;">
+        
+        <!-- Summary Stats Card -->
+        <div class="glass-card parallax-tilt-card">
+            <h3 class="section-title">
+                <i class="fas fa-chart-pie" id="statsTitleIcon" style="color: #7091E6;"></i>
+                <span>Overall Metrics</span>
+            </h3>
+            
+            <div class="stat-radial-container">
+                <div class="radial-widget">
+                    <svg>
+                        <circle class="bg-circle" cx="40" cy="40" r="35"/>
+                        <circle class="fill-circle" id="accuracyCircle" cx="40" cy="40" r="35" stroke="#7091E6"/>
+                    </svg>
+                    <div class="percentage-text" id="accuracyText">0%</div>
+                    <div class="label">Avg Accuracy</div>
+                </div>
+                <div class="radial-widget">
+                    <svg>
+                        <circle class="bg-circle" cx="40" cy="40" r="35"/>
+                        <circle class="fill-circle" id="percentileCircle" cx="40" cy="40" r="35" stroke="#7091E6"/>
+                    </svg>
+                    <div class="percentage-text" id="percentileText">0%</div>
+                    <div class="label">Avg Percentile</div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
+                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Total Tests Taken</span>
+                    <strong style="font-size: 0.85rem; color: #ffffff;" id="metricTotalTests">0</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
+                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Best Mock Score</span>
+                    <strong style="font-size: 0.85rem; color: #7091E6;" id="metricBestScore">0/40</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Progression Graphical Representation -->
+        <div class="glass-card parallax-tilt-card">
+            <h3 class="section-title">
+                <i class="fas fa-chart-line" id="graphTitleIcon" style="color: #7091E6;"></i>
+                <span>Score Progression Trend</span>
+            </h3>
+            
+            <div class="chart-container" id="chartContainer">
+                <div class="chart-tooltip" id="chartTooltip"></div>
+                <svg id="trendSvg" style="width: 100%; height: 100%; overflow: visible;">
+                    <!-- SVG Chart items drawn dynamically via script -->
+                </svg>
+            </div>
+            
+            <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 10px; line-height: 1.45;">
+                Graph shows Score (0 - 40 Marks) achieved in past attempts. Keep scores above <strong>30</strong> to maintain 90+ percentile target!
+            </div>
+        </div>
+
+        <!-- Weak Topics checklist recommendation -->
+        <div class="glass-card parallax-tilt-card">
+            <h3 class="section-title">
+                <i class="fas fa-list-ul" style="color: #fccb90;"></i>
+                <span>Study Focus Recommendations</span>
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;" id="recommendationsList">
+                <!-- dynamically calculated based on weak subjects in history -->
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{{ history|json_script:"history-data-json" }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Pre-populated data passed from django context
+    const dbHistory = JSON.parse(document.getElementById('history-data-json').textContent);
+
+    let allAttempts = [];
+    let filteredAttempts = [];
+    let currentMode = 'Module Blitz'; // Default mode selected on page load
+
+    // Load attempts from localStorage and merge with dbAttempts
+    function loadAttempts() {
+        let localHistory = [];
+        try {
+            localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history') || '[]');
+        } catch (e) {
+            console.error("Error parsing prepverse-mock-history", e);
+        }
+
+        // Merge localHistory (dynamic attempts) with preloaded database attempts (to showcase historical data)
+        allAttempts = [...localHistory, ...dbHistory];
+        
+        // Remove duplicates if any (by id)
+        const uniqueAttempts = [];
+        const seen = new Set();
+        allAttempts.forEach(item => {
+            if (!seen.has(item.id)) {
+                seen.add(item.id);
+                uniqueAttempts.push(item);
+            }
+        });
+        allAttempts = uniqueAttempts;
+
+        // Sort attempts by date descending (newest first)
+        allAttempts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    // Initialize UI Components
+    document.addEventListener("DOMContentLoaded", () => {
+        loadAttempts();
+        filterByMode('Module Blitz'); // Apply default filter
+
+        // 1. Moving Glow Blobs via Cursor Vectors
+        document.addEventListener("mousemove", (e) => {
+            const mx = (e.clientX / window.innerWidth - 0.5).toFixed(3);
+            const my = (e.clientY / window.innerHeight - 0.5).toFixed(3);
+            document.documentElement.style.setProperty("--mx", mx);
+            document.documentElement.style.setProperty("--my", my);
+        });
+
+        // 2. Parallax card tilt effect
+        const cards = document.querySelectorAll(".parallax-tilt-card");
+        cards.forEach(card => {
+            card.addEventListener("mousemove", (e) => {
+                const box = card.getBoundingClientRect();
+                const x = e.clientX - box.left - (box.width / 2);
+                const y = e.clientY - box.top - (box.height / 2);
+                
+                // Scale factor for gentle tilts
+                const factorX = (x / (box.width / 2)).toFixed(3);
+                const factorY = (y / (box.height / 2)).toFixed(3);
+                
+                card.style.transform = `perspective(1000px) rotateY(${factorX * 4}deg) rotateX(${-factorY * 4}deg) translateY(-2px)`;
+            });
+            
+            card.style.transition = "transform 0.1s ease-out, box-shadow 0.2s ease";
+            
+            card.addEventListener("mouseleave", () => {
+                card.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(0)";
+            });
+        });
+
+        // 3. Intersection Observer for Scroll Reveal animations
+        const revealObserverOptions = {
+            root: null,
+            rootMargin: "0px",
+            threshold: 0.08
+        };
+        
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry, idx) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add("revealed");
+                    }, idx * 70); // Staggered reveal effect
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, revealObserverOptions);
+        
+        const revealTargets = document.querySelectorAll(".history-container .glass-card, .hero");
+        revealTargets.forEach(target => {
+            revealObserver.observe(target);
+        });
+    });
+
+    // Filter attempts by mode on tab selection
+    window.filterByMode = function(modeName) {
+        currentMode = modeName;
+        filteredAttempts = allAttempts.filter(item => item.mode === modeName);
+
+        // Update active tab styles
+        updateTabStyles(modeName);
+
+        // Render Attempts List, Overall Metrics & Progression Graph
+        renderAttemptsList();
+        renderOverallMetrics();
+        renderScoreTrend();
+        renderRecommendations();
+
+        // Autoselect first attempt in the filtered list
+        if (filteredAttempts.length > 0) {
+            selectAttempt(filteredAttempts[0].id);
+        } else {
+            // Hide report panel if no attempts exist for the mode
+            document.getElementById("reportPanel").style.display = "none";
+        }
+    }
+
+    // Update styling for tab buttons dynamically
+    function updateTabStyles(modeName) {
+        const tabBlitz = document.getElementById("tab-blitz");
+        const tabMaster = document.getElementById("tab-master");
+        const tabMarathon = document.getElementById("tab-marathon");
+
+        // Clear all active styling classes
+        tabBlitz.className = "mode-tab-btn";
+        tabMaster.className = "mode-tab-btn";
+        tabMarathon.className = "mode-tab-btn";
+
+        // Assign correct coloring themes based on active modes
+        let activeColor = "#7091E6";
+        if (modeName === 'Module Blitz') {
+            tabBlitz.classList.add("active-blitz");
+            activeColor = "#7091E6";
+        } else if (modeName === 'Topic Master') {
+            tabMaster.classList.add("active-master");
+            activeColor = "#3D52A0";
+        } else if (modeName === 'Subject Marathon') {
+            tabMarathon.classList.add("active-marathon");
+            activeColor = "#8697C4";
+        }
+
+        // Apply theme color highlights to titles and icons
+        document.getElementById("modeHeaderIcon").style.color = activeColor;
+        document.getElementById("modeHeaderTitle").textContent = modeName;
+        document.getElementById("statsTitleIcon").style.color = activeColor;
+        document.getElementById("graphTitleIcon").style.color = activeColor;
+        
+        const accuracyCircle = document.getElementById("accuracyCircle");
+        const percentileCircle = document.getElementById("percentileCircle");
+        if (accuracyCircle) accuracyCircle.style.stroke = activeColor;
+        if (percentileCircle) percentileCircle.style.stroke = activeColor;
+    }
+
+    // Render attempts table rows
+    function renderAttemptsList() {
+        const tableBody = document.getElementById("attemptsTableBody");
+        if (filteredAttempts.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: rgba(255,255,255,0.4); padding: 30px;">No mock tests attempted under this category yet. Start tests inside the Mock Tests section!</td></tr>`;
+            return;
+        }
+
+        tableBody.innerHTML = filteredAttempts.map(item => {
+            let badgeClass = "badge-quant";
+            if (item.subject.includes("Logic")) badgeClass = "badge-logic";
+            else if (item.subject.includes("Verbal") || item.subject.includes("English")) badgeClass = "badge-verbal";
+            else if (item.subject.includes("Data") || item.subject.includes("DI")) badgeClass = "badge-di";
+
+            return `
+                <tr id="row-${item.id}" onclick="selectAttempt('${item.id}')">
+                    <td>
+                        <div style="font-weight: 700; color: #ffffff;">${item.test_name}</div>
+                    </td>
+                    <td>
+                        <span class="badge ${badgeClass}">${item.subject}</span>
+                    </td>
+                    <td style="color: rgba(255,255,255,0.5);">${formatDate(item.date)}</td>
+                    <td>
+                        <strong style="color: #ffffff;">${item.score}</strong> <span style="color: rgba(255,255,255,0.3); font-size: 0.72rem;">/ ${item.max_score}</span>
+                    </td>
+                    <td>
+                        <span style="color: ${item.accuracy >= 85 ? '#2af598' : item.accuracy >= 70 ? '#fccb90' : '#ff7675'}; font-weight: 700;">${item.accuracy}%</span>
+                    </td>
+                    <td>
+                        <span style="font-weight: 700; color: #ffffff; opacity: 0.95;">Top ${100 - item.percentile}%</span>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Select an attempt to load diagnostic details
+    window.selectAttempt = function(attemptId) {
+        // Highlight active row in table depending on current active mode class styling
+        document.querySelectorAll("#attemptsTableBody tr").forEach(row => {
+            row.classList.remove("selected-blitz", "selected-master", "selected-marathon");
+        });
+        
+        const row = document.getElementById(`row-${attemptId}`);
+        if (row) {
+            if (currentMode === 'Module Blitz') row.classList.add("selected-blitz");
+            else if (currentMode === 'Topic Master') row.classList.add("selected-master");
+            else if (currentMode === 'Subject Marathon') row.classList.add("selected-marathon");
+        }
+
+        const attempt = allAttempts.find(item => item.id === attemptId);
+        if (!attempt) return;
+
+        // Populate panel details
+        const panel = document.getElementById("reportPanel");
+        panel.style.display = "block";
+
+        document.getElementById("reportTestName").textContent = attempt.test_name;
+        document.getElementById("reportSubject").textContent = attempt.subject;
+        
+        // Color theme setup
+        let activeColor = "#7091E6";
+        if (currentMode === 'Module Blitz') activeColor = "#7091E6";
+        else if (currentMode === 'Topic Master') activeColor = "#3D52A0";
+        else if (currentMode === 'Subject Marathon') activeColor = "#8697C4";
+        document.getElementById("reportIcon").style.color = activeColor;
+
+        let badgeClass = "badge badge-quant";
+        if (attempt.subject.includes("Logic")) badgeClass = "badge badge-logic";
+        else if (attempt.subject.includes("Verbal") || attempt.subject.includes("English")) badgeClass = "badge badge-verbal";
+        else if (attempt.subject.includes("Data") || attempt.subject.includes("DI")) badgeClass = "badge badge-di";
+        document.getElementById("reportSubject").className = badgeClass;
+
+        document.getElementById("rptScore").textContent = `${attempt.score} / ${attempt.max_score}`;
+        document.getElementById("rptCorrect").textContent = attempt.correct;
+        document.getElementById("rptWrong").textContent = attempt.wrong;
+        document.getElementById("rptTime").textContent = attempt.duration;
+        document.getElementById("rptStrong").textContent = attempt.strong_topic;
+        document.getElementById("rptWeak").textContent = attempt.weak_topic;
+
+        // Populate diagnostic questions list
+        const questionsList = document.getElementById("diagnosticQuestionsList");
+        if (!attempt.questions || attempt.questions.length === 0) {
+            questionsList.innerHTML = `<div style="color: rgba(255,255,255,0.4); font-size: 0.8rem; padding: 15px; background: rgba(255,255,255,0.01); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.05); text-align: center;">No diagnostic question data saved for this test.</div>`;
+            return;
+        }
+
+        const explanationLabels = ["A", "B", "C", "D"];
+        questionsList.innerHTML = attempt.questions.map((q, idx) => {
+            const isCorrect = q.user_index === q.correct_index;
+            const isUnanswered = q.user_index === null || q.user_index === undefined;
+            
+            let statusText = "";
+            let statusColor = "rgba(255,255,255,0.4)";
+            if (isUnanswered) {
+                statusText = "Skipped";
+            } else if (isCorrect) {
+                statusText = "Correct (+4)";
+                statusColor = "#2af598";
+            } else {
+                statusText = "Incorrect (-1)";
+                statusColor = "#ff4757";
+            }
+
+            return `
+                <div class="q-accord-item">
+                    <div class="q-accord-header" onclick="toggleAccordion(${idx})">
+                        <span style="color: #ffffff;">Question ${idx + 1}</span>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span style="color: ${statusColor}; font-weight: 700; font-size: 0.72rem; text-transform: uppercase;">${statusText}</span>
+                            <i class="fas fa-chevron-down" id="arrow-${idx}" style="font-size: 0.75rem; color: rgba(255,255,255,0.3); transition: transform 0.2s;"></i>
+                        </div>
+                    </div>
+                    <div class="q-accord-body" id="body-${idx}">
+                        <p style="color: #ffffff; font-weight: 600; margin-bottom: 15px;">${q.text}</p>
+                        
+                        <!-- Options list -->
+                        <div style="margin-bottom: 20px;">
+                            ${q.options.map((opt, oIdx) => {
+                                let optClass = "";
+                                if (oIdx === q.correct_index) optClass = "correct";
+                                else if (oIdx === q.user_index && !isCorrect) optClass = "incorrect";
+
+                                return `
+                                    <div class="opt-pill ${optClass}">
+                                        <div class="opt-pill-marker">${explanationLabels[oIdx]}</div>
+                                        <div>${opt}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <!-- Solution Conceptual analysis -->
+                        <div style="background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; padding: 15px;">
+                            <h5 style="margin: 0 0 6px 0; color: ${activeColor}; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;">Conceptual Solution & Analysis</h5>
+                            <p style="margin: 0; color: rgba(255,255,255,0.65); font-size: 0.78rem;">${q.explanation}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
+    // Toggle diagnostic accordion questions
+    window.toggleAccordion = function(idx) {
+        const body = document.getElementById(`body-${idx}`);
+        const arrow = document.getElementById(`arrow-${idx}`);
+        if (!body) return;
+
+        if (body.style.display === "block") {
+            body.style.display = "none";
+            if (arrow) arrow.style.transform = "rotate(0deg)";
+        } else {
+            // Close others
+            document.querySelectorAll(".q-accord-body").forEach(el => el.style.display = "none");
+            document.querySelectorAll(".q-accord-header i").forEach(el => el.style.transform = "rotate(0deg)");
+            
+            body.style.display = "block";
+            if (arrow) arrow.style.transform = "rotate(180deg)";
+        }
+    };
+
+    // Render overall progress metrics radial graphs based on active category selection
+    function renderOverallMetrics() {
+        if (filteredAttempts.length === 0) {
+            document.getElementById("accuracyText").textContent = "0%";
+            document.getElementById("percentileText").textContent = "0%";
+            document.getElementById("metricTotalTests").textContent = "0";
+            document.getElementById("metricBestScore").textContent = "0/40";
+            document.getElementById("accuracyCircle").style.strokeDashoffset = 220;
+            document.getElementById("percentileCircle").style.strokeDashoffset = 220;
+            return;
+        }
+
+        let totalAccuracy = 0;
+        let totalPercentile = 0;
+        let highestScore = -99; // support negative marking margins
+
+        filteredAttempts.forEach(item => {
+            totalAccuracy += item.accuracy;
+            totalPercentile += item.percentile;
+            if (item.score > highestScore) highestScore = item.score;
+        });
+
+        const avgAccuracy = Math.round(totalAccuracy / filteredAttempts.length);
+        const avgPercentile = Math.round(totalPercentile / filteredAttempts.length);
+
+        // Update elements
+        document.getElementById("accuracyText").textContent = avgAccuracy + "%";
+        document.getElementById("percentileText").textContent = avgPercentile + "%";
+        document.getElementById("metricTotalTests").textContent = filteredAttempts.length;
+        document.getElementById("metricBestScore").textContent = `${highestScore} / 40`;
+
+        // Radial progress calculations (stroke-dashoffset = 220 - (220 * percentage / 100))
+        const accOffset = Math.max(0, 220 - (220 * avgAccuracy / 100));
+        const percOffset = Math.max(0, 220 - (220 * avgPercentile / 100));
+
+        setTimeout(() => {
+            document.getElementById("accuracyCircle").style.strokeDashoffset = accOffset;
+            document.getElementById("percentileCircle").style.strokeDashoffset = percOffset;
+        }, 150);
+    }
+
+    // Graphical Representation: Draw dynamic SVG score progression trend chart matching specific tab
+    function renderScoreTrend() {
+        const svg = document.getElementById("trendSvg");
+        const container = document.getElementById("chartContainer");
+        const tooltip = document.getElementById("chartTooltip");
+        if (!svg || !container) return;
+
+        // Clean prior path drawings
+        svg.innerHTML = '';
+
+        if (filteredAttempts.length === 0) {
+            svg.innerHTML = `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="12">No attempts to draw progression trend</text>`;
+            return;
+        }
+
+        // Draw last 5 tests in chronological order (oldest first)
+        const trendData = [...filteredAttempts].slice(0, 5).reverse();
+        
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        const padding = 25;
+
+        // Color configurations based on current mode
+        let themeColor = "#7091E6";
+        if (currentMode === 'Module Blitz') themeColor = "#7091E6";
+        else if (currentMode === 'Topic Master') themeColor = "#3D52A0";
+        else if (currentMode === 'Subject Marathon') themeColor = "#8697C4";
+
+        // Calculate coordinates
+        const xStep = trendData.length > 1 ? (width - 2 * padding) / (trendData.length - 1) : width - 2 * padding;
+        const coordinates = trendData.map((item, idx) => {
+            const x = padding + (idx * xStep);
+            const normalisedScore = Math.max(0, item.score);
+            const y = height - padding - (normalisedScore / 40) * (height - 2 * padding);
+            return { x, y, score: item.score, name: item.test_name, date: formatDate(item.date) };
+        });
+
+        // 1. Draw grid background lines
+        const gridYLines = [0, 10, 20, 30, 40];
+        gridYLines.forEach(scoreVal => {
+            const yVal = height - padding - (scoreVal / 40) * (height - 2 * padding);
+            
+            // Grid Line
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", padding);
+            line.setAttribute("y1", yVal);
+            line.setAttribute("x2", width - padding);
+            line.setAttribute("y2", yVal);
+            line.setAttribute("stroke", "rgba(255,255,255,0.03)");
+            line.setAttribute("stroke-width", "1");
+            svg.appendChild(line);
+
+            // Score tag labels
+            const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("x", padding - 8);
+            label.setAttribute("y", yVal + 3);
+            label.setAttribute("fill", "rgba(255,255,255,0.3)");
+            label.setAttribute("font-size", "7.5");
+            label.setAttribute("text-anchor", "end");
+            label.textContent = scoreVal;
+            svg.appendChild(label);
+        });
+
+        if (coordinates.length === 1) {
+            // Draw a single pulsing dot if only 1 test exists
+            const pt = coordinates[0];
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", pt.x);
+            circle.setAttribute("cy", pt.y);
+            circle.setAttribute("r", "6");
+            circle.setAttribute("fill", themeColor);
+            circle.setAttribute("stroke", "#050505");
+            circle.setAttribute("stroke-width", "2");
+            svg.appendChild(circle);
+            return;
+        }
+
+        // 2. Draw Gradient fill under the trend line
+        const gradientId = "chart-grad-" + Date.now();
+        const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        const linGrad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+        linGrad.setAttribute("id", gradientId);
+        linGrad.setAttribute("x1", "0%");
+        linGrad.setAttribute("y1", "0%");
+        linGrad.setAttribute("x2", "0%");
+        linGrad.setAttribute("y2", "100%");
+
+        const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+        stop1.setAttribute("offset", "0%");
+        stop1.setAttribute("stop-color", themeColor);
+        stop1.setAttribute("stop-opacity", "0.2");
+        const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+        stop2.setAttribute("offset", "100%");
+        stop2.setAttribute("stop-color", themeColor);
+        stop2.setAttribute("stop-opacity", "0");
+
+        linGrad.appendChild(stop1);
+        linGrad.appendChild(stop2);
+        defs.appendChild(linGrad);
+        svg.appendChild(defs);
+
+        // Build Area path description (fill area under the curve)
+        let areaPathDesc = `M ${coordinates[0].x} ${height - padding}`;
+        coordinates.forEach(pt => {
+            areaPathDesc += ` L ${pt.x} ${pt.y}`;
+        });
+        areaPathDesc += ` L ${coordinates[coordinates.length - 1].x} ${height - padding} Z`;
+
+        const areaPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        areaPath.setAttribute("d", areaPathDesc);
+        areaPath.setAttribute("fill", `url(#${gradientId})`);
+        svg.appendChild(areaPath);
+
+        // 3. Draw Trend Line path
+        let linePathDesc = `M ${coordinates[0].x} ${coordinates[0].y}`;
+        for (let i = 1; i < coordinates.length; i++) {
+            linePathDesc += ` L ${coordinates[i].x} ${coordinates[i].y}`;
+        }
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", linePathDesc);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", themeColor);
+        path.setAttribute("stroke-width", "2.5");
+        path.setAttribute("stroke-linecap", "round");
+        svg.appendChild(path);
+
+        // 4. Draw interactive dot coordinates
+        coordinates.forEach((pt, idx) => {
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", pt.x);
+            circle.setAttribute("cy", pt.y);
+            circle.setAttribute("r", "5");
+            circle.setAttribute("fill", idx === coordinates.length - 1 ? themeColor : "#ffffff");
+            circle.setAttribute("stroke", themeColor);
+            circle.setAttribute("stroke-width", "2");
+            circle.style.cursor = "pointer";
+            circle.style.transition = "r 0.2s";
+
+            // Interactive Tooltips
+            circle.addEventListener("mouseover", (e) => {
+                circle.setAttribute("r", "7");
+                tooltip.style.opacity = "1";
+                tooltip.innerHTML = `<strong>${pt.name}</strong><br>Score: ${pt.score}/40<br>Date: ${pt.date}`;
+                
+                // Position tooltip
+                tooltip.style.left = `${pt.x - 50}px`;
+                tooltip.style.top = `${pt.y - 65}px`;
+            });
+
+            circle.addEventListener("mouseout", () => {
+                circle.setAttribute("r", "5");
+                tooltip.style.opacity = "0";
+            });
+
+            svg.appendChild(circle);
+        });
+    }
+
+    // Render Weak Topic focus recommendations checklist
+    function renderRecommendations() {
+        const list = document.getElementById("recommendationsList");
+        if (filteredAttempts.length === 0) {
+            list.innerHTML = `<div style="color: rgba(255,255,255,0.4); font-size: 0.78rem;">No recommendations generated yet. Complete tests to view insights.</div>`;
+            return;
+        }
+
+        // Gather weak topics from history list
+        const weakTopics = [...new Set(filteredAttempts.map(item => item.weak_topic).filter(Boolean))].slice(0, 3);
+        if (weakTopics.length === 0) {
+            list.innerHTML = `<div style="color: rgba(255,255,255,0.4); font-size: 0.78rem;">All clear! Accuracy is highly consistent across categories. Keep practicing!</div>`;
+            return;
+        }
+
+        list.innerHTML = weakTopics.map(topic => {
+            return `
+                <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px;">
+                    <div style="color: #ff9a9e; background: rgba(255, 154, 158, 0.08); width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.8rem; color: #ffffff;">Focus Area: ${topic}</div>
+                        <a href="{% url 'courses' %}" style="font-size: 0.68rem; color: #7091E6; font-weight: 700; text-decoration: none; text-transform: uppercase;">Study Concepts <i class="fas fa-arrow-right" style="font-size: 0.6rem; margin-left: 3px;"></i></a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Helper functions
+    function formatDate(dateStr) {
+        if (!dateStr) return "-";
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+</script>
+{% endblock %}

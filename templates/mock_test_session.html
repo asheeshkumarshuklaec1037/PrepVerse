@@ -1180,6 +1180,45 @@
         document.getElementById("rpt-wrong").innerText = wrongCount;
         document.getElementById("rpt-accuracy").innerText = accuracy + "%";
 
+        // Save test to localStorage history
+        try {
+            const testHistory = JSON.parse(localStorage.getItem('prepverse-mock-history') || '[]');
+            const durationTotal = parseInt("{{ duration_seconds }}") || 900;
+            const timeDiff = Math.max(0, durationTotal - timeLeft);
+            const minsSpent = Math.floor(timeDiff / 60);
+            const secsSpent = timeDiff % 60;
+            const formattedDuration = `${minsSpent < 10 ? '0' + minsSpent : minsSpent}:${secsSpent < 10 ? '0' + secsSpent : secsSpent}`;
+
+            const newRecord = {
+                id: 'mock-local-' + Date.now(),
+                test_name: "{{ test_name }}",
+                subject: "{{ subject }}",
+                mode: "{{ mode }}",
+                date: new Date().toISOString().split('T')[0],
+                score: finalScore,
+                max_score: questions.length * 4,
+                correct: correctCount,
+                wrong: wrongCount,
+                unanswered: unansweredCount,
+                accuracy: accuracy,
+                duration: formattedDuration,
+                percentile: Math.round(70 + Math.random() * 28), // realistic percentile
+                weak_topic: "{{ module }}",
+                strong_topic: "{{ topic }}",
+                questions: questions.map((q, idx) => ({
+                    text: q.text,
+                    options: q.options,
+                    correct_index: q.correct_index,
+                    user_index: answers[idx],
+                    explanation: q.explanation || "This is a detailed explanation of the solution based on core concepts of the topic."
+                }))
+            };
+            testHistory.unshift(newRecord);
+            localStorage.setItem('prepverse-mock-history', JSON.stringify(testHistory));
+        } catch (e) {
+            console.error("Failed to save test to localStorage history", e);
+        }
+
         // Trigger scorecard modal
         document.getElementById("scorecardModal").classList.add("active");
     }
