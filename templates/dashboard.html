@@ -143,9 +143,9 @@
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         /* Soft vignette effect to blend edges smoothly (using black for shading) */
-        background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.75) 100%),
-                    linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 10%, transparent 90%, rgba(0,0,0,0.9) 100%);
-        box-shadow: inset 0 0 40px 10px rgba(0,0,0,0.6);
+        background: radial-gradient(ellipse at center, transparent 65%, rgba(0,0,0,0.45) 100%),
+                    linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.85) 100%);
+        box-shadow: inset 0 0 40px 10px rgba(0,0,0,0.25);
         z-index: 5;
         pointer-events: none;
     }
@@ -153,17 +153,18 @@
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         object-fit: cover;
+        object-position: center 50%; /* Center alignment for landscape image */
         opacity: 0;
         animation: coverImageReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, coverSubtleZoom 20s ease-in-out infinite alternate 1.2s;
         z-index: 2;
     }
     @keyframes coverImageReveal {
         from { opacity: 0; transform: scale(1.2); filter: brightness(0); }
-        to { opacity: 1; transform: scale(1.05); filter: brightness(0.65); }
+        to { opacity: 1; transform: scale(1.05); filter: brightness(0.95); }
     }
     @keyframes coverSubtleZoom {
-        from { transform: scale(1.05); filter: brightness(0.65); }
-        to { transform: scale(1.12); filter: brightness(0.65); }
+        from { transform: scale(1.05); filter: brightness(0.95); }
+        to { transform: scale(1.12); filter: brightness(0.95); }
     }
 
     /* Headings Hierarchy */
@@ -665,14 +666,16 @@
         pointer-events: auto;
     }
     .modal-glass-container {
-        padding: 40px;
+        padding: 45px;
         text-align: center;
-        max-width: 440px;
+        max-width: 720px;
         width: 90%;
-        border-color: rgba(139, 92, 246, 0.3);
-        box-shadow: 0 0 50px rgba(139, 92, 246, 0.2);
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(3, 3, 7, 0.98) 100%);
-        border-radius: 28px;
+        background: rgba(10, 8, 24, 0.65) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        backdrop-filter: blur(25px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+        border-radius: 32px;
+        box-shadow: 0 30px 70px rgba(0,0,0,0.8), 0 0 60px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         transform: scale(0.9);
         transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -863,56 +866,104 @@
     <div class="stats-grid-row" data-aos="fade-up" data-aos-delay="100">
         <!-- Card 1: Solved Problems -->
         <div class="glass-card stat-counter-card" onclick="openStatsModal('solved')">
-            <div>
+            <!-- Background Pattern: Concentric Rings (Zano style) -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="85" cy="15" r="20" stroke="#38bdf8" stroke-width="1.2"/>
+                    <circle cx="85" cy="15" r="35" stroke="#38bdf8" stroke-width="1.2"/>
+                    <circle cx="85" cy="15" r="50" stroke="#38bdf8" stroke-width="1.2"/>
+                    <circle cx="85" cy="15" r="65" stroke="#38bdf8" stroke-width="1.2"/>
+                    <circle cx="85" cy="15" r="80" stroke="#38bdf8" stroke-width="1.2"/>
+                </svg>
+            </div>
+            <div class="relative z-10">
                 <div class="stat-icon-box text-[#38bdf8] bg-[#38bdf8]/10 border border-[#38bdf8]/20">
                     <i class="fas fa-check-double"></i>
                 </div>
                 <div class="stat-title-val text-white mt-4" id="counter-solved">{{ stats.questions_solved }}</div>
                 <div class="stat-title-label">Solved Problems</div>
             </div>
-            <svg class="stat-sparkline-graph" viewBox="0 0 60 30">
+            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
                 <path d="M0,25 Q15,5 30,20 T60,5" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
         </div>
 
         <!-- Card 2: Accuracy Rate -->
         <div class="glass-card stat-counter-card" onclick="openStatsModal('accuracy')">
-            <div>
+            <!-- Background Pattern: Isometric columns (Kudoe style) -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.08] z-0">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Column 1 -->
+                    <path d="M70 70 L80 65 L90 70 L80 75 Z" fill="#c084fc" opacity="0.6"/>
+                    <path d="M70 70 L70 95 L80 100 L80 75 Z" fill="#c084fc" opacity="0.4"/>
+                    <path d="M80 75 L80 100 L90 95 L90 70 Z" fill="#c084fc" opacity="0.8"/>
+                    <!-- Column 2 -->
+                    <path d="M52 52 L62 47 L72 52 L62 57 Z" fill="#c084fc" opacity="0.6"/>
+                    <path d="M52 52 L52 95 L62 100 L62 57 Z" fill="#c084fc" opacity="0.4"/>
+                    <path d="M62 57 L62 100 L72 95 L72 52 Z" fill="#c084fc" opacity="0.8"/>
+                    <!-- Column 3 -->
+                    <path d="M35 75 L45 70 L55 75 L45 80 Z" fill="#c084fc" opacity="0.6"/>
+                    <path d="M35 75 L35 95 L45 100 L45 80 Z" fill="#c084fc" opacity="0.4"/>
+                    <path d="M45 80 L45 100 L55 95 L55 75 Z" fill="#c084fc" opacity="0.8"/>
+                </svg>
+            </div>
+            <div class="relative z-10">
                 <div class="stat-icon-box text-[#c084fc] bg-[#c084fc]/10 border border-[#c084fc]/20">
                     <i class="fas fa-bullseye"></i>
                 </div>
                 <div class="stat-title-val text-white mt-4" id="counter-accuracy">85%</div>
                 <div class="stat-title-label">Accuracy Rate</div>
             </div>
-            <svg class="stat-sparkline-graph" viewBox="0 0 60 30">
+            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
                 <path d="M0,15 L15,10 L30,20 L45,8 L60,12" fill="none" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
         </div>
 
         <!-- Card 3: Active Streak -->
         <div class="glass-card stat-counter-card" onclick="openStatsModal('streak')">
-            <div>
+            <!-- Background Pattern: 3D Diagonal bands (Rootcube style) -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.08] z-0">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M-20 80 L80 -20 L95 -5 L-5 95 Z" fill="#fb7185" opacity="0.4"/>
+                    <path d="M-5 95 L95 -5 L100 0 L0 100 Z" fill="#fb7185" opacity="0.7"/>
+                    <path d="M15 115 L115 15 L130 30 L30 130 Z" fill="#fb7185" opacity="0.4"/>
+                    <path d="M30 130 L130 30 L135 35 L35 135 Z" fill="#fb7185" opacity="0.7"/>
+                    <path d="M-55 45 L45 -55 L60 -40 L-40 60 Z" fill="#fb7185" opacity="0.4"/>
+                    <path d="M-40 60 L60 -40 L65 -35 L-35 65 Z" fill="#fb7185" opacity="0.7"/>
+                </svg>
+            </div>
+            <div class="relative z-10">
                 <div class="stat-icon-box text-[#fb7185] bg-[#fb7185]/10 border border-[#fb7185]/20">
                     <i class="fas fa-fire"></i>
                 </div>
                 <div class="stat-title-val text-white mt-4" id="counter-streak">{{ stats.current_streak }} Days</div>
                 <div class="stat-title-label">Active Streak</div>
             </div>
-            <svg class="stat-sparkline-graph" viewBox="0 0 60 30">
+            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
                 <path d="M0,28 L10,24 L20,20 L30,12 L40,16 L50,8 L60,4" fill="none" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
         </div>
 
         <!-- Card 4: Global Rank -->
         <div class="glass-card stat-counter-card" onclick="openStatsModal('rank')">
-            <div>
+            <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
+            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.08] z-0">
+                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="100,45 68,78 100,100" fill="#fbcd0b" opacity="0.4"/>
+                    <polygon points="68,78 48,58 100,45" fill="#fbcd0b" opacity="0.6"/>
+                    <polygon points="48,58 38,88 68,78" fill="#fbcd0b" opacity="0.3"/>
+                    <polygon points="68,78 38,88 100,100" fill="#fbcd0b" opacity="0.8"/>
+                    <polygon points="48,58 78,38 100,45" fill="#fbcd0b" opacity="0.5"/>
+                </svg>
+            </div>
+            <div class="relative z-10">
                 <div class="stat-icon-box text-[#fbcd0b] bg-[#fbcd0b]/10 border border-[#fbcd0b]/20">
                     <i class="fas fa-trophy"></i>
                 </div>
                 <div class="stat-title-val text-white mt-4" id="counter-rank">#{{ stats.global_rank }}</div>
                 <div class="stat-title-label">Global Rank</div>
             </div>
-            <svg class="stat-sparkline-graph" viewBox="0 0 60 30">
+            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
                 <path d="M0,22 Q12,18 24,10 T48,6 T60,2" fill="none" stroke="#fbcd0b" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
         </div>
@@ -927,33 +978,77 @@
         
         <div class="subject-cards-grid">
             {% for cat in categories %}
-            <div class="glass-card subject-card" style="background: rgba(13, 11, 29, 0.35);" onclick="location.href='{% url 'courses' %}'">
-                <div class="subject-cover-img-box mb-4">
-                    <img src="{{ cat.image }}" alt="{{ cat.title }}">
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#070412] via-transparent to-transparent"></div>
-                    <div class="subject-icon-badge" style="color: {{ cat.color }}; border: 1px solid {{ cat.color }}44; box-shadow: 0 0 10px {{ cat.color }}33;">
-                        <i class="fas {{ cat.icon }}"></i>
-                    </div>
+            <div class="glass-card subject-card relative overflow-hidden" style="background: rgba(13, 11, 29, 0.35);" onclick="location.href='{% url 'courses' %}'">
+                {% if cat.title == "Quantitative Aptitude" %}
+                <!-- Background Pattern: Concentric Rings (Zano style) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="50" width="80" height="80" rx="20" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
+                        <rect x="50" y="50" width="110" height="110" rx="30" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
+                        <rect x="50" y="50" width="140" height="140" rx="40" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
+                    </svg>
                 </div>
-                <h4 class="font-extrabold text-sm text-white">{{ cat.title }}</h4>
-                <p class="text-[10px] text-gray-400 font-bold mb-4">
-                    {% if cat.title == "Quantitative Aptitude" %}Prof. Arun Sharma
-                    {% elif cat.title == "Logical Reasoning" %}Prof. R.S. Aggarwal
-                    {% elif cat.title == "Verbal Ability" %}Prof. Wren & Martin
-                    {% else %}Prof. Jonathan Reyes{% endif %}
-                </p>
-                <div class="mb-4">
-                    <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
-                        <span>{% if cat.progress == 45 %}6 lessons left{% elif cat.progress == 60 %}4 lessons left{% elif cat.progress == 30 %}8 lessons left{% else %}9 lessons left{% endif %}</span>
-                        <span style="color: {{ cat.color }};">{{ cat.progress }}% Complete</span>
-                    </div>
-                    <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full" style="width: {{ cat.progress }}%; background-color: {{ cat.color }};"></div>
-                    </div>
+                {% elif cat.title == "Logical Reasoning" %}
+                <!-- Background Pattern: Isometric columns (Kudoe style) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M80 60 L90 55 L100 60 L90 65 Z" fill="{{ cat.color }}" opacity="0.6"/>
+                        <path d="M80 60 L80 85 L90 90 L90 65 Z" fill="{{ cat.color }}" opacity="0.4"/>
+                        <path d="M90 65 L90 90 L100 85 L100 60 Z" fill="{{ cat.color }}" opacity="0.8"/>
+                        
+                        <path d="M60 70 L70 65 L80 70 L70 75 Z" fill="{{ cat.color }}" opacity="0.6"/>
+                        <path d="M60 70 L60 95 L70 100 L70 75 Z" fill="{{ cat.color }}" opacity="0.4"/>
+                        <path d="M70 75 L70 100 L80 95 L80 70 Z" fill="{{ cat.color }}" opacity="0.8"/>
+                    </svg>
                 </div>
-                <div class="flex gap-3" onclick="event.stopPropagation();">
-                    <a href="{% url 'courses' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90" style="background: {{ cat.color }}; text-decoration: none;">Study Course</a>
-                    <a href="{% url 'practice' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-white border border-white/5 bg-white/2 transition-all hover:bg-white/5" style="text-decoration: none;">Practice Meter</a>
+                {% elif cat.title == "Verbal Ability" %}
+                <!-- Background Pattern: Wavy ribbon paths (wavy style) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M-20,50 Q10,20 40,50 T100,50 T160,50" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M-20,60 Q10,30 40,60 T100,60 T160,60" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                        <path d="M-20,70 Q10,40 40,70 T100,70 T160,70" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+                    </svg>
+                </div>
+                {% else %}
+                <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="100,60 75,85 100,100" fill="{{ cat.color }}" opacity="0.4"/>
+                        <polygon points="75,85 55,70 100,60" fill="{{ cat.color }}" opacity="0.6"/>
+                        <polygon points="55,70 85,50 100,60" fill="{{ cat.color }}" opacity="0.5"/>
+                        <polygon points="75,85 55,70 65,95" fill="{{ cat.color }}" opacity="0.3"/>
+                    </svg>
+                </div>
+                {% endif %}
+                <div class="relative z-10">
+                    <div class="subject-cover-img-box mb-4">
+                        <img src="{{ cat.image }}" alt="{{ cat.title }}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#070412] via-transparent to-transparent"></div>
+                        <div class="subject-icon-badge" style="color: {{ cat.color }}; border: 1px solid {{ cat.color }}44; box-shadow: 0 0 10px {{ cat.color }}33;">
+                            <i class="fas {{ cat.icon }}"></i>
+                        </div>
+                    </div>
+                    <h4 class="font-extrabold text-sm text-white">{{ cat.title }}</h4>
+                    <p class="text-[10px] text-gray-400 font-bold mb-4">
+                        {% if cat.title == "Quantitative Aptitude" %}Prof. Arun Sharma
+                        {% elif cat.title == "Logical Reasoning" %}Prof. R.S. Aggarwal
+                        {% elif cat.title == "Verbal Ability" %}Prof. Wren & Martin
+                        {% else %}Prof. Jonathan Reyes{% endif %}
+                    </p>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
+                            <span>{% if cat.progress == 45 %}6 lessons left{% elif cat.progress == 60 %}4 lessons left{% elif cat.progress == 30 %}8 lessons left{% else %}9 lessons left{% endif %}</span>
+                            <span style="color: {{ cat.color }};">{{ cat.progress }}% Complete</span>
+                        </div>
+                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full" style="width: {{ cat.progress }}%; background-color: {{ cat.color }};"></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3" onclick="event.stopPropagation();">
+                        <a href="{% url 'courses' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90" style="background: {{ cat.color }}; text-decoration: none;">Study Course</a>
+                        <a href="{% url 'practice' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-white border border-white/5 bg-white/2 transition-all hover:bg-white/5" style="text-decoration: none;">Practice Meter</a>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -970,7 +1065,23 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Card 1: Module Blitz -->
             <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between bg-[#0d0b1d]/35 border border-white/5" style="background: rgba(13, 11, 29, 0.35);">
-                <div>
+                <!-- Background Pattern: Isometric columns (Kudoe style) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M85 55 L95 50 L105 55 L95 60 Z" fill="#2af598" opacity="0.6"/>
+                        <path d="M85 55 L85 85 L95 90 L95 60 Z" fill="#2af598" opacity="0.4"/>
+                        <path d="M95 60 L95 90 L105 85 L105 55 Z" fill="#2af598" opacity="0.8"/>
+                        
+                        <path d="M65 65 L75 60 L85 65 L75 70 Z" fill="#2af598" opacity="0.6"/>
+                        <path d="M65 65 L65 95 L75 100 L75 70 Z" fill="#2af598" opacity="0.4"/>
+                        <path d="M75 70 L75 100 L85 95 L85 65 Z" fill="#2af598" opacity="0.8"/>
+
+                        <path d="M45 75 L55 70 L65 75 L55 80 Z" fill="#2af598" opacity="0.6"/>
+                        <path d="M45 75 L45 103 L55 108 L55 80 Z" fill="#2af598" opacity="0.4"/>
+                        <path d="M55 80 L55 103 L65 108 L65 75 Z" fill="#2af598" opacity="0.8"/>
+                    </svg>
+                </div>
+                <div class="relative z-10">
                     <div class="flex justify-between items-start mb-3">
                         <div>
                             <h4 class="font-extrabold text-sm text-white">Module Blitz</h4>
@@ -982,7 +1093,7 @@
                     </div>
                     <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">Focus deeply on a single, isolated module within a topic. Highly recommended for drilling specific weak concepts.</p>
                 </div>
-                <div>
+                <div class="relative z-10">
                     <div class="mb-4">
                         <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
                             <span>Completed: <strong class="text-white" id="blitzTakenVal">0</strong> / 15</span>
@@ -1002,7 +1113,17 @@
 
             <!-- Card 2: Topic Master -->
             <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between bg-[#0d0b1d]/35 border border-white/5" style="background: rgba(13, 11, 29, 0.35);">
-                <div>
+                <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="100,50 70,80 100,100" fill="#fbcd0b" opacity="0.4"/>
+                        <polygon points="70,80 50,60 100,50" fill="#fbcd0b" opacity="0.6"/>
+                        <polygon points="50,60 40,90 70,80" fill="#fbcd0b" opacity="0.3"/>
+                        <polygon points="70,80 40,90 100,100" fill="#fbcd0b" opacity="0.8"/>
+                        <polygon points="50,60 80,40 100,50" fill="#fbcd0b" opacity="0.5"/>
+                    </svg>
+                </div>
+                <div class="relative z-10">
                     <div class="flex justify-between items-start mb-3">
                         <div>
                             <h4 class="font-extrabold text-sm text-white">Topic Master</h4>
@@ -1014,7 +1135,7 @@
                     </div>
                     <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">Covers all modules under a selected topic. Ideal for testing overall grasp of a composite topic category.</p>
                 </div>
-                <div>
+                <div class="relative z-10">
                     <div class="mb-4">
                         <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
                             <span>Completed: <strong class="text-white" id="topicTakenVal">0</strong> / 10</span>
@@ -1034,7 +1155,18 @@
 
             <!-- Card 3: Subject Marathon -->
             <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between bg-[#0d0b1d]/35 border border-white/5" style="background: rgba(13, 11, 29, 0.35);">
-                <div>
+                <!-- Background Pattern: Concentric Rings (Zano style) -->
+                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="90" cy="10" r="15" stroke="#fb7185" stroke-width="1.2"/>
+                        <circle cx="90" cy="10" r="28" stroke="#fb7185" stroke-width="1.2"/>
+                        <circle cx="90" cy="10" r="41" stroke="#fb7185" stroke-width="1.2"/>
+                        <circle cx="90" cy="10" r="54" stroke="#fb7185" stroke-width="1.2"/>
+                        <circle cx="90" cy="10" r="67" stroke="#fb7185" stroke-width="1.2"/>
+                        <circle cx="90" cy="10" r="80" stroke="#fb7185" stroke-width="1.2"/>
+                    </svg>
+                </div>
+                <div class="relative z-10">
                     <div class="flex justify-between items-start mb-3">
                         <div>
                             <h4 class="font-extrabold text-sm text-white">Subject Marathon</h4>
@@ -1046,7 +1178,7 @@
                     </div>
                     <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">A full scope test covering all topics and modules inside a major subject. Prepares you for general aptitude rounds.</p>
                 </div>
-                <div>
+                <div class="relative z-10">
                     <div class="mb-4">
                         <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
                             <span>Completed: <strong class="text-white" id="marathonTakenVal">0</strong> / 5</span>
@@ -1330,22 +1462,22 @@
 
 <!-- STATS BREAKDOWN DETAILS OVERLAY MODAL -->
 <div id="statsDetailModal" class="overlay-modal-fullscreen">
-    <div class="glass-card modal-glass-container text-left" id="statsDetailModalContent" style="max-width: 500px;">
-        <div class="flex justify-between items-center mb-5">
-            <div class="flex items-center gap-3">
-                <div id="modalIconWrapper" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-white">
+    <div class="glass-card modal-glass-container text-left" id="statsDetailModalContent" style="max-width: 720px; width: 90%;">
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-4">
+                <div id="modalIconWrapper" class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xl text-white shadow-inner">
                     <i id="modalIcon" class="fas"></i>
                 </div>
                 <div>
-                    <h3 id="modalTitle" class="font-black text-sm text-white font-['Outfit']">Detailed Breakdown</h3>
-                    <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">Real-time stats</span>
+                    <h3 id="modalTitle" class="font-extrabold text-lg text-white font-['Outfit'] tracking-wide">Detailed Breakdown</h3>
+                    <span class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Real-time stats analytics</span>
                 </div>
             </div>
-            <button onclick="closeStatsModal()" class="text-gray-500 hover:text-white transition-all text-base"><i class="fas fa-times"></i></button>
+            <button onclick="closeStatsModal()" class="w-8 h-8 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-all text-sm"><i class="fas fa-times"></i></button>
         </div>
-        <div id="modalContent" class="text-xs text-gray-300 leading-relaxed mb-6 min-h-[80px]"></div>
+        <div id="modalContent" class="text-sm text-gray-200 leading-relaxed mb-6 min-h-[100px]"></div>
         <div class="flex gap-3">
-            <button onclick="closeStatsModal()" class="w-full py-2 text-[10px] font-black rounded-lg border border-white/5 bg-white/2 hover:bg-white/5 text-white transition-all">Close Window</button>
+            <button onclick="closeStatsModal()" class="w-full py-3 text-xs font-black rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-white transition-all shadow-md">Close Breakdown Analytics</button>
         </div>
     </div>
 </div>
@@ -1439,22 +1571,22 @@
             iconClass = "fa-check-double";
             modalTitle = "Problems Solved Breakdown";
             htmlContent = `
-                <div class="flex flex-col gap-3">
-                    <div class="flex justify-between items-center py-1 border-b border-white/5">
-                        <span class="font-bold text-gray-400">Quantitative Aptitude</span>
-                        <span class="font-black text-[#38bdf8]">145 Problems</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-white/2 border border-white/5 hover:bg-white/5 transition-all">
+                        <span class="font-bold text-gray-400 text-sm">Quantitative Aptitude</span>
+                        <span class="font-black text-[#38bdf8] text-base">145 Problems</span>
                     </div>
-                    <div class="flex justify-between items-center py-1 border-b border-white/5">
-                        <span class="font-bold text-gray-400">Logical Reasoning</span>
-                        <span class="font-black text-[#2af598]">120 Problems</span>
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-white/2 border border-white/5 hover:bg-white/5 transition-all">
+                        <span class="font-bold text-gray-400 text-sm">Logical Reasoning</span>
+                        <span class="font-black text-[#2af598] text-base">120 Problems</span>
                     </div>
-                    <div class="flex justify-between items-center py-1 border-b border-white/5">
-                        <span class="font-bold text-gray-400">Verbal Ability</span>
-                        <span class="font-black text-[#fb7185]">55 Problems</span>
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-white/2 border border-white/5 hover:bg-white/5 transition-all">
+                        <span class="font-bold text-gray-400 text-sm">Verbal Ability</span>
+                        <span class="font-black text-[#fb7185] text-base">55 Problems</span>
                     </div>
-                    <div class="flex justify-between items-center py-1">
-                        <span class="font-bold text-gray-400">Data Interpretation</span>
-                        <span class="font-black text-[#fbcd0b]">22 Problems</span>
+                    <div class="flex items-center justify-between p-4 rounded-2xl bg-white/2 border border-white/5 hover:bg-white/5 transition-all">
+                        <span class="font-bold text-gray-400 text-sm">Data Interpretation</span>
+                        <span class="font-black text-[#fbcd0b] text-base">22 Problems</span>
                     </div>
                 </div>
             `;
@@ -1462,28 +1594,28 @@
             iconClass = "fa-bullseye";
             modalTitle = "Accuracy Rate Analytics";
             htmlContent = `
-                <p class="mb-4">Your average accuracy rate across all practice sets is <strong>85%</strong>. Here is the topic-level breakdown:</p>
-                <div class="flex flex-col gap-3">
-                    <div>
-                        <div class="flex justify-between text-[10px] text-gray-400 mb-1">
-                            <span>Quantitative Efficiency</span>
-                            <span class="text-[#c084fc]">90%</span>
+                <p class="mb-5 text-gray-300">Your average accuracy rate across all practice sets is <strong class="text-[#2af598]">85%</strong>. Here is the topic-level breakdown:</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="p-4 rounded-2xl bg-white/2 border border-white/5">
+                        <div class="flex justify-between text-xs text-gray-400 mb-2 font-bold">
+                            <span>Quantitative</span>
+                            <span class="text-[#c084fc] font-black">90%</span>
                         </div>
-                        <div class="h-1 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-[#c084fc] rounded-full" style="width:90%"></div></div>
+                        <div class="h-2 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-[#8b5cf6] to-[#c084fc] rounded-full" style="width:90%"></div></div>
                     </div>
-                    <div>
-                        <div class="flex justify-between text-[10px] text-gray-400 mb-1">
-                            <span>Reasoning Consistency</span>
-                            <span class="text-[#2af598]">88%</span>
+                    <div class="p-4 rounded-2xl bg-white/2 border border-white/5">
+                        <div class="flex justify-between text-xs text-gray-400 mb-2 font-bold">
+                            <span>Logical Reasoning</span>
+                            <span class="text-[#2af598] font-black">88%</span>
                         </div>
-                        <div class="h-1 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-[#2af598] rounded-full" style="width:88%"></div></div>
+                        <div class="h-2 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-[#2af598] to-[#00ffcc] rounded-full" style="width:88%"></div></div>
                     </div>
-                    <div>
-                        <div class="flex justify-between text-[10px] text-gray-400 mb-1">
-                            <span>Verbal Comprehension</span>
-                            <span class="text-[#fb7185]">78%</span>
+                    <div class="p-4 rounded-2xl bg-white/2 border border-white/5">
+                        <div class="flex justify-between text-xs text-gray-400 mb-2 font-bold">
+                            <span>Verbal Ability</span>
+                            <span class="text-[#fb7185] font-black">78%</span>
                         </div>
-                        <div class="h-1 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-[#fb7185] rounded-full" style="width:78%"></div></div>
+                        <div class="h-2 bg-white/5 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-[#fb7185] to-[#f43f5e] rounded-full" style="width:78%"></div></div>
                     </div>
                 </div>
             `;
@@ -1491,28 +1623,28 @@
             iconClass = "fa-fire";
             modalTitle = "Active Learning Streak";
             htmlContent = `
-                <p class="mb-3">You have maintained a learning consistency of <strong>{{ stats.current_streak }} Days</strong>. You are inside the top 8% of consistent candidates this week!</p>
-                <div class="p-3 bg-white/2 rounded-xl border border-white/5 flex justify-between items-center">
+                <p class="mb-5 text-gray-300">You have maintained an active learning consistency of <strong class="text-[#fbcd0b]">{{ stats.current_streak }} Days</strong>. You are currently in the top 8% of the most active candidates this week!</p>
+                <div class="p-5 bg-gradient-to-r from-orange-500/10 to-yellow-500/10 rounded-2xl border border-orange-500/20 flex justify-between items-center">
                     <div>
-                        <div class="text-[10px] font-black text-[#2af598] uppercase">Next milestone reward</div>
-                        <div class="text-xs font-bold text-white mt-1">15-Days consistent streak badge</div>
+                        <div class="text-[10px] font-black text-[#fbcd0b] uppercase tracking-wider">Next Milestone Unlock</div>
+                        <div class="text-sm font-extrabold text-white mt-1">15-Days Consistent Streak Badge</div>
                     </div>
-                    <span class="text-lg">🔥</span>
+                    <span class="text-3xl animate-bounce">🔥</span>
                 </div>
             `;
         } else if (type === 'rank') {
             iconClass = "fa-trophy";
             modalTitle = "Global Rank Standings";
             htmlContent = `
-                <p class="mb-4">Your current standing is <strong>#{{ stats.global_rank }}</strong> globally out of 24,000+ candidates.</p>
-                <div class="flex flex-col gap-2">
-                    <div class="flex justify-between py-1 border-b border-white/5">
-                        <span class="text-gray-400">Weekly Percentile</span>
-                        <span class="text-[#fbcd0b] font-extrabold">93.8%</span>
+                <p class="mb-5 text-gray-300">Your current global standing is <strong class="text-[#38bdf8]">#{{ stats.global_rank }}</strong> out of 24,000+ active candidates.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-2xl bg-white/2 border border-white/5 flex justify-between items-center">
+                        <span class="text-gray-400 font-bold">Weekly Percentile</span>
+                        <span class="text-[#fbcd0b] font-black text-lg">93.8%</span>
                     </div>
-                    <div class="flex justify-between py-1">
-                        <span class="text-gray-400">Active Candidates</span>
-                        <span class="text-white font-extrabold">24,510</span>
+                    <div class="p-4 rounded-2xl bg-white/2 border border-white/5 flex justify-between items-center">
+                        <span class="text-gray-400 font-bold">Total Active Users</span>
+                        <span class="text-white font-black text-lg">24,510</span>
                     </div>
                 </div>
             `;
@@ -1619,7 +1751,7 @@
         if (hours < 12) {
             greeting = "Good Morning";
             subText = "Wake up, refresh your mind, and ready to solve today's challenge!";
-            bgImage = "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=1000&auto=format&fit=crop";
+            bgImage = "{% static 'images/morning-sunrise.jpg' %}";
             if (moonOverlay) moonOverlay.classList.add("hidden");
         } else if (hours < 17) {
             greeting = "Good Afternoon";

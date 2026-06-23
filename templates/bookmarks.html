@@ -1,0 +1,617 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --bg-dark: #070412;
+        --card-bg: rgba(13, 11, 29, 0.35);
+        --border-glass: rgba(255, 255, 255, 0.05);
+        --border-glass-hover: rgba(255, 255, 255, 0.12);
+        --text-primary: #ffffff;
+        --text-secondary: #e2e8f0;
+        --text-tertiary: #94a3b8;
+        --accent-blue: #38bdf8;
+        --accent-purple: #c084fc;
+        --accent-rose: #fb7185;
+        --accent-gold: #fbcd0b;
+    }
+
+    body {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-primary) !important;
+    }
+
+    /* Cinematic Parallax Scrolling Background Layer */
+    #bgPatternLayer {
+        position: fixed;
+        top: -15vh;
+        left: 0;
+        width: 100vw;
+        height: 130vh;
+        z-index: -3;
+        pointer-events: none;
+        background-image: 
+            linear-gradient(rgba(139, 92, 246, 0.012) 1.5px, transparent 1.5px),
+            linear-gradient(90deg, rgba(139, 92, 246, 0.012) 1.5px, transparent 1.5px),
+            radial-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 0);
+        background-size: 60px 60px, 60px 60px, 30px 30px;
+        background-position: center center;
+        will-change: transform;
+        transform: translate3d(0, 0, 0);
+    }
+
+    /* Ambient Glowing Orbs */
+    .glow-orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(140px);
+        opacity: 0.14;
+        z-index: -2;
+        pointer-events: none;
+        will-change: transform;
+        transition: transform 0.2s ease-out;
+    }
+    .orb-1 {
+        width: 600px; height: 600px;
+        top: -150px; right: -100px;
+        background: radial-gradient(circle, rgba(192, 132, 252, 0.8) 0%, transparent 70%);
+    }
+    .orb-2 {
+        width: 500px; height: 500px;
+        bottom: -150px; left: -100px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, transparent 70%);
+    }
+    .orb-3 {
+        width: 400px; height: 400px;
+        top: 35%; left: 35%;
+        background: radial-gradient(circle, rgba(251, 113, 133, 0.6) 0%, transparent 70%);
+    }
+
+    /* Particles Canvas for Background Dust */
+    #particlesCanvas {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .bookmarks-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 4% 80px;
+    }
+    .page-header {
+        margin-bottom: 40px;
+        animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .page-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .page-subtitle {
+        font-size: 0.9rem;
+        color: var(--text-tertiary);
+        margin-top: 6px;
+    }
+    .question-card {
+        margin-bottom: 25px;
+        padding: 24px;
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .q-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+    }
+    .q-tag {
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 20px;
+        background: rgba(251, 205, 11, 0.1);
+        border: 1px solid rgba(251, 205, 11, 0.2);
+        color: #fbcd0b;
+        letter-spacing: 0.5px;
+    }
+    .q-module-link {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #38bdf8;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: all 0.3s;
+    }
+    .q-module-link:hover {
+        color: #c084fc;
+        text-shadow: 0 0 8px rgba(192,132,252,0.3);
+    }
+    .q-text {
+        font-size: 0.95rem;
+        color: #ffffff;
+        font-weight: 600;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .options-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .option-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .option-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        transform: translateX(4px);
+    }
+    .option-item.correct {
+        background: rgba(42, 245, 152, 0.08) !important;
+        border-color: rgba(42, 245, 152, 0.3) !important;
+        color: #2af598 !important;
+        box-shadow: 0 0 15px rgba(42, 245, 152, 0.15);
+    }
+    .option-item.wrong {
+        background: rgba(239, 68, 68, 0.08) !important;
+        border-color: rgba(239, 68, 68, 0.3) !important;
+        color: #ef4444 !important;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+    }
+    .option-item.answered {
+        pointer-events: none;
+    }
+    .option-letter {
+        width: 24px; height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--text-tertiary);
+    }
+    .option-item.correct .option-letter {
+        background: #2af598 !important;
+        color: #070412 !important;
+    }
+    .option-item.wrong .option-letter {
+        background: #ef4444 !important;
+        color: #ffffff !important;
+    }
+    .explanation-box {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 18px;
+        margin-top: 15px;
+        display: none;
+        animation: slideDown 0.4s ease forwards;
+    }
+    .explanation-box.show {
+        display: block;
+    }
+    .ans-header {
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: #2af598;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+    }
+    .exp-text {
+        font-size: 0.8rem;
+        color: var(--text-tertiary);
+        line-height: 1.5;
+    }
+    .action-bar {
+        display: flex;
+        gap: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 16px;
+        margin-top: 16px;
+        justify-content: flex-end;
+    }
+    .action-icon {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+    }
+    .action-icon:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+    }
+    .action-icon.remove-btn:hover {
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.05);
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.15);
+    }
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .empty-icon-box {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background: rgba(251, 205, 11, 0.05);
+        border: 1.5px solid rgba(251, 205, 11, 0.15);
+        color: #fbcd0b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        margin: 0 auto 20px;
+        box-shadow: 0 0 20px rgba(251, 205, 11, 0.1);
+    }
+    .empty-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 8px;
+    }
+    .empty-desc {
+        font-size: 0.85rem;
+        color: var(--text-tertiary);
+        max-width: 400px;
+        margin: 0 auto 24px;
+        line-height: 1.5;
+    }
+    .btn-explore {
+        background: #fbcd0b;
+        color: #070412;
+        padding: 10px 24px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-explore:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(251, 205, 11, 0.3);
+    }
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Parallax Grid Background Layer -->
+<div id="bgPatternLayer"></div>
+
+<!-- Ambient Blurred Glowing Orbs -->
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+
+<!-- Background particles canvas -->
+<canvas id="particlesCanvas"></canvas>
+
+<div class="bookmarks-container">
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="fas fa-bookmark text-[#fbcd0b]"></i>
+            <span>Bookmarked Practice Questions</span>
+            <span class="text-xs bg-[#fbcd0b]/10 border border-[#fbcd0b]/20 px-2.5 py-1 rounded-full text-[#fbcd0b] font-extrabold uppercase tracking-wider" id="bookmarksCount">0</span>
+        </h1>
+        <p class="page-subtitle">Review, re-try, and manage the questions you've saved during your practice sessions.</p>
+    </div>
+
+    <!-- Questions list -->
+    <div id="bookmarksList">
+        <!-- Rendered dynamically -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Inject Toast notification element dynamically into body if not already present
+        if (!document.getElementById('toastNotification')) {
+            const toastHtml = `
+                <div id="toastNotification" class="fixed bottom-6 right-6 px-4 py-3 bg-[#0d0b1d]/90 border border-[#fbcd0b]/30 text-white rounded-xl shadow-2xl backdrop-blur-md transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2 text-xs font-bold">
+                    <i class="fas fa-check-circle text-[#fbcd0b]"></i>
+                    <span id="toastMessage">Bookmark removed!</span>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+        }
+
+        renderBookmarks();
+
+        // 1. Particle Background Dust Effects
+        const canvas = document.getElementById("particlesCanvas");
+        if (canvas) {
+            const ctx = canvas.getContext("2d");
+            let particles = [];
+            
+            const resizeCanvas = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = 0.5 + Math.random() * 1.5;
+                    this.speedX = -0.15 + Math.random() * 0.3;
+                    this.speedY = -0.15 + Math.random() * 0.3;
+                    this.alpha = 0.1 + Math.random() * 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                        this.reset();
+                    }
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.fillStyle = "#ffffff";
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < 75; i++) {
+                particles.push(new Particle());
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+        }
+
+        // 2. Parallax Grid background movement & mouse move glows
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const pattern = document.getElementById('bgPatternLayer');
+            if (pattern) {
+                pattern.style.transform = `translate3d(0, ${scrolled * 0.12}px, 0)`;
+            }
+        });
+
+        // Glow orbs mouse parallax
+        const orbs = document.querySelectorAll('.glow-orb');
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 15;
+                orb.style.transform = `translate3d(${mouseX * speed}px, ${mouseY * speed}px, 0)`;
+            });
+        });
+    });
+
+    function getBookmarks() {
+        return JSON.parse(localStorage.getItem('prepverse_bookmarks') || '[]');
+    }
+
+    function saveBookmarks(bookmarks) {
+        localStorage.setItem('prepverse_bookmarks', JSON.stringify(bookmarks));
+    }
+
+    function renderBookmarks() {
+        const container = document.getElementById('bookmarksList');
+        const countBadge = document.getElementById('bookmarksCount');
+        const bookmarks = getBookmarks();
+        
+        countBadge.innerText = bookmarks.length;
+        
+        if (bookmarks.length === 0) {
+            container.innerHTML = `
+                <div class="glass-card empty-state">
+                    <div class="empty-icon-box">
+                        <i class="far fa-bookmark"></i>
+                    </div>
+                    <h3 class="empty-title">No Bookmarks Yet</h3>
+                    <p class="empty-desc">When practicing questions in your modules, click the bookmark icon to save them here for quick review!</p>
+                    <a href="{% url 'courses' %}" class="btn-explore">
+                        <i class="fas fa-compass"></i> Explore Courses
+                    </a>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        bookmarks.forEach((q, idx) => {
+            const letters = ['A', 'B', 'C', 'D'];
+            const correctLetter = q.correct_label || letters[q.correct_index];
+            
+            // Build options list HTML
+            let optionsHtml = '';
+            q.options.forEach((opt, optIdx) => {
+                const optLetter = letters[optIdx];
+                optionsHtml += `
+                    <div class="option-item" onclick="checkBookmarkAnswer(this, ${idx}, ${optIdx}, ${q.correct_index !== undefined ? q.correct_index : letters.indexOf(correctLetter)})">
+                        <div class="option-letter">${optLetter}</div>
+                        <span>${opt}</span>
+                    </div>
+                `;
+            });
+
+            // Back Link to Module Detail Page
+            let studyLink = '#';
+            if (q.course_id && q.topic_id && q.module) {
+                studyLink = `/course/${q.course_id}/topic/${q.topic_id}/module/${encodeURIComponent(q.module)}/`;
+            } else {
+                studyLink = '{% url "courses" %}';
+            }
+
+            html += `
+                <div class="glass-card question-card" id="q-card-${idx}" style="animation-delay: ${idx * 0.1}s;">
+                    <div class="q-meta">
+                        <span class="q-tag">${q.module || 'Practice Question'}</span>
+                        <a href="${studyLink}" class="q-module-link">
+                            <i class="fas fa-external-link-alt"></i> Go to Module
+                        </a>
+                    </div>
+                    <div class="q-text">${q.text}</div>
+                    <div class="options-grid">
+                        ${optionsHtml}
+                    </div>
+                    
+                    <div class="explanation-box" id="exp-${idx}">
+                        <div class="ans-header">
+                            <i class="fas fa-check-circle"></i> Correct Answer: Option ${correctLetter}
+                        </div>
+                        <div class="exp-text">${q.explanation}</div>
+                    </div>
+
+                    <div class="action-bar">
+                        <div class="action-icon" onclick="toggleExp(${idx})" title="Show Explanation">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="action-icon remove-btn" onclick="removeBookmark(${idx})" title="Remove Bookmark">
+                            <i class="fas fa-trash-can"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    function checkBookmarkAnswer(el, qIdx, selectedOptIdx, correctOptIdx) {
+        const grid = el.parentElement;
+        if (grid.classList.contains('answered')) return;
+        
+        grid.classList.add('answered');
+        const items = grid.querySelectorAll('.option-item');
+        
+        // Disable click on all options
+        items.forEach(item => item.classList.add('answered'));
+        
+        if (selectedOptIdx === correctOptIdx) {
+            el.classList.add('correct');
+        } else {
+            el.classList.add('wrong');
+            items[correctOptIdx].classList.add('correct');
+        }
+        
+        toggleExp(qIdx, true);
+    }
+
+    function toggleExp(qIdx, forceShow = false) {
+        const expBox = document.getElementById('exp-' + qIdx);
+        if (expBox) {
+            if (forceShow) expBox.classList.add('show');
+            else expBox.classList.toggle('show');
+        }
+    }
+
+    function removeBookmark(idx) {
+        let bookmarks = getBookmarks();
+        bookmarks.splice(idx, 1);
+        saveBookmarks(bookmarks);
+        
+        // Animate removal
+        const card = document.getElementById('q-card-' + idx);
+        if (card) {
+            card.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+        }
+        
+        setTimeout(() => {
+            renderBookmarks();
+            showToast("Bookmark removed!");
+        }, 500);
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toastNotification');
+        const msg = document.getElementById('toastMessage');
+        if (toast && msg) {
+            msg.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2000);
+        }
+    }
+</script>
+{% endblock %}

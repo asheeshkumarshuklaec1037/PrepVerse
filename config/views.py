@@ -368,6 +368,9 @@ def module_detail(request, course_id, topic_id, module_name):
 def login_view(request):
     print("DEBUG: login_view called with method:", request.method)
     if request.user.is_authenticated:
+        next_url = request.GET.get('next') or request.POST.get('next')
+        if next_url:
+            return redirect(next_url)
         return redirect('dashboard')
 
     if request.method == 'POST':
@@ -382,6 +385,9 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
+            next_url = request.GET.get('next') or request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
             return redirect('dashboard')
         else:
             # Check if user exists to give more specific error
@@ -395,6 +401,9 @@ def login_view(request):
 def signup_view(request):
     print("DEBUG: signup_view called with method:", request.method)
     if request.user.is_authenticated:
+        next_url = request.GET.get('next') or request.POST.get('next')
+        if next_url:
+            return redirect(next_url)
         return redirect('dashboard')
         
     if request.method == 'POST':
@@ -422,6 +431,9 @@ def signup_view(request):
             )
             # Log the user in directly after signup
             login(request, user)
+            next_url = request.GET.get('next') or request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
             return redirect('dashboard')
         except Exception as e:
             return render(request, 'signup.html', {'error': f'Something went wrong: {str(e)}'})
@@ -1072,6 +1084,11 @@ def mock_history_view(request):
         'history_json': json.dumps(history_data),
         'history': history_data
     })
+
+def bookmarks_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'bookmarks.html')
 
 
 

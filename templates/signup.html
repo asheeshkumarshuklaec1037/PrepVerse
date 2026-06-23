@@ -286,7 +286,7 @@
         </div>
         {% endif %}
 
-        <form method="POST" action="{% url 'signup' %}">
+        <form method="POST" action="{% url 'signup' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
             {% csrf_token %}
             <div class="name-row">
                 <div class="form-group">
@@ -319,7 +319,7 @@
             </div>
 
             <div class="signup-link">
-                Already have an account? <a href="{% url 'login' %}">Log in here</a>
+                Already have an account? <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">Log in here</a>
             </div>
         </form>
     </div>

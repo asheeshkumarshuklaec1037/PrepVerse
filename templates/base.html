@@ -217,10 +217,10 @@
             left: 0;
             height: 100vh;
             width: var(--sidebar-width);
-            background: rgba(10, 10, 15, 0.75) !important;
+            background: rgba(255, 255, 255, 0.03) !important;
             border-right: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(25px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+            backdrop-filter: blur(20px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
             z-index: 2200;
             display: flex;
             flex-direction: column;
@@ -454,41 +454,14 @@
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.2), inset 0 0 8px rgba(59, 130, 246, 0.1);
             border-color: rgba(59, 130, 246, 0.3);
         }
-        .sidebar-link[data-sidebar-route="practice"].active, 
-        .sidebar-link[data-sidebar-route="practice"]:hover {
-            color: #a855f7;
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2), inset 0 0 8px rgba(168, 85, 247, 0.1);
-            border-color: rgba(168, 85, 247, 0.3);
+        .sidebar-link[data-sidebar-route="bookmarks"].active, 
+        .sidebar-link[data-sidebar-route="bookmarks"]:hover {
+            color: #fbcd0b;
+            text-shadow: 0 0 10px rgba(251, 205, 11, 0.6);
+            box-shadow: 0 0 15px rgba(251, 205, 11, 0.2), inset 0 0 8px rgba(251, 205, 11, 0.1);
+            border-color: rgba(251, 205, 11, 0.3);
         }
-        .sidebar-link[data-sidebar-route="courses"].active, 
-        .sidebar-link[data-sidebar-route="courses"]:hover {
-            color: #ec4899;
-            text-shadow: 0 0 10px rgba(236, 72, 153, 0.6);
-            box-shadow: 0 0 15px rgba(236, 72, 153, 0.2), inset 0 0 8px rgba(236, 72, 153, 0.1);
-            border-color: rgba(236, 72, 153, 0.3);
-        }
-        .sidebar-link[data-sidebar-route="mock-test"].active, 
-        .sidebar-link[data-sidebar-route="mock-test"]:hover {
-            color: #f59e0b;
-            text-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.2), inset 0 0 8px rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.3);
-        }
-        .sidebar-link[data-sidebar-route="daily-challenges"].active, 
-        .sidebar-link[data-sidebar-route="daily-challenges"]:hover {
-            color: #ef4444;
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2), inset 0 0 8px rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-        .sidebar-link[data-sidebar-route="blog"].active, 
-        .sidebar-link[data-sidebar-route="blog"]:hover {
-            color: #10b981;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2), inset 0 0 8px rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.3);
-        }
+
 
         /* Footer logout */
         .sidebar-footer {
@@ -645,26 +618,11 @@
                 <i class="fa-solid fa-chart-line"></i>
                 <span>Test Performance</span>
             </a>
-            <a href="{% url 'practice' %}" class="sidebar-link" data-sidebar-route="practice" data-title="Practice Arena">
-                <i class="fa-solid fa-brain"></i>
-                <span>Practice Arena</span>
+            <a href="{% url 'bookmarks' %}" class="sidebar-link" data-sidebar-route="bookmarks" data-title="Bookmarks">
+                <i class="fa-solid fa-bookmark"></i>
+                <span>Bookmarks</span>
             </a>
-            <a href="{% url 'courses' %}" class="sidebar-link" data-sidebar-route="courses" data-title="Courses">
-                <i class="fa-solid fa-book-open"></i>
-                <span>Courses</span>
-            </a>
-            <a href="{% url 'mock_test' %}" class="sidebar-link" data-sidebar-route="mock-test" data-title="Mock Tests">
-                <i class="fa-solid fa-file-signature"></i>
-                <span>Mock Tests</span>
-            </a>
-            <a href="{% url 'daily_challenges' %}" class="sidebar-link" data-sidebar-route="daily-challenges" data-title="Daily Challenges">
-                <i class="fa-solid fa-bolt-lightning"></i>
-                <span>Daily Challenges</span>
-            </a>
-            <a href="{% url 'blog' %}" class="sidebar-link" data-sidebar-route="blog" data-title="Journal / Blog">
-                <i class="fa-solid fa-pen-nib"></i>
-                <span>Journal / Blog</span>
-            </a>
+
         </nav>
 
         <div class="sidebar-footer">

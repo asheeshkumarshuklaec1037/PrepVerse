@@ -203,10 +203,158 @@
         display: flex; align-items: center; justify-content: center;
         color: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s;
         font-size: 0.9rem;
+        position: relative;
     }
-    .action-icon:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #fff; transform: translateY(-2px); }
+    .action-icon:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); color: #fff; transform: translateY(-2px); }
 
     .breadcrumb-text { font-size: 0.7rem; opacity: 0.4; margin-bottom: 25px; display: flex; align-items: center; gap: 8px; }
+
+    /* Discussion Section */
+    .discussion-box {
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 16px;
+        opacity: 0;
+    }
+    .discussion-box.show {
+        max-height: 600px;
+        margin-top: 25px;
+        padding: 25px;
+        opacity: 1;
+        border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Comments List Styling */
+    .comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin: 15px 0;
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 8px;
+        text-align: left;
+    }
+    .comments-list::-webkit-scrollbar {
+        width: 4px;
+    }
+    .comments-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+    .comment-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 14px;
+    }
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+    .comment-user {
+        font-weight: 800;
+        color: #c084fc; /* purple accent */
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .comment-time {
+        color: #94a3b8;
+        font-weight: 500;
+    }
+    .comment-text {
+        font-size: 0.8rem;
+        color: #e2e8f0;
+        line-height: 1.4;
+    }
+    
+    /* Comment Form / Message */
+    .comment-input-area {
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 20px;
+        margin-top: 10px;
+    }
+    .comment-textarea {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 0.8rem;
+        color: #ffffff;
+        resize: none;
+        height: 80px;
+        outline: none;
+        transition: all 0.3s;
+    }
+    .comment-textarea:focus {
+        border-color: rgba(192, 132, 252, 0.4);
+        box-shadow: 0 0 10px rgba(192, 132, 252, 0.1);
+    }
+    .btn-submit-comment {
+        background: linear-gradient(135deg, #c084fc, #8b5cf6);
+        color: #ffffff;
+        font-size: 0.8rem;
+        font-weight: 800;
+        padding: 8px 20px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        float: right;
+        margin-top: 10px;
+    }
+    .btn-submit-comment:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    }
+    .btn-submit-comment:active {
+        transform: translateY(0);
+    }
+    
+    .login-prompt-box {
+        background: rgba(251, 205, 11, 0.05);
+        border: 1px solid rgba(251, 205, 11, 0.15);
+        border-radius: 14px;
+        padding: 14px;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #fbcd0b;
+        font-weight: 700;
+        margin-top: 15px;
+    }
+    .login-prompt-box a {
+        color: #fbcd0b;
+        text-decoration: underline;
+        font-weight: 800;
+        transition: opacity 0.2s;
+    }
+    .login-prompt-box a:hover {
+        opacity: 0.8;
+    }
+    
+    .comment-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: linear-gradient(135deg, #c084fc, #8b5cf6);
+        color: #ffffff;
+        font-size: 0.6rem;
+        font-weight: 800;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
 </style>
 {% endblock %}
 
@@ -245,6 +393,24 @@
             {% endfor %}
         </div>
 
+        <div class="action-bar">
+            <div class="action-icon" onclick="toggleExp({{ forloop.counter0 }})" title="Show Explanation"><i class="fas fa-lightbulb"></i></div>
+            <div class="action-icon" onclick="toggleDiscussion({{ forloop.counter0 }})" title="Discussion">
+                <i class="fas fa-comments"></i>
+                <span class="comment-badge" id="badge-{{ forloop.counter0 }}">0</span>
+            </div>
+            <div class="action-icon bookmark-btn" onclick="toggleBookmark(this, {
+                text: '{{ q.text|escapejs }}',
+                options: [{% for opt in q.options %}'{{ opt|escapejs }}',{% endfor %}],
+                correct_label: '{{ q.correct_label|escapejs }}',
+                explanation: '{{ q.explanation|escapejs }}',
+                module: '{{ module_name|escapejs }}',
+                course_id: '{{ course.id }}',
+                topic_id: '{{ topic.id }}'
+            })" title="Bookmark Question"><i class="far fa-bookmark"></i></div>
+            <div class="action-icon" title="Share"><i class="fas fa-share-nodes"></i></div>
+        </div>
+
         <div class="explanation-box" id="exp-{{ forloop.counter0 }}">
             <div class="ans-header">
                 <i class="fas fa-check-circle"></i> Correct Answer: Option {{ q.correct_label }}
@@ -252,11 +418,21 @@
             <div class="exp-text">{{ q.explanation }}</div>
         </div>
 
-        <div class="action-bar">
-            <div class="action-icon" onclick="toggleExp({{ forloop.counter0 }})"><i class="fas fa-lightbulb"></i></div>
-            <div class="action-icon"><i class="fas fa-comments"></i></div>
-            <div class="action-icon"><i class="far fa-bookmark"></i></div>
-            <div class="action-icon"><i class="fas fa-share-nodes"></i></div>
+        <!-- Question Discussion Section -->
+        <div class="discussion-box" id="disc-{{ forloop.counter0 }}">
+            <div class="ans-header" style="color: #c084fc; font-weight: 800; font-size: 0.9rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-comments"></i> Question Discussion
+            </div>
+            
+            <!-- Comments scroll area -->
+            <div class="comments-list" id="commentsContainer-{{ forloop.counter0 }}">
+                <!-- Rendered dynamically -->
+            </div>
+            
+            <!-- Form or Login alert -->
+            <div class="comment-input-area" id="commentFormContainer-{{ forloop.counter0 }}">
+                <!-- Rendered dynamically depending on login status -->
+            </div>
         </div>
     </div>
     {% endfor %}
@@ -265,6 +441,73 @@
 
 {% block extra_js %}
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Inject Toast notification element dynamically into body
+        const toastHtml = `
+            <div id="toastNotification" class="fixed bottom-6 right-6 px-4 py-3 bg-[#0d0b1d]/90 border border-[#fbcd0b]/30 text-white rounded-xl shadow-2xl backdrop-blur-md transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2 text-xs font-bold">
+                <i class="fas fa-check-circle text-[#fbcd0b]"></i>
+                <span id="toastMessage">Action completed!</span>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', toastHtml);
+
+        // Load existing bookmarks and toggle icon classes on load
+        const bookmarks = JSON.parse(localStorage.getItem('prepverse_bookmarks') || '[]');
+        document.querySelectorAll('.bookmark-btn').forEach(btn => {
+            const onclickAttr = btn.getAttribute('onclick');
+            const match = onclickAttr.match(/toggleBookmark\(this,\s*({[\s\S]*?})\)/);
+            if (match) {
+                try {
+                    const qData = new Function(`return ${match[1]}`)();
+                    const isBookmarked = bookmarks.some(b => b.text === qData.text && b.module === qData.module);
+                    if (isBookmarked) {
+                        const icon = btn.querySelector('i');
+                        icon.className = 'fas fa-bookmark';
+                        btn.style.color = '#fbcd0b';
+                    }
+                } catch(e) {
+                    console.error("Error parsing question metadata", e);
+                }
+            }
+        });
+
+        // Initialize discussions for each question index
+        {% for q in questions %}
+        initializeDiscussion({{ forloop.counter0 }});
+        {% endfor %}
+    });
+
+    function toggleBookmark(btn, qData) {
+        let bookmarks = JSON.parse(localStorage.getItem('prepverse_bookmarks') || '[]');
+        const idx = bookmarks.findIndex(b => b.text === qData.text && b.module === qData.module);
+        const icon = btn.querySelector('i');
+        
+        if (idx > -1) {
+            bookmarks.splice(idx, 1);
+            icon.className = 'far fa-bookmark';
+            btn.style.color = '';
+            showToast("Bookmark removed!");
+        } else {
+            bookmarks.push(qData);
+            icon.className = 'fas fa-bookmark';
+            btn.style.color = '#fbcd0b';
+            showToast("Question bookmarked!");
+        }
+        localStorage.setItem('prepverse_bookmarks', JSON.stringify(bookmarks));
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toastNotification');
+        const msg = document.getElementById('toastMessage');
+        if (toast && msg) {
+            msg.innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2000);
+        }
+    }
+
     function checkAnswer(element, qIndex, optIndex) {
         const optionsList = element.parentElement;
         if (optionsList.classList.contains('answered')) return;
@@ -279,10 +522,169 @@
         }
         toggleExp(qIndex, true);
     }
+    
     function toggleExp(qIndex, forceShow = false) {
         const expBox = document.getElementById('exp-' + qIndex);
-        if (forceShow) expBox.classList.add('show');
-        else expBox.classList.toggle('show');
+        if (expBox) {
+            if (forceShow) {
+                expBox.classList.add('show');
+                const discBox = document.getElementById('disc-' + qIndex);
+                if (discBox) discBox.classList.remove('show');
+            } else {
+                expBox.classList.toggle('show');
+                if (expBox.classList.contains('show')) {
+                    const discBox = document.getElementById('disc-' + qIndex);
+                    if (discBox) discBox.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    // --- QUESTION DISCUSSION / COMMENTS SYSTEM ---
+    function toggleDiscussion(qIndex) {
+        const discBox = document.getElementById('disc-' + qIndex);
+        if (discBox) {
+            discBox.classList.toggle('show');
+            if (discBox.classList.contains('show')) {
+                // Hide explanation when opening discussion
+                const expBox = document.getElementById('exp-' + qIndex);
+                if (expBox) expBox.classList.remove('show');
+                
+                // Scroll to bottom of comments list when opened
+                const container = document.getElementById('commentsContainer-' + qIndex);
+                if (container) {
+                    setTimeout(() => {
+                        container.scrollTop = container.scrollHeight;
+                    }, 100);
+                }
+            }
+        }
+    }
+
+    function getCommentsKey(qIndex) {
+        const moduleName = "{{ module_name|escapejs }}";
+        return `prepverse_comments_${moduleName}_${qIndex}`;
+    }
+
+    function getComments(qIndex) {
+        const key = getCommentsKey(qIndex);
+        let comments = JSON.parse(localStorage.getItem(key));
+        
+        if (!comments) {
+            comments = getMockComments(qIndex);
+            localStorage.setItem(key, JSON.stringify(comments));
+        }
+        return comments;
+    }
+
+    function getMockComments(qIndex) {
+        const now = new Date();
+        const twoDaysAgo = new Date(now - 2 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const hoursAgo = "8 hours ago";
+
+        if (qIndex === 0) {
+            return [
+                { user: "Arun Sharma", text: "The half-division pattern is simple once you write it out as fraction terms!", time: twoDaysAgo },
+                { user: "Meera Nair", text: "Excellent explanation. I initially thought it was a subtraction sequence.", time: oneDayAgo }
+            ];
+        } else if (qIndex === 1) {
+            return [
+                { user: "Rahul Gupta", text: "Alternating series (+3, -2). Found this one relatively easy!", time: twoDaysAgo },
+                { user: "Pooja Roy", text: "Is there an easier way than doing (+3, -2)? Maybe separate even/odd terms?", time: oneDayAgo },
+                { user: "Amit Patel", text: "Yes Pooja! The odd terms are 7, 8, 9... and even terms are 10, 11, 12... It is just two interwoven series!", time: hoursAgo }
+            ];
+        } else {
+            return [
+                { user: "Sunita Sen", text: "Alternating subtraction of 2, then 4. Solid practice!", time: twoDaysAgo },
+                { user: "Vijay Kumar", text: "Be careful, I subtracted 4 first instead of 2. Pay close attention to the first step!", time: oneDayAgo }
+            ];
+        }
+    }
+
+    function initializeDiscussion(qIndex) {
+        renderComments(qIndex);
+        renderCommentForm(qIndex);
+        updateBadge(qIndex);
+    }
+
+    function updateBadge(qIndex) {
+        const comments = getComments(qIndex);
+        const badge = document.getElementById('badge-' + qIndex);
+        if (badge) {
+            badge.innerText = comments.length;
+        }
+    }
+
+    function renderComments(qIndex) {
+        const container = document.getElementById('commentsContainer-' + qIndex);
+        if (!container) return;
+        const comments = getComments(qIndex);
+        
+        let html = '';
+        comments.forEach(c => {
+            html += `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-user"><i class="fas fa-user-circle"></i> ${c.user}</span>
+                        <span class="comment-time">${c.time}</span>
+                    </div>
+                    <div class="comment-text">${c.text}</div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        
+        setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+        }, 100);
+    }
+
+    function renderCommentForm(qIndex) {
+        const container = document.getElementById('commentFormContainer-' + qIndex);
+        if (!container) return;
+        const isUserLoggedIn = {% if user.is_authenticated %}true{% else %}false{% endif %};
+        
+        if (isUserLoggedIn) {
+            container.innerHTML = `
+                <div>
+                    <textarea class="comment-textarea" id="newCommentText-${qIndex}" placeholder="Share your trick, solution path, or explanation..." required></textarea>
+                    <button class="btn-submit-comment" onclick="postComment(${qIndex})">Post Comment</button>
+                    <div style="clear:both;"></div>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div class="login-prompt-box">
+                    <i class="fas fa-lock mr-1.5"></i> You must be <a href="{% url 'login' %}?next={{ request.path }}">logged in</a> to post comments.
+                </div>
+            `;
+        }
+    }
+
+    function postComment(qIndex) {
+        const txtarea = document.getElementById('newCommentText-' + qIndex);
+        if (!txtarea) return;
+        const text = txtarea.value.trim();
+        if (!text) return;
+        
+        const key = getCommentsKey(qIndex);
+        let comments = getComments(qIndex);
+        
+        const userName = "{{ user.first_name|default:'User' }} {{ user.last_name|default:'' }}".trim();
+        
+        comments.push({
+            user: userName,
+            text: text,
+            time: "Just now"
+        });
+        
+        localStorage.setItem(key, JSON.stringify(comments));
+        txtarea.value = '';
+        
+        renderComments(qIndex);
+        updateBadge(qIndex);
+        showToast("Comment posted!");
     }
 </script>
 {% endblock %}

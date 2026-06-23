@@ -295,7 +295,7 @@
         </div>
         {% endif %}
 
-        <form method="POST" action="{% url 'login' %}">
+        <form method="POST" action="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
             {% csrf_token %}
             <div class="form-group">
                 <label>Email Address</label>
@@ -320,7 +320,7 @@
             </div>
 
             <div class="signup-link">
-                New to PrepVerse? <a href="{% url 'signup' %}">Create an account</a>
+                New to PrepVerse? <a href="{% url 'signup' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">Create an account</a>
             </div>
         </form>
     </div>
