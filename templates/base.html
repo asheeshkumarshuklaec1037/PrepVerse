@@ -461,6 +461,13 @@
             box-shadow: 0 0 15px rgba(251, 205, 11, 0.2), inset 0 0 8px rgba(251, 205, 11, 0.1);
             border-color: rgba(251, 205, 11, 0.3);
         }
+        .sidebar-link[data-sidebar-route="leaderboard"].active, 
+        .sidebar-link[data-sidebar-route="leaderboard"]:hover {
+            color: #c084fc;
+            text-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.2), inset 0 0 8px rgba(192, 132, 252, 0.1);
+            border-color: rgba(192, 132, 252, 0.3);
+        }
 
 
         /* Footer logout */
@@ -617,6 +624,10 @@
             <a href="{% url 'mock_history' %}" class="sidebar-link" data-sidebar-route="mock-history" data-title="Test Performance">
                 <i class="fa-solid fa-chart-line"></i>
                 <span>Test Performance</span>
+            </a>
+            <a href="{% url 'leaderboard' %}" class="sidebar-link" data-sidebar-route="leaderboard" data-title="Leaderboard">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Leaderboard</span>
             </a>
             <a href="{% url 'bookmarks' %}" class="sidebar-link" data-sidebar-route="bookmarks" data-title="Bookmarks">
                 <i class="fa-solid fa-bookmark"></i>

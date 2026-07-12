@@ -1090,6 +1090,31 @@ def bookmarks_view(request):
         return redirect('login')
     return render(request, 'bookmarks.html')
 
+def leaderboard_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    user_name = f"{request.user.first_name or 'Candidate'} {request.user.last_name or ''}".strip()
+    
+    leaderboard_data = [
+        {'rank': 1, 'name': 'Aarav Sharma', 'xp': 2850, 'solved': 412, 'accuracy': '96.8%', 'streak': '24 Days', 'tier': 'Grandmaster', 'badge_color': '#fbcd0b', 'trend': 'up', 'change': '+1', 'avatar': 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150&auto=format&fit=crop', 'topic': 'Quant Blitz'},
+        {'rank': 2, 'name': 'Priya Patel', 'xp': 2640, 'solved': 385, 'accuracy': '94.2%', 'streak': '18 Days', 'tier': 'Grandmaster', 'badge_color': '#e2e8f0', 'trend': 'down', 'change': '-1', 'avatar': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', 'topic': 'Logical Reasoning'},
+        {'rank': 3, 'name': 'Rohan Verma', 'xp': 2410, 'solved': 350, 'accuracy': '92.5%', 'streak': '15 Days', 'tier': 'Master', 'badge_color': '#b45309', 'trend': 'up', 'change': '+3', 'avatar': 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=150&auto=format&fit=crop', 'topic': 'Data Interpretation'},
+        {'rank': 4, 'name': 'Ananya Gupta', 'xp': 2190, 'solved': 318, 'accuracy': '91.0%', 'streak': '12 Days', 'tier': 'Master', 'badge_color': '#c084fc', 'trend': 'same', 'change': '0', 'avatar': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', 'topic': 'Verbal Ability'},
+        {'rank': 5, 'name': 'Karan Malhotra', 'xp': 1980, 'solved': 290, 'accuracy': '89.4%', 'streak': '9 Days', 'tier': 'Diamond', 'badge_color': '#38bdf8', 'trend': 'up', 'change': '+2', 'avatar': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', 'topic': 'Quant Blitz'},
+        {'rank': 6, 'name': 'Sneha Reddy', 'xp': 1750, 'solved': 265, 'accuracy': '88.1%', 'streak': '7 Days', 'tier': 'Diamond', 'badge_color': '#38bdf8', 'trend': 'down', 'change': '-2', 'avatar': 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', 'topic': 'Logical Reasoning'},
+        {'rank': 7, 'name': f"{user_name} (You)", 'xp': 1450, 'solved': 184, 'accuracy': '87.5%', 'streak': '5 Days', 'tier': 'Platinum', 'badge_color': '#2af598', 'trend': 'up', 'change': '+4', 'avatar': '/static/images/candidate_profile_avatar.jpg', 'topic': 'Quant Blitz', 'is_user': True},
+        {'rank': 8, 'name': 'Vikram Singh', 'xp': 1380, 'solved': 210, 'accuracy': '85.0%', 'streak': '4 Days', 'tier': 'Platinum', 'badge_color': '#2af598', 'trend': 'down', 'change': '-1', 'avatar': '', 'topic': 'Verbal Ability'},
+        {'rank': 9, 'name': 'Meera Joshi', 'xp': 1250, 'solved': 195, 'accuracy': '84.2%', 'streak': '6 Days', 'tier': 'Gold', 'badge_color': '#fbcd0b', 'trend': 'up', 'change': '+1', 'avatar': '', 'topic': 'Data Interpretation'},
+        {'rank': 10, 'name': 'Kabir Nair', 'xp': 1120, 'solved': 170, 'accuracy': '82.8%', 'streak': '3 Days', 'tier': 'Gold', 'badge_color': '#fbcd0b', 'trend': 'same', 'change': '0', 'avatar': '', 'topic': 'Quant Blitz'},
+    ]
+    
+    return render(request, 'leaderboard.html', {
+        'leaderboard': leaderboard_data,
+        'top_three': leaderboard_data[:3],
+        'user_rank': next((item for item in leaderboard_data if item.get('is_user')), leaderboard_data[6])
+    })
+
 
 
 

@@ -1,0 +1,833 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Global Leaderboard & Rankings | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --bg-dark: #070412;
+        --card-bg: rgba(13, 11, 29, 0.45);
+        --accent-purple: #c084fc;
+        --accent-gold: #fbcd0b;
+        --accent-silver: #e2e8f0;
+        --accent-bronze: #b45309;
+        --accent-cyan: #2af598;
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --text-tertiary: rgba(255, 255, 255, 0.4);
+        --border-glass: rgba(255, 255, 255, 0.06);
+        --border-glass-hover: rgba(255, 255, 255, 0.15);
+    }
+
+    body {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-primary) !important;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        overflow-x: hidden;
+    }
+
+    /* Parallax & Ambient Background Layers */
+    #bgPatternLayer {
+        position: fixed;
+        top: -15vh; left: 0;
+        width: 100vw; height: 130vh;
+        z-index: -3;
+        pointer-events: none;
+        background-image: 
+            linear-gradient(rgba(192, 132, 252, 0.015) 1.5px, transparent 1.5px),
+            linear-gradient(90deg, rgba(192, 132, 252, 0.015) 1.5px, transparent 1.5px),
+            radial-gradient(rgba(251, 205, 11, 0.04) 1px, transparent 0);
+        background-size: 60px 60px, 60px 60px, 30px 30px;
+    }
+
+    .glow-orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(140px);
+        opacity: 0.14;
+        z-index: -2;
+        pointer-events: none;
+    }
+    .orb-1 { width: 600px; height: 600px; top: -150px; right: -100px; background: radial-gradient(circle, rgba(251, 205, 11, 0.6) 0%, transparent 70%); }
+    .orb-2 { width: 500px; height: 500px; bottom: -150px; left: -100px; background: radial-gradient(circle, rgba(192, 132, 252, 0.7) 0%, transparent 70%); }
+    .orb-3 { width: 400px; height: 400px; top: 40%; left: 35%; background: radial-gradient(circle, rgba(42, 245, 152, 0.5) 0%, transparent 70%); }
+
+    #particlesCanvas {
+        position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    }
+
+    .leaderboard-container {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 40px 4% 80px;
+        opacity: 0;
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
+    }
+
+    @keyframes pageFadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Glass Cards */
+    .glass-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-glass);
+        border-radius: 24px;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .glass-card:hover {
+        border-color: var(--border-glass-hover);
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), 0 0 25px rgba(192, 132, 252, 0.12);
+    }
+
+    /* Hero Banner Header */
+    .hero-banner {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+    .hero-banner h1 {
+        font-family: 'Outfit', sans-serif;
+        font-size: 3.2rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+        background: linear-gradient(135deg, #ffffff 30%, #fbcd0b 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 12px;
+    }
+    .hero-banner p {
+        color: var(--text-secondary);
+        font-size: 1.05rem;
+        max-width: 620px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Podium Section */
+    .podium-section {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 50px;
+        padding-top: 40px;
+    }
+    @media (max-width: 768px) {
+        .podium-section {
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+    }
+
+    .podium-card {
+        flex: 1;
+        max-width: 320px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 20px 25px;
+        border-radius: 28px;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: floatPodium 4s ease-in-out infinite alternate;
+    }
+
+    .podium-card.rank-1 {
+        order: 2;
+        background: linear-gradient(180deg, rgba(251, 205, 11, 0.12) 0%, rgba(13, 11, 29, 0.7) 100%);
+        border: 1px solid rgba(251, 205, 11, 0.4);
+        box-shadow: 0 20px 50px rgba(251, 205, 11, 0.15), inset 0 1px 0 rgba(251, 205, 11, 0.3);
+        transform: translateY(-20px);
+        animation-delay: 0s;
+    }
+    .podium-card.rank-2 {
+        order: 1;
+        background: linear-gradient(180deg, rgba(226, 232, 240, 0.08) 0%, rgba(13, 11, 29, 0.65) 100%);
+        border: 1px solid rgba(226, 232, 240, 0.3);
+        animation-delay: 1s;
+    }
+    .podium-card.rank-3 {
+        order: 3;
+        background: linear-gradient(180deg, rgba(180, 83, 9, 0.08) 0%, rgba(13, 11, 29, 0.65) 100%);
+        border: 1px solid rgba(180, 83, 9, 0.3);
+        animation-delay: 2s;
+    }
+
+    @keyframes floatPodium {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-10px); }
+    }
+    .podium-card.rank-1 {
+        animation: floatPodiumGold 4s ease-in-out infinite alternate;
+    }
+    @keyframes floatPodiumGold {
+        0% { transform: translateY(-20px); }
+        100% { transform: translateY(-32px); }
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        margin-bottom: 16px;
+    }
+    .podium-avatar {
+        width: 86px; height: 86px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .rank-1 .podium-avatar { border: 4px solid #fbcd0b; width: 100px; height: 100px; }
+    .rank-2 .podium-avatar { border: 4px solid #e2e8f0; }
+    .rank-3 .podium-avatar { border: 4px solid #b45309; }
+
+    .crown-icon {
+        position: absolute;
+        top: -22px; left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.6rem;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    }
+    .rank-1 .crown-icon { color: #fbcd0b; font-size: 2.2rem; top: -30px; }
+    .rank-2 .crown-icon { color: #e2e8f0; }
+    .rank-3 .crown-icon { color: #b45309; }
+
+    .podium-rank-badge {
+        position: absolute;
+        bottom: -8px; left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Outfit', sans-serif;
+        font-weight: 900;
+        font-size: 0.8rem;
+        padding: 3px 12px;
+        border-radius: 20px;
+        color: #000;
+    }
+    .rank-1 .podium-rank-badge { background: #fbcd0b; box-shadow: 0 0 15px rgba(251, 205, 11, 0.6); }
+    .rank-2 .podium-rank-badge { background: #e2e8f0; box-shadow: 0 0 15px rgba(226, 232, 240, 0.5); }
+    .rank-3 .podium-rank-badge { background: #b45309; color: #fff; box-shadow: 0 0 15px rgba(180, 83, 9, 0.5); }
+
+    .podium-name {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 1.15rem;
+        color: #fff;
+        margin-top: 8px;
+        text-align: center;
+    }
+    .podium-xp {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 1.3rem;
+        margin-top: 4px;
+    }
+    .rank-1 .podium-xp { color: #fbcd0b; }
+    .rank-2 .podium-xp { color: #e2e8f0; }
+    .rank-3 .podium-xp { color: #b45309; }
+
+    .podium-stats {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        width: 100%;
+        justify-content: center;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        font-weight: 700;
+    }
+
+    /* Filter & Search Header */
+    .controls-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+    .filter-tabs {
+        display: flex;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-glass);
+        padding: 5px;
+        border-radius: 16px;
+        gap: 6px;
+    }
+    .tab-btn {
+        background: none;
+        border: none;
+        padding: 9px 18px;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+        background: rgba(192, 132, 252, 0.15);
+        color: #c084fc;
+        box-shadow: 0 0 12px rgba(192, 132, 252, 0.2);
+    }
+
+    .search-box {
+        position: relative;
+        min-width: 260px;
+    }
+    .search-box input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-glass);
+        padding: 10px 16px 10px 40px;
+        border-radius: 14px;
+        color: #fff;
+        font-size: 0.82rem;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        outline: none;
+        transition: all 0.3s;
+    }
+    .search-box input:focus {
+        border-color: rgba(192, 132, 252, 0.4);
+        box-shadow: 0 0 15px rgba(192, 132, 252, 0.15);
+    }
+    .search-box i {
+        position: absolute;
+        left: 14px; top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-tertiary);
+        font-size: 0.85rem;
+    }
+
+    /* Standing Highlight Box */
+    .user-standing-card {
+        background: linear-gradient(135deg, rgba(192, 132, 252, 0.12) 0%, rgba(13, 11, 29, 0.8) 100%);
+        border: 1px solid rgba(192, 132, 252, 0.35);
+        border-radius: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(192, 132, 252, 0.15);
+    }
+
+    /* Leaderboard Table List */
+    .leader-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .leader-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.015);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .leader-row:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.12);
+        transform: translateX(6px);
+    }
+    .leader-row.is-current-user {
+        background: rgba(42, 245, 152, 0.06);
+        border-color: rgba(42, 245, 152, 0.25);
+    }
+
+    .col-rank {
+        width: 60px;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 900;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .trend-icon { font-size: 0.65rem; font-weight: 800; }
+    .trend-up { color: #2af598; }
+    .trend-down { color: #fb7185; }
+    .trend-same { color: var(--text-tertiary); }
+
+    .col-user {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: 1.5;
+    }
+    .user-avatar-sm {
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .user-name-title {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #fff;
+    }
+    .user-topic-tag {
+        font-size: 0.7rem;
+        color: var(--text-tertiary);
+    }
+
+    .col-stat {
+        flex: 1;
+        text-align: center;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+    }
+    @media (max-width: 768px) {
+        .col-stat.hide-mobile { display: none; }
+    }
+
+    .col-xp {
+        width: 110px;
+        text-align: right;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #c084fc;
+    }
+
+    .tier-badge {
+        font-size: 0.68rem;
+        font-weight: 800;
+        padding: 3px 10px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Candidate Popup Modal System */
+    .cand-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(4, 2, 12, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 20px;
+    }
+    .cand-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .cand-modal-card {
+        background: rgba(13, 11, 29, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(25px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+        border-radius: 28px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(192, 132, 252, 0.15);
+        max-width: 480px;
+        width: 100%;
+        padding: 30px;
+        position: relative;
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .cand-modal-overlay.active .cand-modal-card {
+        transform: scale(1) translateY(0);
+    }
+    .cand-modal-close {
+        position: absolute;
+        top: 20px; right: 20px;
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .cand-modal-close:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        transform: rotate(90deg);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="bgPatternLayer"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+<div class="glow-orb orb-3"></div>
+<canvas id="particlesCanvas"></canvas>
+
+<div class="leaderboard-container">
+    
+    <!-- Hero Header -->
+    <div class="hero-banner">
+        <h1>Global Leaderboard</h1>
+        <p>Compete with top aptitude scholars worldwide. Solve module questions, earn XP, and climb to the Grandmaster tier!</p>
+    </div>
+
+    <!-- Top 3 Podium -->
+    <div class="podium-section">
+        {% for candidate in top_three %}
+            {% if candidate.rank == 2 %}
+            <!-- Silver -->
+            <div class="podium-card rank-2 glass-card">
+                <div class="avatar-wrapper">
+                    <i class="fas fa-crown crown-icon"></i>
+                    {% if candidate.avatar %}
+                        <img src="{{ candidate.avatar }}" alt="{{ candidate.name }}" class="podium-avatar">
+                    {% else %}
+                        <div class="podium-avatar flex items-center justify-center bg-white/10 text-white text-2xl font-bold">{{ candidate.name|slice:":1" }}</div>
+                    {% endif %}
+                    <div class="podium-rank-badge">RANK 2</div>
+                </div>
+                <div class="podium-name">{{ candidate.name }}</div>
+                <div class="podium-xp">{{ candidate.xp }} XP</div>
+                <div class="podium-stats">
+                    <span><i class="fas fa-check-circle text-[#2af598]"></i> {{ candidate.solved }} Solved</span>
+                    <span><i class="fas fa-[#e2e8f0] fa-bullseye"></i> {{ candidate.accuracy }}</span>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        {% for candidate in top_three %}
+            {% if candidate.rank == 1 %}
+            <!-- Gold -->
+            <div class="podium-card rank-1 glass-card">
+                <div class="avatar-wrapper">
+                    <i class="fas fa-crown crown-icon"></i>
+                    {% if candidate.avatar %}
+                        <img src="{{ candidate.avatar }}" alt="{{ candidate.name }}" class="podium-avatar">
+                    {% else %}
+                        <div class="podium-avatar flex items-center justify-center bg-white/10 text-white text-3xl font-bold">{{ candidate.name|slice:":1" }}</div>
+                    {% endif %}
+                    <div class="podium-rank-badge">RANK 1</div>
+                </div>
+                <div class="podium-name">{{ candidate.name }}</div>
+                <div class="podium-xp">{{ candidate.xp }} XP</div>
+                <div class="podium-stats">
+                    <span><i class="fas fa-check-circle text-[#2af598]"></i> {{ candidate.solved }} Solved</span>
+                    <span><i class="fas fa-bullseye text-[#fbcd0b]"></i> {{ candidate.accuracy }}</span>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        {% for candidate in top_three %}
+            {% if candidate.rank == 3 %}
+            <!-- Bronze -->
+            <div class="podium-card rank-3 glass-card">
+                <div class="avatar-wrapper">
+                    <i class="fas fa-crown crown-icon"></i>
+                    {% if candidate.avatar %}
+                        <img src="{{ candidate.avatar }}" alt="{{ candidate.name }}" class="podium-avatar">
+                    {% else %}
+                        <div class="podium-avatar flex items-center justify-center bg-white/10 text-white text-2xl font-bold">{{ candidate.name|slice:":1" }}</div>
+                    {% endif %}
+                    <div class="podium-rank-badge">RANK 3</div>
+                </div>
+                <div class="podium-name">{{ candidate.name }}</div>
+                <div class="podium-xp">{{ candidate.xp }} XP</div>
+                <div class="podium-stats">
+                    <span><i class="fas fa-check-circle text-[#2af598]"></i> {{ candidate.solved }} Solved</span>
+                    <span><i class="fas fa-bullseye text-[#b45309]"></i> {{ candidate.accuracy }}</span>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="controls-bar">
+        <div class="filter-tabs">
+            <button class="tab-btn active">Weekly (This Week)</button>
+            <button class="tab-btn">Monthly</button>
+            <button class="tab-btn">All-Time Champions</button>
+        </div>
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search candidate name..." onkeyup="filterLeaderboard()">
+        </div>
+    </div>
+
+    <!-- Leaderboard Table Container -->
+    <div class="glass-card p-6">
+        <div class="leader-list" id="leaderboardRows">
+            {% for candidate in leaderboard %}
+            <div class="leader-row {% if candidate.is_user %}is-current-user{% endif %}" 
+                 data-name="{{ candidate.name|lower }}"
+                 data-display-name="{{ candidate.name }}"
+                 data-rank="{{ candidate.rank }}"
+                 data-avatar="{{ candidate.avatar|default:'' }}"
+                 data-xp="{{ candidate.xp }}"
+                 data-solved="{{ candidate.solved }}"
+                 data-accuracy="{{ candidate.accuracy }}"
+                 data-streak="{{ candidate.streak }}"
+                 data-topic="{{ candidate.topic }}"
+                 data-tier="{{ candidate.tier }}"
+                 data-color="{{ candidate.badge_color }}"
+                 onclick="openCandidateModal(this)">
+                <!-- Rank & Trend -->
+                <div class="col-rank">
+                    <span class="text-gray-400">#{{ candidate.rank }}</span>
+                    {% if candidate.trend == 'up' %}
+                        <span class="trend-icon trend-up" title="Rank Increased"><i class="fas fa-caret-up"></i></span>
+                    {% elif candidate.trend == 'down' %}
+                        <span class="trend-icon trend-down" title="Rank Decreased"><i class="fas fa-caret-down"></i></span>
+                    {% else %}
+                        <span class="trend-icon trend-same" title="No Change"><i class="fas fa-minus"></i></span>
+                    {% endif %}
+                </div>
+
+                <!-- User Info -->
+                <div class="col-user">
+                    {% if candidate.avatar %}
+                        <img src="{{ candidate.avatar }}" alt="{{ candidate.name }}" class="user-avatar-sm">
+                    {% else %}
+                        <div class="user-avatar-sm">{{ candidate.name|slice:":1" }}</div>
+                    {% endif %}
+                    <div>
+                        <div class="user-name-title">{{ candidate.name }}</div>
+                        <div class="user-topic-tag"><i class="fas fa-fire text-[#fb7185] mr-1"></i>{{ candidate.topic }} • {{ candidate.streak }}</div>
+                    </div>
+                </div>
+
+                <!-- Tier Badge -->
+                <div class="col-stat hide-mobile">
+                    <span class="tier-badge" style="background: {{ candidate.badge_color }}20; color: {{ candidate.badge_color }}; border: 1px solid {{ candidate.badge_color }}40;">
+                        {{ candidate.tier }}
+                    </span>
+                </div>
+
+                <!-- Questions Solved -->
+                <div class="col-stat hide-mobile">
+                    <span class="text-white font-bold">{{ candidate.solved }}</span> Solved
+                </div>
+
+                <!-- Accuracy -->
+                <div class="col-stat hide-mobile">
+                    <span class="text-[#2af598] font-bold">{{ candidate.accuracy }}</span> Accuracy
+                </div>
+
+                <!-- XP -->
+                <div class="col-xp">
+                    {{ candidate.xp }} <span class="text-xs font-normal text-gray-400">XP</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Candidate Detail Modal Overlay -->
+<div id="candidateModal" class="cand-modal-overlay" onclick="if(event.target===this)closeCandidateModal()">
+    <div class="cand-modal-card" id="candidateModalCard">
+        <!-- Close Button -->
+        <button onclick="closeCandidateModal()" class="cand-modal-close">
+            <i class="fas fa-times text-sm"></i>
+        </button>
+
+        <!-- Header Info -->
+        <div class="flex items-center gap-4 border-b border-white/10 pb-5 mb-5">
+            <div class="relative">
+                <div id="modalAvatarBox" class="w-16 h-16 rounded-full overflow-hidden border-2 border-[#2af598] flex items-center justify-center bg-white/10 text-white text-2xl font-bold shadow-md">
+                    <!-- Avatar img or initial -->
+                </div>
+                <span id="modalRankBadge" class="absolute -bottom-1 -right-1 bg-[#fbcd0b] text-black font-black text-[10px] px-2 py-0.5 rounded-full shadow-md">#1</span>
+            </div>
+            <div>
+                <h2 id="modalName" class="text-xl font-black text-white font-['Outfit']">Candidate Name</h2>
+                <div class="flex items-center gap-2 mt-1">
+                    <span id="modalTierBadge" class="tier-badge">GRANDMASTER</span>
+                    <span class="text-xs text-gray-400 font-medium"><i class="fas fa-fire text-[#fb7185] mr-1"></i><span id="modalStreak">7-Day Streak</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Statistics Grid -->
+        <div class="grid grid-cols-2 gap-3 mb-5">
+            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
+                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Total Score</div>
+                <div id="modalXP" class="text-xl font-black text-[#c084fc] font-['Outfit']">2,450 XP</div>
+            </div>
+            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
+                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Overall Accuracy</div>
+                <div id="modalAccuracy" class="text-xl font-black text-[#2af598] font-['Outfit']">94%</div>
+            </div>
+            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
+                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Questions Solved</div>
+                <div id="modalSolved" class="text-xl font-black text-white font-['Outfit']">380 Solved</div>
+            </div>
+            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
+                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Primary Mastery</div>
+                <div id="modalTopic" class="text-xs font-extrabold text-[#38bdf8] truncate mt-1">Quant Aptitude</div>
+            </div>
+        </div>
+
+        <!-- Special Mastery Badges -->
+        <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+            <div class="text-xs font-extrabold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
+                <i class="fas fa-award text-[#fbcd0b]"></i> Verified Candidate Badges
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-[10px] bg-[#fbcd0b]/10 text-[#fbcd0b] border border-[#fbcd0b]/20 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5"><i class="fas fa-bolt"></i> Speed Demon</span>
+                <span class="text-[10px] bg-[#2af598]/10 text-[#2af598] border border-[#2af598]/20 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5"><i class="fas fa-bullseye"></i> Accuracy Elite</span>
+                <span class="text-[10px] bg-[#c084fc]/10 text-[#c084fc] border border-[#c084fc]/20 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5"><i class="fas fa-fire"></i> Daily Warrior</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Particles Canvas Effect
+        const canvas = document.getElementById("particlesCanvas");
+        if (canvas) {
+            const ctx = canvas.getContext("2d");
+            let particles = [];
+            
+            const resizeCanvas = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = 0.5 + Math.random() * 1.5;
+                    this.speedX = -0.15 + Math.random() * 0.3;
+                    this.speedY = -0.15 + Math.random() * 0.3;
+                    this.alpha = 0.1 + Math.random() * 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                        this.reset();
+                    }
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.fillStyle = "#ffffff";
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < 75; i++) {
+                particles.push(new Particle());
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+        }
+
+        // Tab Switcher Logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    });
+
+    function filterLeaderboard() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        const rows = document.querySelectorAll("#leaderboardRows .leader-row");
+        rows.forEach(row => {
+            const name = row.getAttribute("data-name");
+            if (name.includes(query)) {
+                row.style.display = "flex";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    function openCandidateModal(row) {
+        const name = row.getAttribute("data-display-name");
+        const rank = row.getAttribute("data-rank");
+        const avatar = row.getAttribute("data-avatar");
+        const xp = row.getAttribute("data-xp");
+        const solved = row.getAttribute("data-solved");
+        const accuracy = row.getAttribute("data-accuracy");
+        const streak = row.getAttribute("data-streak");
+        const topic = row.getAttribute("data-topic");
+        const tier = row.getAttribute("data-tier");
+        const color = row.getAttribute("data-color");
+
+        document.getElementById("modalName").textContent = name;
+        document.getElementById("modalRankBadge").textContent = "#" + rank;
+        document.getElementById("modalXP").textContent = xp + " XP";
+        document.getElementById("modalSolved").textContent = solved + " Solved";
+        document.getElementById("modalAccuracy").textContent = accuracy;
+        document.getElementById("modalStreak").textContent = streak;
+        document.getElementById("modalTopic").textContent = topic;
+
+        const tierBadge = document.getElementById("modalTierBadge");
+        tierBadge.textContent = tier;
+        tierBadge.style.background = color + "20";
+        tierBadge.style.color = color;
+        tierBadge.style.borderColor = color + "40";
+
+        const avatarBox = document.getElementById("modalAvatarBox");
+        avatarBox.style.borderColor = color;
+        if (avatar && avatar.trim() !== "") {
+            avatarBox.innerHTML = `<img src="${avatar}" class="w-full h-full object-cover">`;
+        } else {
+            avatarBox.innerHTML = name.charAt(0).toUpperCase();
+        }
+
+        const modal = document.getElementById("candidateModal");
+        modal.classList.add("active");
+    }
+
+    function closeCandidateModal() {
+        const modal = document.getElementById("candidateModal");
+        modal.classList.remove("active");
+    }
+</script>
+{% endblock %}
