@@ -1446,6 +1446,334 @@
 
     </div>
 
+    <!-- Three Stat Cards from Mockup -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mt-12" data-aos="fade-up">
+        <!-- Time Spend Card -->
+        <div class="glass-card p-6 flex justify-between items-center relative overflow-hidden text-left">
+            <div>
+                <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-wider block mb-1">Time Spend</span>
+                <h3 class="text-3xl font-black text-white font-['Outfit']">15:30:45</h3>
+                <span class="text-xs text-[#2af598] font-bold mt-1 inline-block"><i class="fas fa-arrow-up"></i> +1.5% <span class="text-gray-500 font-normal">This Week</span></span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-xl text-indigo-400">
+                <i class="fas fa-box-open"></i>
+            </div>
+        </div>
+
+        <!-- Course Progress Card -->
+        <div class="glass-card p-6 flex justify-between items-center relative overflow-hidden text-left">
+            <div>
+                <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-wider block mb-1">Course Progress</span>
+                <h3 class="text-3xl font-black text-white font-['Outfit']">75%</h3>
+                <span class="text-xs text-[#fb7185] font-bold mt-1 inline-block"><i class="fas fa-arrow-down"></i> -0.35% <span class="text-gray-500 font-normal">This Week</span></span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-xl text-yellow-500">
+                <i class="fas fa-chart-line"></i>
+            </div>
+        </div>
+
+        <!-- Assignment Card -->
+        <div class="glass-card p-6 flex justify-between items-center relative overflow-hidden text-left">
+            <div>
+                <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-wider block mb-1">Assignment</span>
+                <h3 class="text-3xl font-black text-white font-['Outfit']">17/33</h3>
+                <span class="text-xs text-[#2af598] font-bold mt-1 inline-block"><i class="fas fa-arrow-up"></i> +1 <span class="text-gray-500 font-normal">This Week</span></span>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-[#fb7185]/10 border border-[#fb7185]/20 flex items-center justify-center text-xl text-[#fb7185]">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Layout Grid mirroring mockup sidebars and sections -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-aos="fade-up">
+        <!-- Left 2 Cols: My Courses, Monthly Progress, Recent Courses -->
+        <div class="lg:col-span-2 flex flex-col gap-8">
+            <!-- My Course Section -->
+            <div class="glass-card p-6 text-left">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-base text-white font-['Outfit']">My Course</h3>
+                    <a href="#" class="text-xs text-gray-500 hover:text-white transition-all font-bold">See all</a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Course 1 -->
+                    <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex flex-col justify-between hover:border-white/10 transition-all text-left">
+                        <div class="h-28 w-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/10 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                            <i class="fas fa-laptop-code text-3xl text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-xs text-white mb-2 line-clamp-1">Learn UI Design</h4>
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold mb-1">
+                                <span>Progress</span><span>27%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-4">
+                                <div class="h-full bg-indigo-500" style="width: 27%;"></div>
+                            </div>
+                            <button class="w-full py-2 bg-indigo-500/20 border border-indigo-500/30 hover:bg-indigo-500 text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Course 2 -->
+                    <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex flex-col justify-between hover:border-white/10 transition-all text-left">
+                        <div class="h-28 w-full bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border border-yellow-500/10 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                            <i class="fas fa-palette text-3xl text-yellow-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-xs text-white mb-2 line-clamp-1">Motion Graphics Master</h4>
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold mb-1">
+                                <span>Progress</span><span>70%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-4">
+                                <div class="h-full bg-yellow-500" style="width: 70%;"></div>
+                            </div>
+                            <button class="w-full py-2 bg-yellow-500/20 border border-yellow-500/30 hover:bg-yellow-500 text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Course 3 -->
+                    <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex flex-col justify-between hover:border-white/10 transition-all text-left">
+                        <div class="h-28 w-full bg-gradient-to-br from-[#fb7185]/20 to-rose-500/20 border border-[#fb7185]/10 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
+                            <i class="fas fa-cubes text-3xl text-[#fb7185]"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-xs text-white mb-2 line-clamp-1">3D Art & Modeling</h4>
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold mb-1">
+                                <span>Progress</span><span>16%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-4">
+                                <div class="h-full bg-[#fb7185]" style="width: 16%;"></div>
+                            </div>
+                            <button class="w-full py-2 bg-[#fb7185]/20 border border-[#fb7185]/30 hover:bg-[#fb7185] text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly Progress Wave Chart Section -->
+            <div class="glass-card p-6 text-left">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Monthly Progress</h3>
+                    <div class="flex items-center gap-4 text-[10px] font-black uppercase tracking-wider">
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#8b5cf6]"></span> Current</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#d946ef]"></span> Previous</span>
+                        <select class="bg-white/5 border border-white/8 rounded-lg px-2.5 py-1 text-white focus:outline-none">
+                            <option class="bg-[#0f0b24]">All Course</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Wave SVG chart mimicking mockup -->
+                <div class="relative h-60 w-full mt-4">
+                    <svg class="w-full h-full" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="currentGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.45"/>
+                                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+                            </linearGradient>
+                            <linearGradient id="previousGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#d946ef" stop-opacity="0.25"/>
+                                <stop offset="100%" stop-color="#d946ef" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Grid lines -->
+                        <line x1="0" y1="40" x2="800" y2="40" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="160" x2="800" y2="160" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="220" x2="800" y2="220" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+                        <!-- Previous Year Peak Path -->
+                        <path d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140 L 800 240 L 0 240 Z" fill="url(#previousGrad)"/>
+                        <path d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140" stroke="#d946ef" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+                        <!-- Current Year Peak Path -->
+                        <path d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90 L 800 240 L 0 240 Z" fill="url(#currentGrad)"/>
+                        <path d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+                        <!-- Marker dot highlight -->
+                        <circle cx="280" cy="110" r="6" fill="#8b5cf6" stroke="#fff" stroke-width="2"/>
+                        <line x1="280" y1="110" x2="280" y2="220" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4 4"/>
+                    </svg>
+                    <!-- Peak tag popup -->
+                    <div class="absolute bg-[#8b5cf6] text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow-lg" style="left: 32.5%; top: 32%;">
+                        $3533
+                    </div>
+                    <!-- X-axis Labels -->
+                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-extrabold uppercase mt-2 px-2">
+                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Courses Section -->
+            <div class="glass-card p-6 text-left">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Recent Courses</h3>
+                </div>
+                <div class="flex flex-col gap-4 text-left">
+                    <!-- Recent Course 1 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-white/[0.01] border border-white/5 rounded-2xl gap-4 hover:border-white/10 transition-all">
+                        <div class="flex items-center gap-4">
+                           <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-lg text-indigo-400 flex-shrink-0">
+                               <i class="fas fa-code"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-extrabold text-xs text-white">Web development</h4>
+                               <span class="text-[10px] text-gray-500 font-bold">5 Module - 32 Lesson - 16 Hours</span>
+                           </div>
+                        </div>
+                        <div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-start">
+                           <div>
+                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Instructor</span>
+                               <span class="text-xs text-gray-300 font-extrabold">Jenny Wilson</span>
+                           </div>
+                           <div>
+                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Reviews</span>
+                               <span class="text-xs text-yellow-500 font-extrabold"><i class="fas fa-star text-xs"></i> 5.0 <span class="text-gray-500 font-normal text-[10px]">(150)</span></span>
+                           </div>
+                           <button class="py-2.5 px-6 bg-[#38bdf8] hover:opacity-90 rounded-xl text-[10px] font-black uppercase text-white transition-all shadow-md">Enroll Now</button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Course 2 -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-white/[0.01] border border-white/5 rounded-2xl gap-4 hover:border-white/10 transition-all text-left">
+                        <div class="flex items-center gap-4">
+                           <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-lg text-purple-400 flex-shrink-0">
+                               <i class="fas fa-bezier-curve"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-extrabold text-xs text-white">Ui Design</h4>
+                               <span class="text-[10px] text-gray-500 font-bold">4 Module - 24 Lesson - 12 Hours</span>
+                           </div>
+                        </div>
+                        <div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-start">
+                           <div>
+                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Instructor</span>
+                               <span class="text-xs text-gray-300 font-extrabold">Robert Fox</span>
+                           </div>
+                           <div>
+                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Reviews</span>
+                               <span class="text-xs text-yellow-500 font-extrabold"><i class="fas fa-star text-xs"></i> 4.9 <span class="text-gray-500 font-normal text-[10px]">(120)</span></span>
+                           </div>
+                           <button class="py-2.5 px-6 bg-[#8b5cf6] hover:opacity-90 rounded-xl text-[10px] font-black uppercase text-white transition-all shadow-md">Enroll Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right 1 Col: Sidebar widgets (Event Dates, Today's Activity, Top Performer) -->
+        <div class="flex flex-col gap-8 text-left">
+            <!-- Event Dates widget -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Event Dates</h3>
+                    <a href="#" class="text-xs text-[#38bdf8] hover:underline font-bold">See all &rarr;</a>
+                </div>
+                <!-- Calendar Grid Layout -->
+                <div class="bg-white/[0.01] border border-white/5 rounded-2xl p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <button class="text-gray-400 hover:text-white transition-all"><i class="fas fa-chevron-left text-xs"></i></button>
+                        <span class="text-xs font-black text-white font-['Outfit'] uppercase">Jan 2023</span>
+                        <button class="text-gray-400 hover:text-white transition-all"><i class="fas fa-chevron-right text-xs"></i></button>
+                    </div>
+                    <!-- Days of week -->
+                    <div class="grid grid-cols-7 text-center text-[10px] font-extrabold text-gray-500 mb-2">
+                        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                    </div>
+                    <!-- Calendar grid -->
+                    <div class="grid grid-cols-7 gap-y-2 text-center text-xs font-bold text-gray-300">
+                        <span class="text-gray-600">27</span><span class="text-gray-600">28</span><span class="text-gray-600">29</span><span class="text-gray-600">30</span><span class="text-gray-600">31</span><span>1</span><span>2</span>
+                        <span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                        <span>10</span><span>11</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500 rounded-full mx-auto text-white shadow-lg">12</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500/20 rounded-full mx-auto text-indigo-300">13</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500/20 rounded-full mx-auto text-indigo-300">14</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500 rounded-full mx-auto text-white shadow-lg">15</span><span>16</span>
+                        <span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span>
+                        <span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Activity Ring widget -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Today's Activity</h3>
+                    <button class="text-gray-500 hover:text-white transition-all"><i class="fas fa-ellipsis-h"></i></button>
+                </div>
+                <!-- Gauge ring display -->
+                <div class="relative flex flex-col items-center justify-center py-4">
+                    <!-- SVG Semicircle Ring -->
+                    <svg class="w-48 h-28" viewBox="0 0 100 50">
+                        <!-- Gray background ring -->
+                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" stroke-linecap="round"/>
+                        <!-- Semicircle segment progress path (e.g. 100% completion) -->
+                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#activityGrad)" stroke-width="8" stroke-linecap="round"/>
+                        <!-- Gradient definitions -->
+                        <defs>
+                            <linearGradient id="activityGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#38bdf8"/>
+                                <stop offset="50%" stop-color="#fb7185"/>
+                                <stop offset="100%" stop-color="#d946ef"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="absolute top-[32%] text-center">
+                        <span class="text-2xl font-black text-white font-['Outfit']">100%</span>
+                    </div>
+                    <!-- legend label grids -->
+                    <div class="flex justify-around items-center w-full mt-4 text-[10px] text-gray-500 font-extrabold uppercase">
+                        <span class="flex flex-col items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span>UI Design <b class="text-gray-300 mt-0.5">40%</b></span>
+                        <span class="flex flex-col items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>Motion <b class="text-gray-300 mt-0.5">65%</b></span>
+                        <span class="flex flex-col items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span>3D Art <b class="text-gray-300 mt-0.5">30%</b></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Performer widget -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Top Performer</h3>
+                    <button class="text-gray-500 hover:text-white transition-all"><i class="fas fa-ellipsis-h"></i></button>
+                </div>
+                <div class="flex flex-col gap-4 text-xs">
+                    <!-- Top Performer 1 -->
+                    <div class="flex justify-between items-center p-3 bg-white/[0.01] border border-white/5 rounded-xl hover:border-white/10 transition-all">
+                        <div class="flex items-center gap-3">
+                            <span class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[10px] font-black">1</span>
+                            <img src="https://picsum.photos/id/1027/80/80" alt="Rasel Mondol" class="w-8 h-8 rounded-full object-cover border border-white/10">
+                            <div>
+                                <h5 class="font-extrabold text-xs text-white">Rasel Mondol</h5>
+                                <span class="text-[9px] text-gray-500">15 Assignment</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-black text-emerald-400">85/100</span>
+                    </div>
+
+                    <!-- Top Performer 2 -->
+                    <div class="flex justify-between items-center p-3 bg-white/[0.01] border border-white/5 rounded-xl hover:border-white/10 transition-all">
+                        <div class="flex items-center gap-3">
+                            <span class="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-[10px] font-black">2</span>
+                            <img src="https://picsum.photos/id/1012/80/80" alt="Devon Lane" class="w-8 h-8 rounded-full object-cover border border-white/10">
+                            <div>
+                                <h5 class="font-extrabold text-xs text-white">Devon Lane</h5>
+                                <span class="text-[9px] text-gray-500">17 Assignment</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-black text-emerald-400">78/100</span>
+                    </div>
+
+                    <!-- Top Performer 3 -->
+                    <div class="flex justify-between items-center p-3 bg-white/[0.01] border border-white/5 rounded-xl hover:border-white/10 transition-all">
+                        <div class="flex items-center gap-3">
+                            <span class="w-5 h-5 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-[10px] font-black">3</span>
+                            <img src="https://picsum.photos/id/1015/80/80" alt="Bessie Cooper" class="w-8 h-8 rounded-full object-cover border border-white/10">
+                            <div>
+                                <h5 class="font-extrabold text-xs text-white">Bessie Cooper</h5>
+                                <span class="text-[9px] text-gray-500">20 Assignment</span>
+                            </div>
+                        </div>
+                        <span class="text-xs font-black text-emerald-400">75/100</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
