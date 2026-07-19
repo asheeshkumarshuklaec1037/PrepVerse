@@ -865,7 +865,7 @@
     <!-- 2. High-End Key Stats Counter Cards Row -->
     <div class="stats-grid-row" data-aos="fade-up" data-aos-delay="100">
         <!-- Card 1: Solved Problems -->
-        <div class="glass-card stat-counter-card" onclick="openStatsModal('solved')">
+        <div class="glass-card stat-counter-card" style="cursor: pointer;" onclick="location.href='{% url 'solved_questions' %}'">
             <!-- Background Pattern: Concentric Rings (Zano style) -->
             <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
                 <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -945,7 +945,7 @@
         </div>
 
         <!-- Card 4: Global Rank -->
-        <div class="glass-card stat-counter-card" onclick="openStatsModal('rank')">
+        <div class="glass-card stat-counter-card" style="cursor: pointer;" onclick="location.href='{% url 'leaderboard' %}'">
             <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
             <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.08] z-0">
                 <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1202,355 +1202,9 @@
     <div class="dashboard-grid">
 
         <!-- COLUMN 1: Subject Cards Grid & Navigation -->
-        <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="200">
-
-
-            <!-- Quick Navigation Menu -->
-            <div class="glass-card p-6">
-                <div class="widget-header">
-                    <i class="fas fa-paper-plane text-[#2af598]"></i>
-                    <span>Quick Navigation</span>
-                </div>
-                <div class="flex flex-col gap-3">
-                    <a href="{% url 'practice' %}" class="flex justify-between items-center p-3.5 rounded-xl border border-white/5 bg-[#38bdf8]/5 hover:bg-[#38bdf8]/10 text-white font-bold text-xs" style="text-decoration: none;">
-                        <span class="flex items-center gap-2"><i class="fas fa-brain text-[#38bdf8]"></i> Practice Arena</span>
-                        <i class="fas fa-chevron-right text-gray-500 text-[10px]"></i>
-                    </a>
-                    <a href="{% url 'courses' %}" class="flex justify-between items-center p-3.5 rounded-xl border border-white/5 bg-[#c084fc]/5 hover:bg-[#c084fc]/10 text-white font-bold text-xs" style="text-decoration: none;">
-                        <span class="flex items-center gap-2"><i class="fas fa-graduation-cap text-[#c084fc]"></i> Study Syllabus</span>
-                        <i class="fas fa-chevron-right text-gray-500 text-[10px]"></i>
-                    </a>
-                    <a href="{% url 'mock_history' %}" class="flex justify-between items-center p-3.5 rounded-xl border border-white/5 bg-[#fbcd0b]/5 hover:bg-[#fbcd0b]/10 text-white font-bold text-xs" style="text-decoration: none;">
-                        <span class="flex items-center gap-2"><i class="fas fa-chart-line text-[#fbcd0b]"></i> Test History</span>
-                        <i class="fas fa-chevron-right text-gray-500 text-[10px]"></i>
-                    </a>
-                    <a href="{% url 'blog' %}" class="flex justify-between items-center p-3.5 rounded-xl border border-white/5 bg-[#fb7185]/5 hover:bg-[#fb7185]/10 text-white font-bold text-xs" style="text-decoration: none;">
-                        <span class="flex items-center gap-2"><i class="fas fa-newspaper text-[#fb7185]"></i> Study Journals</span>
-                        <i class="fas fa-chevron-right text-gray-500 text-[10px]"></i>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Weekly ranking Leaderboard widget -->
-            <div class="glass-card p-6 flex flex-col justify-between flex-1">
-                <div>
-                    <div class="widget-header">
-                        <i class="fas fa-ranking-star text-[#c084fc]"></i>
-                        <span>Weekly Leaderboard</span>
-                    </div>
-
-                    <div class="flex flex-col gap-3" id="leaderboardList">
-                        <!-- Rohan -->
-                        <div class="leader-row-card" id="leader-rohan" data-xp="520" data-name="Rohan Verma" data-rank="7">
-                            <div class="flex items-center gap-3">
-                                <span class="leader-rank text-xs font-black text-gray-500 w-4">7</span>
-                                <div class="leaderboard-avatar-circle">R</div>
-                                <span class="text-xs font-bold text-white">Rohan Verma</span>
-                            </div>
-                            <span class="text-xs font-black text-[#c084fc]">520 XP</span>
-                        </div>
-
-                        <!-- Vikram -->
-                        <div class="leader-row-card" id="leader-vikram" data-xp="480" data-name="Vikram Singh" data-rank="8">
-                            <div class="flex items-center gap-3">
-                                <span class="leader-rank text-xs font-black text-gray-500 w-4">8</span>
-                                <div class="leaderboard-avatar-circle">V</div>
-                                <span class="text-xs font-bold text-white">Vikram Singh</span>
-                            </div>
-                            <span class="text-xs font-black text-[#c084fc]">480 XP</span>
-                        </div>
-
-                        <!-- User -->
-                        <div class="leader-row-card user-row" id="leader-user" data-xp="450" data-name="You" data-rank="9">
-                            <div class="flex items-center gap-3">
-                                <span class="leader-rank text-xs font-black text-[#c084fc] w-4" id="leaderUserRankText">9</span>
-                                <div class="leaderboard-avatar-circle bg-[#c084fc]/20 text-[#c084fc]">{{ user.first_name|slice:":1"|upper }}</div>
-                                <span class="text-xs font-black text-white">{{ user.first_name }} (You)</span>
-                            </div>
-                            <span class="text-xs font-black text-[#c084fc]" id="leaderUserScoreText">450 XP</span>
-                        </div>
-
-                        <!-- Priya -->
-                        <div class="leader-row-card" id="leader-priya" data-xp="410" data-name="Priya Sharma" data-rank="10">
-                            <div class="flex items-center gap-3">
-                                <span class="leader-rank text-xs font-black text-gray-500 w-4">10</span>
-                                <div class="leaderboard-avatar-circle">P</div>
-                                <span class="text-xs font-bold text-white">Priya Sharma</span>
-                            </div>
-                            <span class="text-xs font-black text-[#c084fc]">410 XP</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- COLUMN 2: Analytics, Target Tracker, Flashcard Deck, Calendar -->
-        <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="300">
-            <!-- Weekly Hours & Radial Target -->
-            <div class="glass-card weekly-hours-chart-box">
-                <div class="widget-header">
-                    <i class="fas fa-chart-bar text-[#fbcd0b]"></i>
-                    <span>Study Progress Analytics</span>
-                </div>
-                <!-- Interactive Weekly hours bar chart -->
-                <div class="bar-chart-container">
-                    <div class="bar-col-wrapper">
-                        <div class="bar-track-line"><div class="bar-fill-glow h-[70%]"></div></div>
-                        <span class="bar-day-name">M</span>
-                    </div>
-                    <div class="bar-col-wrapper">
-                        <div class="bar-track-line"><div class="bar-fill-glow h-[85%]"></div></div>
-                        <span class="bar-day-name">T</span>
-                    </div>
-                    <div class="bar-col-wrapper">
-                        <div class="bar-track-line"><div class="bar-fill-glow h-[60%]"></div></div>
-                        <span class="bar-day-name">W</span>
-                    </div>
-                    <div class="bar-col-wrapper">
-                        <div class="bar-track-line"><div class="bar-fill-glow h-[90%]"></div></div>
-                        <span class="bar-day-name">T</span>
-                    </div>
-                    <div class="bar-col-wrapper">
-                        <div class="bar-track-line"><div class="bar-fill-glow h-[45%]"></div></div>
-                        <span class="bar-day-name">F</span>
-                    </div>
-                    <div class="bar-col-wrapper">
-                        <div class="bar-track-line"><div class="bar-fill-glow h-[80%]"></div></div>
-                        <span class="bar-day-name">S</span>
-                    </div>
-                    <div class="bar-col-wrapper">
-                        <div class="bar-track-line"><div class="bar-fill-glow highlight h-[30%]" id="sundayChartBar"></div></div>
-                        <span class="bar-day-name">S</span>
-                    </div>
-                </div>
-
-                <!-- Nested Target Tracker Ring -->
-                <div class="radial-hours-box">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-300">
-                            <i class="fas fa-clock text-[#fbcd0b]"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs font-bold text-white">Daily study limit</div>
-                            <div class="text-[10px] text-gray-400">4.5 hrs of 6 hrs target complete</div>
-                        </div>
-                    </div>
-                    <div class="radial-hours-ring-container">
-                        <svg>
-                            <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="4.5"/>
-                            <circle cx="30" cy="30" r="26" fill="none" stroke="#fbcd0b" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="163.3" stroke-dashoffset="40.8"/>
-                        </svg>
-                        <div class="radial-center-pct-text text-white">75%</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Concept Flashcards Deck Widget -->
-            <div class="glass-card p-6 flex flex-col justify-between flex-1">
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-clone text-[#c084fc]"></i>
-                            <span class="font-extrabold text-sm text-white">Interactive Concept Cards</span>
-                        </div>
-                        <span id="flashcardDeckCounter" class="text-[10px] text-gray-500 font-bold">Card 1/4</span>
-                    </div>
-
-                    <!-- 3D Transform flashcard wrapper -->
-                    <div class="concept-card-wrapper mb-5" id="flashcardWidget">
-                        <div class="concept-card-inner" id="flashcardInner">
-                            <!-- Front face -->
-                            <div class="concept-card-face concept-card-front">
-                                <span class="recent-tag tag-quant text-[8px]" id="flashcardCategory">Quantitative Aptitude</span>
-                                <h4 id="flashcardQuestion" class="font-extrabold text-xs text-white text-center mt-3 leading-relaxed">
-                                    What is the formula for the Sum of first 'n' natural numbers?
-                                </h4>
-                                <span class="text-[9px] text-gray-500 uppercase mt-5 font-bold tracking-wider">
-                                    <i class="fas fa-rotate mr-1"></i> Tap Card to Reveal
-                                </span>
-                            </div>
-                            <!-- Back face -->
-                            <div class="concept-card-face concept-card-back">
-                                <span class="text-[9px] text-[#2af598] uppercase font-black tracking-wider mb-2">Answer & Concept</span>
-                                <h3 id="flashcardAnswer" class="font-extrabold text-lg text-[#2af598] mb-2 text-center">n * (n + 1) / 2</h3>
-                                <p id="flashcardExplanation" class="text-[10px] text-gray-400 text-center leading-relaxed">
-                                    Example: For n = 10, the sum is 10 * 11 / 2 = 55.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Flashcard Action triggers -->
-                <div class="flex gap-4">
-                    <button class="flex-1 py-2 text-[10px] font-bold rounded-xl border border-white/5 bg-white/2 hover:bg-white/5 text-gray-300 transition-all flex items-center justify-center gap-1.5" id="flashcardReviewBtn">
-                        <i class="fas fa-rotate-left"></i> Review (+2 XP)
-                    </button>
-                    <button class="flex-1 py-2 text-[10px] font-bold rounded-xl text-black transition-all flex items-center justify-center gap-1.5 hover:opacity-90" style="background: linear-gradient(135deg, #c084fc, #38bdf8);" id="flashcardMasteredBtn">
-                        <i class="fas fa-check-circle"></i> Mastered (+5 XP)
-                    </button>
-                </div>
-            </div>
-
-
-        </div>
-
-        <!-- COLUMN 3: Streak Tracker, Exam Readiness, Checklist, Spark MCQ, Achievements, Leaderboard -->
-        <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="400">
-            <!-- Active Streak tracker widget -->
-            <div class="glass-card streak-card">
-                <div class="streak-header">
-                    <span class="streak-badge"><i class="fas fa-fire"></i> Practice Streak</span>
-                    <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Milestones</span>
-                </div>
-                <div class="streak-days-display">
-                    <div class="streak-count text-white" id="streakCounterDisplay">{{ stats.current_streak }} <span class="text-gray-500 text-xs">Days Active</span></div>
-                </div>
-                <!-- Week fire checkpoints -->
-                <div class="fire-week-row">
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">M</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">W</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">F</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">S</span></div>
-                    <div class="fire-day-dot" id="streakSundayDot"><i class="far fa-circle text-xs text-gray-600" id="streakSundayIcon"></i><span class="text-[9px] text-gray-500 block mt-1 font-bold">S</span></div>
-                </div>
-            </div>
-
-            <!-- Scheduled Events Widget -->
-            <div class="glass-card p-6 flex flex-col justify-between flex-1" id="eventsWidget">
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-tasks text-[#c084fc]"></i>
-                            <span class="font-extrabold text-sm text-white">Scheduled Activity</span>
-                        </div>
-                        <div class="flex gap-1.5">
-                            <button id="filterSelectedDayBtn" class="text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all">Today</button>
-                            <button id="filterAllBtn" class="text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all">All</button>
-                        </div>
-                    </div>
-
-                    <div id="eventsListContainer" class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1 mb-4">
-                        <!-- Dynamic events list items -->
-                    </div>
-                </div>
-
-                <button id="openAddEventModalBtn" class="w-full py-2.5 rounded-xl font-black text-xs text-center border border-white/5 bg-white/2 hover:bg-white/5 text-[#38bdf8] flex items-center justify-center gap-1.5 transition-all">
-                    <i class="fas fa-plus"></i> Add Study Activity
-                </button>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Three Stat Cards from Mockup -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mt-12" data-aos="fade-up">
-        <!-- Time Spend Card -->
-        <div class="glass-card p-6 flex justify-between items-center relative overflow-hidden text-left">
-            <div>
-                <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-wider block mb-1">Time Spend</span>
-                <h3 class="text-3xl font-black text-white font-['Outfit']">15:30:45</h3>
-                <span class="text-xs text-[#2af598] font-bold mt-1 inline-block"><i class="fas fa-arrow-up"></i> +1.5% <span class="text-gray-500 font-normal">This Week</span></span>
-            </div>
-            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-xl text-indigo-400">
-                <i class="fas fa-box-open"></i>
-            </div>
-        </div>
-
-        <!-- Course Progress Card -->
-        <div class="glass-card p-6 flex justify-between items-center relative overflow-hidden text-left">
-            <div>
-                <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-wider block mb-1">Course Progress</span>
-                <h3 class="text-3xl font-black text-white font-['Outfit']">75%</h3>
-                <span class="text-xs text-[#fb7185] font-bold mt-1 inline-block"><i class="fas fa-arrow-down"></i> -0.35% <span class="text-gray-500 font-normal">This Week</span></span>
-            </div>
-            <div class="w-12 h-12 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-xl text-yellow-500">
-                <i class="fas fa-chart-line"></i>
-            </div>
-        </div>
-
-        <!-- Assignment Card -->
-        <div class="glass-card p-6 flex justify-between items-center relative overflow-hidden text-left">
-            <div>
-                <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-wider block mb-1">Assignment</span>
-                <h3 class="text-3xl font-black text-white font-['Outfit']">17/33</h3>
-                <span class="text-xs text-[#2af598] font-bold mt-1 inline-block"><i class="fas fa-arrow-up"></i> +1 <span class="text-gray-500 font-normal">This Week</span></span>
-            </div>
-            <div class="w-12 h-12 rounded-2xl bg-[#fb7185]/10 border border-[#fb7185]/20 flex items-center justify-center text-xl text-[#fb7185]">
-                <i class="fas fa-clipboard-list"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Layout Grid mirroring mockup sidebars and sections -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-aos="fade-up">
-        <!-- Left 2 Cols: My Courses, Monthly Progress, Recent Courses -->
-        <div class="lg:col-span-2 flex flex-col gap-8">
-            <!-- My Course Section -->
-            <div class="glass-card p-6 text-left">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-base text-white font-['Outfit']">My Course</h3>
-                    <a href="#" class="text-xs text-gray-500 hover:text-white transition-all font-bold">See all</a>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <!-- Course 1 -->
-                    <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex flex-col justify-between hover:border-white/10 transition-all text-left">
-                        <div class="h-28 w-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/10 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
-                            <i class="fas fa-laptop-code text-3xl text-indigo-400"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-extrabold text-xs text-white mb-2 line-clamp-1">Learn UI Design</h4>
-                            <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold mb-1">
-                                <span>Progress</span><span>27%</span>
-                            </div>
-                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-4">
-                                <div class="h-full bg-indigo-500" style="width: 27%;"></div>
-                            </div>
-                            <button class="w-full py-2 bg-indigo-500/20 border border-indigo-500/30 hover:bg-indigo-500 text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">Continue</button>
-                        </div>
-                    </div>
-
-                    <!-- Course 2 -->
-                    <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex flex-col justify-between hover:border-white/10 transition-all text-left">
-                        <div class="h-28 w-full bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border border-yellow-500/10 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
-                            <i class="fas fa-palette text-3xl text-yellow-500"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-extrabold text-xs text-white mb-2 line-clamp-1">Motion Graphics Master</h4>
-                            <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold mb-1">
-                                <span>Progress</span><span>70%</span>
-                            </div>
-                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-4">
-                                <div class="h-full bg-yellow-500" style="width: 70%;"></div>
-                            </div>
-                            <button class="w-full py-2 bg-yellow-500/20 border border-yellow-500/30 hover:bg-yellow-500 text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">Continue</button>
-                        </div>
-                    </div>
-
-                    <!-- Course 3 -->
-                    <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4 flex flex-col justify-between hover:border-white/10 transition-all text-left">
-                        <div class="h-28 w-full bg-gradient-to-br from-[#fb7185]/20 to-rose-500/20 border border-[#fb7185]/10 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden">
-                            <i class="fas fa-cubes text-3xl text-[#fb7185]"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-extrabold text-xs text-white mb-2 line-clamp-1">3D Art & Modeling</h4>
-                            <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold mb-1">
-                                <span>Progress</span><span>16%</span>
-                            </div>
-                            <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-4">
-                                <div class="h-full bg-[#fb7185]" style="width: 16%;"></div>
-                            </div>
-                            <button class="w-full py-2 bg-[#fb7185]/20 border border-[#fb7185]/30 hover:bg-[#fb7185] text-white rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">Continue</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="flex flex-col gap-6 lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
             <!-- Monthly Progress Wave Chart Section -->
-            <div class="glass-card p-6 text-left">
+            <div class="glass-card p-6 text-left flex flex-col justify-between h-full">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="font-extrabold text-base text-white font-['Outfit']">Monthly Progress</h3>
                     <div class="flex items-center gap-4 text-[10px] font-black uppercase tracking-wider">
@@ -1562,7 +1216,7 @@
                     </div>
                 </div>
                 <!-- Wave SVG chart mimicking mockup -->
-                <div class="relative h-60 w-full mt-4">
+                <div class="relative h-[380px] w-full mt-4">
                     <svg class="w-full h-full" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="currentGrad" x1="0" y1="0" x2="0" y2="1">
@@ -1603,214 +1257,61 @@
                 </div>
             </div>
 
-            <!-- Recent Courses Section -->
-            <div class="glass-card p-6 text-left">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Recent Courses</h3>
-                </div>
-                <div class="flex flex-col gap-4 text-left">
-                    <!-- Recent Course 1 -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-white/[0.01] border border-white/5 rounded-2xl gap-4 hover:border-white/10 transition-all">
-                        <div class="flex items-center gap-4">
-                           <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-lg text-indigo-400 flex-shrink-0">
-                               <i class="fas fa-code"></i>
-                           </div>
-                           <div>
-                               <h4 class="font-extrabold text-xs text-white">Web development</h4>
-                               <span class="text-[10px] text-gray-500 font-bold">5 Module - 32 Lesson - 16 Hours</span>
-                           </div>
-                        </div>
-                        <div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-start">
-                           <div>
-                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Instructor</span>
-                               <span class="text-xs text-gray-300 font-extrabold">Jenny Wilson</span>
-                           </div>
-                           <div>
-                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Reviews</span>
-                               <span class="text-xs text-yellow-500 font-extrabold"><i class="fas fa-star text-xs"></i> 5.0 <span class="text-gray-500 font-normal text-[10px]">(150)</span></span>
-                           </div>
-                           <button class="py-2.5 px-6 bg-[#38bdf8] hover:opacity-90 rounded-xl text-[10px] font-black uppercase text-white transition-all shadow-md">Enroll Now</button>
-                        </div>
-                    </div>
-
-                    <!-- Recent Course 2 -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-white/[0.01] border border-white/5 rounded-2xl gap-4 hover:border-white/10 transition-all text-left">
-                        <div class="flex items-center gap-4">
-                           <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-lg text-purple-400 flex-shrink-0">
-                               <i class="fas fa-bezier-curve"></i>
-                           </div>
-                           <div>
-                               <h4 class="font-extrabold text-xs text-white">Ui Design</h4>
-                               <span class="text-[10px] text-gray-500 font-bold">4 Module - 24 Lesson - 12 Hours</span>
-                           </div>
-                        </div>
-                        <div class="flex items-center gap-8 w-full sm:w-auto justify-between sm:justify-start">
-                           <div>
-                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Instructor</span>
-                               <span class="text-xs text-gray-300 font-extrabold">Robert Fox</span>
-                           </div>
-                           <div>
-                               <span class="text-[10px] text-gray-500 block uppercase font-extrabold">Reviews</span>
-                               <span class="text-xs text-yellow-500 font-extrabold"><i class="fas fa-star text-xs"></i> 4.9 <span class="text-gray-500 font-normal text-[10px]">(120)</span></span>
-                           </div>
-                           <button class="py-2.5 px-6 bg-[#8b5cf6] hover:opacity-90 rounded-xl text-[10px] font-black uppercase text-white transition-all shadow-md">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
-        <!-- Right 1 Col: Sidebar widgets (Event Dates, Today's Activity, Top Performer) -->
-        <div class="flex flex-col gap-8 text-left">
-            <!-- Event Dates widget -->
-            <div class="glass-card p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Event Dates</h3>
-                    <a href="#" class="text-xs text-[#38bdf8] hover:underline font-bold">See all &rarr;</a>
+        <!-- COLUMN 3: Streak Tracker, Exam Readiness, Checklist, Spark MCQ, Achievements, Leaderboard -->
+        <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="400">
+            <!-- Active Streak tracker widget -->
+            <div class="glass-card streak-card">
+                <div class="streak-header">
+                    <span class="streak-badge"><i class="fas fa-fire"></i> Practice Streak</span>
+                    <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Milestones</span>
                 </div>
-                <!-- Calendar Grid Layout -->
-                <div class="bg-white/[0.01] border border-white/5 rounded-2xl p-4">
-                    <div class="flex justify-between items-center mb-4">
-                        <button class="text-gray-400 hover:text-white transition-all"><i class="fas fa-chevron-left text-xs"></i></button>
-                        <span class="text-xs font-black text-white font-['Outfit'] uppercase">Jan 2023</span>
-                        <button class="text-gray-400 hover:text-white transition-all"><i class="fas fa-chevron-right text-xs"></i></button>
-                    </div>
-                    <!-- Days of week -->
-                    <div class="grid grid-cols-7 text-center text-[10px] font-extrabold text-gray-500 mb-2">
-                        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-                    </div>
-                    <!-- Calendar grid -->
-                    <div class="grid grid-cols-7 gap-y-2 text-center text-xs font-bold text-gray-300">
-                        <span class="text-gray-600">27</span><span class="text-gray-600">28</span><span class="text-gray-600">29</span><span class="text-gray-600">30</span><span class="text-gray-600">31</span><span>1</span><span>2</span>
-                        <span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
-                        <span>10</span><span>11</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500 rounded-full mx-auto text-white shadow-lg">12</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500/20 rounded-full mx-auto text-indigo-300">13</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500/20 rounded-full mx-auto text-indigo-300">14</span><span class="w-6 h-6 flex items-center justify-center bg-indigo-500 rounded-full mx-auto text-white shadow-lg">15</span><span>16</span>
-                        <span>17</span><span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span>
-                        <span>24</span><span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span>
-                    </div>
+                <div class="streak-days-display">
+                    <div class="streak-count text-white" id="streakCounterDisplay">{{ stats.current_streak }} <span class="text-gray-500 text-xs">Days Active</span></div>
+                </div>
+                <!-- Week fire checkpoints -->
+                <div class="fire-week-row">
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">M</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">W</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">F</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">S</span></div>
+                    <div class="fire-day-dot" id="streakSundayDot"><i class="far fa-circle text-xs text-gray-600" id="streakSundayIcon"></i><span class="text-[9px] text-gray-500 block mt-1 font-bold">S</span></div>
                 </div>
             </div>
 
-            <!-- Today's Activity Ring widget -->
-            <div class="glass-card p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Today's Activity</h3>
-                    <button class="text-gray-500 hover:text-white transition-all"><i class="fas fa-ellipsis-h"></i></button>
-                </div>
-                <!-- Gauge ring display -->
-                <div class="relative flex flex-col items-center justify-center py-4">
-                    <!-- SVG Semicircle Ring -->
-                    <svg class="w-48 h-28" viewBox="0 0 100 50">
-                        <!-- Gray background ring -->
-                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8" stroke-linecap="round"/>
-                        <!-- Semicircle segment progress path (e.g. 100% completion) -->
-                        <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#activityGrad)" stroke-width="8" stroke-linecap="round"/>
-                        <!-- Gradient definitions -->
-                        <defs>
-                            <linearGradient id="activityGrad" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stop-color="#38bdf8"/>
-                                <stop offset="50%" stop-color="#fb7185"/>
-                                <stop offset="100%" stop-color="#d946ef"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="absolute top-[32%] text-center">
-                        <span class="text-2xl font-black text-white font-['Outfit']">100%</span>
-                    </div>
-                    <!-- legend label grids -->
-                    <div class="flex justify-around items-center w-full mt-4 text-[10px] text-gray-500 font-extrabold uppercase">
-                        <span class="flex flex-col items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span>UI Design <b class="text-gray-300 mt-0.5">40%</b></span>
-                        <span class="flex flex-col items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>Motion <b class="text-gray-300 mt-0.5">65%</b></span>
-                        <span class="flex flex-col items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span>3D Art <b class="text-gray-300 mt-0.5">30%</b></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Top Performer widget -->
-            <div class="glass-card p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Top Performer</h3>
-                    <button class="text-gray-500 hover:text-white transition-all"><i class="fas fa-ellipsis-h"></i></button>
-                </div>
-                <div class="flex flex-col gap-4 text-xs">
-                    <!-- Top Performer 1 -->
-                    <div class="flex justify-between items-center p-3 bg-white/[0.01] border border-white/5 rounded-xl hover:border-white/10 transition-all">
-                        <div class="flex items-center gap-3">
-                            <span class="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[10px] font-black">1</span>
-                            <img src="https://picsum.photos/id/1027/80/80" alt="Rasel Mondol" class="w-8 h-8 rounded-full object-cover border border-white/10">
-                            <div>
-                                <h5 class="font-extrabold text-xs text-white">Rasel Mondol</h5>
-                                <span class="text-[9px] text-gray-500">15 Assignment</span>
-                            </div>
-                        </div>
-                        <span class="text-xs font-black text-emerald-400">85/100</span>
-                    </div>
-
-                    <!-- Top Performer 2 -->
-                    <div class="flex justify-between items-center p-3 bg-white/[0.01] border border-white/5 rounded-xl hover:border-white/10 transition-all">
-                        <div class="flex items-center gap-3">
-                            <span class="w-5 h-5 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-[10px] font-black">2</span>
-                            <img src="https://picsum.photos/id/1012/80/80" alt="Devon Lane" class="w-8 h-8 rounded-full object-cover border border-white/10">
-                            <div>
-                                <h5 class="font-extrabold text-xs text-white">Devon Lane</h5>
-                                <span class="text-[9px] text-gray-500">17 Assignment</span>
-                            </div>
-                        </div>
-                        <span class="text-xs font-black text-emerald-400">78/100</span>
-                    </div>
-
-                    <!-- Top Performer 3 -->
-                    <div class="flex justify-between items-center p-3 bg-white/[0.01] border border-white/5 rounded-xl hover:border-white/10 transition-all">
-                        <div class="flex items-center gap-3">
-                            <span class="w-5 h-5 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-[10px] font-black">3</span>
-                            <img src="https://picsum.photos/id/1015/80/80" alt="Bessie Cooper" class="w-8 h-8 rounded-full object-cover border border-white/10">
-                            <div>
-                                <h5 class="font-extrabold text-xs text-white">Bessie Cooper</h5>
-                                <span class="text-[9px] text-gray-500">20 Assignment</span>
-                            </div>
-                        </div>
-                        <span class="text-xs font-black text-emerald-400">75/100</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- CELEBRATION LEVEL UP OVERLAY -->
-<div id="levelUpOverlay" class="overlay-modal-fullscreen">
-    <div class="modal-glass-container">
-        <div class="text-5xl mb-4">🏆</div>
-        <h2 class="font-extrabold text-2xl mb-1 text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-violet-500 font-['Outfit']">LEVEL UP!</h2>
-        <div class="text-sm font-extrabold text-white mb-4" id="levelUpNewTitle">Level 5: Equation Master</div>
-        <p class="text-[11px] text-gray-400 leading-relaxed mb-6">Amazing consistency! You have unlocked Level 5 conceptual resources. Keep pushing your limits!</p>
-        <button onclick="dismissLevelUp()" class="w-full py-2.5 rounded-xl font-black text-xs text-center border-none text-white hover:opacity-90 transition-all" style="background: linear-gradient(135deg, #d946ef, #8b5cf6);">Awesome!</button>
-    </div>
-</div>
-
-<!-- STATS BREAKDOWN DETAILS OVERLAY MODAL -->
-<div id="statsDetailModal" class="overlay-modal-fullscreen">
-    <div class="glass-card modal-glass-container text-left" id="statsDetailModalContent" style="max-width: 720px; width: 90%;">
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex items-center gap-4">
-                <div id="modalIconWrapper" class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xl text-white shadow-inner">
-                    <i id="modalIcon" class="fas"></i>
-                </div>
+            <!-- Scheduled Events Widget -->
+            <div class="glass-card p-6 flex flex-col justify-between flex-1" id="eventsWidget" style="height: 350px; min-height: 350px;">
                 <div>
-                    <h3 id="modalTitle" class="font-extrabold text-lg text-white font-['Outfit'] tracking-wide">Detailed Breakdown</h3>
-                    <span class="text-[10px] text-gray-500 uppercase font-black tracking-widest">Real-time stats analytics</span>
-                </div>
-            </div>
-            <button onclick="closeStatsModal()" class="w-8 h-8 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-all text-sm"><i class="fas fa-times"></i></button>
-        </div>
-        <div id="modalContent" class="text-sm text-gray-200 leading-relaxed mb-6 min-h-[100px]"></div>
-        <div class="flex gap-3">
-            <button onclick="closeStatsModal()" class="w-full py-3 text-xs font-black rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 text-white transition-all shadow-md">Close Breakdown Analytics</button>
-        </div>
-    </div>
-</div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-tasks text-[#c084fc]"></i>
+                            <span class="font-extrabold text-sm text-white">Scheduled Activity</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button id="filterSelectedDayBtn" class="text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all">Today</button>
+                            <button id="filterAllBtn" class="text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all">All</button>
+                        </div>
+                    </div>
 
-<!-- ADD EVENT MODAL OVERLAY -->
+                    <div id="eventsListContainer" class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1 mb-4">
+                        <!-- Dynamic events list items -->
+                    </div>
+                </div>
+
+                <button id="openAddEventModalBtn" class="w-full py-2.5 rounded-xl font-black text-xs text-center border border-white/5 bg-white/2 hover:bg-white/5 text-[#38bdf8] flex items-center justify-center gap-1.5 transition-all">
+                    <i class="fas fa-plus"></i> Add Study Activity
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ADD EVENT MODAL OVERLAY -->
 <div id="addEventModal" class="overlay-modal-fullscreen">
     <div class="glass-card modal-glass-container text-left" style="max-width: 420px;">
         <div class="flex justify-between items-center mb-5">
@@ -2235,6 +1736,7 @@
         let flipped = false;
 
         function renderFlashcard(idx) {
+            if (!fcCat || !fcQ || !fcA || !fcExp) return;
             const card = deck[idx];
             if (!card) return;
             fcCat.textContent = card.category;
@@ -2661,13 +2163,13 @@
 
         // Set active filters styling
         if (filterSelBtn && filterAllBtn) {
-            filterSelBtn.addEventListener("click", () => {
+            if (filterSelBtn) filterSelBtn.addEventListener("click", () => {
                 filterMode = 'selected';
                 filterSelBtn.className = "text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all";
                 filterAllBtn.className = "text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all";
                 renderEventsList();
             });
-            filterAllBtn.addEventListener("click", () => {
+            if (filterAllBtn) filterAllBtn.addEventListener("click", () => {
                 filterMode = 'all';
                 filterAllBtn.className = "text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all";
                 filterSelBtn.className = "text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all";
@@ -2677,7 +2179,7 @@
 
         // Open modal
         if (openAddModalBtn && addModal) {
-            openAddModalBtn.addEventListener("click", () => {
+            if (openAddModalBtn) openAddModalBtn.addEventListener("click", () => {
                 const todayStr = formatDateISO(new Date());
                 const dateInput = document.getElementById("eventDateInput");
                 if (dateInput) dateInput.value = todayStr;
@@ -2729,6 +2231,8 @@
 
         // Render Events List
         function renderEventsList() {
+            const listContainer = document.getElementById("eventsListContainer");
+            if (!listContainer) return;
             if (!listContainer) return;
             listContainer.innerHTML = "";
 

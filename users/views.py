@@ -212,7 +212,67 @@ def leaderboard_view(request):
         'user_rank': next((item for item in leaderboard_data if item.get('is_user')), leaderboard_data[6])
     })
 
-
-
-
-
+def solved_questions_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+        
+    # Generate 120 mock solved questions
+    import random
+    from django.core.paginator import Paginator
+    
+    subjects = ["Quantitative Aptitude", "Logical Reasoning", "Verbal Ability", "Data Interpretation"]
+    topics = {
+        "Quantitative Aptitude": ["Number Systems", "Percentages", "Profit & Loss", "Time & Work", "Algebra"],
+        "Logical Reasoning": ["Blood Relations", "Syllogisms", "Seating Arrangement", "Analogy"],
+        "Verbal Ability": ["Synonyms & Antonyms", "Tenses", "Reading Comprehension", "Active Voice"],
+        "Data Interpretation": ["Pie Charts", "Bar Graphs", "Line Graphs"]
+    }
+    
+    solved_list = []
+    # Seed random for consistent mock data
+    random.seed(42)
+    
+    for i in range(1, 121):
+        subj = subjects[i % len(subjects)]
+        topic = topics[subj][i % len(topics[subj])]
+        is_correct = (i % 5 != 0) # 80% accuracy
+        solved_list.append({
+            'id': i,
+            'subject': subj,
+            'topic': topic,
+            'question_text': f"Which of the following statements correctly solves the aptitude question number {i} regarding {topic}?",
+            'selected_option': f"Option {chr(65 + (i % 4))}",
+            'correct_option': f"Option {chr(65 + (i % 4) if is_correct else 65 + ((i + 1) % 4))}",
+            'status': "Correct" if is_correct else "Incorrect",
+            'date_solved': f"July {19 - (i // 10):02d}, 2026"
+        })
+        
+    # Read query and filter status
+    q = request.GET.get('q', '').strip()
+    status_filter = request.GET.get('status', 'all')
+    
+    # Apply search filter
+    if q:
+        solved_list = [
+            item for item in solved_list
+            if q.lower() in item['question_text'].lower() 
+            or q.lower() in item['topic'].lower() 
+            or q.lower() in item['subject'].lower()
+        ]
+        
+    # Apply status filter
+    if status_filter == 'correct':
+        solved_list = [item for item in solved_list if item['status'] == 'Correct']
+    elif status_filter == 'incorrect':
+        solved_list = [item for item in solved_list if item['status'] == 'Incorrect']
+        
+    paginator = Paginator(solved_list, 50)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'users/solved_questions.html', {
+        'page_obj': page_obj,
+        'total_count': len(solved_list),
+        'q': q,
+        'status_filter': status_filter
+    })

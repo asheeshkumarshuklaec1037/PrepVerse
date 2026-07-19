@@ -16,32 +16,29 @@
         /* Modern Glass Navbar */
         .navbar {
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 1200px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 12px 30px;
+            top: 0;
+            left: 0;
+            transform: none;
+            width: 100%;
+            max-width: 100%;
+            background: rgba(10, 10, 15, 0.7);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0;
+            padding: 15px 4%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 2000;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
         .navbar.scrolled {
-            top: 0;
-            width: 100%;
-            border-radius: 0;
-            background: rgba(10, 10, 10, 0.8);
+            background: rgba(5, 5, 8, 0.85);
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 15px 5%;
+            padding: 12px 4%;
         }
 
         .logo {
@@ -201,14 +198,9 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* Modern Narrow Sidebar Styles */
+        /* Modern Floating Overlay Sidebar Styles */
         :root {
-            --sidebar-width: 80px;
-        }
-        @media (max-width: 992px) {
-            :root {
-                --sidebar-width: 70px;
-            }
+            --sidebar-width: 260px;
         }
 
         .sidebar-menu {
@@ -217,22 +209,49 @@
             left: 0;
             height: 100vh;
             width: var(--sidebar-width);
-            background: rgba(255, 255, 255, 0.03) !important;
+            background: rgba(10, 10, 15, 0.55) !important;
             border-right: 1px solid rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px) saturate(180%) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+            backdrop-filter: blur(35px) saturate(220%) !important;
+            -webkit-backdrop-filter: blur(35px) saturate(220%) !important;
             z-index: 2200;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             overflow-x: hidden;
-            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
+            box-shadow: 5px 0 30px rgba(0,0,0,0.5);
         }
 
-        .sidebar-menu:hover {
-            width: 260px;
-            box-shadow: 15px 0 50px rgba(0,0,0,0.6);
+        .sidebar-menu.active-hover {
+            transform: translateX(0);
+            box-shadow: 15px 0 50px rgba(0,0,0,0.7);
+        }
+
+        /* Sidebar hover trigger in Navbar */
+        .sidebar-hover-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-right: 15px;
+            z-index: 2100;
+        }
+
+        .sidebar-hover-trigger:hover {
+            background: rgba(42, 245, 152, 0.1);
+            border-color: rgba(42, 245, 152, 0.4);
+            color: #2af598;
+            box-shadow: 0 0 15px rgba(42, 245, 152, 0.3);
+            transform: scale(1.05);
         }
 
         .sidebar-header {
@@ -281,7 +300,7 @@
             transition: opacity 0.2s ease, visibility 0.2s ease;
         }
 
-        .sidebar-menu:hover .sidebar-brand span {
+        .sidebar-menu.active-hover .sidebar-brand span {
             opacity: 1;
             visibility: visible;
             transition-delay: 0.1s;
@@ -365,7 +384,7 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
-        .sidebar-menu:hover .sidebar-user-info {
+        .sidebar-menu.active-hover .sidebar-user-info {
             opacity: 1;
             visibility: visible;
             transition-delay: 0.1s;
@@ -425,7 +444,7 @@
             display: inline-block !important;
         }
 
-        .sidebar-menu:hover .sidebar-link span {
+        .sidebar-menu.active-hover .sidebar-link span {
             opacity: 1;
             visibility: visible;
             transition-delay: 0.1s;
@@ -522,7 +541,7 @@
             display: inline-block !important;
         }
 
-        .sidebar-menu:hover .sidebar-logout span {
+        .sidebar-menu.active-hover .sidebar-logout span {
             opacity: 1;
             visibility: visible;
             transition-delay: 0.1s;
@@ -536,46 +555,46 @@
             transform: translateY(-2px);
         }
 
-        /* Layout Shifts */
+        /* Layout Shifts (No shifting since sidebar is floating overlay) */
         body {
             transition: padding-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         
         body.has-sidebar {
-            padding-left: 80px;
+            padding-left: 0 !important;
         }
         
         body.has-sidebar .navbar {
-            left: calc(50% + 40px) !important;
-            width: calc(90% - 80px) !important;
-            transform: translateX(-50%) !important;
+            left: 0 !important;
+            width: 100% !important;
+            transform: none !important;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         body.has-sidebar .navbar.scrolled {
-            left: 80px !important;
-            width: calc(100% - 80px) !important;
+            left: 0 !important;
+            width: 100% !important;
             transform: none !important;
-            padding: 15px 5% !important;
+            padding: 12px 4% !important;
         }
 
         /* Responsive Mobile Layout Shifts */
         @media (max-width: 992px) {
             body.has-sidebar {
-                padding-left: 70px;
+                padding-left: 0 !important;
             }
             body.has-sidebar .navbar {
-                left: calc(50% + 35px) !important;
-                width: calc(95% - 70px) !important;
-                transform: translateX(-50%) !important;
+                left: 0 !important;
+                width: 100% !important;
+                transform: none !important;
             }
             body.has-sidebar .navbar.scrolled {
-                left: 70px !important;
-                width: calc(100% - 70px) !important;
+                left: 0 !important;
+                width: 100% !important;
                 transform: none !important;
                 padding: 12px 4% !important;
             }
             .mobile-sidebar-toggle-btn {
-                display: none !important; /* Always visible narrow sidebar, no toggle needed */
+                display: block !important;
             }
         }
 
@@ -647,7 +666,9 @@
 
     <nav class="navbar" id="navbar">
         {% if user.is_authenticated %}
-            <button class="mobile-sidebar-toggle-btn" id="mobileSidebarToggleBtn" style="background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; display: none; margin-right: 15px;"><i class="fas fa-bars"></i></button>
+            <div class="sidebar-hover-trigger" id="sidebarHoverTrigger">
+                <i class="fas fa-bars"></i>
+            </div>
         {% endif %}
         
         <a href="{% url 'home' %}" class="logo">
@@ -727,10 +748,29 @@
             });
         }
 
-        // Collapsible Sidebar Drawer Logic (Always visible narrow layout, hidden in mock test start)
-        const isMockTestSession = window.location.pathname.includes('/mock-test/start/');
-        if (isMockTestSession) {
-            document.body.classList.add('sidebar-hidden');
+        // Sidebar Hover Toggle Logic
+        const sidebarTrigger = document.getElementById('sidebarHoverTrigger');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        
+        if (sidebarTrigger && sidebarMenu) {
+            let closeTimeout;
+            
+            const openSidebar = () => {
+                clearTimeout(closeTimeout);
+                sidebarMenu.classList.add('active-hover');
+            };
+            
+            const closeSidebar = () => {
+                closeTimeout = setTimeout(() => {
+                    sidebarMenu.classList.remove('active-hover');
+                }, 300); // 300ms delay to allow moving mouse from trigger to sidebar
+            };
+            
+            sidebarTrigger.addEventListener('mouseenter', openSidebar);
+            sidebarTrigger.addEventListener('mouseleave', closeSidebar);
+            
+            sidebarMenu.addEventListener('mouseenter', openSidebar);
+            sidebarMenu.addEventListener('mouseleave', closeSidebar);
         }
 
         // Highlight active sidebar route
