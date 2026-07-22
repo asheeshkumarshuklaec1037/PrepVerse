@@ -646,6 +646,119 @@
         100% { transform: translate(calc(var(--x) - 50%), calc(var(--y) - 50%)) scale(0.2) rotate(360deg); opacity: 0; }
     }
 
+    /* Sticky Notes Styling */
+    .sticky-note-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 24px;
+        padding: 26px 24px 20px;
+        min-height: 170px;
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .note-purple {
+        border: 1px solid rgba(192, 132, 252, 0.15);
+        background: linear-gradient(135deg, rgba(192, 132, 252, 0.07) 0%, rgba(13, 11, 29, 0.75) 100%);
+    }
+    .note-purple:hover {
+        transform: translateY(-5px) rotate(0deg) scale(1.02);
+        border-color: rgba(192, 132, 252, 0.4);
+        box-shadow: 0 20px 45px rgba(192, 132, 252, 0.18), 0 0 25px rgba(192, 132, 252, 0.12);
+    }
+    
+    .note-emerald {
+        border: 1px solid rgba(42, 245, 152, 0.15);
+        background: linear-gradient(135deg, rgba(42, 245, 152, 0.07) 0%, rgba(13, 11, 29, 0.75) 100%);
+    }
+    .note-emerald:hover {
+        transform: translateY(-5px) rotate(0deg) scale(1.02);
+        border-color: rgba(42, 245, 152, 0.4);
+        box-shadow: 0 20px 45px rgba(42, 245, 152, 0.18), 0 0 25px rgba(42, 245, 152, 0.12);
+    }
+    
+    .note-pin {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        position: absolute;
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .note-pin-purple {
+        background: #c084fc;
+        box-shadow: 0 0 8px 3px rgba(192, 132, 252, 0.6);
+    }
+    .note-pin-emerald {
+        background: #2af598;
+        box-shadow: 0 0 8px 3px rgba(42, 245, 152, 0.6);
+    }
+    
+    .note-tape {
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%) rotate(-3deg);
+        width: 70px;
+        height: 18px;
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-bottom: none;
+        border-radius: 2px;
+        opacity: 0.8;
+    }
+
+    /* Modern Chart Animations */
+    .chart-group {
+        opacity: 0;
+        transform: scale(0.98) translateY(5px);
+        transform-origin: center;
+        transform-box: fill-box;
+        transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        pointer-events: none;
+    }
+    .chart-group.active-chart {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        pointer-events: auto;
+    }
+    
+    @keyframes growColumn {
+        from {
+            transform: scaleY(0);
+        }
+        to {
+            transform: scaleY(1);
+        }
+    }
+    
+    @keyframes popPoint {
+        from {
+            transform: scale(0);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    
+    .chart-grow-bar {
+        transform-box: fill-box;
+        transform-origin: bottom;
+        animation: growColumn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    
+    .chart-pop-point {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: popPoint 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
     /* Dynamic Modals */
     .overlay-modal-fullscreen {
         position: fixed;
@@ -844,19 +957,25 @@
                 </div>
             </div>
             
-            <!-- Quick Stats in Header -->
-            <div class="flex gap-6 justify-center md:justify-end border-t md:border-t-0 border-white/5 pt-4 md:pt-0 w-full md:w-auto">
-                <div class="text-center md:text-right">
-                    <div class="text-[9px] text-gray-500 font-extrabold uppercase tracking-widest mb-0.5">Accuracy</div>
-                    <div class="text-xl md:text-2xl font-black text-[#2af598]" id="quickStatAccuracy">{{ stats.accuracy }}</div>
+            <!-- Beautiful Glassmorphic Clock & Date Widget -->
+            <div class="relative flex items-center gap-4 bg-[#0d0b1d]/40 border border-white/10 backdrop-blur-xl px-5 py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.08)] hover:border-[#c084fc]/30 transition-all duration-300 w-fit mx-auto md:mx-0 group overflow-hidden">
+                <!-- Glowing Ambient Accent Lights inside widget -->
+                <div class="absolute -top-10 -left-10 w-24 h-24 bg-[#c084fc]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[#c084fc]/15 transition-all duration-300"></div>
+                <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-[#2af598]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[#2af598]/15 transition-all duration-300"></div>
+
+                <!-- Clock Icon / indicator with breathing glow -->
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#c084fc]/15 to-[#2af598]/15 border border-white/10 flex items-center justify-center text-base text-white shadow-lg relative overflow-hidden">
+                    <i class="far fa-clock text-[#2af598] animate-pulse"></i>
                 </div>
-                <div class="text-center md:text-right">
-                    <div class="text-[9px] text-gray-500 font-extrabold uppercase tracking-widest mb-0.5">Solved</div>
-                    <div class="text-xl md:text-2xl font-black text-[#fbcd0b]">{{ stats.questions_solved }}</div>
-                </div>
-                <div class="text-center md:text-right">
-                    <div class="text-[9px] text-gray-500 font-extrabold uppercase tracking-widest mb-0.5">Global Rank</div>
-                    <div class="text-xl md:text-2xl font-black text-[#fb7185]">#{{ stats.global_rank }}</div>
+                
+                <div class="flex flex-col text-left relative z-10">
+                    <!-- Current Time (Hour:Minute AM/PM) -->
+                    <div class="text-xl md:text-2xl font-black text-white leading-none font-['Outfit'] tracking-tight" id="liveHeaderTime">--:--</div>
+                    <!-- Current Date with live status indicator -->
+                    <div class="text-[9px] text-[#2af598] font-black uppercase tracking-wider mt-1.5 font-['Plus Jakarta Sans'] flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#2af598] inline-block animate-ping"></span>
+                        <span id="liveHeaderDate">-- --, ----</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -969,6 +1088,216 @@
         </div>
     </div>
 
+    <!-- Sticky Notes Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 mb-4" data-aos="fade-up" data-aos-delay="150">
+        <!-- Sticky Note 1: Motivational Quote -->
+        <div class="sticky-note-card note-purple" style="transform: rotate(-0.5deg);">
+            <!-- Floating Tape & Glowing Pin -->
+            <div class="note-tape"></div>
+            <div class="note-pin note-pin-purple"></div>
+            
+            <div class="relative z-10 flex flex-col justify-between h-full pt-4">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[9px] font-black text-[#c084fc] uppercase tracking-widest block"><i class="fas fa-quote-left"></i> Quote of the Day <span id="quoteDateDisplay" class="ml-2 opacity-60 text-[8px] normal-case font-bold bg-[#c084fc]/15 px-1.5 py-0.5 rounded">Today</span></span>
+                        <div class="flex gap-2">
+                            <button id="prevQuoteBtn" onclick="changeQuote(1)" class="text-[10px] text-white/40 hover:text-[#c084fc] transition-all"><i class="fas fa-chevron-left"></i></button>
+                            <button id="nextQuoteBtn" onclick="changeQuote(-1)" class="text-[10px] text-white/40 hover:text-[#c084fc] transition-all"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="quote-slider-wrapper" style="transition: all 0.25s ease;">
+                        <p class="font-extrabold text-sm text-white/90 leading-relaxed font-['Outfit']" id="motivationQuoteDisplay">
+                            "Your limitation—it's only your imagination. Push yourself, because no one else is going to do it for you."
+                        </p>
+                    </div>
+                </div>
+                <div class="text-[10px] text-gray-500 font-bold mt-4 text-right" id="quoteAuthorDisplay">— PrepVerse AI</div>
+            </div>
+        </div>
+        
+        <!-- Sticky Note 2: Tip of the Day -->
+        <div class="sticky-note-card note-emerald" style="transform: rotate(0.5deg);">
+            <!-- Floating Tape & Glowing Pin -->
+            <div class="note-tape"></div>
+            <div class="note-pin note-pin-emerald"></div>
+            
+            <div class="relative z-10 flex flex-col justify-between h-full pt-4">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[9px] font-black text-[#2af598] uppercase tracking-widest block"><i class="fas fa-lightbulb"></i> Tip of the Day <span id="tipDateDisplay" class="ml-2 opacity-60 text-[8px] normal-case font-bold bg-[#2af598]/15 px-1.5 py-0.5 rounded">Today</span></span>
+                        <div class="flex gap-2">
+                            <button id="prevTipBtn" onclick="changeTip(1)" class="text-[10px] text-white/40 hover:text-[#2af598] transition-all"><i class="fas fa-chevron-left"></i></button>
+                            <button id="nextTipBtn" onclick="changeTip(-1)" class="text-[10px] text-white/40 hover:text-[#2af598] transition-all"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="tip-slider-wrapper" style="transition: all 0.25s ease;">
+                        <p class="font-extrabold text-sm text-white/90 leading-relaxed font-['Outfit']" id="tipDisplay">
+                            <strong>Quant Trick:</strong> To multiply any 2-digit number by 11, simply add the two digits together and place the sum in the middle! (e.g. 24 x 11 = 264).
+                        </p>
+                    </div>
+                </div>
+                <div class="text-[10px] text-gray-500 font-bold mt-4 text-right" id="tipAuthorDisplay">— Aptitude Masterclass</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Dashboard Main Grid Blocks (3-Column Layout) -->
+    <div class="dashboard-grid">
+
+        <!-- COLUMN 1: Subject Cards Grid & Navigation -->
+        <div class="flex flex-col gap-6 lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
+            <!-- Monthly Progress Wave Chart Section -->
+            <div class="glass-card p-6 text-left flex flex-col justify-between h-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Monthly Progress</h3>
+                    <div class="flex items-center gap-4 text-[10px] font-black uppercase tracking-wider">
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#8b5cf6]"></span> Current</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#d946ef]"></span> Previous</span>
+                        <select id="chartTypeSelector" onchange="toggleDashboardChart(this.value)" class="bg-white/5 border border-white/8 rounded-lg px-2.5 py-1 text-white focus:outline-none text-[10px] font-black cursor-pointer hover:bg-white/10 transition-all">
+                            <option value="wave" class="bg-[#0f0b24] text-white">Wave Area Chart</option>
+                            <option value="bar" class="bg-[#0f0b24] text-white">Column Bar Chart</option>
+                            <option value="line" class="bg-[#0f0b24] text-white">Neon Line Chart</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Wave SVG chart mimicking mockup -->
+                <div class="relative h-[380px] w-full mt-4">
+                    <svg class="w-full h-full" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="currentGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.45"/>
+                                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+                            </linearGradient>
+                            <linearGradient id="previousGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#d946ef" stop-opacity="0.25"/>
+                                <stop offset="100%" stop-color="#d946ef" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Grid lines -->
+                        <line x1="0" y1="40" x2="800" y2="40" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="160" x2="800" y2="160" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                        <line x1="0" y1="220" x2="800" y2="220" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+
+                        <!-- Wave Area Chart Group -->
+                        <g id="svgWaveChartGroup" class="chart-group active-chart">
+                            <!-- Previous Year Peak Path -->
+                            <path d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140 L 800 240 L 0 240 Z" fill="url(#previousGrad)"/>
+                            <path class="chart-draw-path" d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140" stroke="#d946ef" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+                            <!-- Current Year Peak Path -->
+                            <path d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90 L 800 240 L 0 240 Z" fill="url(#currentGrad)"/>
+                            <path class="chart-draw-path" d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" fill="none"/>
+                        </g>
+
+                        <!-- Column Bar Chart Group -->
+                        <g id="svgBarChartGroup" class="chart-group">
+                            <!-- Jan -->
+                            <rect class="chart-grow-bar" x="80" y="100" width="16" height="120" rx="4" fill="#8b5cf6" opacity="0.85" />
+                            <rect class="chart-grow-bar" x="100" y="130" width="16" height="90" rx="4" fill="#d946ef" opacity="0.7" />
+                            <!-- Mar -->
+                            <rect class="chart-grow-bar" x="200" y="80" width="16" height="140" rx="4" fill="#8b5cf6" opacity="0.85" />
+                            <rect class="chart-grow-bar" x="220" y="110" width="16" height="110" rx="4" fill="#d946ef" opacity="0.7" />
+                            <!-- May -->
+                            <rect class="chart-grow-bar" x="320" y="60" width="16" height="160" rx="4" fill="#8b5cf6" opacity="0.85" />
+                            <rect class="chart-grow-bar" x="340" y="90" width="16" height="130" rx="4" fill="#d946ef" opacity="0.7" />
+                            <!-- Jul -->
+                            <rect class="chart-grow-bar" x="440" y="70" width="16" height="150" rx="4" fill="#8b5cf6" opacity="0.85" />
+                            <rect class="chart-grow-bar" x="460" y="120" width="16" height="100" rx="4" fill="#d946ef" opacity="0.7" />
+                            <!-- Sep -->
+                            <rect class="chart-grow-bar" x="560" y="50" width="16" height="170" rx="4" fill="#8b5cf6" opacity="0.85" />
+                            <rect class="chart-grow-bar" x="580" y="80" width="16" height="140" rx="4" fill="#d946ef" opacity="0.7" />
+                            <!-- Nov -->
+                            <rect class="chart-grow-bar" x="680" y="30" width="16" height="190" rx="4" fill="#8b5cf6" opacity="0.85" />
+                            <rect class="chart-grow-bar" x="700" y="60" width="16" height="160" rx="4" fill="#d946ef" opacity="0.7" />
+                        </g>
+
+                        <!-- Neon Line Chart Group -->
+                        <g id="svgLineChartGroup" class="chart-group">
+                            <!-- Previous Line -->
+                            <polyline class="chart-draw-path" points="50,150 150,130 250,160 350,120 450,140 550,90 650,110 750,80" fill="none" stroke="#d946ef" stroke-width="3" stroke-dasharray="3,3" />
+                            <!-- Current Line -->
+                            <polyline class="chart-draw-path" points="50,110 150,140 250,90 350,70 450,120 550,60 650,80 750,40" fill="none" stroke="#8b5cf6" stroke-width="4" />
+                            <!-- Glowing Dots on Current Line -->
+                            <circle class="chart-pop-point" cx="50" cy="110" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                            <circle class="chart-pop-point" cx="150" cy="140" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                            <circle class="chart-pop-point" cx="250" cy="90" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                            <circle class="chart-pop-point" cx="350" cy="70" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                            <circle class="chart-pop-point" cx="450" cy="120" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                            <circle class="chart-pop-point" cx="550" cy="60" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                            <circle class="chart-pop-point" cx="650" cy="80" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                            <circle class="chart-pop-point" cx="750" cy="40" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
+                        </g>
+
+                        <!-- Marker dot highlight -->
+                        <circle cx="280" cy="110" r="6" fill="#8b5cf6" stroke="#fff" stroke-width="2"/>
+                        <line x1="280" y1="110" x2="280" y2="220" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4 4"/>
+                    </svg>
+                    <!-- Peak tag popup -->
+                    <div class="absolute bg-[#8b5cf6] text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow-lg" style="left: 32.5%; top: 32%;">
+                        $3533
+                    </div>
+                    <!-- X-axis Labels -->
+                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-extrabold uppercase mt-2 px-2">
+                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <!-- COLUMN 3: Streak Tracker, Exam Readiness, Checklist, Spark MCQ, Achievements, Leaderboard -->
+        <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="400">
+            <!-- Active Streak tracker widget -->
+            <div class="glass-card streak-card">
+                <div class="streak-header">
+                    <span class="streak-badge"><i class="fas fa-fire"></i> Practice Streak</span>
+                    <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Milestones</span>
+                </div>
+                <div class="streak-days-display">
+                    <div class="streak-count text-white" id="streakCounterDisplay">{{ stats.current_streak }} <span class="text-gray-500 text-xs">Days Active</span></div>
+                </div>
+                <!-- Week fire checkpoints -->
+                <div class="fire-week-row">
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">M</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">W</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">F</span></div>
+                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">S</span></div>
+                    <div class="fire-day-dot" id="streakSundayDot"><i class="far fa-circle text-xs text-gray-600" id="streakSundayIcon"></i><span class="text-[9px] text-gray-500 block mt-1 font-bold">S</span></div>
+                </div>
+            </div>
+
+            <!-- Scheduled Events Widget -->
+            <div class="glass-card p-6 flex flex-col justify-between flex-1" id="eventsWidget" style="height: 350px; min-height: 350px;">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-tasks text-[#c084fc]"></i>
+                            <span class="font-extrabold text-sm text-white">Scheduled Activity</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button id="filterSelectedDayBtn" class="text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all">Today</button>
+                            <button id="filterAllBtn" class="text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all">All</button>
+                        </div>
+                    </div>
+
+                    <div id="eventsListContainer" class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1 mb-4">
+                        <!-- Dynamic events list items -->
+                    </div>
+                </div>
+
+                <button id="openAddEventModalBtn" class="w-full py-2.5 rounded-xl font-black text-xs text-center border border-white/5 bg-white/2 hover:bg-white/5 text-[#38bdf8] flex items-center justify-center gap-1.5 transition-all">
+                    <i class="fas fa-plus"></i> Add Study Activity
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
     <!-- Subject Preparations Horizontal Row -->
     <div class="glass-card p-6 mt-8" data-aos="fade-up" data-aos-delay="150">
         <div class="widget-header">
@@ -1055,6 +1384,7 @@
         </div>
     </div>
 
+    
     <!-- Mock Tests Overview Section -->
     <div class="glass-card p-6 mt-8" data-aos="fade-up" data-aos-delay="180">
         <div class="widget-header">
@@ -1198,117 +1528,27 @@
         </div>
     </div>
 
-    <!-- 3. Dashboard Main Grid Blocks (3-Column Layout) -->
-    <div class="dashboard-grid">
-
-        <!-- COLUMN 1: Subject Cards Grid & Navigation -->
-        <div class="flex flex-col gap-6 lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
-            <!-- Monthly Progress Wave Chart Section -->
-            <div class="glass-card p-6 text-left flex flex-col justify-between h-full">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Monthly Progress</h3>
-                    <div class="flex items-center gap-4 text-[10px] font-black uppercase tracking-wider">
-                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#8b5cf6]"></span> Current</span>
-                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#d946ef]"></span> Previous</span>
-                        <select class="bg-white/5 border border-white/8 rounded-lg px-2.5 py-1 text-white focus:outline-none">
-                            <option class="bg-[#0f0b24]">All Course</option>
-                        </select>
+    
+<!-- STATS DETAIL MODAL OVERLAY -->
+    <div id="statsDetailModal" class="overlay-modal-fullscreen">
+        <div class="glass-card modal-glass-container text-left" style="max-width: 500px; width: 100%;">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-white">
+                        <i id="modalIcon" class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h3 id="modalTitle" class="font-black text-sm text-white font-['Outfit']">Stats Detail</h3>
+                        <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">Performance Insights</span>
                     </div>
                 </div>
-                <!-- Wave SVG chart mimicking mockup -->
-                <div class="relative h-[380px] w-full mt-4">
-                    <svg class="w-full h-full" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="currentGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.45"/>
-                                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
-                            </linearGradient>
-                            <linearGradient id="previousGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#d946ef" stop-opacity="0.25"/>
-                                <stop offset="100%" stop-color="#d946ef" stop-opacity="0"/>
-                            </linearGradient>
-                        </defs>
-                        <!-- Grid lines -->
-                        <line x1="0" y1="40" x2="800" y2="40" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="0" y1="160" x2="800" y2="160" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="0" y1="220" x2="800" y2="220" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-
-                        <!-- Previous Year Peak Path -->
-                        <path d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140 L 800 240 L 0 240 Z" fill="url(#previousGrad)"/>
-                        <path d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140" stroke="#d946ef" stroke-width="3" stroke-linecap="round" fill="none"/>
-
-                        <!-- Current Year Peak Path -->
-                        <path d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90 L 800 240 L 0 240 Z" fill="url(#currentGrad)"/>
-                        <path d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" fill="none"/>
-
-                        <!-- Marker dot highlight -->
-                        <circle cx="280" cy="110" r="6" fill="#8b5cf6" stroke="#fff" stroke-width="2"/>
-                        <line x1="280" y1="110" x2="280" y2="220" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4 4"/>
-                    </svg>
-                    <!-- Peak tag popup -->
-                    <div class="absolute bg-[#8b5cf6] text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow-lg" style="left: 32.5%; top: 32%;">
-                        $3533
-                    </div>
-                    <!-- X-axis Labels -->
-                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-extrabold uppercase mt-2 px-2">
-                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
-                    </div>
-                </div>
+                <button onclick="closeStatsModal()" class="text-gray-500 hover:text-white transition-all text-base"><i class="fas fa-times"></i></button>
             </div>
-
             
-        </div>
-
-        <!-- COLUMN 3: Streak Tracker, Exam Readiness, Checklist, Spark MCQ, Achievements, Leaderboard -->
-        <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="400">
-            <!-- Active Streak tracker widget -->
-            <div class="glass-card streak-card">
-                <div class="streak-header">
-                    <span class="streak-badge"><i class="fas fa-fire"></i> Practice Streak</span>
-                    <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Milestones</span>
-                </div>
-                <div class="streak-days-display">
-                    <div class="streak-count text-white" id="streakCounterDisplay">{{ stats.current_streak }} <span class="text-gray-500 text-xs">Days Active</span></div>
-                </div>
-                <!-- Week fire checkpoints -->
-                <div class="fire-week-row">
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">M</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">W</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">F</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">S</span></div>
-                    <div class="fire-day-dot" id="streakSundayDot"><i class="far fa-circle text-xs text-gray-600" id="streakSundayIcon"></i><span class="text-[9px] text-gray-500 block mt-1 font-bold">S</span></div>
-                </div>
+            <div id="modalContent" class="text-xs text-gray-300">
+                <!-- Dynamic Content injected here -->
             </div>
-
-            <!-- Scheduled Events Widget -->
-            <div class="glass-card p-6 flex flex-col justify-between flex-1" id="eventsWidget" style="height: 350px; min-height: 350px;">
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-tasks text-[#c084fc]"></i>
-                            <span class="font-extrabold text-sm text-white">Scheduled Activity</span>
-                        </div>
-                        <div class="flex gap-1.5">
-                            <button id="filterSelectedDayBtn" class="text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all">Today</button>
-                            <button id="filterAllBtn" class="text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all">All</button>
-                        </div>
-                    </div>
-
-                    <div id="eventsListContainer" class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1 mb-4">
-                        <!-- Dynamic events list items -->
-                    </div>
-                </div>
-
-                <button id="openAddEventModalBtn" class="w-full py-2.5 rounded-xl font-black text-xs text-center border border-white/5 bg-white/2 hover:bg-white/5 text-[#38bdf8] flex items-center justify-center gap-1.5 transition-all">
-                    <i class="fas fa-plus"></i> Add Study Activity
-                </button>
-            </div>
-
         </div>
-
     </div>
 
     <!-- ADD EVENT MODAL OVERLAY -->
@@ -1485,12 +1725,175 @@
         modal.classList.add("active");
     };
 
+    window.toggleDashboardChart = function(type) {
+        const wave = document.getElementById("svgWaveChartGroup");
+        const bar = document.getElementById("svgBarChartGroup");
+        const line = document.getElementById("svgLineChartGroup");
+        
+        if (wave) wave.classList.remove("active-chart");
+        if (bar) bar.classList.remove("active-chart");
+        if (line) line.classList.remove("active-chart");
+        
+        let targetGroup = null;
+        if (type === 'wave') targetGroup = wave;
+        else if (type === 'bar') targetGroup = bar;
+        else if (type === 'line') targetGroup = line;
+        
+        if (targetGroup) {
+            targetGroup.classList.add("active-chart");
+            
+            // 1. Dynamic SVG path line drawing transition
+            const paths = targetGroup.querySelectorAll('.chart-draw-path');
+            paths.forEach(p => {
+                const length = p.getTotalLength();
+                p.style.transition = 'none';
+                p.style.strokeDasharray = length;
+                p.style.strokeDashoffset = length;
+                void p.offsetWidth; // Force Reflow
+                p.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                p.style.strokeDashoffset = '0';
+            });
+            
+            // 2. Re-trigger scale-up / pop animations
+            const animElements = targetGroup.querySelectorAll('.chart-grow-bar, .chart-pop-point');
+            animElements.forEach(el => {
+                let origClass = '';
+                if (el.classList.contains('chart-grow-bar')) origClass = 'chart-grow-bar';
+                else if (el.classList.contains('chart-pop-point')) origClass = 'chart-pop-point';
+                
+                if (origClass) {
+                    el.classList.remove(origClass);
+                    void el.offsetWidth; // Force Reflow
+                    el.classList.add(origClass);
+                }
+            });
+        }
+    };
+
+    // Global quotes & tips arrays for slider with dates
+    const quotesList = [
+        { text: "Your limitation—it's only your imagination. Push yourself, because no one else is going to do it for you.", author: "PrepVerse AI", date: "Today (July 20)" },
+        { text: "Great things never come from comfort zones. Keep pushing, keep solving!", author: "PrepVerse AI", date: "Yesterday (July 19)" },
+        { text: "Success doesn't just find you. You have to go out and get it.", author: "PrepVerse AI", date: "July 18" },
+        { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "PrepVerse AI", date: "July 17" },
+        { text: "Dream it. Wish it. Do it. Every single day counts towards your final goal.", author: "PrepVerse AI", date: "July 16" },
+        { text: "Don't stop when you are tired. Stop when you are done.", author: "PrepVerse AI", date: "July 15" },
+        { text: "Believe you can and you're halfway there. Keep preparing!", author: "PrepVerse AI", date: "July 14" }
+    ];
+
+    const tipsList = [
+        { text: "<strong>Quant Trick:</strong> To multiply any 2-digit number by 11, add the two digits together and place the sum in the middle! (e.g. 35 x 11 = 385).", author: "Aptitude Masterclass", date: "Today (July 20)" },
+        { text: "<strong>Logical Reasoning:</strong> In direction tests, always sketch a quick N-S-E-W compass in a corner of your rough sheet before reading detail steps.", author: "Aptitude Masterclass", date: "Yesterday (July 19)" },
+        { text: "<strong>Verbal Hack:</strong> Read the question stems first before reading full RC passages; it alerts your brain to scan for key terms while scanning paragraphs.", author: "Aptitude Masterclass", date: "July 18" },
+        { text: "<strong>Quant Trick:</strong> Find the square of numbers ending in 5. Multiply the first digit by (first digit + 1) and suffix 25! (e.g., 65 x 65 = (6x7) and 25 = 4225).", author: "Aptitude Masterclass", date: "July 17" },
+        { text: "<strong>Data Interpretation:</strong> Pay close attention to unit conversions (Millions vs. Billions, Percentages vs. Ratios) on chart legends first.", author: "Aptitude Masterclass", date: "July 16" },
+        { text: "<strong>Consistency Tip:</strong> Try solving at least 5 aptitude questions daily at the exact same hour to build consistency muscle memory.", author: "Aptitude Masterclass", date: "July 15" }
+    ];
+
+    let currentQuoteIdx = 0;
+    let currentTipIdx = 0;
+
+    window.updateQuoteSliderUI = function() {
+        const quoteEl = document.getElementById("motivationQuoteDisplay");
+        const authorEl = document.getElementById("quoteAuthorDisplay");
+        const dateEl = document.getElementById("quoteDateDisplay");
+        const prevBtn = document.getElementById("prevQuoteBtn");
+        const nextBtn = document.getElementById("nextQuoteBtn");
+        
+        if (quoteEl) quoteEl.textContent = `"${quotesList[currentQuoteIdx].text}"`;
+        if (authorEl) authorEl.textContent = `— ${quotesList[currentQuoteIdx].author}`;
+        if (dateEl) dateEl.textContent = quotesList[currentQuoteIdx].date;
+        
+        if (prevBtn) prevBtn.style.visibility = (currentQuoteIdx < quotesList.length - 1) ? "visible" : "hidden";
+        if (nextBtn) nextBtn.style.visibility = (currentQuoteIdx > 0) ? "visible" : "hidden";
+    };
+
+    window.updateTipSliderUI = function() {
+        const tipEl = document.getElementById("tipDisplay");
+        const authorEl = document.getElementById("tipAuthorDisplay");
+        const dateEl = document.getElementById("tipDateDisplay");
+        const prevBtn = document.getElementById("prevTipBtn");
+        const nextBtn = document.getElementById("nextTipBtn");
+        
+        if (tipEl) tipEl.innerHTML = tipsList[currentTipIdx].text;
+        if (authorEl) authorEl.textContent = `— ${tipsList[currentTipIdx].author}`;
+        if (dateEl) dateEl.textContent = tipsList[currentTipIdx].date;
+        
+        if (prevBtn) prevBtn.style.visibility = (currentTipIdx < tipsList.length - 1) ? "visible" : "hidden";
+        if (nextBtn) nextBtn.style.visibility = (currentTipIdx > 0) ? "visible" : "hidden";
+    };
+
+    window.changeQuote = function(dir) {
+        // Prevent going out of bounds
+        const targetIdx = currentQuoteIdx + dir;
+        if (targetIdx < 0 || targetIdx >= quotesList.length) return;
+        
+        currentQuoteIdx = targetIdx;
+        const quoteWrapper = document.querySelector('.quote-slider-wrapper');
+        if (quoteWrapper) {
+            quoteWrapper.style.opacity = '0';
+            quoteWrapper.style.transform = dir > 0 ? 'translateX(-12px)' : 'translateX(12px)';
+            setTimeout(() => {
+                window.updateQuoteSliderUI();
+                quoteWrapper.style.transform = dir > 0 ? 'translateX(12px)' : 'translateX(-12px)';
+                quoteWrapper.offsetHeight; // force reflow
+                quoteWrapper.style.opacity = '1';
+                quoteWrapper.style.transform = 'translateX(0)';
+            }, 150);
+        }
+    };
+
+    window.changeTip = function(dir) {
+        // Prevent going out of bounds
+        const targetIdx = currentTipIdx + dir;
+        if (targetIdx < 0 || targetIdx >= tipsList.length) return;
+        
+        currentTipIdx = targetIdx;
+        const tipWrapper = document.querySelector('.tip-slider-wrapper');
+        if (tipWrapper) {
+            tipWrapper.style.opacity = '0';
+            tipWrapper.style.transform = dir > 0 ? 'translateX(-12px)' : 'translateX(12px)';
+            setTimeout(() => {
+                window.updateTipSliderUI();
+                tipWrapper.style.transform = dir > 0 ? 'translateX(12px)' : 'translateX(-12px)';
+                tipWrapper.offsetHeight; // force reflow
+                tipWrapper.style.opacity = '1';
+                tipWrapper.style.transform = 'translateX(0)';
+            }, 150);
+        }
+    };
+
     document.addEventListener("DOMContentLoaded", () => {
         // Initialize AOS
         AOS.init({
             once: true,
             duration: 800
         });
+
+        // Initialize Slider UI (starts at index 0 = Today)
+        currentQuoteIdx = 0;
+        currentTipIdx = 0;
+        window.updateQuoteSliderUI();
+        window.updateTipSliderUI();
+
+        // Live Clock & Date Update inside Header
+        const headerDateEl = document.getElementById("liveHeaderDate");
+        const headerTimeEl = document.getElementById("liveHeaderTime");
+        
+        function updateLiveClock() {
+            const now = new Date();
+            if (headerDateEl) {
+                headerDateEl.textContent = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            }
+            if (headerTimeEl) {
+                headerTimeEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            }
+        }
+        updateLiveClock();
+        setInterval(updateLiveClock, 1000);
+
+        // Trigger initial chart animation
+        window.toggleDashboardChart('wave');
 
         // 1. Particle Background Dust Effects
         const canvas = document.getElementById("particlesCanvas");
