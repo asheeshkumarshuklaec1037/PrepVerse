@@ -492,10 +492,507 @@
         will-change: transform, opacity;
     }
     
+    
     .history-container .glass-card.revealed, 
     .hero.revealed {
         opacity: 1;
         transform: translateY(0) scale(1);
+    }
+
+    /* Carousel Slider Styles */
+    .carousel-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100%;
+        gap: 15px;
+    }
+    .carousel-viewport {
+        overflow: hidden;
+        width: 100%;
+        padding: 10px 0;
+    }
+    .carousel-track {
+        display: flex;
+        gap: 25px;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+    }
+    .carousel-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-glass);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #ffffff;
+        font-size: 1rem;
+        transition: 0.2s;
+        z-index: 10;
+        flex-shrink: 0;
+    }
+    .carousel-btn:hover {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+    }
+    
+    /* Attempt card styling matching screenshot */
+    .attempt-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 30px;
+        min-width: 330px;
+        max-width: 330px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s;
+        transform-style: preserve-3d;
+    }
+    .attempt-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--border-glass-hover);
+        box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+    }
+    
+    .card-badge {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        align-self: flex-start;
+        text-transform: uppercase;
+        margin-bottom: 22px;
+        display: inline-block;
+    }
+    .attempt-count-pill {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+        align-self: flex-start;
+        margin-bottom: 22px;
+        display: inline-block;
+    }
+    .badge-needs-improvement {
+        background: rgba(251, 140, 0, 0.12);
+        color: #fb8c00;
+        border: 1px solid rgba(251, 140, 0, 0.25);
+    }
+    .badge-good {
+        background: rgba(59, 130, 246, 0.12);
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+    .badge-better {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .attempt-card h3 {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 0 0 18px 0;
+        line-height: 1.35;
+        font-family: 'Outfit', sans-serif;
+    }
+    
+    .attempt-timeline {
+        border-left: 2px solid rgba(255, 255, 255, 0.08);
+        padding-left: 15px;
+        margin-left: 5px;
+        margin-bottom: 20px;
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 15px;
+    }
+    .timeline-item:last-child {
+        margin-bottom: 0;
+    }
+    .timeline-dot {
+        position: absolute;
+        left: -21px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #3b82f6;
+    }
+    .timeline-item h5 {
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+        color: #ffffff;
+    }
+    .timeline-item .meta {
+        font-size: 0.68rem;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+    }
+    
+    .progress-bar-row {
+        display: flex;
+        flex-direction: column;
+        margin-top: 4px;
+    }
+    .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.68rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .progress-bar-track {
+        display: flex;
+        height: 6px;
+        border-radius: 3px;
+        overflow: hidden;
+        background: rgba(255,255,255,0.03);
+    }
+    .prog-correct { background: #10b981; }
+    .prog-incorrect { background: #ef4444; }
+
+    .card-stats-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 15px;
+        margin-bottom: 20px;
+    }
+    .stat-row-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+    }
+    .stat-row-item span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .stat-row-item strong {
+        color: #ffffff;
+    }
+
+    .retake-btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        border: none;
+        transition: 0.2s;
+        text-align: center;
+        background: #3b82f6;
+        color: #ffffff;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .retake-btn:hover {
+        background: #2563eb;
+    }
+    .details-link {
+        text-align: center;
+        font-size: 0.78rem;
+        color: #3b82f6;
+        font-weight: 700;
+        cursor: pointer;
+        display: block;
+        transition: 0.2s;
+        text-decoration: none;
+    }
+    .details-link:hover {
+        color: #2563eb;
+        text-decoration: underline;
+    }
+
+    /* Modal Confirmation Guidelines (Split Screens) */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(8px);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        overflow-y: auto;
+        padding: 50px 0;
+    }
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
+    }
+
+    .modal-split-wrapper {
+        max-width: 1000px;
+        width: 90%;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 40px;
+        align-items: center;
+    }
+
+    /* Modal Left Guide Info */
+    .modal-left-info {
+        color: #ffffff;
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    }
+    .modal-overlay.active .modal-left-info {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .modal-left-info h3 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 25px;
+        line-height: 1.2;
+        font-family: 'Outfit', sans-serif;
+    }
+    .modal-left-info h3 span {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .rule-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .rule-item i {
+        font-size: 1.25rem;
+        color: #3b82f6;
+        margin-top: 3px;
+    }
+    .rule-item-text h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #ffffff;
+    }
+    .rule-item-text p {
+        font-size: 0.85rem;
+        color: #cbd5e1;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    /* Modal Right Confirmation Card */
+    .modal-confirm-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        position: relative;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    }
+    .modal-overlay.active .modal-confirm-card {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .modal-close-trigger {
+        position: absolute;
+        top: 25px; right: 25px;
+        font-size: 1.1rem;
+        color: #94a3b8;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .modal-close-trigger:hover { color: #1e293b; }
+
+    .modal-details {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 20px 25px;
+        margin-bottom: 30px;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 0.95rem;
+    }
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+    .detail-label { opacity: 0.7; font-weight: 500; }
+    .detail-value { font-weight: 700; color: #0f172a; text-align: right; max-width: 60%; }
+
+    .modal-actions {
+        display: flex;
+        gap: 15px;
+    }
+    .modal-btn {
+        flex: 1;
+        padding: 15px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: 0.3s;
+        text-align: center;
+        border: none;
+    }
+    .modal-btn-cancel {
+        background: rgba(0,0,0,0.05);
+        color: #64748b;
+        border: 1px solid #cbd5e1;
+    }
+    .modal-btn-cancel:hover { background: rgba(0,0,0,0.08); }
+    
+    .modal-btn-confirm {
+        background: #3b82f6;
+        color: #ffffff;
+        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
+    }
+    .modal-btn-confirm:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(59, 130, 246, 0.35);
+    }
+
+    /* Time Picker Styles for Schedule Modal */
+    .time-columns-container {
+        display: flex;
+        height: 180px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 5px;
+    }
+    .time-scroll-column {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        padding: 8px 5px;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        scroll-behavior: smooth;
+    }
+    .time-scroll-column::-webkit-scrollbar {
+        width: 4px;
+    }
+    .time-scroll-column::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+    }
+    .time-scroll-column:last-child {
+        border-right: none;
+    }
+    .time-val-item {
+        padding: 10px 0;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.2s ease;
+        border-radius: 8px;
+        margin: 2px 0;
+    }
+    .time-val-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+    }
+    .time-val-item.selected {
+        color: #ffffff !important;
+        font-weight: 800;
+        background: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+    .time-drop-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        font-weight: 800;
+        color: #ffffff;
+    }
+    .time-header-column {
+        background: rgba(15, 23, 42, 0.6);
+        padding: 5px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.95rem;
+    }
+
+    .paper-schedule-btn:hover {
+        background: #3b82f6 !important;
+        color: #ffffff !important;
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Sticky Note Toast Styles */
+    .sticky-note-toast {
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        z-index: 9999;
+        background: linear-gradient(135deg, #ffe57f 0%, #ffc107 100%);
+        color: #120a21;
+        padding: 14px 22px 14px 18px;
+        border-radius: 4px 18px 18px 18px;
+        box-shadow: 0 15px 35px rgba(255, 193, 7, 0.35), 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 0.85rem;
+        pointer-events: none;
+        transform: translateX(150%) rotate(12deg) scale(0.8);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-left: 5px solid #ff9800;
+    }
+    .sticky-note-toast.show-sticky {
+        transform: translateX(0) rotate(-2deg) scale(1);
+        opacity: 1;
+    }
+    .sticky-note-pin {
+        position: absolute;
+        top: -10px;
+        left: 18px;
+        color: #e53935;
+        font-size: 1.1rem;
+        filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4));
+        transform: rotate(-15deg);
     }
 </style>
 {% endblock %}
@@ -535,105 +1032,19 @@
     </div>
 </div>
 
-<div class="history-container">
+<div class="history-container" style="display: flex; flex-direction: column; gap: 40px;">
     
-    <!-- Left Column: History list and reports -->
-    <div style="display: flex; flex-direction: column; gap: 30px;">
+    <!-- Row 1: Graphs (Overall Metrics & Score Progression Trend) -->
+    <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; width: 100%;">
         
-        <!-- Attempts List Card -->
-        <div class="glass-card parallax-tilt-card">
-            <h3 class="section-title">
-                <i class="fas fa-history" id="modeHeaderIcon" style="color: #7091E6;"></i>
-                <span>Attempts: <span id="modeHeaderTitle" style="text-transform: capitalize;">Module Blitz</span></span>
-            </h3>
-            
-            <div class="attempts-table-wrapper">
-                <table class="attempts-table">
-                    <thead>
-                        <tr>
-                            <th>Test Session</th>
-                            <th>Subject Category</th>
-                            <th>Date Attempted</th>
-                            <th>Score Achieved</th>
-                            <th>Accuracy</th>
-                            <th>Percentile</th>
-                        </tr>
-                    </thead>
-                    <tbody id="attemptsTableBody">
-                        <!-- Populated dynamically via JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Detailed Report Panel -->
-        <div class="glass-card diagnostic-panel parallax-tilt-card" id="reportPanel">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px;">
-                <h3 class="section-title" style="margin-bottom: 0;">
-                    <i class="fas fa-file-medical-alt" id="reportIcon" style="color: #7091E6;"></i>
-                    <span>Detailed Diagnostics: <span id="reportTestName" style="color: #ffffff;"></span></span>
-                </h3>
-                <span class="badge badge-quant" id="reportSubject"></span>
-            </div>
-
-            <!-- Report stats row -->
-            <div class="metric-grid">
-                <div class="metric-box">
-                    <div class="val" id="rptScore">0/40</div>
-                    <div class="label">Total Score</div>
-                </div>
-                <div class="metric-box">
-                    <div class="val" id="rptCorrect" style="color: #7091E6;">0</div>
-                    <div class="label">Correct Answers</div>
-                </div>
-                <div class="metric-box">
-                    <div class="val" id="rptWrong" style="color: #ff4757;">0</div>
-                    <div class="label">Wrong Answers</div>
-                </div>
-                <div class="metric-box">
-                    <div class="val" id="rptTime">00:00</div>
-                    <div class="label">Time Spent</div>
-                </div>
-            </div>
-
-            <!-- Highlights boxes -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
-                <div class="topic-indicator">
-                    <div>
-                        <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Subject Strength</div>
-                        <strong id="rptStrong" style="color: #7091E6;">-</strong>
-                    </div>
-                    <i class="fas fa-check-circle" style="color: #7091E6; font-size: 1.2rem;"></i>
-                </div>
-                <div class="topic-indicator">
-                    <div>
-                        <div style="font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; font-weight: 700; margin-bottom: 2px;">Subject Focus Area</div>
-                        <strong id="rptWeak" style="color: #ff7675;">-</strong>
-                    </div>
-                    <i class="fas fa-exclamation-triangle" style="color: #ff7675; font-size: 1.2rem;"></i>
-                </div>
-            </div>
-
-            <!-- Diagnostic Questions Accordion List -->
-            <div style="font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.5); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Question Analysis Sheet</div>
-            <div id="diagnosticQuestionsList">
-                <!-- Injected via JavaScript -->
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Right Column: Performance Analytics Dashboard -->
-    <div style="display: flex; flex-direction: column; gap: 30px;">
-        
-        <!-- Summary Stats Card -->
+        <!-- Summary Stats Card (Overall Metrics) -->
         <div class="glass-card parallax-tilt-card">
             <h3 class="section-title">
                 <i class="fas fa-chart-pie" id="statsTitleIcon" style="color: #7091E6;"></i>
                 <span>Overall Metrics</span>
             </h3>
             
-            <div class="stat-radial-container">
+            <div class="stat-radial-container" style="margin-top: 20px;">
                 <div class="radial-widget">
                     <svg>
                         <circle class="bg-circle" cx="40" cy="40" r="35"/>
@@ -652,7 +1063,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 25px;">
                 <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
                     <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Total Tests Taken</span>
                     <strong style="font-size: 0.85rem; color: #ffffff;" id="metricTotalTests">0</strong>
@@ -671,31 +1082,211 @@
                 <span>Score Progression Trend</span>
             </h3>
             
-            <div class="chart-container" id="chartContainer">
+            <div class="chart-container" id="chartContainer" style="margin-top: 15px;">
                 <div class="chart-tooltip" id="chartTooltip"></div>
                 <svg id="trendSvg" style="width: 100%; height: 100%; overflow: visible;">
                     <!-- SVG Chart items drawn dynamically via script -->
                 </svg>
             </div>
             
-            <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 10px; line-height: 1.45;">
+            <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 15px; line-height: 1.45;">
                 Graph shows Score (0 - 40 Marks) achieved in past attempts. Keep scores above <strong>30</strong> to maintain 90+ percentile target!
             </div>
         </div>
+    </div>
 
-        <!-- Weak Topics checklist recommendation -->
-        <div class="glass-card parallax-tilt-card">
-            <h3 class="section-title">
-                <i class="fas fa-list-ul" style="color: #fccb90;"></i>
-                <span>Study Focus Recommendations</span>
-            </h3>
-            <div style="display: flex; flex-direction: column; gap: 12px;" id="recommendationsList">
-                <!-- dynamically calculated based on weak subjects in history -->
+    <!-- Row 2: Previously Attempted Exams Carousel -->
+    <div class="glass-card" style="width: 100%; overflow: visible; padding: 35px 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0;">Attempted Tests</h2>
+            <span style="font-size: 0.88rem; color: #3b82f6; font-weight: 700; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); padding: 8px 16px; border-radius: 12px; display: flex; align-items: center; gap: 6px;">Total Attempted Tests: <strong style="color: #ffffff;" id="totalAttemptedCount">0</strong></span>
+        </div>
+        
+        <div class="carousel-container">
+            <button class="carousel-btn prev-btn" onclick="slideCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
+            <div class="carousel-viewport">
+                <div class="carousel-track" id="attemptsCardsTrack">
+                    <!-- Cards will be populated dynamically -->
+                </div>
+            </div>
+            <button class="carousel-btn next-btn" onclick="slideCarousel(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Retake Confirm Modal -->
+<div class="modal-overlay" id="retakeModal" onclick="closeRetakeModal()">
+    <div class="modal-split-wrapper" onclick="event.stopPropagation()">
+        
+        <!-- Left Column: Guidelines & Practice Disclaimer -->
+        <div class="modal-left-info">
+            <h3>Test <span>Arena Rules & Guidelines</span></h3>
+            
+            <div class="rule-item">
+                <i class="fas fa-history"></i>
+                <div class="rule-item-text">
+                    <h4>Strict Simulated Timer</h4>
+                    <p>The timer runs continuously once you begin. The test will auto-submit when the duration ends.</p>
+                </div>
+            </div>
+            
+            <div class="rule-item">
+                <i class="fas fa-shield-alt"></i>
+                <div class="rule-item-text">
+                    <h4>Anti-Cheat Monitoring</h4>
+                    <p>Tab switching or leaving the screen will warn you. Exceeding warnings will force auto-submit.</p>
+                </div>
+            </div>
+            
+            <div class="rule-item" style="color: #fbcd0b;">
+                <i class="fas fa-exclamation-circle" style="color: #fbcd0b;"></i>
+                <div class="rule-item-text">
+                    <h4 style="color: #fbcd0b;">Practice Run Standing</h4>
+                    <p style="color: rgba(255, 255, 255, 0.95); font-weight: 600;">This is a practice retake session. Please note that only your 1st attempt score counts towards the global leaderboard rank. Retaking tests will not affect your ranking profile.</p>
+                </div>
+            </div>
+            
+            <div class="rule-item">
+                <i class="fas fa-keyboard"></i>
+                <div class="rule-item-text">
+                    <h4>Input Restrictions</h4>
+                    <p>Do not refresh the page or use browser back/forward buttons during the active session.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column: Mock Test Ready card details -->
+        <div class="modal-confirm-card" style="background: #ffffff; padding: 40px; border-radius: 24px; color: #0f172a; position: relative;">
+            <div class="modal-close-trigger" onclick="closeRetakeModal()"><i class="fas fa-times"></i></div>
+            
+            <div style="margin-bottom: 25px; text-align: left;">
+                <i class="fas fa-redo-alt" style="font-size: 2.2rem; color: #3b82f6; margin-bottom: 12px; display: inline-block;"></i>
+                <h3 style="font-size: 1.6rem; font-weight: 800; color: #0f172a; margin: 0; text-align: left;">Mock Test Ready</h3>
+                <p style="font-size: 0.82rem; color: #64748b; margin-top: 5px; text-align: left;">Double check test parameters before launching session.</p>
+            </div>
+            
+            <!-- Parameters list -->
+            <div class="modal-details">
+                <div class="detail-row">
+                    <span class="detail-label">Test Mode</span>
+                    <span class="detail-value" id="retake-val-mode">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Subject</span>
+                    <span class="detail-value" id="retake-val-subject">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Mock Paper</span>
+                    <span class="detail-value" id="retake-val-test">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total Questions</span>
+                    <span class="detail-value" id="retake-val-questions">-</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Duration</span>
+                    <span class="detail-value" id="retake-val-duration">-</span>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="closeRetakeModal()">Go Back</button>
+                <button class="modal-btn modal-btn-confirm" onclick="launchRetakeActual()">Begin Test</button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Modal Overlay for Scheduling Mock Test -->
+<div class="modal-overlay" id="scheduleModal" onclick="closeScheduleModal()">
+    <div class="modal-confirm-card" style="max-width: 500px; width: 95%; padding: 35px; color: #ffffff; background: rgba(30, 41, 59, 0.65); border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 28px; position: relative;" onclick="event.stopPropagation()">
+        <div class="modal-close-trigger" onclick="closeScheduleModal()"><i class="fas fa-times" style="color: rgba(255,255,255,0.6);"></i></div>
+        
+        <div class="modal-card-header" style="margin-bottom: 25px;">
+            <i class="fas fa-calendar-plus" style="color: #3b82f6; font-size: 2.2rem; margin-bottom: 10px; display: inline-block;"></i>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0; text-align: left;">Schedule Mock Test</h3>
+            <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); margin-top: 5px; text-align: left;">Select a date and time to reserve your mock test seat.</p>
+        </div>
+
+        <!-- Meta Summary Box -->
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 15px 20px; margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
+            <div>
+                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block;">Mock Paper</span>
+                <span id="sch-paper-val" style="font-size: 0.88rem; font-weight: 700; color: #ffffff;">-</span>
+            </div>
+            <div>
+                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block;">Test Mode</span>
+                <span id="sch-mode-val" style="font-size: 0.88rem; font-weight: 700; color: #ffffff;">-</span>
+            </div>
+            <div style="grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; margin-top: 4px;">
+                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block;">Subject</span>
+                <span id="sch-subject-val" style="font-size: 0.88rem; font-weight: 700; color: #ffffff;">-</span>
             </div>
         </div>
 
-    </div>
+        <!-- Custom Date Picker Field -->
+        <div class="custom-picker-container" id="date-picker-wrapper" style="position: relative; margin-bottom: 20px; text-align: left;">
+            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; display: block;">Select Date</span>
+            <div class="custom-time-input-row" onclick="togglePicker('date', event)" style="cursor: pointer; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px; background: rgba(255, 255, 255, 0.05);">
+                <i class="far fa-calendar-alt" style="color: rgba(255, 255, 255, 0.6);"></i>
+                <input type="text" id="sch-date-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #ffffff;" placeholder="Select Date">
+            </div>
+            
+            <!-- Custom Date Calendar Dropdown -->
+            <div class="picker-dropdown" id="date-dropdown" style="bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0; display: none; position: absolute; z-index: 1000; width: 100%; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); padding: 15px;" onclick="event.stopPropagation()">
+                <div class="cal-drop-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <button type="button" onclick="changeMonth(-1, event)" style="background: none; border: none; cursor: pointer; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-chevron-left"></i></button>
+                    <span id="cal-month-title" style="font-weight: 700; color: #ffffff;">January 2026</span>
+                    <button type="button" onclick="changeMonth(1, event)" style="background: none; border: none; cursor: pointer; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="cal-drop-grid" id="cal-days-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; font-size: 0.8rem;">
+                </div>
+            </div>
+        </div>
 
+        <!-- Custom Time Picker Field -->
+        <div class="custom-picker-container" id="time-picker-wrapper" style="position: relative; margin-bottom: 30px; text-align: left;">
+            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; display: block;">Select Time</span>
+            <div class="custom-time-input-row" onclick="togglePicker('time', event)" style="cursor: pointer; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px; background: rgba(255, 255, 255, 0.05);">
+                <i class="far fa-clock" style="color: rgba(255, 255, 255, 0.6);"></i>
+                <input type="text" id="sch-time-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #ffffff;" placeholder="Select Time">
+            </div>
+            
+            <!-- Custom Time Picker Dropdown -->
+            <div class="picker-dropdown" id="time-dropdown" style="padding: 15px; bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0; display: none; position: absolute; z-index: 1000; width: 100%; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
+                <!-- Fixed Display Columns in Header -->
+                <div class="time-drop-header" style="background: rgba(255,255,255,0.05); color: #ffffff;">
+                    <div class="time-header-column" id="time-h-lbl" style="background: #1e293b; color: #ffffff; border: 1px solid rgba(255,255,255,0.1);">09</div>
+                    <div class="time-header-column" style="background:none; border:none; flex:0.2;">:</div>
+                    <div class="time-header-column" id="time-m-lbl" style="background: #1e293b; color: #ffffff; border: 1px solid rgba(255,255,255,0.1);">00</div>
+                    <div class="time-header-column" style="background:none; border:none; flex:0.2;"></div>
+                    <div class="time-header-column" id="time-ap-lbl" style="background: #1e293b; color: #ffffff; border: 1px solid rgba(255,255,255,0.1);">AM</div>
+                </div>
+                
+                <!-- Scrolling Columns -->
+                <div class="time-columns-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1);">
+                    <!-- Hour Column -->
+                    <div class="time-scroll-column" id="sch-hour-scroll" style="border-right: 1px solid rgba(255,255,255,0.08);"></div>
+                    <!-- Minute Column -->
+                    <div class="time-scroll-column" id="sch-minute-scroll" style="border-right: 1px solid rgba(255,255,255,0.08);"></div>
+                    <!-- AM/PM Column -->
+                    <div class="time-scroll-column" id="sch-ampm-scroll">
+                        <div class="time-val-item selected" onclick="selectTimeComponent('ampm', 'AM', this)" style="color: rgba(255,255,255,0.6);">AM</div>
+                        <div class="time-val-item" onclick="selectTimeComponent('ampm', 'PM', this)" style="color: rgba(255,255,255,0.6);">PM</div>
+                    </div>
+                </div>
+                
+                <button type="button" class="modal-btn modal-btn-confirm" onclick="confirmTimeSelection(event)" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem; border-radius: 10px; background: #3b82f6; color: #ffffff; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase;">Done</button>
+            </div>
+        </div>
+
+        <div class="modal-action-row" style="display: flex; gap: 15px;">
+            <button class="modal-btn modal-btn-cancel" onclick="closeScheduleModal()" style="border-radius: 12px; padding: 12px; flex: 1; font-weight: 700; text-transform: uppercase; cursor: pointer; background: rgba(255,255,255,0.05); color: #ffffff; border: 1px solid rgba(255,255,255,0.15);">Cancel</button>
+            <button class="modal-btn modal-btn-confirm" onclick="confirmScheduleFromPopup()" style="background: #3b82f6; color: #ffffff; border-radius: 12px; padding: 12px; flex: 1; font-weight: 700; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);">Confirm Schedule</button>
+        </div>
+    </div>
 </div>
 
 {{ history|json_script:"history-data-json" }}
@@ -796,6 +1387,27 @@
         });
     });
 
+    let carouselIndex = 0;
+    
+    window.slideCarousel = function(direction) {
+        const track = document.getElementById("attemptsCardsTrack");
+        if (!track) return;
+        const cardsCount = track.children.length;
+        if (cardsCount === 0) return;
+        
+        // Calculate max index
+        const cardWidth = 330 + 25; // width + gap
+        const viewportWidth = track.parentElement.clientWidth;
+        const visibleCards = Math.floor(viewportWidth / cardWidth) || 1;
+        const maxIndex = Math.max(0, cardsCount - visibleCards);
+        
+        carouselIndex += direction;
+        if (carouselIndex < 0) carouselIndex = 0;
+        if (carouselIndex > maxIndex) carouselIndex = maxIndex;
+        
+        track.style.transform = `translateX(-${carouselIndex * cardWidth}px)`;
+    }
+
     // Filter attempts by mode on tab selection
     window.filterByMode = function(modeName) {
         currentMode = modeName;
@@ -808,15 +1420,6 @@
         renderAttemptsList();
         renderOverallMetrics();
         renderScoreTrend();
-        renderRecommendations();
-
-        // Autoselect first attempt in the filtered list
-        if (filteredAttempts.length > 0) {
-            selectAttempt(filteredAttempts[0].id);
-        } else {
-            // Hide report panel if no attempts exist for the mode
-            document.getElementById("reportPanel").style.display = "none";
-        }
     }
 
     // Update styling for tab buttons dynamically
@@ -844,8 +1447,6 @@
         }
 
         // Apply theme color highlights to titles and icons
-        document.getElementById("modeHeaderIcon").style.color = activeColor;
-        document.getElementById("modeHeaderTitle").textContent = modeName;
         document.getElementById("statsTitleIcon").style.color = activeColor;
         document.getElementById("graphTitleIcon").style.color = activeColor;
         
@@ -855,168 +1456,155 @@
         if (percentileCircle) percentileCircle.style.stroke = activeColor;
     }
 
-    // Render attempts table rows
+    // Render attempts card list inside carousel track
     function renderAttemptsList() {
-        const tableBody = document.getElementById("attemptsTableBody");
-        if (filteredAttempts.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: rgba(255,255,255,0.4); padding: 30px;">No mock tests attempted under this category yet. Start tests inside the Mock Tests section!</td></tr>`;
-            return;
-        }
+        const track = document.getElementById("attemptsCardsTrack");
+        if (!track) return;
+        
+        // Update total attempted count text
+        const countEl = document.getElementById("totalAttemptedCount");
+        if (countEl) countEl.innerText = filteredAttempts.length;
 
-        tableBody.innerHTML = filteredAttempts.map(item => {
-            let badgeClass = "badge-quant";
-            if (item.subject.includes("Logic")) badgeClass = "badge-logic";
-            else if (item.subject.includes("Verbal") || item.subject.includes("English")) badgeClass = "badge-verbal";
-            else if (item.subject.includes("Data") || item.subject.includes("DI")) badgeClass = "badge-di";
-
-            return `
-                <tr id="row-${item.id}" onclick="selectAttempt('${item.id}')">
-                    <td>
-                        <div style="font-weight: 700; color: #ffffff;">${item.test_name}</div>
-                    </td>
-                    <td>
-                        <span class="badge ${badgeClass}">${item.subject}</span>
-                    </td>
-                    <td style="color: rgba(255,255,255,0.5);">${formatDate(item.date)}</td>
-                    <td>
-                        <strong style="color: #ffffff;">${item.score}</strong> <span style="color: rgba(255,255,255,0.3); font-size: 0.72rem;">/ ${item.max_score}</span>
-                    </td>
-                    <td>
-                        <span style="color: ${item.accuracy >= 85 ? '#2af598' : item.accuracy >= 70 ? '#fccb90' : '#ff7675'}; font-weight: 700;">${item.accuracy}%</span>
-                    </td>
-                    <td>
-                        <span style="font-weight: 700; color: #ffffff; opacity: 0.95;">Top ${100 - item.percentile}%</span>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    // Select an attempt to load diagnostic details
-    window.selectAttempt = function(attemptId) {
-        // Highlight active row in table depending on current active mode class styling
-        document.querySelectorAll("#attemptsTableBody tr").forEach(row => {
-            row.classList.remove("selected-blitz", "selected-master", "selected-marathon");
+        // Group attempts by test_name
+        const groups = {};
+        filteredAttempts.forEach(item => {
+            if (!groups[item.test_name]) {
+                groups[item.test_name] = [];
+            }
+            groups[item.test_name].push(item);
         });
         
-        const row = document.getElementById(`row-${attemptId}`);
-        if (row) {
-            if (currentMode === 'Module Blitz') row.classList.add("selected-blitz");
-            else if (currentMode === 'Topic Master') row.classList.add("selected-master");
-            else if (currentMode === 'Subject Marathon') row.classList.add("selected-marathon");
-        }
-
-        const attempt = allAttempts.find(item => item.id === attemptId);
-        if (!attempt) return;
-
-        // Populate panel details
-        const panel = document.getElementById("reportPanel");
-        panel.style.display = "block";
-
-        document.getElementById("reportTestName").textContent = attempt.test_name;
-        document.getElementById("reportSubject").textContent = attempt.subject;
-        
-        // Color theme setup
-        let activeColor = "#7091E6";
-        if (currentMode === 'Module Blitz') activeColor = "#7091E6";
-        else if (currentMode === 'Topic Master') activeColor = "#3D52A0";
-        else if (currentMode === 'Subject Marathon') activeColor = "#8697C4";
-        document.getElementById("reportIcon").style.color = activeColor;
-
-        let badgeClass = "badge badge-quant";
-        if (attempt.subject.includes("Logic")) badgeClass = "badge badge-logic";
-        else if (attempt.subject.includes("Verbal") || attempt.subject.includes("English")) badgeClass = "badge badge-verbal";
-        else if (attempt.subject.includes("Data") || attempt.subject.includes("DI")) badgeClass = "badge badge-di";
-        document.getElementById("reportSubject").className = badgeClass;
-
-        document.getElementById("rptScore").textContent = `${attempt.score} / ${attempt.max_score}`;
-        document.getElementById("rptCorrect").textContent = attempt.correct;
-        document.getElementById("rptWrong").textContent = attempt.wrong;
-        document.getElementById("rptTime").textContent = attempt.duration;
-        document.getElementById("rptStrong").textContent = attempt.strong_topic;
-        document.getElementById("rptWeak").textContent = attempt.weak_topic;
-
-        // Populate diagnostic questions list
-        const questionsList = document.getElementById("diagnosticQuestionsList");
-        if (!attempt.questions || attempt.questions.length === 0) {
-            questionsList.innerHTML = `<div style="color: rgba(255,255,255,0.4); font-size: 0.8rem; padding: 15px; background: rgba(255,255,255,0.01); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.05); text-align: center;">No diagnostic question data saved for this test.</div>`;
+        const groupKeys = Object.keys(groups);
+        if (groupKeys.length === 0) {
+            track.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.4); padding: 30px; width: 100%;">No mock tests attempted under this category yet. Start tests inside the Mock Tests section!</div>`;
+            carouselIndex = 0;
+            track.style.transform = 'translateX(0)';
             return;
         }
 
-        const explanationLabels = ["A", "B", "C", "D"];
-        questionsList.innerHTML = attempt.questions.map((q, idx) => {
-            const isCorrect = q.user_index === q.correct_index;
-            const isUnanswered = q.user_index === null || q.user_index === undefined;
-            
-            let statusText = "";
-            let statusColor = "rgba(255,255,255,0.4)";
-            if (isUnanswered) {
-                statusText = "Skipped";
-            } else if (isCorrect) {
-                statusText = "Correct (+4)";
-                statusColor = "#2af598";
-            } else {
-                statusText = "Incorrect (-1)";
-                statusColor = "#ff4757";
+        track.innerHTML = groupKeys.map(testName => {
+            const list = groups[testName];
+            // Sort attempts chronological (oldest to newest)
+            list.sort((a, b) => new Date(a.date) - new Date(b.date));
+            const latestAttempt = list[list.length - 1];
+
+            // Badge mapping
+            let badgeClass = "badge-good";
+            let badgeText = "Good";
+            if (latestAttempt.accuracy < 60) {
+                badgeClass = "badge-needs-improvement";
+                badgeText = "Needs Improvement";
+            } else if (latestAttempt.accuracy >= 80) {
+                badgeClass = "badge-better";
+                badgeText = "Better";
+            }
+
+            // Timeline slides HTML
+            let slidesHtml = "";
+            list.forEach((attempt, idx) => {
+                const labelText = idx === 0 ? "1st Attempt" : idx === 1 ? "2nd Attempt" : `${idx + 1}th Attempt`;
+                const formattedTime = new Date(attempt.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                
+                slidesHtml += `
+                    <div class="inner-slide" style="min-width: 100%; flex-shrink: 0; box-sizing: border-box;">
+                        <div class="timeline-item" style="position: relative; padding-left: 15px; border-left: 2px solid rgba(255, 255, 255, 0.08); margin-left: 5px; margin-bottom: 0;">
+                            
+                            <div class="attempt-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <h5 style="margin: 0; font-size: 0.8rem; color: #ffffff; font-weight: 700;">${labelText}</h5>
+                                ${list.length > 1 ? `
+                                <div class="inner-carousel-controls" style="display: flex; gap: 6px; align-items: center;">
+                                    <button type="button" onclick="slideInnerTrack(this, -1, ${idx}, ${list.length})" class="inner-carousel-btn" style="background: rgba(255,255,255,0.05); border: none; border-radius: 4px; color: #ffffff; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; cursor: pointer; transition: 0.2s;"><i class="fas fa-chevron-left"></i></button>
+                                    <span style="font-size: 0.68rem; color: rgba(255,255,255,0.4); font-weight: 700; min-width: 25px; text-align: center;">${idx+1}/${list.length}</span>
+                                    <button type="button" onclick="slideInnerTrack(this, 1, ${idx}, ${list.length})" class="inner-carousel-btn" style="background: rgba(255,255,255,0.05); border: none; border-radius: 4px; color: #ffffff; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; cursor: pointer; transition: 0.2s;"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="meta" style="font-size: 0.68rem; color: rgba(255,255,255,0.5); margin-bottom: 8px;">${formatDate(attempt.date)}, ${formattedTime}<br>Time Taken: ${attempt.duration}</div>
+                            <div class="progress-bar-row">
+                                <div class="progress-labels" style="display: flex; justify-content: space-between; font-size: 0.68rem; font-weight: 700; margin-bottom: 4px;">
+                                    <span style="color: #10b981;">${attempt.accuracy}% Correct</span>
+                                    <span style="color: #ef4444;">${100 - attempt.accuracy}% Incorrect</span>
+                                </div>
+                                <div class="progress-bar-track" style="display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: rgba(255,255,255,0.03);">
+                                    <div class="prog-correct" style="width: ${attempt.accuracy}%; background: #10b981;"></div>
+                                    <div class="prog-incorrect" style="width: ${100 - attempt.accuracy}%; background: #ef4444;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Map questions and duration stats based on mode
+            let questionsCount = "10";
+            let durationVal = "15 Mins";
+            if (latestAttempt.mode === "Topic Master") {
+                questionsCount = "25";
+                durationVal = "30 Mins";
+            } else if (latestAttempt.mode === "Subject Marathon") {
+                questionsCount = "50";
+                durationVal = "60 Mins";
             }
 
             return `
-                <div class="q-accord-item">
-                    <div class="q-accord-header" onclick="toggleAccordion(${idx})">
-                        <span style="color: #ffffff;">Question ${idx + 1}</span>
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <span style="color: ${statusColor}; font-weight: 700; font-size: 0.72rem; text-transform: uppercase;">${statusText}</span>
-                            <i class="fas fa-chevron-down" id="arrow-${idx}" style="font-size: 0.75rem; color: rgba(255,255,255,0.3); transition: transform 0.2s;"></i>
+                <div class="attempt-card">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span class="card-badge ${badgeClass}">${badgeText}</span>
+                            <span class="attempt-count-pill">Attempts: ${list.length}</span>
+                        </div>
+                        <h3>${testName}</h3>
+                        
+                        <div class="inner-slider-wrapper" style="overflow: hidden; position: relative; width: 100%; margin-bottom: 20px;">
+                            <div class="inner-slider-track" style="display: flex; transition: transform 0.3s ease; width: 100%;">
+                                ${slidesHtml}
+                            </div>
                         </div>
                     </div>
-                    <div class="q-accord-body" id="body-${idx}">
-                        <p style="color: #ffffff; font-weight: 600; margin-bottom: 15px;">${q.text}</p>
-                        
-                        <!-- Options list -->
-                        <div style="margin-bottom: 20px;">
-                            ${q.options.map((opt, oIdx) => {
-                                let optClass = "";
-                                if (oIdx === q.correct_index) optClass = "correct";
-                                else if (oIdx === q.user_index && !isCorrect) optClass = "incorrect";
-
-                                return `
-                                    <div class="opt-pill ${optClass}">
-                                        <div class="opt-pill-marker">${explanationLabels[oIdx]}</div>
-                                        <div>${opt}</div>
-                                    </div>
-                                `;
-                            }).join('')}
+                    
+                    <div>
+                        <div class="card-stats-list">
+                            <div class="stat-row-item">
+                                <span><i class="fas fa-th-large" style="color: rgba(255,255,255,0.4);"></i> Section</span>
+                                <strong>04</strong>
+                            </div>
+                            <div class="stat-row-item">
+                                <span><i class="far fa-question-circle" style="color: rgba(255,255,255,0.4);"></i> Questions</span>
+                                <strong>${questionsCount}</strong>
+                            </div>
+                            <div class="stat-row-item">
+                                <span><i class="far fa-clock" style="color: rgba(255,255,255,0.4);"></i> Duration</span>
+                                <strong>${durationVal}</strong>
+                            </div>
                         </div>
-
-                        <!-- Solution Conceptual analysis -->
-                        <div style="background: rgba(255,255,255,0.015); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; padding: 15px;">
-                            <h5 style="margin: 0 0 6px 0; color: ${activeColor}; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px;">Conceptual Solution & Analysis</h5>
-                            <p style="margin: 0; color: rgba(255,255,255,0.65); font-size: 0.78rem;">${q.explanation}</p>
+                        
+                        <div style="display: flex; gap: 10px; width: 100%;">
+                            <button class="retake-btn" onclick="confirmRetake('${latestAttempt.mode}', '${latestAttempt.subject}', '${testName.replace(/'/g, "\\'")}')" style="flex: 1; margin-bottom: 0;">Re-take Test</button>
+                            <button class="paper-schedule-btn" onclick="openScheduleFromHistory('${latestAttempt.mode}', '${latestAttempt.subject}', '${testName.replace(/'/g, "\\'")}')" style="padding: 12px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: #ffffff; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;" title="Schedule Test"><i class="far fa-calendar-plus" style="font-size: 1.1rem;"></i></button>
                         </div>
                     </div>
                 </div>
             `;
         }).join('');
-    };
 
-    // Toggle diagnostic accordion questions
-    window.toggleAccordion = function(idx) {
-        const body = document.getElementById(`body-${idx}`);
-        const arrow = document.getElementById(`arrow-${idx}`);
-        if (!body) return;
+        // Reset track position
+        carouselIndex = 0;
+        track.style.transform = 'translateX(0)';
+    }
 
-        if (body.style.display === "block") {
-            body.style.display = "none";
-            if (arrow) arrow.style.transform = "rotate(0deg)";
-        } else {
-            // Close others
-            document.querySelectorAll(".q-accord-body").forEach(el => el.style.display = "none");
-            document.querySelectorAll(".q-accord-header i").forEach(el => el.style.transform = "rotate(0deg)");
-            
-            body.style.display = "block";
-            if (arrow) arrow.style.transform = "rotate(180deg)";
-        }
-    };
+    window.slideInnerTrack = function(button, direction, currentIndex, totalElements) {
+        event.stopPropagation();
+        const slide = button.closest('.inner-slide');
+        const track = slide.closest('.inner-slider-track');
+        if (!track) return;
+        
+        let targetIndex = currentIndex + direction;
+        if (targetIndex < 0) targetIndex = totalElements - 1;
+        if (targetIndex >= totalElements) targetIndex = 0;
+        
+        track.style.transform = `translateX(-${targetIndex * 100}%)`;
+    }
 
     // Render overall progress metrics radial graphs based on active category selection
     function renderOverallMetrics() {
@@ -1218,36 +1806,6 @@
         });
     }
 
-    // Render Weak Topic focus recommendations checklist
-    function renderRecommendations() {
-        const list = document.getElementById("recommendationsList");
-        if (filteredAttempts.length === 0) {
-            list.innerHTML = `<div style="color: rgba(255,255,255,0.4); font-size: 0.78rem;">No recommendations generated yet. Complete tests to view insights.</div>`;
-            return;
-        }
-
-        // Gather weak topics from history list
-        const weakTopics = [...new Set(filteredAttempts.map(item => item.weak_topic).filter(Boolean))].slice(0, 3);
-        if (weakTopics.length === 0) {
-            list.innerHTML = `<div style="color: rgba(255,255,255,0.4); font-size: 0.78rem;">All clear! Accuracy is highly consistent across categories. Keep practicing!</div>`;
-            return;
-        }
-
-        list.innerHTML = weakTopics.map(topic => {
-            return `
-                <div style="background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px;">
-                    <div style="color: #ff9a9e; background: rgba(255, 154, 158, 0.08); width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">
-                        <i class="fas fa-exclamation-circle"></i>
-                    </div>
-                    <div>
-                        <div style="font-weight: 700; font-size: 0.8rem; color: #ffffff;">Focus Area: ${topic}</div>
-                        <a href="{% url 'courses' %}" style="font-size: 0.68rem; color: #7091E6; font-weight: 700; text-decoration: none; text-transform: uppercase;">Study Concepts <i class="fas fa-arrow-right" style="font-size: 0.6rem; margin-left: 3px;"></i></a>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
     // Helper functions
     function formatDate(dateStr) {
         if (!dateStr) return "-";
@@ -1335,5 +1893,300 @@
             });
         });
     });
+
+    let retakeConfig = {};
+
+    window.confirmRetake = function(mode, subject, testName) {
+        retakeConfig = {
+            mode: mode,
+            subject: subject,
+            testName: testName
+        };
+
+        // Populate questions and duration based on mode
+        let questions = "10 MCQs";
+        let duration = "15 Mins";
+        if (mode === "Topic Master") {
+            questions = "25 MCQs";
+            duration = "30 Mins";
+        } else if (mode === "Subject Marathon") {
+            questions = "50 MCQs";
+            duration = "60 Mins";
+        }
+
+        document.getElementById("retake-val-mode").innerText = mode;
+        document.getElementById("retake-val-subject").innerText = subject;
+        document.getElementById("retake-val-test").innerText = testName;
+        document.getElementById("retake-val-questions").innerText = questions;
+        document.getElementById("retake-val-duration").innerText = duration;
+
+        document.getElementById("retakeModal").classList.add("active");
+    }
+
+    window.closeRetakeModal = function() {
+        document.getElementById("retakeModal").classList.remove("active");
+    }
+
+    window.launchRetakeActual = function() {
+        closeRetakeModal();
+        const mode = encodeURIComponent(retakeConfig.mode);
+        const subject = encodeURIComponent(retakeConfig.subject);
+        const test = encodeURIComponent(retakeConfig.testName);
+        
+        window.location.href = `{% url 'start_test_session' %}?mode=${mode}&subject=${subject}&topic=All Topics included&module=All Modules included&test=${test}`;
+    }
+
+    // Schedule modal operations from attempts list
+    let selectedDateVal = ""; // Store date string e.g. "2026-01-23"
+    let selectedTimeVal = "09:00 AM";
+    let calCurrentDate = new Date(2026, 0, 1); // January 2026 default
+
+    // Toggle dropdown pickers
+    window.togglePicker = function(type, event) {
+        if (event) event.stopPropagation();
+        
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        
+        if (type === 'date') {
+            timeDrop.style.display = "none";
+            if (dateDrop.style.display === "none" || dateDrop.style.display === "") {
+                dateDrop.style.display = "block";
+            } else {
+                dateDrop.style.display = "none";
+            }
+        } else if (type === 'time') {
+            dateDrop.style.display = "none";
+            if (timeDrop.style.display === "none" || timeDrop.style.display === "") {
+                timeDrop.style.display = "block";
+                setupTimePickerScrolls();
+            } else {
+                timeDrop.style.display = "none";
+            }
+        }
+    }
+
+    // Hide dropdowns when clicking outside
+    document.addEventListener("click", function() {
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        if (dateDrop) dateDrop.style.display = "none";
+        if (timeDrop) timeDrop.style.display = "none";
+    });
+
+    // Calendar month navigation
+    window.changeMonth = function(direction, event) {
+        if (event) event.stopPropagation();
+        calCurrentDate.setMonth(calCurrentDate.getMonth() + direction);
+        renderCalendarDropdown();
+    }
+
+    window.renderCalendarDropdown = function() {
+        const monthTitle = document.getElementById("cal-month-title");
+        const daysGrid = document.getElementById("cal-days-grid");
+        
+        const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        const year = calCurrentDate.getFullYear();
+        const month = calCurrentDate.getMonth();
+        
+        monthTitle.innerText = `${monthsList[month]} ${year}`;
+        daysGrid.innerHTML = "";
+        
+        // Days labels
+        const dayLabels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+        dayLabels.forEach(d => {
+            const span = document.createElement("span");
+            span.style.fontWeight = "bold";
+            span.style.color = "#94a3b8";
+            span.style.padding = "5px 0";
+            span.innerText = d;
+            daysGrid.appendChild(span);
+        });
+        
+        // Calculate offset and total days
+        let firstDayIndex = new Date(year, month, 1).getDay();
+        firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1; // Mon=0 to Sun=6
+        
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        
+        // Blank spaces for offset
+        for (let i = 0; i < firstDayIndex; i++) {
+            const span = document.createElement("span");
+            span.style.cursor = "default";
+            daysGrid.appendChild(span);
+        }
+        
+        // Date numbers
+        for (let day = 1; day <= totalDays; day++) {
+            const span = document.createElement("span");
+            span.style.padding = "8px 0";
+            span.style.borderRadius = "8px";
+            span.style.cursor = "pointer";
+            span.style.color = "rgba(255, 255, 255, 0.85)";
+            span.style.fontWeight = "600";
+            span.style.transition = "all 0.2s ease";
+            span.innerText = day;
+            
+            const monthNum = String(month + 1).padStart(2, '0');
+            const dateStr = `${year}-${monthNum}-${String(day).padStart(2, '0')}`;
+            
+            if (dateStr === selectedDateVal) {
+                span.style.background = "linear-gradient(135deg, #3b82f6, #1d4ed8)";
+                span.style.color = "#ffffff";
+                span.style.boxShadow = "0 4px 10px rgba(59, 130, 246, 0.4)";
+            } else {
+                span.onmouseover = function() { this.style.background = "rgba(255, 255, 255, 0.08)"; this.style.transform = "scale(1.08)"; };
+                span.onmouseout = function() { if (dateStr !== selectedDateVal) { this.style.background = "none"; this.style.transform = "none"; } };
+            }
+            
+            span.onclick = function(e) {
+                e.stopPropagation();
+                selectedDateVal = dateStr;
+                
+                const shortMonth = monthsList[month].substring(0, 3);
+                document.getElementById("sch-date-display").value = `${shortMonth} ${day}, ${year}`;
+                
+                document.getElementById("date-dropdown").style.display = "none";
+                renderCalendarDropdown();
+            };
+            
+            daysGrid.appendChild(span);
+        }
+    }
+
+    // Time picker scroll column items populator
+    let timeSelectedH = "09";
+    let timeSelectedM = "00";
+    let timeSelectedAP = "AM";
+
+    window.setupTimePickerScrolls = function() {
+        const hourScroll = document.getElementById("sch-hour-scroll");
+        const minuteScroll = document.getElementById("sch-minute-scroll");
+        
+        if (hourScroll.querySelectorAll(".time-val-item").length === 0) {
+            hourScroll.innerHTML = ""; // Clear any comments or dummy text
+            for (let h = 1; h <= 12; h++) {
+                const val = String(h).padStart(2, '0');
+                const div = document.createElement("div");
+                div.className = "time-val-item" + (val === timeSelectedH ? " selected" : "");
+                div.innerText = val;
+                div.onclick = function() {
+                    selectTimeComponent('hour', val, this);
+                };
+                hourScroll.appendChild(div);
+            }
+        }
+        
+        if (minuteScroll.querySelectorAll(".time-val-item").length === 0) {
+            minuteScroll.innerHTML = ""; // Clear any comments or dummy text
+            for (let m = 0; m < 60; m += 5) {
+                const val = String(m).padStart(2, '0');
+                const div = document.createElement("div");
+                div.className = "time-val-item" + (val === timeSelectedM ? " selected" : "");
+                div.innerText = val;
+                div.onclick = function() {
+                    selectTimeComponent('minute', val, this);
+                };
+                minuteScroll.appendChild(div);
+            }
+        }
+    }
+
+    window.selectTimeComponent = function(type, val, element) {
+        if (type === 'hour') {
+            timeSelectedH = val;
+            document.getElementById("time-h-lbl").innerText = val;
+            document.querySelectorAll("#sch-hour-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        } else if (type === 'minute') {
+            timeSelectedM = val;
+            document.getElementById("time-m-lbl").innerText = val;
+            document.querySelectorAll("#sch-minute-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        } else if (type === 'ampm') {
+            timeSelectedAP = val;
+            document.getElementById("time-ap-lbl").innerText = val;
+            document.querySelectorAll("#sch-ampm-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        }
+        element.classList.add("selected");
+    }
+
+    window.confirmTimeSelection = function(e) {
+        if (e) e.stopPropagation();
+        selectedTimeVal = `${timeSelectedH}:${timeSelectedM} ${timeSelectedAP}`;
+        document.getElementById("sch-time-display").value = selectedTimeVal;
+        document.getElementById("time-dropdown").style.display = "none";
+    }
+
+    window.openScheduleFromHistory = function(mode, subject, testName) {
+        document.getElementById("sch-paper-val").innerText = testName;
+        document.getElementById("sch-mode-val").innerText = mode;
+        document.getElementById("sch-subject-val").innerText = subject;
+        
+        // Clear fields
+        selectedDateVal = "";
+        document.getElementById("sch-date-display").value = "";
+        document.getElementById("sch-time-display").value = "09:00 AM";
+        
+        timeSelectedH = "09";
+        timeSelectedM = "00";
+        timeSelectedAP = "AM";
+        document.getElementById("time-h-lbl").innerText = "09";
+        document.getElementById("time-m-lbl").innerText = "00";
+        document.getElementById("time-ap-lbl").innerText = "AM";
+        
+        // Initialize calendar to current date
+        calCurrentDate = new Date();
+        renderCalendarDropdown();
+        
+        document.getElementById("scheduleModal").classList.add("active");
+    }
+
+    window.closeScheduleModal = function() {
+        document.getElementById("scheduleModal").classList.remove("active");
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        if (dateDrop) dateDrop.style.display = "none";
+        if (timeDrop) timeDrop.style.display = "none";
+    }
+
+    window.confirmScheduleFromPopup = function() {
+        if (!selectedDateVal) {
+            alert("Please select a date to schedule this test.");
+            return;
+        }
+        
+        const dateObj = new Date(selectedDateVal);
+        const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthName = monthsList[dateObj.getMonth()];
+        const dayNum = dateObj.getDate();
+        
+        closeScheduleModal();
+        
+        // Use custom toast notification
+        showToast(`Success! Scheduled ${document.getElementById("sch-mode-val").innerText} (${document.getElementById("sch-subject-val").innerText}) for ${monthName} ${dayNum} at ${selectedTimeVal}`);
+    }
+
+    function showToast(message) {
+        if (!document.getElementById('toastNotification')) {
+            const toastHtml = `
+                <div id="toastNotification" class="sticky-note-toast">
+                    <i class="fas fa-thumbtack sticky-note-pin"></i>
+                    <i class="fas fa-calendar-check text-[#120a21] text-base" id="toastIcon"></i>
+                    <span id="toastMessage" class="tracking-wide"></span>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+        }
+        
+        const toast = document.getElementById('toastNotification');
+        const toastMsg = document.getElementById('toastMessage');
+        toastMsg.innerText = message;
+        
+        toast.classList.add('show-sticky');
+        
+        setTimeout(() => {
+            toast.classList.remove('show-sticky');
+        }, 4000);
+    }
 </script>
 {% endblock %}

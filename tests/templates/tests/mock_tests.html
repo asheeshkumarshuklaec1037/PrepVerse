@@ -6,294 +6,683 @@
 {% block extra_css %}
 <style>
     body {
-        background: #050505 !important;
+        background: #f4f6fa !important;
+        color: #1e293b !important;
     }
     
-    /* Background Glows (Purple Theme) */
-    .glow {
-        position: fixed;
-        width: 600px; height: 600px;
-        border-radius: 50%;
-        z-index: -1;
-        filter: blur(80px);
-        opacity: 0;
-        animation: pageFadeIn 1.5s ease-out forwards;
+    /* Layout Container */
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Top Banner Card */
+    .top-banner {
+        background: linear-gradient(135deg, #e0e7ff 0%, #fae8ff 100%);
+        border-radius: 24px;
+        padding: 35px 45px;
+        margin-bottom: 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        position: relative;
+        overflow: hidden;
+    }
+    .top-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(232, 121, 249, 0.15) 0%, transparent 70%);
         pointer-events: none;
     }
-    .glow-1 { 
-        top: -100px; right: -100px; 
-        background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%); 
-    }
-    .glow-2 { 
-        bottom: -100px; left: -100px; 
-        background: radial-gradient(circle, rgba(255, 0, 128, 0.15) 0%, transparent 70%); 
-        animation-delay: 0.5s; 
-    }
-    .glow-3 {
-        top: 40%; left: 30%;
-        background: radial-gradient(circle, rgba(65, 88, 208, 0.1) 0%, transparent 70%);
-        animation-delay: 1s;
-    }
-    
-    /* Hero Section */
-    .hero {
-        position: relative;
-        width: 100%;
-        padding: 80px 20px 40px;
-        text-align: center;
-        opacity: 0;
-        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
-    }
-    .hero h1 {
-        font-size: 4rem;
+    .banner-text h1 {
+        font-size: 2.2rem;
         font-weight: 800;
+        color: #0f172a;
+        margin-top: 5px;
+    }
+    .banner-text p {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #64748b;
         text-transform: uppercase;
-        letter-spacing: -1px;
-        margin-bottom: 15px;
-        background: linear-gradient(90deg, #fff, #2af598);
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+    .ai-assistant-btn {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #4f46e5;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    .ai-assistant-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+        background: #fff;
+    }
+    .ai-assistant-btn i {
+        background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
     }
-    .hero p {
-        font-size: 1.1rem;
-        opacity: 0.6;
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.6;
-    }
 
-    /* Grid Layout */
-    .arena-container {
-        max-width: 1400px;
-        margin: 0 auto 100px;
-        padding: 0 5%;
-        opacity: 0;
-        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
-    }
-    .modes-grid {
+    /* Top Cards Row spanning full width */
+    .cards-row {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 30px;
-        margin-bottom: 60px;
+        margin-bottom: 35px;
+    }
+    @media (max-width: 992px) {
+        .cards-row {
+            grid-template-columns: 1fr;
+        }
     }
 
-    /* Mode Card */
-    .mode-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 30px;
-        padding: 40px 30px;
-        backdrop-filter: blur(80px) saturate(200%);
-        -webkit-backdrop-filter: blur(80px) saturate(200%);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Main Dashboard Cards */
+    .dashboard-card {
+        background: #ffffff;
+        border: 1px solid rgba(241, 245, 249, 0.8);
+        border-radius: 28px;
+        padding: 35px 30px;
+        box-shadow: 0 10px 25px rgba(100, 116, 139, 0.04);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         position: relative;
         overflow: hidden;
+        transition: all 0.3s ease;
+        min-height: 480px;
     }
-    .mode-card:hover {
-        transform: translateY(-10px);
-        border-color: rgba(42, 245, 152, 0.3);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(42, 245, 152, 0.05);
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 35px rgba(100, 116, 139, 0.08);
     }
     
-    /* Glowing background accent for cards */
-    .mode-card::before {
-        content: "";
-        position: absolute;
-        top: -50%; left: -50%; width: 200%; height: 200%;
-        background: radial-gradient(circle, rgba(42, 245, 152, 0.02) 0%, transparent 60%);
-        opacity: 0;
-        transition: 0.5s;
-        pointer-events: none;
+    .card-module-blitz {
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
     }
-    .mode-card:hover::before {
-        opacity: 1;
+    .card-topic-master {
+        background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+    }
+    .card-subject-marathon {
+        background: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 100%);
+    }
+    
+    /* Bottom Grid Workspace */
+    .bottom-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr;
+        gap: 30px;
+    }
+    @media (max-width: 1200px) {
+        .bottom-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    @media (max-width: 768px) {
+        .bottom-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
-    .card-top {
-        margin-bottom: 30px;
+    .card-exam-history {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        min-height: auto;
+        height: 100%;
+        padding: 40px;
+    }
+    .card-exam-history .card-illustration {
+        width: 100%;
+        height: 160px;
+        margin: 20px 0;
     }
 
-    .mode-icon {
-        width: 70px;
-        height: 70px;
-        border-radius: 20px;
+    .card-header-info {
+        margin-bottom: 15px;
+    }
+    .card-title-group {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: #2af598;
-        background: rgba(42, 245, 152, 0.05);
-        border: 1px solid rgba(42, 245, 152, 0.15);
-        margin-bottom: 25px;
-        transition: 0.4s;
+        gap: 12px;
+        margin-bottom: 10px;
     }
-    .mode-card:hover .mode-icon {
-        background: #2af598;
-        color: #000;
-        box-shadow: 0 0 30px rgba(42, 245, 152, 0.3);
+    .card-icon {
+        font-size: 1.6rem;
+    }
+    .card-module-blitz .card-icon { color: #d97706; }
+    .card-topic-master .card-icon { color: #0284c7; }
+    .card-subject-marathon .card-icon { color: #a855f7; }
+    .card-exam-history .card-icon { color: #2563eb; }
+
+    .card-header-info h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+    .card-header-info p {
+        font-size: 0.88rem;
+        line-height: 1.45;
+        color: #475569;
+        margin: 0;
+    }
+
+    .card-illustration {
+        width: 100%;
+        height: 180px;
+        object-fit: contain;
+        margin: 15px 0 25px;
+        mix-blend-mode: multiply;
+        transition: transform 0.5s ease;
+    }
+    .dashboard-card:hover .card-illustration {
         transform: scale(1.05);
     }
 
-    .mode-card h2 {
-        font-size: 1.8rem;
-        font-weight: 800;
-        margin-bottom: 8px;
-        color: #fff;
-    }
-    .mode-card h3 {
-        font-size: 0.9rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: rgba(255, 255, 255, 0.4);
-        margin-bottom: 20px;
-    }
-    .mode-desc {
-        font-size: 0.95rem;
-        line-height: 1.6;
-        opacity: 0.6;
-        margin-bottom: 30px;
-    }
-
-    /* Form selectors */
-    .selector-group {
-        margin-bottom: 30px;
-    }
-    .selector-label {
-        display: block;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: rgba(255,255,255,0.5);
-        margin-bottom: 8px;
-    }
-    .custom-select {
+    /* Card Action Buttons */
+    .card-action-btn {
         width: 100%;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 14px;
         border-radius: 14px;
-        padding: 14px 18px;
-        color: #fff;
-        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
         font-size: 0.9rem;
-        outline: none;
+        text-align: center;
+        border: none;
         cursor: pointer;
         transition: all 0.3s ease;
-        appearance: none; /* Hide default arrow */
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 18px center;
-        background-size: 16px;
-        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
-    .custom-select:focus {
-        border-color: #2af598;
-        background: rgba(255, 255, 255, 0.06);
-        box-shadow: 0 0 15px rgba(42, 245, 152, 0.15);
+    .btn-orange {
+        background: #f59e0b;
+        color: #ffffff;
     }
-    .custom-select option {
-        background: #0d0d0d;
-        color: #fff;
-        padding: 10px;
+    .btn-orange:hover {
+        background: #d97706;
+        box-shadow: 0 6px 20px rgba(217, 119, 6, 0.25);
+    }
+    .btn-blue {
+        background: #3b82f6;
+        color: #ffffff;
+    }
+    .btn-blue:hover {
+        background: #2563eb;
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+    }
+    .btn-purple {
+        background: #a855f7;
+        color: #ffffff;
+    }
+    .btn-purple:hover {
+        background: #9333ea;
+        box-shadow: 0 6px 20px rgba(147, 51, 234, 0.25);
     }
 
-    /* Stats tags */
-    .mode-stats {
-        display: flex;
-        gap: 15px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255,255,255,0.05);
+    /* White Panel Base Style */
+    .sidebar-panel {
+        background: #ffffff;
+        border-radius: 28px;
+        padding: 30px;
+        box-shadow: 0 10px 25px rgba(100, 116, 139, 0.04);
+        border: 1px solid rgba(241, 245, 249, 0.8);
+        height: 100%;
+    }
+
+    /* Calendar Styling */
+    .calendar-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 20px;
+    }
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        text-align: center;
         margin-bottom: 25px;
     }
-    .stat-badge {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: rgba(255,255,255,0.5);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255,255,255,0.02);
-        padding: 6px 12px;
-        border-radius: 50px;
-        border: 1px solid rgba(255,255,255,0.05);
+    .cal-header {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #94a3b8;
+        text-transform: lowercase;
+        margin-bottom: 5px;
     }
-    .stat-badge i {
-        color: #2af598;
-    }
-
-    /* Start Button */
-    .start-btn {
-        width: 100%;
-        padding: 15px;
-        background: #fff;
-        color: #000;
-        border: none;
-        border-radius: 14px;
-        font-weight: 700;
+    .cal-day {
         font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-weight: 500;
+        color: #334155;
+        padding: 8px 0;
+        border-radius: 50%;
+        position: relative;
         cursor: pointer;
-        transition: all 0.3s;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        height: 38px;
+    }
+    .cal-day.muted {
+        color: #cbd5e1;
+    }
+    .cal-day.active {
+        background: #f1f5f9;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .cal-day .dots {
+        position: absolute;
+        bottom: 2px;
+        display: flex;
+        gap: 2px;
+    }
+    .dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    .dot-blue { background: #3b82f6; }
+    .dot-orange { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+    .dot-grey { background: #64748b; }
+
+    /* Schedule Agenda list */
+    .agenda-section {
+        margin-top: 15px;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 20px;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    .agenda-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+    }
+    .agenda-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #fafafa;
+    }
+    .agenda-item:last-child {
+        border-bottom: none;
+    }
+    .agenda-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .indicator-circle {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    .bg-blue { background: #3b82f6; }
+    .bg-orange { background: #f59e0b; }
+    .bg-green { background: #10b981; }
+    .bg-grey { background: #94a3b8; }
+
+    .agenda-text h4 {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+    .agenda-text p {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin: 0;
+    }
+    .agenda-right {
+        display: flex;
+        align-items: center;
         gap: 10px;
     }
-    .mode-card:hover .start-btn {
-        background: #2af598;
-        box-shadow: 0 10px 25px rgba(42, 245, 152, 0.3);
+    .agenda-time {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
     }
-    .start-btn:hover {
-        transform: translateY(-2px);
+    .agenda-link {
+        font-size: 0.75rem;
+        color: #3b82f6;
+        transition: 0.2s;
+    }
+    .agenda-item:hover .agenda-link {
+        transform: translate(2px, -2px);
     }
 
-    /* Test Arena Details / Rules Section */
-    .info-bar {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 24px;
-        padding: 30px;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 30px;
-        margin-bottom: 60px;
-        backdrop-filter: blur(80px) saturate(200%);
-        -webkit-backdrop-filter: blur(80px) saturate(200%);
+    /* Stress Endurance Test Panel */
+    .stress-badge {
+        background: #fffbeb;
+        color: #b45309;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 50px;
+        display: inline-block;
+        margin-bottom: 12px;
+        border: 1px solid #fef3c7;
     }
-    .info-item {
-        display: flex;
-        align-items: center;
-        gap: 15px;
+    .stress-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    .info-item-icon {
+    .attempt-card {
+        padding: 15px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .attempt-card:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .attempt-header {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 5px;
+    }
+    .attempt-meta {
+        font-size: 0.78rem;
+        color: #64748b;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    /* Progress Bar */
+    .progress-bar-container {
+        height: 6px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        display: flex;
+        overflow: hidden;
+        margin-bottom: 6px;
+    }
+    .progress-correct {
+        background: #10b981;
+        height: 100%;
+    }
+    .progress-incorrect {
+        background: #ef4444;
+        height: 100%;
+    }
+    .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    .lbl-correct { color: #10b981; }
+    .lbl-incorrect { color: #ef4444; }
+
+    /* Interactive Configuration Workspace (Smooth Slide-Down Effect) */
+    .config-workspace {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        background: #ffffff;
+        border-radius: 28px;
+        box-shadow: 0 15px 35px rgba(100, 116, 139, 0.08);
+        border: 1px solid rgba(241, 245, 249, 0.9);
+        margin-top: 0;
+        transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease, margin-top 0.4s ease, padding 0.6s ease;
+        padding: 0 40px;
+    }
+    .config-workspace.active {
+        max-height: 1000px;
+        opacity: 1;
+        margin-top: 40px;
+        margin-bottom: 45px;
+        padding: 40px;
+    }
+    
+    .config-workspace-header {
+        margin-bottom: 30px;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .config-workspace-header h2 {
         font-size: 1.5rem;
-        color: #2af598;
-        width: 50px;
-        height: 50px;
-        background: rgba(42, 245, 152, 0.05);
+        font-weight: 800;
+        color: #0f172a;
+    }
+    .config-close-btn {
+        background: #f1f5f9;
+        border: none;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
+        color: #64748b;
+        transition: 0.2s;
     }
-    .info-item-text h4 { font-size: 1rem; font-weight: 700; margin-bottom: 3px; }
-    .info-item-text p { font-size: 0.8rem; opacity: 0.5; margin: 0; }
+    .config-close-btn:hover {
+        background: #cbd5e1;
+        color: #0f172a;
+    }
 
-    /* Modal Styling */
-    .modal {
+    .config-grid {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+    @media (max-width: 992px) {
+        .config-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+    }
+
+    .selector-card {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 20px;
+        padding: 30px;
+    }
+    .selector-card h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #0f172a;
+    }
+    .selector-card p {
+        font-size: 0.82rem;
+        color: #64748b;
+        line-height: 1.4;
+        margin-bottom: 25px;
+    }
+
+    .select-group {
+        margin-bottom: 20px;
+    }
+    .select-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+    }
+    .form-select {
+        width: 100%;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 12px 18px;
+        color: #1e293b;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 500;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 15px;
+    }
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .form-select:disabled {
+        background-color: #f1f5f9;
+        color: #94a3b8;
+        cursor: not-allowed;
+    }
+
+    /* Dynamic Test List Panel */
+    .test-papers-list-container {
+        display: none;
+    }
+    .test-papers-list-container.show {
+        display: block;
+        animation: fadeIn 0.4s ease forwards;
+    }
+    .test-papers-list-container h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #0f172a;
+    }
+    .test-papers-list-container p.subtitle {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin-bottom: 25px;
+    }
+
+    .papers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    /* Premium Test Card Styling */
+    .paper-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 250px;
+        transition: all 0.3s ease;
+    }
+    .paper-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(100, 116, 139, 0.08);
+    }
+    
+    .paper-card.easy-card:hover { border-color: #10b981; }
+    .paper-card.medium-card:hover { border-color: #f59e0b; }
+    .paper-card.hard-card:hover { border-color: #ef4444; }
+
+    .paper-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .paper-card-header h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+    .difficulty-badge {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+    }
+    .diff-easy { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+    .diff-medium { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .diff-hard { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+    .paper-card-details {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+    .paper-detail-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: #475569;
+    }
+    .paper-detail-row i {
+        color: #3b82f6;
+        width: 16px;
+    }
+
+    .paper-start-btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        color: #475569;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .paper-card.easy-card:hover .paper-start-btn { background: #10b981; color: #ffffff; border-color: #10b981; }
+    .paper-card.medium-card:hover .paper-start-btn { background: #f59e0b; color: #ffffff; border-color: #f59e0b; }
+    .paper-card.hard-card:hover .paper-start-btn { background: #ef4444; color: #ffffff; border-color: #ef4444; }
+
+    /* Modal Confirmation Guidelines (Split Screens) */
+    .modal-overlay {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
+        background: rgba(15, 23, 42, 0.4);
+        backdrop-filter: blur(8px);
         z-index: 3000;
         display: flex;
         align-items: center;
@@ -301,855 +690,838 @@
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition: all 0.3s ease;
+        overflow-y: auto;
+        padding: 50px 0;
     }
-    .modal.active {
+    .modal-overlay.active {
         opacity: 1;
         pointer-events: auto;
         visibility: visible;
     }
-    .modal-card {
-        background: rgba(15, 15, 15, 0.95);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 30px;
-        max-width: 500px;
+
+    .modal-split-wrapper {
+        max-width: 1000px;
         width: 90%;
-        padding: 40px;
-        box-shadow: 0 30px 100px rgba(0,0,0,0.8);
-        position: relative;
-        transform: translateY(30px);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 40px;
+        align-items: center;
     }
-    .modal.active .modal-card {
+
+    /* Modal Left Guide Info */
+    .modal-left-info {
+        color: #ffffff;
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    }
+    .modal-overlay.active .modal-left-info {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .modal-left-info h3 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 25px;
+        line-height: 1.2;
+    }
+    .modal-left-info h3 span {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .rule-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .rule-item i {
+        font-size: 1.25rem;
+        color: #3b82f6;
+        margin-top: 3px;
+    }
+    .rule-item-text h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #ffffff;
+    }
+    .rule-item-text p {
+        font-size: 0.85rem;
+        color: #cbd5e1;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    /* Modal Right Confirmation Card */
+    .modal-confirm-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        position: relative;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    }
+    .modal-overlay.active .modal-confirm-card {
+        opacity: 1;
         transform: translateY(0);
     }
-    .close-modal {
+    .modal-close-trigger {
         position: absolute;
         top: 25px; right: 25px;
-        font-size: 1.2rem;
-        color: rgba(255,255,255,0.4);
+        font-size: 1.1rem;
+        color: #94a3b8;
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.2s;
     }
-    .close-modal:hover { color: #fff; }
-    
-    .modal-header {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-    .modal-header i {
-        font-size: 3rem;
-        color: #2af598;
-        margin-bottom: 15px;
-        display: block;
-    }
-    .modal-header h3 { font-size: 1.8rem; font-weight: 800; }
-    .modal-header p { font-size: 0.85rem; opacity: 0.5; margin-top: 5px; }
+    .modal-close-trigger:hover { color: #1e293b; }
 
-    .modal-details {
-        background: rgba(255,255,255,0.02);
-        border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 20px;
-        padding: 20px 25px;
-        margin-bottom: 30px;
+    .modal-card-header {
+        margin-bottom: 25px;
     }
-    .detail-row {
+    .modal-card-header i {
+        font-size: 2.2rem;
+        color: #f59e0b;
+        margin-bottom: 10px;
+    }
+    .modal-card-header h3 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+    .modal-card-header p {
+        font-size: 0.82rem;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .modal-details-list {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 16px;
+        padding: 15px 20px;
+        margin-bottom: 25px;
+    }
+    .modal-detail-row {
         display: flex;
         justify-content: space-between;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        font-size: 0.95rem;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.88rem;
     }
-    .detail-row:last-child {
+    .modal-detail-row:last-child {
         border-bottom: none;
     }
-    .detail-label { opacity: 0.5; font-weight: 500; }
-    .detail-value { font-weight: 700; color: #fff; text-align: right; max-width: 60%; }
+    .m-lbl { color: #64748b; font-weight: 500; }
+    .m-val { color: #0f172a; font-weight: 700; text-align: right; }
 
-    .modal-actions {
+    .modal-action-row {
         display: flex;
         gap: 15px;
     }
     .modal-btn {
         flex: 1;
-        padding: 15px;
+        padding: 14px;
         border-radius: 12px;
         font-weight: 700;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        font-size: 0.88rem;
         cursor: pointer;
-        transition: 0.3s;
-        text-align: center;
+        transition: 0.2s;
         border: none;
     }
-    .modal-btn-cancel {
-        background: rgba(255,255,255,0.05);
-        color: #fff;
-        border: 1px solid rgba(255,255,255,0.1);
+    .modal-btn-back {
+        background: #f1f5f9;
+        color: #475569;
     }
-    .modal-btn-cancel:hover { background: rgba(255,255,255,0.1); }
+    .modal-btn-back:hover { background: #e2e8f0; }
     
-    .modal-btn-confirm {
-        background: #2af598;
-        color: #000;
-        box-shadow: 0 10px 20px rgba(42, 245, 152, 0.2);
+    .modal-btn-start {
+        background: #3b82f6;
+        color: #ffffff;
     }
-    .modal-btn-confirm:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 30px rgba(42, 245, 152, 0.3);
+    .modal-btn-start:hover {
+        background: #2563eb;
+        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
     }
 
+    /* Custom Date and Time Picker Styles */
+    .custom-picker-container {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .picker-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(100, 116, 139, 0.15);
+        z-index: 1000;
+        padding: 15px;
+        margin-top: 8px;
+        display: none;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: max-height 0.4s ease, opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .picker-dropdown.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        animation: slideDownFade 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .custom-time-input-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 14px;
+        padding: 14px 18px;
+        transition: 0.2s;
+    }
+    .custom-time-input-row:hover {
+        border-color: #3b82f6;
+        background: #ffffff;
+    }
+    .custom-time-input-row i {
+        color: #3b82f6;
+        font-size: 1.1rem;
+    }
+
+    /* Custom Date Calendar Dropdown Styles */
+    .cal-drop-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #1e293b;
+        padding: 0 5px;
+    }
+    .cal-drop-header button {
+        background: #f1f5f9;
+        border: none;
+        cursor: pointer;
+        color: #475569;
+        font-size: 0.8rem;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+    }
+    .cal-drop-header button:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+    .cal-drop-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        text-align: center;
+    }
+    .cal-drop-grid span {
+        font-size: 0.8rem;
+        padding: 8px 0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        color: #475569;
+        transition: 0.15s;
+    }
+    .cal-drop-grid span.header-day {
+        color: #94a3b8;
+        font-weight: 700;
+        cursor: default;
+    }
+    .cal-drop-grid span.day-num:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+    .cal-drop-grid span.day-num.active {
+        background: #3b82f6 !important;
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+
+    /* Custom Time dropdown picker Styles */
+    .time-drop-header {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: #3b82f6;
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 15px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+    .time-header-column {
+        flex: 1;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px dashed rgba(255, 255, 255, 0.35);
+        border-radius: 8px;
+        padding: 5px 0;
+        font-family: monospace;
+        font-size: 1.1rem;
+    }
+    .time-columns-container {
+        display: flex;
+        height: 180px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        background: #f8fafc;
+    }
+    .time-scroll-column {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        padding: 8px 0;
+        border-right: 1px solid #e2e8f0;
+        scroll-behavior: smooth;
+    }
+    .time-scroll-column::-webkit-scrollbar {
+        width: 4px;
+    }
+    .time-scroll-column::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    .time-scroll-column:last-child {
+        border-right: none;
+    }
+    .time-val-item {
+        padding: 8px 0;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #64748b;
+        transition: 0.15s;
+    }
+    .time-val-item:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+    .time-val-item.selected {
+        color: #3b82f6;
+        font-weight: 800;
+        background: #eff6ff;
+    }
+
+    /* Animations */
     @keyframes pageFadeIn {
-        from { opacity: 0; transform: translateY(30px); }
+        from { opacity: 0; transform: translateY(15px); }
         to { opacity: 1; transform: translateY(0); }
     }
-
-    @media (max-width: 1024px) {
-        .modes-grid { grid-template-columns: 1fr; gap: 40px; }
-        .hero h1 { font-size: 2.5rem; }
+    @keyframes slideUpFade {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Accordion Row styling */
-    .mode-rows-list {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-        margin-bottom: 60px;
-    }
-    .mode-row-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 24px;
-        overflow: hidden;
-        backdrop-filter: blur(80px) saturate(200%);
-        -webkit-backdrop-filter: blur(80px) saturate(200%);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .mode-row-card:hover {
-        border-color: rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.03);
-    }
-    .mode-row-card.active {
-        background: rgba(255, 255, 255, 0.03);
-        border-color: rgba(42, 245, 152, 0.2);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(42, 245, 152, 0.02);
+    /* Glassmorphism scheduling wizard styles */
+    #scheduleModal .modal-confirm-card {
+        background: rgba(255, 255, 255, 0.72) !important;
+        backdrop-filter: blur(25px) saturate(200%) !important;
+        -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.45) !important;
+        box-shadow: 0 30px 60px rgba(15, 23, 42, 0.12) !important;
     }
     
-    .mode-row-header {
-        width: 100%;
-        background: transparent;
-        border: none;
-        padding: 30px;
+    
+    #scheduleModal .picker-dropdown {
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    }
+
+    /* Sticky Note Toast Styles */
+    .sticky-note-toast {
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        z-index: 9999;
+        background: linear-gradient(135deg, #ffe57f 0%, #ffc107 100%);
+        color: #120a21;
+        padding: 14px 22px 14px 18px;
+        border-radius: 4px 18px 18px 18px;
+        box-shadow: 0 15px 35px rgba(255, 193, 7, 0.35), 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6);
         display: flex;
         align-items: center;
-        gap: 25px;
-        cursor: pointer;
-        text-align: left;
-        color: #fff;
-    }
-    .mode-row-header .mode-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.6rem;
-        transition: all 0.4s;
-    }
-    
-    .row-blitz .mode-icon {
-        color: #2af598;
-        background: rgba(42, 245, 152, 0.05);
-        border: 1px solid rgba(42, 245, 152, 0.15);
-    }
-    .row-master .mode-icon {
-        color: #fccb90;
-        background: rgba(252, 203, 144, 0.05);
-        border: 1px solid rgba(252, 203, 144, 0.15);
-    }
-    .row-marathon .mode-icon {
-        color: #ff4757;
-        background: rgba(255, 71, 87, 0.05);
-        border: 1px solid rgba(255, 71, 87, 0.15);
-    }
-    
-    .mode-row-card.active.row-blitz { border-color: rgba(42, 245, 152, 0.3); }
-    .mode-row-card.active.row-master { border-color: rgba(252, 203, 144, 0.3); }
-    .mode-row-card.active.row-marathon { border-color: rgba(255, 71, 87, 0.3); }
-    
-    .mode-row-header:hover .mode-icon {
-        transform: scale(1.08);
-    }
-    .row-blitz .mode-row-header:hover .mode-icon { background: #2af598; color: #000; box-shadow: 0 0 20px rgba(42, 245, 152, 0.3); }
-    .row-master .mode-row-header:hover .mode-icon { background: #fccb90; color: #000; box-shadow: 0 0 20px rgba(252, 203, 144, 0.3); }
-    .row-marathon .mode-row-header:hover .mode-icon { background: #ff4757; color: #000; box-shadow: 0 0 20px rgba(255, 71, 87, 0.3); }
-    
-    .mode-row-card.active.row-blitz .mode-icon { background: #2af598; color: #000; box-shadow: 0 0 20px rgba(42, 245, 152, 0.3); }
-    .mode-row-card.active.row-master .mode-icon { background: #fccb90; color: #000; box-shadow: 0 0 20px rgba(252, 203, 144, 0.3); }
-    .mode-row-card.active.row-marathon .mode-icon { background: #ff4757; color: #000; box-shadow: 0 0 20px rgba(255, 71, 87, 0.3); }
-
-    .mode-text-group {
-        flex: 1;
-    }
-    .mode-text-group h2 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        margin-bottom: 6px;
-        color: #fff;
-    }
-    .mode-text-group p {
-        font-size: 0.9rem;
-        line-height: 1.5;
-        opacity: 0.6;
-        margin-bottom: 0;
-        max-width: 800px;
-    }
-    
-    .mode-badges-group {
-        display: flex;
         gap: 12px;
-        margin-left: 20px;
-    }
-    
-    .collapse-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
         font-size: 0.85rem;
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        color: rgba(255,255,255,0.7);
-        margin-left: 20px;
-    }
-    .mode-row-header:hover .collapse-btn {
-        background: rgba(255, 255, 255, 0.08);
-        color: #fff;
-    }
-    .mode-row-card.active .collapse-btn {
-        transform: rotate(180deg);
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-    }
-    
-    /* Accordion Body */
-    .mode-row-body {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .mode-row-card.active .mode-row-body {
-        grid-template-rows: 1fr;
-    }
-    .mode-row-content {
-        overflow: hidden;
-    }
-    
-    /* Inner Content Container */
-    .mode-inner-container {
-        padding: 0 30px 40px 30px;
-        border-top: 1px solid rgba(255, 255, 255, 0.03);
-    }
-    
-    /* Inline layout with grid for config and test cards */
-    .inline-config-wrapper {
-        display: grid;
-        grid-template-columns: 350px 1fr;
-        gap: 40px;
-        align-items: start;
-        margin-top: 30px;
-    }
-    @media (max-width: 992px) {
-        .inline-config-wrapper {
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-    }
-    
-    .inline-config-form {
-        background: rgba(255, 255, 255, 0.01);
-        border: 1px solid rgba(255, 255, 255, 0.03);
-        border-radius: 20px;
-        padding: 25px;
-    }
-    .inline-config-form h3 {
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin-bottom: 5px;
-        color: #fff;
-    }
-    .inline-config-form p {
-        font-size: 0.8rem;
-        opacity: 0.5;
-        margin-bottom: 20px;
-        line-height: 1.4;
-    }
-
-    /* Tests list container */
-    .tests-list-container {
-        display: none;
-        background: rgba(255,255,255,0.01);
-        border: 1px solid rgba(255,255,255,0.03);
-        border-radius: 24px;
-        padding: 30px;
-        backdrop-filter: blur(80px) saturate(200%);
-    }
-    .tests-list-container.show {
-        display: block !important;
-        animation: slideUpFade 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-    .tests-list-container h3 {
-        font-size: 1.4rem;
-        font-weight: 800;
-        margin-bottom: 5px;
-    }
-    .tests-list-container .section-subtitle {
-        font-size: 0.9rem;
-        opacity: 0.5;
-        margin-bottom: 25px;
-    }
-    .test-cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 20px;
-    }
-
-    /* Test Card */
-    .test-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 20px;
-        padding: 25px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        min-height: 230px;
-    }
-    .test-card:hover {
-        background: rgba(255, 255, 255, 0.04);
-        transform: translateY(-5px);
-    }
-
-    /* Hover effects per difficulty glow */
-    .test-card.easy-card:hover {
-        border-color: rgba(42, 245, 152, 0.3);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(42, 245, 152, 0.1);
-    }
-    .test-card.medium-card:hover {
-        border-color: rgba(252, 203, 144, 0.3);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(252, 203, 144, 0.1);
-    }
-    .test-card.hard-card:hover {
-        border-color: rgba(255, 71, 87, 0.3);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255, 71, 87, 0.1);
-    }
-
-    .test-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    .test-card h4 {
-        font-size: 1.15rem;
-        font-weight: 700;
-        color: #fff;
-    }
-    .difficulty-badge {
-        font-size: 0.65rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        padding: 4px 10px;
-        border-radius: 6px;
-        letter-spacing: 0.5px;
-    }
-    .difficulty-easy { background: rgba(42, 245, 152, 0.1); color: #2af598; border: 1px solid rgba(42, 245, 152, 0.2); }
-    .difficulty-medium { background: rgba(252, 203, 144, 0.1); color: #fccb90; border: 1px solid rgba(252, 203, 144, 0.2); }
-    .difficulty-hard { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.2); }
-    
-    .test-card-stats {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 25px;
-    }
-    .test-stat-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 0.8rem;
-        opacity: 0.6;
-    }
-    .test-stat-row i {
-        color: #2af598;
-        width: 14px;
-    }
-    
-    .test-start-btn {
-        width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        transition: all 0.3s;
-        text-align: center;
-        background: rgba(255,255,255,0.05);
-        color: #fff;
-        border: 1px solid rgba(255,255,255,0.08);
-    }
-    .test-card.easy-card:hover .test-start-btn {
-        background: #2af598;
-        color: #000;
-        border-color: #2af598;
-        box-shadow: 0 5px 15px rgba(42, 245, 152, 0.3);
-    }
-    .test-card.medium-card:hover .test-start-btn {
-        background: #fccb90;
-        color: #000;
-        border-color: #fccb90;
-        box-shadow: 0 5px 15px rgba(252, 203, 144, 0.3);
-    }
-    .test-card.hard-card:hover .test-start-btn {
-        background: #ff4757;
-        color: #000;
-        border-color: #ff4757;
-        box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
-    }
-    .test-start-btn:hover {
-        transform: scale(1.02);
-    }
-
-    /* Split Modal Custom Styling */
-    .modal-grid-wrapper {
-        position: relative;
-        z-index: 10;
-        max-width: 1050px;
-        width: 95%;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1.2fr 450px;
-        align-items: center;
-        gap: 60px;
-        padding: 0 20px;
-    }
-    
-    .modal-grid-wrapper .modal-card {
-        max-width: 450px;
-        width: 100%;
-        padding: 40px;
-        background: rgba(15, 15, 15, 0.6);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-        transform: translateY(30px);
+        pointer-events: none;
+        transform: translateX(150%) rotate(12deg) scale(0.8);
         opacity: 0;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-left: 5px solid #ff9800;
     }
-    .modal.active .modal-grid-wrapper .modal-card {
-        transform: translateY(0);
+    .sticky-note-toast.show-sticky {
+        transform: translateX(0) rotate(-2deg) scale(1);
         opacity: 1;
     }
-
-    .modal-left-instructions {
-        opacity: 0;
-        transform: translateX(-30px);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-        padding: 20px 0;
-    }
-    .modal.active .modal-left-instructions {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    
-    .instruction-header {
-        margin-bottom: 30px;
-    }
-    .instruction-header i {
-        font-size: 2.2rem;
-        color: #2af598;
-        margin-bottom: 15px;
-        display: block;
-    }
-    .instruction-header h3 {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #fff;
-        margin: 0;
-        letter-spacing: -1px;
-        line-height: 1.2;
-    }
-    .instruction-header h3 span {
-        background: linear-gradient(90deg, #fff, #2af598);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .instructions-list {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
-    .instruction-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    .instruction-item i {
-        font-size: 1.3rem;
-        color: #2af598;
-        margin-top: 3px;
-        width: 24px;
-        text-align: center;
-    }
-    .instruction-item h4 {
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: #fff;
-        margin-bottom: 5px;
-        margin-top: 0;
-    }
-    .instruction-item p {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.5;
-        margin: 0;
-    }
-    
-    .modal-right-details {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    @media (max-width: 992px) {
-        .modal-grid-wrapper {
-            grid-template-columns: 1fr;
-            max-width: 500px;
-            justify-content: center;
-            gap: 0;
-        }
-        .modal-left-instructions {
-            display: none;
-        }
-        .modal-grid-wrapper .modal-card {
-            max-width: 100%;
-        }
+    .sticky-note-pin {
+        position: absolute;
+        top: -10px;
+        left: 18px;
+        color: #e53935;
+        font-size: 1.1rem;
+        filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4));
+        transform: rotate(-15deg);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Background Glows -->
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
-<div class="glow glow-3"></div>
-
-<section class="hero">
-    <h1>Mock Test Arena</h1>
-    <p>Simulate real interview conditions. Choose your scale, select subjects, and test your problem solving potential with comprehensive mocks.</p>
-</section>
-
-<div class="arena-container">
+<div class="dashboard-container">
     
-    <!-- Info Bar / Rules -->
-    <div class="info-bar">
-        <div class="info-item">
-            <div class="info-item-icon"><i class="fas fa-history"></i></div>
-            <div class="info-item-text">
-                <h4>Simulated Timer</h4>
-                <p>Auto-submits when time ends</p>
+    <!-- Top banner -->
+    <div class="top-banner">
+        <div class="banner-text">
+            <p>Attend exams and boost confidence</p>
+            <h1>All Exams</h1>
+        </div>
+        <button class="ai-assistant-btn"><i class="fas fa-sparkles"></i> AI Assistant</button>
+    </div>
+
+    <!-- Top Row: Three Test Cards (100% width grid) -->
+    <div class="cards-row">
+        <!-- Card 1: Module Blitz (Drill Exam) -->
+        <div class="dashboard-card card-module-blitz">
+            <div class="card-header-info">
+                <div class="card-title-group">
+                    <span class="card-icon">🧩</span>
+                    <h2>Single Module Drill (Module Blitz)</h2>
+                </div>
+                <p>Focus deeply on a single, isolated module within a topic. Perfect for practicing specific weak areas and quick concepts.</p>
+            </div>
+            <img src="{% static 'images/drill_exam_card.jpg' %}" alt="Module Blitz" class="card-illustration">
+            <button class="card-action-btn btn-orange" onclick="openConfig(1)">Start Module Drill</button>
+        </div>
+
+        <!-- Card 2: Topic Master (Full Test) -->
+        <div class="dashboard-card card-topic-master">
+            <div class="card-header-info">
+                <div class="card-title-group">
+                    <span class="card-icon">📋</span>
+                    <h2>Complete Topic Test (Topic Master)</h2>
+                </div>
+                <p>Covers all modules under a selected topic category. Ideal for testing your cumulative knowledge of a whole topic.</p>
+            </div>
+            <img src="{% static 'images/full_test_card.jpg' %}" alt="Topic Master" class="card-illustration">
+            <button class="card-action-btn btn-blue" onclick="openConfig(2)">Start Topic Test</button>
+        </div>
+
+        <!-- Card 3: Subject Marathon -->
+        <div class="dashboard-card card-subject-marathon">
+            <div class="card-header-info">
+                <div class="card-title-group">
+                    <span class="card-icon">🏆</span>
+                    <h2>Full Subject Marathon (Subject Test)</h2>
+                </div>
+                <p>A comprehensive, full-length mock test covering all topics and modules inside a major subject. Simulates actual exam rounds.</p>
+            </div>
+            <img src="{% static 'images/marathon_card.jpg' %}" alt="Subject Marathon" class="card-illustration">
+            <button class="card-action-btn btn-purple" onclick="openConfig(3)">Start Subject Marathon</button>
+        </div>
+    </div>
+
+    <!-- Active Configurations & Available Test Papers Workspace (revealed on card action click) -->
+    <div class="config-workspace" id="interactive-workspace">
+        <div class="config-workspace-header">
+            <h2 id="workspace-mode-title">Test Parameters Configuration</h2>
+            <button class="config-close-btn" onclick="closeConfig()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="config-grid">
+            
+            <!-- Selector side panel -->
+            <div class="selector-card">
+                <h3 id="panel-setup-title">Setup Parameters</h3>
+                <p>Verify options to dynamically render matching test papers.</p>
+                
+                <div class="select-group">
+                    <span class="select-label">Select Subject</span>
+                    <select id="w-subject" class="form-select" onchange="onWSubjectChange(this.value)">
+                        <option value="">-- Choose Subject --</option>
+                        {% for subject in subjects %}
+                        <option value="{{ subject.name }}">{{ subject.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="select-group" id="group-topic">
+                    <span class="select-label">Select Topic</span>
+                    <select id="w-topic" class="form-select" disabled onchange="onWTopicChange(this.value)">
+                        <option value="">-- Choose Topic --</option>
+                    </select>
+                </div>
+
+                <div class="select-group" id="group-module">
+                    <span class="select-label">Select Module</span>
+                    <select id="w-module" class="form-select" disabled onchange="onWModuleChange(this.value)">
+                        <option value="">-- Choose Module --</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Available papers side panel -->
+            <div class="test-papers-list-container" id="w-tests-container">
+                <h3>Available Mock Tests</h3>
+                <p class="subtitle">Pick a simulated test sheet below to begin the assessment.</p>
+                
+                <div class="papers-grid" id="w-papers-grid">
+                    <!-- Cards will be populated here -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bottom Section: Grid of History, Calendar, and Stress analytics side-by-side -->
+    <div class="bottom-grid">
+        <!-- Column 1: Exam History -->
+        <div class="dashboard-card card-exam-history">
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                <div class="card-header-info">
+                    <div class="card-title-group" style="margin-bottom: 5px;">
+                        <span class="card-icon">📂</span>
+                        <h2>Exam History</h2>
+                    </div>
+                    <p>Boost your career with our skill assessments. Showcase your expertise and draw in clients.</p>
+                </div>
+                <img src="{% static 'images/exam_history_card.jpg' %}" alt="Exam History" class="card-illustration">
+                <a href="{% url 'mock_history' %}" style="text-decoration: none;">
+                    <button class="card-action-btn btn-blue" style="width: 100%;">Check Detailed History</button>
+                </a>
             </div>
         </div>
-        <div class="info-item">
-            <div class="info-item-icon"><i class="fas fa-check-double"></i></div>
-            <div class="info-item-text">
-                <h4>Strict Scoring</h4>
-                <p>Instant analytics & report card</p>
+
+        <!-- Column 2: Calendar -->
+        <div class="sidebar-panel">
+            <div class="calendar-title">January</div>
+            
+            <div class="calendar-grid">
+                <!-- Day headers -->
+                <span class="cal-header">m</span>
+                <span class="cal-header">t</span>
+                <span class="cal-header">w</span>
+                <span class="cal-header">t</span>
+                <span class="cal-header">f</span>
+                <span class="cal-header">s</span>
+                <span class="cal-header">s</span>
+
+                <!-- Grid dates -->
+                <span class="cal-day">01</span>
+                <span class="cal-day active">02 <div class="dots"><span class="dot dot-orange"></span><span class="dot dot-blue"></span></div></span>
+                <span class="cal-day active">03 <div class="dots"><span class="dot dot-green"></span><span class="dot dot-orange"></span></div></span>
+                <span class="cal-day">04</span>
+                <span class="cal-day">05</span>
+                <span class="cal-day">06</span>
+                <span class="cal-day">07</span>
+
+                <span class="cal-day">08</span>
+                <span class="cal-day">09</span>
+                <span class="cal-day">10</span>
+                <span class="cal-day">11</span>
+                <span class="cal-day">12</span>
+                <span class="cal-day">13</span>
+                <span class="cal-day">14</span>
+
+                <span class="cal-day">15</span>
+                <span class="cal-day">16</span>
+                <span class="cal-day active">17 <div class="dots"><span class="dot dot-blue"></span><span class="dot dot-grey"></span></div></span>
+                <span class="cal-day">18</span>
+                <span class="cal-day">19</span>
+                <span class="cal-day">20</span>
+                <span class="cal-day">21</span>
+
+                <span class="cal-day">22</span>
+                <span class="cal-day">23</span>
+                <span class="cal-day">24</span>
+                <span class="cal-day">25</span>
+                <span class="cal-day">26</span>
+                <span class="cal-day">27</span>
+                <span class="cal-day">28</span>
+
+                <span class="cal-day">29</span>
+                <span class="cal-day">30</span>
+                <span class="cal-day">31</span>
+                <span class="cal-day muted">01</span>
+                <span class="cal-day muted">02</span>
+                <span class="cal-day muted">03</span>
+                <span class="cal-day muted">04</span>
+            </div>
+
+            <!-- Agenda Section -->
+            <div class="agenda-section">
+                <div class="agenda-title">Today</div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-left">
+                        <span class="indicator-circle bg-blue"></span>
+                        <div class="agenda-text">
+                            <h4>Exam - Full Test</h4>
+                            <p>Standard Marathon mock</p>
+                        </div>
+                    </div>
+                    <div class="agenda-right">
+                        <span class="agenda-time">08:00 AM</span>
+                    </div>
+                </div>
+                
+                <div class="agenda-item">
+                    <div class="agenda-left">
+                        <span class="indicator-circle bg-orange"></span>
+                        <div class="agenda-text">
+                            <h4>Exam - Drill Exam</h4>
+                            <p>Interactive practice</p>
+                        </div>
+                    </div>
+                    <div class="agenda-right">
+                        <span class="agenda-time">06:00 PM</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="info-item">
-            <div class="info-item-icon"><i class="fas fa-shield-alt"></i></div>
-            <div class="info-item-text">
-                <h4>Anti-Cheat Enabled</h4>
-                <p>Auto tab-switching block</p>
+
+        <!-- Column 3: Stress Endurance -->
+        <div class="sidebar-panel">
+            <span class="stress-badge">Needs Improvement</span>
+            <div class="stress-title" title="Stress Endurance Test for Student">Stress Endurance Test for Student (SA...</div>
+            
+            <!-- Attempt 1 -->
+            <div class="attempt-card">
+                <div class="attempt-header">⚫ 1st Attempt at</div>
+                <div class="attempt-meta">
+                    <span>17 June, 2025, 10:40 AM</span>
+                    <span>01hr 11mins</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-correct" style="width: 40%;"></div>
+                    <div class="progress-incorrect" style="width: 60%;"></div>
+                </div>
+                <div class="progress-labels">
+                    <span class="lbl-correct">40% Ok</span>
+                    <span class="lbl-incorrect">60% Fail</span>
+                </div>
+            </div>
+
+            <!-- Attempt 2 -->
+            <div class="attempt-card" style="border-bottom: none;">
+                <div class="attempt-header">⚫ 2nd Attempt at</div>
+                <div class="attempt-meta">
+                    <span>05 May, 2025, 03:50 PM</span>
+                    <span>01hr 02mins</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Collapsible Accordion Mode Rows List -->
-    <div class="mode-rows-list">
+
+
+</div>
+
+<!-- Modal Overlay for Confirmation split view -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal-split-wrapper">
         
-        <!-- Row 1: Module Blitz -->
-        <div class="mode-row-card row-blitz" id="card-mode-1">
-            <button class="mode-row-header" onclick="toggleModeAccordion(1)">
-                <div class="mode-icon"><i class="fas fa-puzzle-piece"></i></div>
-                <div class="mode-text-group">
-                    <h2>Module Blitz</h2>
-                    <p>Focus deeply on a single, isolated module within a topic. Highly recommended for drilling specific weak concepts after class tutorials.</p>
-                </div>
-                <div class="mode-badges-group">
-                    <span class="stat-badge"><i class="far fa-clock"></i> 15 Mins</span>
-                    <span class="stat-badge"><i class="fas fa-question-circle"></i> 10 MCQs</span>
-                    <span class="stat-badge"><i class="fas fa-bullseye"></i> Targeted</span>
-                </div>
-                <div class="collapse-btn"><i class="fas fa-chevron-down"></i></div>
-            </button>
+        <!-- Left: rules -->
+        <div class="modal-left-info">
+            <h3>Test <span>Arena Rules & Guidelines</span></h3>
             
-            <div class="mode-row-body">
-                <div class="mode-row-content">
-                    <div class="mode-inner-container">
-                        <div class="inline-config-wrapper">
-                            <!-- Configuration Form -->
-                            <div class="inline-config-form">
-                                <h3>Configure Blitz Parameters</h3>
-                                <p>Specify the subject, topic, and module to activate matching papers.</p>
-                                
-                                <div class="selector-group" style="margin-bottom: 0;">
-                                    <span class="selector-label">Select Subject</span>
-                                    <select id="m1-subject" class="custom-select" onchange="onSubjectChange(1, this.value)">
-                                        <option value="">-- Choose Subject --</option>
-                                        {% for subject in subjects %}
-                                        <option value="{{ subject.name }}">{{ subject.name }}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                    <span class="selector-label">Select Topic</span>
-                                    <select id="m1-topic" class="custom-select" disabled onchange="onTopicChange(1, this.value)">
-                                        <option value="">-- Select Subject First --</option>
-                                    </select>
-
-                                    <span class="selector-label">Select Module</span>
-                                    <select id="m1-module" class="custom-select" disabled onchange="onModuleChange(1, this.value)">
-                                        <option value="">-- Select Topic First --</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Cards Container -->
-                            <div class="tests-list-container" id="m1-tests-container">
-                                <h3>Available Mock Tests</h3>
-                                <p class="section-subtitle">Select a generated test paper below to begin.</p>
-                                <div class="test-cards-grid" id="m1-cards-grid">
-                                    <!-- Dynamically populated cards -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="rule-item">
+                <i class="fas fa-history"></i>
+                <div class="rule-item-text">
+                    <h4>Strict Simulated Timer</h4>
+                    <p>The timer runs continuously once you begin. The test will auto-submit when the duration ends.</p>
+                </div>
+            </div>
+            
+            <div class="rule-item">
+                <i class="fas fa-shield-halved"></i>
+                <div class="rule-item-text">
+                    <h4>Anti-Cheat Monitoring</h4>
+                    <p>Tab switching or leaving the screen will warn you. Exceeding warnings will force auto-submit.</p>
+                </div>
+            </div>
+            
+            <div class="rule-item">
+                <i class="fas fa-chart-line"></i>
+                <div class="rule-item-text">
+                    <h4>Instant Score Analytics</h4>
+                    <p>You will get a comprehensive performance report card and analytics breakdown immediately upon completion.</p>
+                </div>
+            </div>
+            
+            <div class="rule-item">
+                <i class="fas fa-ban"></i>
+                <div class="rule-item-text">
+                    <h4>Input Restrictions</h4>
+                    <p>Do not refresh the page or use browser back/forward buttons during the active session.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Row 2: Topic Master -->
-        <div class="mode-row-card row-master" id="card-mode-2">
-            <button class="mode-row-header" onclick="toggleModeAccordion(2)">
-                <div class="mode-icon"><i class="fas fa-layer-group"></i></div>
-                <div class="mode-text-group">
-                    <h2>Topic Master</h2>
-                    <p>Covers all modules under a selected topic. Ideal for testing overall grasp of a composite topic category (e.g. Percentage to Profit & Loss).</p>
-                </div>
-                <div class="mode-badges-group">
-                    <span class="stat-badge"><i class="far fa-clock"></i> 30 Mins</span>
-                    <span class="stat-badge"><i class="fas fa-question-circle"></i> 25 MCQs</span>
-                    <span class="stat-badge"><i class="fas fa-random"></i> Mixed Modules</span>
-                </div>
-                <div class="collapse-btn"><i class="fas fa-chevron-down"></i></div>
-            </button>
+        <!-- Right: confirmation check sheet -->
+        <div class="modal-confirm-card">
+            <div class="modal-close-trigger" onclick="closeConfirmModal()"><i class="fas fa-times"></i></div>
             
-            <div class="mode-row-body">
-                <div class="mode-row-content">
-                    <div class="mode-inner-container">
-                        <div class="inline-config-wrapper">
-                            <!-- Configuration Form -->
-                            <div class="inline-config-form">
-                                <h3>Configure Topic Parameters</h3>
-                                <p>Specify the subject and topic to view matching papers.</p>
-                                
-                                <div class="selector-group" style="margin-bottom: 0;">
-                                    <span class="selector-label">Select Subject</span>
-                                    <select id="m2-subject" class="custom-select" onchange="onSubjectChange(2, this.value)">
-                                        <option value="">-- Choose Subject --</option>
-                                        {% for subject in subjects %}
-                                        <option value="{{ subject.name }}">{{ subject.name }}</option>
-                                        {% endfor %}
-                                    </select>
+            <div class="modal-card-header">
+                <i class="fas fa-file-invoice"></i>
+                <h3>Mock Test Ready</h3>
+                <p>Double check test parameters before launching session.</p>
+            </div>
 
-                                    <span class="selector-label">Select Topic</span>
-                                    <select id="m2-topic" class="custom-select" disabled onchange="onTopicChange(2, this.value)">
-                                        <option value="">-- Select Subject First --</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Cards Container -->
-                            <div class="tests-list-container" id="m2-tests-container">
-                                <h3>Available Mock Tests</h3>
-                                <p class="section-subtitle">Select a generated test paper below to begin.</p>
-                                <div class="test-cards-grid" id="m2-cards-grid">
-                                    <!-- Dynamically populated cards -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="modal-details-list">
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Test Mode</span>
+                    <span class="m-val" id="cfm-mode">-</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Subject</span>
+                    <span class="m-val" id="cfm-subject">-</span>
+                </div>
+                <div class="modal-detail-row" id="cfm-row-topic">
+                    <span class="m-lbl">Topic</span>
+                    <span class="m-val" id="cfm-topic">-</span>
+                </div>
+                <div class="modal-detail-row" id="cfm-row-module">
+                    <span class="m-lbl">Module</span>
+                    <span class="m-val" id="cfm-module">-</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Mock Paper</span>
+                    <span class="m-val" id="cfm-paper">-</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Total Questions</span>
+                    <span class="m-val" id="cfm-questions">-</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Duration</span>
+                    <span class="m-val" id="cfm-duration">-</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Row 3: Subject Marathon -->
-        <div class="mode-row-card row-marathon" id="card-mode-3">
-            <button class="mode-row-header" onclick="toggleModeAccordion(3)">
-                <div class="mode-icon"><i class="fas fa-graduation-cap"></i></div>
-                <div class="mode-text-group">
-                    <h2>Subject Marathon</h2>
-                    <p>A full scope test covering all topics and modules inside a major subject. Prepares you for general aptitude rounds of tech companies.</p>
-                </div>
-                <div class="mode-badges-group">
-                    <span class="stat-badge"><i class="far fa-clock"></i> 60 Mins</span>
-                    <span class="stat-badge"><i class="fas fa-question-circle"></i> 50 MCQs</span>
-                    <span class="stat-badge"><i class="fas fa-crown"></i> Full Arena</span>
-                </div>
-                <div class="collapse-btn"><i class="fas fa-chevron-down"></i></div>
-            </button>
-            
-            <div class="mode-row-body">
-                <div class="mode-row-content">
-                    <div class="mode-inner-container">
-                        <div class="inline-config-wrapper">
-                            <!-- Configuration Form -->
-                            <div class="inline-config-form">
-                                <h3>Configure Marathon Parameters</h3>
-                                <p>Specify the subject to search for available test papers.</p>
-                                
-                                <div class="selector-group" style="margin-bottom: 0;">
-                                    <span class="selector-label">Select Subject</span>
-                                    <select id="m3-subject" class="custom-select" onchange="onSubjectChange(3, this.value)">
-                                        <option value="">-- Choose Subject --</option>
-                                        {% for subject in subjects %}
-                                        <option value="{{ subject.name }}">{{ subject.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Cards Container -->
-                            <div class="tests-list-container" id="m3-tests-container">
-                                <h3>Available Mock Tests</h3>
-                                <p class="section-subtitle">Select a generated test paper below to begin.</p>
-                                <div class="test-cards-grid" id="m3-cards-grid">
-                                    <!-- Dynamically populated cards -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-action-row" style="gap: 15px; display: flex;">
+                <button class="modal-btn modal-btn-back" onclick="closeConfirmModal()">Go Back</button>
+                <button class="modal-btn modal-btn-start" onclick="launchTestSession()">Begin Test</button>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
 
-<!-- Modal Confirmation (Asymmetrical Split Screen Layout) -->
-<div class="modal" id="testModal">
-    <div class="modal-grid-wrapper">
-        <!-- Left Column: Guidelines & Instructions (Floating, not in card) -->
-        <div class="modal-left-instructions">
-            <div class="instruction-header">
-                <i class="fas fa-file-signature"></i>
-                <h3>Test Instructions</h3>
+<!-- Modal Overlay for Scheduling Mock Test -->
+<div class="modal-overlay" id="scheduleModal">
+    <div class="modal-confirm-card" style="max-width: 500px; width: 95%; padding: 35px;">
+        <div class="modal-close-trigger" onclick="closeScheduleModal()"><i class="fas fa-times"></i></div>
+        
+        <div class="modal-card-header" style="margin-bottom: 25px;">
+            <i class="fas fa-calendar-plus" style="color: #3b82f6; font-size: 2.2rem; margin-bottom: 10px; display: inline-block;"></i>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: #0f172a;">Schedule Mock Test</h3>
+            <p style="font-size: 0.85rem; color: #64748b;">Select a date and time to reserve your mock test seat.</p>
+        </div>
+
+        <!-- Meta Summary Box -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 15px 20px; margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #94a3b8; display: block;">Mock Paper</span>
+                <span id="sch-paper-val" style="font-size: 0.88rem; font-weight: 700; color: #1e293b;">-</span>
+            </div>
+            <div>
+                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #94a3b8; display: block;">Test Mode</span>
+                <span id="sch-mode-val" style="font-size: 0.88rem; font-weight: 700; color: #1e293b;">-</span>
+            </div>
+            <div style="grid-column: span 2; border-top: 1px solid #f1f5f9; padding-top: 8px; margin-top: 4px;">
+                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #94a3b8; display: block;">Subject</span>
+                <span id="sch-subject-val" style="font-size: 0.88rem; font-weight: 700; color: #1e293b;">-</span>
+            </div>
+        </div>
+
+        <!-- Custom Date Picker Field -->
+        <div class="custom-picker-container" id="date-picker-wrapper">
+            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block;">Select Date</span>
+            <div class="custom-time-input-row" onclick="togglePicker('date', event)" style="cursor: pointer;">
+                <i class="far fa-calendar-alt"></i>
+                <input type="text" id="sch-date-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #1e293b;" placeholder="Select Date">
             </div>
             
-            <div class="instructions-list">
-                <div class="instruction-item">
-                    <i class="fas fa-clock"></i>
-                    <div>
-                        <h4>Strict Simulated Timer</h4>
-                        <p>The timer runs continuously once you begin. The test will auto-submit when the duration ends.</p>
-                    </div>
+            <!-- Custom Date Calendar Dropdown -->
+            <div class="picker-dropdown" id="date-dropdown" style="bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0;" onclick="event.stopPropagation()">
+                <div class="cal-drop-header">
+                    <button type="button" onclick="changeMonth(-1, event)"><i class="fas fa-chevron-left"></i></button>
+                    <span id="cal-month-title">January 2026</span>
+                    <button type="button" onclick="changeMonth(1, event)"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                <div class="instruction-item">
-                    <i class="fas fa-shield-alt"></i>
-                    <div>
-                        <h4>Anti-Cheat Monitoring</h4>
-                        <p>Tab switching or leaving the screen will warn you. Exceeding warnings will force auto-submit.</p>
-                    </div>
-                </div>
-                <div class="instruction-item">
-                    <i class="fas fa-check-double"></i>
-                    <div>
-                        <h4>Instant Score Analytics</h4>
-                        <p>You will get a comprehensive performance report card and analytics breakdown immediately upon completion.</p>
-                    </div>
-                </div>
-                <div class="instruction-item">
-                    <i class="fas fa-keyboard"></i>
-                    <div>
-                        <h4>Input Restrictions</h4>
-                        <p>Do not refresh the page or use browser back/forward buttons during the active session.</p>
-                    </div>
+                <div class="cal-drop-grid" id="cal-days-grid">
+                    <!-- Populated by JS -->
                 </div>
             </div>
         </div>
-        
-        <!-- Right Column: Mock Test Ready details (Inside a modal-card) -->
-        <div class="modal-card">
-            <div class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></div>
-            
-            <div class="modal-right-details">
-                <div class="modal-header" style="margin-bottom: 25px; text-align: left;">
-                    <i class="fas fa-bolt" style="font-size: 2.2rem; color: #2af598; margin-bottom: 12px; display: inline-block;"></i>
-                    <h3 style="font-size: 1.6rem; font-weight: 800; color: #fff; text-align: left;">Mock Test Ready</h3>
-                    <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px; text-align: left;">Verify your parameters to activate the test session.</p>
-                </div>
-                
-                <div class="modal-details" style="margin-bottom: 25px;">
-                    <div class="detail-row">
-                        <span class="detail-label">Test Mode</span>
-                        <span class="detail-value" id="val-mode">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Subject</span>
-                        <span class="detail-value" id="val-subject">-</span>
-                    </div>
-                    <div id="row-topic" class="detail-row">
-                        <span class="detail-label">Topic</span>
-                        <span class="detail-value" id="val-topic">-</span>
-                    </div>
-                    <div id="row-module" class="detail-row">
-                        <span class="detail-label">Module</span>
-                        <span class="detail-value" id="val-module">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Mock Test</span>
-                        <span class="detail-value" id="val-test">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Questions</span>
-                        <span class="detail-value" id="val-questions">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Duration</span>
-                        <span class="detail-value" id="val-duration">-</span>
-                    </div>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Go Back</button>
-                    <button class="modal-btn modal-btn-confirm" onclick="startTestActual()">Begin Test</button>
-                </div>
+
+        <!-- Custom Time Picker Field -->
+        <div class="custom-picker-container" id="time-picker-wrapper" style="margin-bottom: 30px;">
+            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block;">Select Time</span>
+            <div class="custom-time-input-row" onclick="togglePicker('time', event)" style="cursor: pointer;">
+                <i class="far fa-clock"></i>
+                <input type="text" id="sch-time-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #1e293b;" placeholder="Select Time">
             </div>
+            
+            <!-- Custom Time Picker Dropdown -->
+            <div class="picker-dropdown" id="time-dropdown" style="padding: 15px; bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0;" onclick="event.stopPropagation()">
+                <!-- Fixed Display Columns in Header -->
+                <div class="time-drop-header">
+                    <div class="time-header-column" id="time-h-lbl">09</div>
+                    <div class="time-header-column" style="background:none; border:none; flex:0.2;">:</div>
+                    <div class="time-header-column" id="time-m-lbl">00</div>
+                    <div class="time-header-column" style="background:none; border:none; flex:0.2;"></div>
+                    <div class="time-header-column" id="time-ap-lbl">AM</div>
+                </div>
+                
+                <!-- Scrolling Columns -->
+                <div class="time-columns-container">
+                    <!-- Hour Column -->
+                    <div class="time-scroll-column" id="sch-hour-scroll">
+                        <!-- Populated 01 to 12 -->
+                    </div>
+                    <!-- Minute Column -->
+                    <div class="time-scroll-column" id="sch-minute-scroll">
+                        <!-- Populated 00 to 59 -->
+                    </div>
+                    <!-- AM/PM Column -->
+                    <div class="time-scroll-column" id="sch-ampm-scroll">
+                        <div class="time-val-item selected" onclick="selectTimeComponent('ampm', 'AM', this)">AM</div>
+                        <div class="time-val-item" onclick="selectTimeComponent('ampm', 'PM', this)">PM</div>
+                    </div>
+                </div>
+                
+                <button type="button" class="modal-btn modal-btn-start" onclick="confirmTimeSelection(event)" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem; border-radius: 10px;">Done</button>
+            </div>
+        </div>
+
+        <div class="modal-action-row" style="display: flex; gap: 15px;">
+            <button class="modal-btn modal-btn-back" onclick="closeScheduleModal()" style="border-radius: 14px;">Cancel</button>
+            <button class="modal-btn modal-btn-start" onclick="confirmScheduleFromPopup()" style="background: #3b82f6; border-radius: 14px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);">Confirm Schedule</button>
         </div>
     </div>
 </div>
@@ -1159,300 +1531,624 @@
 {{ subjects|json_script:"subjects-data-json" }}
 <script>
     const subjectsData = JSON.parse(document.getElementById('subjects-data-json').textContent);
-    let currentSelectedConfig = {};
- 
-    function toggleModeAccordion(modeNum) {
-        const targetRow = document.getElementById(`card-mode-${modeNum}`);
-        const isActive = targetRow.classList.contains("active");
+    
+    // Active workspace variables
+    let currentMode = 2; // 1 = Blitz, 2 = Master, 3 = Marathon
+    let selectedConfig = {};
+
+    function openConfig(modeNum) {
+        currentMode = modeNum;
         
-        // Close all other rows
-        for (let i = 1; i <= 3; i++) {
-            const row = document.getElementById(`card-mode-${i}`);
-            if (row) {
-                row.classList.remove("active");
-            }
+        // Update Title & Panel setup text
+        const titleEl = document.getElementById("workspace-mode-title");
+        const setupEl = document.getElementById("panel-setup-title");
+        const topicGroup = document.getElementById("group-topic");
+        const moduleGroup = document.getElementById("group-module");
+        
+        if (modeNum === 1) { // Module Blitz
+            titleEl.innerText = "Module Blitz Parameters Configuration";
+            setupEl.innerText = "Blitz Parameters Setup";
+            topicGroup.style.display = "block";
+            moduleGroup.style.display = "block";
+        } else if (modeNum === 2) { // Topic Master
+            titleEl.innerText = "Topic Master Parameters Configuration";
+            setupEl.innerText = "Topic Parameters Setup";
+            topicGroup.style.display = "block";
+            moduleGroup.style.display = "none";
+        } else if (modeNum === 3) { // Subject Marathon
+            titleEl.innerText = "Subject Marathon Parameters Configuration";
+            setupEl.innerText = "Marathon Parameters Setup";
+            topicGroup.style.display = "none";
+            moduleGroup.style.display = "none";
         }
+
+        // Reset selectors
+        const subjectSelect = document.getElementById("w-subject");
+        subjectSelect.value = "";
         
-        if (!isActive) {
-            targetRow.classList.add("active");
-            prefillConfiguration(modeNum);
-        }
-    }
- 
-    function prefillConfiguration(modeNum) {
-        const subjectSelect = document.getElementById(`m${modeNum}-subject`);
-        const topicSelect = document.getElementById(`m${modeNum}-topic`);
-        const moduleSelect = document.getElementById(`m${modeNum}-module`);
+        const topicSelect = document.getElementById("w-topic");
+        topicSelect.innerHTML = '<option value="">-- Choose Topic --</option>';
+        topicSelect.disabled = true;
+
+        const moduleSelect = document.getElementById("w-module");
+        moduleSelect.innerHTML = '<option value="">-- Choose Module --</option>';
+        moduleSelect.disabled = true;
+
+        document.getElementById("w-tests-container").classList.remove("show");
+
+        // Display workspace with smooth height expansion
+        const workspace = document.getElementById("interactive-workspace");
+        workspace.classList.add("active");
         
-        // If subject is already selected, don't overwrite
-        if (subjectSelect && subjectSelect.value !== "") {
-            return;
-        }
-        
+        // Smooth scroll to the workspace
+        setTimeout(() => {
+            workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+
+        // Autofill default if available
         if (subjectsData && subjectsData.length > 0) {
             const defaultSubject = subjectsData[0];
             subjectSelect.value = defaultSubject.name;
-            
-            // Populate topic select if it exists
-            if (topicSelect) {
-                topicSelect.innerHTML = '<option value="">-- Choose Topic --</option>';
-                if (defaultSubject.topics && defaultSubject.topics.length > 0) {
-                    defaultSubject.topics.forEach(t => {
-                        topicSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
-                    });
-                    const defaultTopic = defaultSubject.topics[0];
-                    topicSelect.value = defaultTopic.name;
-                    topicSelect.disabled = false;
-                    
-                    // Populate module select if it exists
-                    if (moduleSelect) {
-                        moduleSelect.innerHTML = '<option value="">-- Choose Module --</option>';
-                        if (defaultTopic.modules && defaultTopic.modules.length > 0) {
-                            defaultTopic.modules.forEach(m => {
-                                moduleSelect.innerHTML += `<option value="${m}">${m}</option>`;
-                            });
-                            moduleSelect.value = defaultTopic.modules[0];
-                            moduleSelect.disabled = false;
-                        }
-                    }
-                }
-            }
-            
-            // Trigger check and show tests
-            checkAndShowTests(modeNum);
+            onWSubjectChange(defaultSubject.name);
         }
     }
- 
-    function onSubjectChange(modeNum, subjectVal) {
-        const topicSelect = document.getElementById(`m${modeNum}-topic`);
-        const moduleSelect = document.getElementById(`m${modeNum}-module`);
-        const testsContainer = document.getElementById(`m${modeNum}-tests-container`);
+
+    function closeConfig() {
+        document.getElementById("interactive-workspace").classList.remove("active");
+    }
+
+    function onWSubjectChange(subjectVal) {
+        const topicSelect = document.getElementById("w-topic");
+        const moduleSelect = document.getElementById("w-module");
+        const testsContainer = document.getElementById("w-tests-container");
         
-        // Reset options
-        if (topicSelect) {
-            topicSelect.innerHTML = '<option value="">-- Choose Topic --</option>';
-            topicSelect.disabled = true;
-        }
-        if (moduleSelect) {
-            moduleSelect.innerHTML = '<option value="">-- Select Topic First --</option>';
-            moduleSelect.disabled = true;
-        }
-        if (testsContainer) {
-            testsContainer.classList.remove("show");
-        }
-        
+        topicSelect.innerHTML = '<option value="">-- Choose Topic --</option>';
+        topicSelect.disabled = true;
+        moduleSelect.innerHTML = '<option value="">-- Choose Module --</option>';
+        moduleSelect.disabled = true;
+        testsContainer.classList.remove("show");
+
         if (subjectVal) {
             const subObj = subjectsData.find(s => s.name === subjectVal);
-            if (subObj && subObj.topics && topicSelect) {
-                subObj.topics.forEach(t => {
-                    topicSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
-                });
-                topicSelect.disabled = false;
+            if (subObj && subObj.topics) {
+                if (currentMode !== 3) {
+                    subObj.topics.forEach(t => {
+                        topicSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+                    });
+                    topicSelect.disabled = false;
+                    
+                    // Select first topic automatically
+                    if (subObj.topics.length > 0) {
+                        topicSelect.value = subObj.topics[0].name;
+                        onWTopicChange(topicSelect.value);
+                    }
+                } else {
+                    // Subject Marathon doesn't need topics
+                    checkConfigState();
+                }
             }
         }
-        
-        checkAndShowTests(modeNum);
     }
- 
-    function onTopicChange(modeNum, topicVal) {
-        const subjectVal = document.getElementById(`m${modeNum}-subject`).value;
-        const moduleSelect = document.getElementById(`m${modeNum}-module`);
-        const testsContainer = document.getElementById(`m${modeNum}-tests-container`);
+
+    function onWTopicChange(topicVal) {
+        const subjectVal = document.getElementById("w-subject").value;
+        const moduleSelect = document.getElementById("w-module");
+        const testsContainer = document.getElementById("w-tests-container");
         
-        if (moduleSelect) {
-            moduleSelect.innerHTML = '<option value="">-- Choose Module --</option>';
-            moduleSelect.disabled = true;
-        }
-        if (testsContainer) {
-            testsContainer.classList.remove("show");
-        }
-        
-        if (topicVal) {
+        moduleSelect.innerHTML = '<option value="">-- Choose Module --</option>';
+        moduleSelect.disabled = true;
+        testsContainer.classList.remove("show");
+
+        if (topicVal && currentMode === 1) { // Module Blitz
             const subObj = subjectsData.find(s => s.name === subjectVal);
             if (subObj) {
                 const topObj = subObj.topics.find(t => t.name === topicVal);
-                if (topObj && topObj.modules && moduleSelect) {
+                if (topObj && topObj.modules) {
                     topObj.modules.forEach(m => {
                         moduleSelect.innerHTML += `<option value="${m}">${m}</option>`;
                     });
                     moduleSelect.disabled = false;
+                    
+                    if (topObj.modules.length > 0) {
+                        moduleSelect.value = topObj.modules[0];
+                    }
                 }
             }
         }
         
-        checkAndShowTests(modeNum);
+        checkConfigState();
     }
- 
-    function onModuleChange(modeNum, moduleVal) {
-        const testsContainer = document.getElementById(`m${modeNum}-tests-container`);
-        if (testsContainer) {
-            testsContainer.classList.remove("show");
-        }
-        
-        checkAndShowTests(modeNum);
+
+    function onWModuleChange(moduleVal) {
+        checkConfigState();
     }
- 
-    function checkAndShowTests(modeNum) {
-        const subjectVal = document.getElementById(`m${modeNum}-subject`).value;
-        const topicSelect = document.getElementById(`m${modeNum}-topic`);
-        const moduleSelect = document.getElementById(`m${modeNum}-module`);
-        const testsContainer = document.getElementById(`m${modeNum}-tests-container`);
+
+    function checkConfigState() {
+        const subjectVal = document.getElementById("w-subject").value;
+        const topicVal = document.getElementById("w-topic").value;
+        const moduleVal = document.getElementById("w-module").value;
         
-        const topicVal = topicSelect ? topicSelect.value : "";
-        const moduleVal = moduleSelect ? moduleSelect.value : "";
-        
-        let allFilled = false;
-        
-        if (modeNum === 1) { // Module Blitz
-            if (subjectVal && topicVal && moduleVal) {
-                allFilled = true;
-            }
-        } else if (modeNum === 2) { // Topic Master
-            if (subjectVal && topicVal) {
-                allFilled = true;
-            }
-        } else if (modeNum === 3) { // Subject Marathon
-            if (subjectVal) {
-                allFilled = true;
-            }
+        let valid = false;
+        if (currentMode === 1) { // Blitz
+            if (subjectVal && topicVal && moduleVal) valid = true;
+        } else if (currentMode === 2) { // Topic Master
+            if (subjectVal && topicVal) valid = true;
+        } else if (currentMode === 3) { // Subject Marathon
+            if (subjectVal) valid = true;
         }
-        
-        if (allFilled) {
-            generateMockCards(modeNum, subjectVal, topicVal, moduleVal);
+
+        if (valid) {
+            renderMockPapers(subjectVal, topicVal, moduleVal);
         } else {
-            if (testsContainer) {
-                testsContainer.classList.remove("show");
-            }
+            document.getElementById("w-tests-container").classList.remove("show");
         }
     }
- 
-    function generateMockCards(modeNum, subject, topic, module) {
-        const grid = document.getElementById(`m${modeNum}-cards-grid`);
-        const container = document.getElementById(`m${modeNum}-tests-container`);
-        
+
+    function renderMockPapers(subject, topic, module) {
+        const grid = document.getElementById("w-papers-grid");
         grid.innerHTML = ""; // Clear existing
+
+        let qCount = "10 MCQs";
+        let duration = "15 Mins";
         
-        let questionsText = "10 MCQs";
-        let durationText = "15 Mins";
-        
-        if (modeNum === 1) {
-            questionsText = "10 MCQs";
-            durationText = "15 Mins";
-        } else if (modeNum === 2) {
-            questionsText = "25 MCQs";
-            durationText = "30 Mins";
-        } else if (modeNum === 3) {
-            questionsText = "50 MCQs";
-            durationText = "60 Mins";
+        if (currentMode === 1) {
+            qCount = "10 MCQs";
+            duration = "15 Mins";
+        } else if (currentMode === 2) {
+            qCount = "25 MCQs";
+            duration = "30 Mins";
+        } else if (currentMode === 3) {
+            qCount = "50 MCQs";
+            duration = "60 Mins";
         }
         
-        const tests = [
-            { name: "Mock Test 01", difficulty: "Easy", diffClass: "difficulty-easy", cardClass: "easy-card", points: "+100 Points" },
-            { name: "Mock Test 02", difficulty: "Medium", diffClass: "difficulty-medium", cardClass: "medium-card", points: "+250 Points" },
-            { name: "Mock Test 03", difficulty: "Hard", diffClass: "difficulty-hard", cardClass: "hard-card", points: "+500 Points" }
+        const mocks = [
+            { name: "Mock Test 01", difficulty: "Easy", dClass: "diff-easy", cClass: "easy-card", xp: "+100 XP" },
+            { name: "Mock Test 02", difficulty: "Medium", dClass: "diff-medium", cClass: "medium-card", xp: "+250 XP" },
+            { name: "Mock Test 03", difficulty: "Hard", dClass: "diff-hard", cClass: "hard-card", xp: "+500 XP" }
         ];
-        
-        tests.forEach(test => {
-            const cardHtml = `
-                <div class="test-card ${test.cardClass}">
-                    <div class="test-card-header">
-                        <h4>${test.name}</h4>
-                        <span class="difficulty-badge ${test.diffClass}">${test.difficulty}</span>
+
+        mocks.forEach(m => {
+            grid.innerHTML += `
+                <div class="paper-card ${m.cClass}">
+                    <div class="paper-card-header">
+                        <h4>${m.name}</h4>
+                        <span class="difficulty-badge ${m.dClass}">${m.difficulty}</span>
                     </div>
-                    <div class="test-card-stats">
-                        <div class="test-stat-row">
+                    <div class="paper-card-details">
+                        <div class="paper-detail-row">
                             <i class="far fa-clock"></i>
-                            <span>${durationText}</span>
+                            <span>${duration}</span>
                         </div>
-                        <div class="test-stat-row">
-                            <i class="fas fa-question-circle"></i>
-                            <span>${questionsText}</span>
+                        <div class="paper-detail-row">
+                            <i class="fas fa-circle-question"></i>
+                            <span>${qCount}</span>
                         </div>
-                        <div class="test-stat-row">
-                            <i class="fas fa-award"></i>
-                            <span>${test.points}</span>
+                        <div class="paper-detail-row">
+                            <i class="fas fa-trophy"></i>
+                            <span>${m.xp}</span>
                         </div>
                     </div>
-                    <button class="test-start-btn" onclick="confirmTest(${modeNum}, '${test.name}', '${test.difficulty}', '${questionsText}', '${durationText}')">
-                        Start Test
-                    </button>
+                    <div style="display: flex; gap: 10px; width: 100%;">
+                        <button class="paper-start-btn" onclick="initiateConfirm('${m.name}', '${m.difficulty}', '${qCount}', '${duration}')" style="flex: 1;">Select Test</button>
+                        <button class="paper-schedule-btn" onclick="openSchedulePopup('${m.name}', '${m.difficulty}', '${qCount}', '${duration}')" style="padding: 12px 15px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; color: #475569; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;" title="Schedule Test"><i class="far fa-calendar-plus" style="font-size: 1.1rem;"></i></button>
+                    </div>
                 </div>
             `;
-            grid.innerHTML += cardHtml;
         });
-        
-        // Show test list section with animation
-        container.classList.add("show");
-    }
- 
-    function confirmTest(modeNum, testName, difficulty, questions, duration) {
-        const subjectVal = document.getElementById(`m${modeNum}-subject`).value;
-        const topicSelect = document.getElementById(`m${modeNum}-topic`);
-        const moduleSelect = document.getElementById(`m${modeNum}-module`);
-        
-        const topicVal = topicSelect ? topicSelect.value : "";
-        const moduleVal = moduleSelect ? moduleSelect.value : "";
-        
-        let modeName = "";
-        let showTopic = true;
-        let showModule = true;
-        
-        if (modeNum === 1) {
-            modeName = "Module Blitz";
-            showTopic = true;
-            showModule = true;
-        } else if (modeNum === 2) {
-            modeName = "Topic Master";
-            showTopic = true;
-            showModule = false;
-        } else if (modeNum === 3) {
-            modeName = "Subject Marathon";
-            showTopic = false;
-            showModule = false;
+
+        // Inject custom hover style dynamically if not already present
+        if (!document.getElementById('sch-btn-style')) {
+            const style = document.createElement('style');
+            style.id = 'sch-btn-style';
+            style.innerHTML = '.paper-schedule-btn:hover { background: #3b82f6 !important; color: #ffffff !important; border-color: #3b82f6 !important; }';
+            document.head.appendChild(style);
         }
+
+        document.getElementById("w-tests-container").classList.add("show");
+    }
+
+    function initiateConfirm(paperName, difficulty, questions, duration) {
+        const subjectVal = document.getElementById("w-subject").value;
+        const topicVal = document.getElementById("w-topic").value;
+        const moduleVal = document.getElementById("w-module").value;
+
+        let modeDisplayName = "Module Blitz";
+        let rawModeName = "Module Blitz";
         
-        currentSelectedConfig = {
-            mode: modeName,
+        if (currentMode === 1) {
+            modeDisplayName = "Module Blitz";
+            rawModeName = "Module Blitz";
+        } else if (currentMode === 2) {
+            modeDisplayName = "Topic Master";
+            rawModeName = "Topic Master";
+        } else if (currentMode === 3) {
+            modeDisplayName = "Subject Marathon";
+            rawModeName = "Subject Marathon";
+        }
+
+        selectedConfig = {
+            mode: modeDisplayName,
             subject: subjectVal,
-            topic: showTopic ? topicVal : "All Topics included",
-            module: showModule ? moduleVal : "All Modules included",
-            test: testName,
+            topic: currentMode !== 3 ? topicVal : "All Topics included",
+            module: currentMode === 1 ? moduleVal : "All Modules included",
+            paper: paperName,
             questions: questions,
             duration: duration,
-            showTopic: showTopic,
-            showModule: showModule
+            rawModeName: rawModeName
         };
+
+        // Populate Modal Fields
+        document.getElementById("cfm-mode").innerText = selectedConfig.mode;
+        document.getElementById("cfm-subject").innerText = selectedConfig.subject;
+        document.getElementById("cfm-topic").innerText = selectedConfig.topic;
+        document.getElementById("cfm-paper").innerText = selectedConfig.paper;
+        document.getElementById("cfm-questions").innerText = selectedConfig.questions;
+        document.getElementById("cfm-duration").innerText = selectedConfig.duration;
         
-        // Populate Modal values
-        document.getElementById("val-mode").innerText = currentSelectedConfig.mode;
-        document.getElementById("val-subject").innerText = currentSelectedConfig.subject;
-        document.getElementById("val-topic").innerText = currentSelectedConfig.topic;
-        document.getElementById("val-module").innerText = currentSelectedConfig.module;
-        document.getElementById("val-test").innerText = currentSelectedConfig.test;
-        document.getElementById("val-questions").innerText = currentSelectedConfig.questions;
-        document.getElementById("val-duration").innerText = currentSelectedConfig.duration;
-        
-        // Hide/Show dynamic rows
-        document.getElementById("row-topic").style.display = currentSelectedConfig.showTopic ? "flex" : "none";
-        document.getElementById("row-module").style.display = currentSelectedConfig.showModule ? "flex" : "none";
-        
+        const rowTopic = document.getElementById("cfm-row-topic");
+        const rowModule = document.getElementById("cfm-row-module");
+
+        if (currentMode === 1) {
+            rowTopic.style.display = "flex";
+            rowModule.style.display = "flex";
+            document.getElementById("cfm-module").innerText = selectedConfig.module;
+        } else if (currentMode === 2) {
+            rowTopic.style.display = "flex";
+            rowModule.style.display = "none";
+        } else {
+            rowTopic.style.display = "none";
+            rowModule.style.display = "none";
+        }
+
         // Open Modal
-        document.getElementById("testModal").classList.add("active");
+        document.getElementById("confirmModal").classList.add("active");
     }
- 
-    function closeModal() {
-        document.getElementById("testModal").classList.remove("active");
+
+    function closeConfirmModal() {
+        document.getElementById("confirmModal").classList.remove("active");
     }
- 
-    function startTestActual() {
-        closeModal();
-        const mode = encodeURIComponent(currentSelectedConfig.mode);
-        const subject = encodeURIComponent(currentSelectedConfig.subject);
-        const topic = encodeURIComponent(currentSelectedConfig.topic);
-        const module = encodeURIComponent(currentSelectedConfig.module);
-        const test = encodeURIComponent(currentSelectedConfig.test);
+
+    function launchTestSession() {
+        closeConfirmModal();
+        const mode = encodeURIComponent(selectedConfig.rawModeName);
+        const subject = encodeURIComponent(selectedConfig.subject);
+        
+        let topic = "";
+        if (currentMode !== 3) {
+            topic = encodeURIComponent(selectedConfig.topic);
+        }
+        
+        let module = "";
+        if (currentMode === 1) {
+            module = encodeURIComponent(selectedConfig.module);
+        }
+        
+        const test = encodeURIComponent(selectedConfig.paper);
         
         window.location.href = `{% url 'start_test_session' %}?mode=${mode}&subject=${subject}&topic=${topic}&module=${module}&test=${test}`;
+    }
+
+    // Schedule modal operations from papers row
+    let selectedDateVal = ""; // Store date string e.g. "2026-01-23"
+    let selectedTimeVal = "09:00 AM";
+    let calCurrentDate = new Date(2026, 0, 1); // January 2026 default
+
+    // Toggle dropdown pickers
+    function togglePicker(type, event) {
+        if (event) event.stopPropagation();
+        
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        
+        if (type === 'date') {
+            timeDrop.classList.remove("active");
+            dateDrop.classList.toggle("active");
+        } else if (type === 'time') {
+            dateDrop.classList.remove("active");
+            timeDrop.classList.toggle("active");
+            setupTimePickerScrolls();
+        }
+    }
+
+    // Hide dropdowns when clicking outside
+    document.addEventListener("click", function() {
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        if (dateDrop) dateDrop.classList.remove("active");
+        if (timeDrop) timeDrop.classList.remove("active");
+    });
+
+    // Calendar month navigation
+    function changeMonth(direction, event) {
+        if (event) event.stopPropagation();
+        calCurrentDate.setMonth(calCurrentDate.getMonth() + direction);
+        renderCalendarDropdown();
+    }
+
+    function renderCalendarDropdown() {
+        const monthTitle = document.getElementById("cal-month-title");
+        const daysGrid = document.getElementById("cal-days-grid");
+        
+        const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        const year = calCurrentDate.getFullYear();
+        const month = calCurrentDate.getMonth();
+        
+        monthTitle.innerText = `${monthsList[month]} ${year}`;
+        daysGrid.innerHTML = "";
+        
+        // Days labels
+        const dayLabels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+        dayLabels.forEach(d => {
+            const span = document.createElement("span");
+            span.className = "header-day";
+            span.innerText = d;
+            daysGrid.appendChild(span);
+        });
+        
+        // Calculate offset and total days
+        let firstDayIndex = new Date(year, month, 1).getDay();
+        firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1; // Mon=0 to Sun=6
+        
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        
+        // Blank spaces for offset
+        for (let i = 0; i < firstDayIndex; i++) {
+            const span = document.createElement("span");
+            span.style.cursor = "default";
+            daysGrid.appendChild(span);
+        }
+        
+        // Date numbers
+        for (let day = 1; day <= totalDays; day++) {
+            const span = document.createElement("span");
+            span.className = "day-num";
+            span.innerText = day;
+            
+            const monthNum = String(month + 1).padStart(2, '0');
+            const dateStr = `${year}-${monthNum}-${String(day).padStart(2, '0')}`;
+            
+            if (dateStr === selectedDateVal) {
+                span.className = "day-num active";
+            }
+            
+            span.onclick = function(e) {
+                e.stopPropagation();
+                selectedDateVal = dateStr;
+                
+                const shortMonth = monthsList[month].substring(0, 3);
+                document.getElementById("sch-date-display").value = `${shortMonth} ${day}, ${year}`;
+                
+                document.querySelectorAll(".day-num").forEach(span => span.classList.remove("active"));
+                this.classList.add("active");
+                
+                document.getElementById("date-dropdown").classList.remove("active");
+            };
+            
+            daysGrid.appendChild(span);
+        }
+    }
+
+    // Time picker scroll column items populator
+    let timeSelectedH = "09";
+    let timeSelectedM = "00";
+    let timeSelectedAP = "AM";
+
+    function setupTimePickerScrolls() {
+        const hourScroll = document.getElementById("sch-hour-scroll");
+        const minuteScroll = document.getElementById("sch-minute-scroll");
+        
+        if (hourScroll.innerHTML.trim() === "") {
+            for (let h = 1; h <= 12; h++) {
+                const val = String(h).padStart(2, '0');
+                const div = document.createElement("div");
+                div.className = "time-val-item" + (val === timeSelectedH ? " selected" : "");
+                div.innerText = val;
+                div.onclick = function() {
+                    selectTimeComponent('hour', val, this);
+                };
+                hourScroll.appendChild(div);
+            }
+        }
+        
+        if (minuteScroll.innerHTML.trim() === "") {
+            for (let m = 0; m < 60; m += 5) {
+                const val = String(m).padStart(2, '0');
+                const div = document.createElement("div");
+                div.className = "time-val-item" + (val === timeSelectedM ? " selected" : "");
+                div.innerText = val;
+                div.onclick = function() {
+                    selectTimeComponent('minute', val, this);
+                };
+                minuteScroll.appendChild(div);
+            }
+        }
+    }
+
+    function selectTimeComponent(type, val, element) {
+        if (type === 'hour') {
+            timeSelectedH = val;
+            document.getElementById("time-h-lbl").innerText = val;
+            document.querySelectorAll("#sch-hour-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        } else if (type === 'minute') {
+            timeSelectedM = val;
+            document.getElementById("time-m-lbl").innerText = val;
+            document.querySelectorAll("#sch-minute-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        } else if (type === 'ampm') {
+            timeSelectedAP = val;
+            document.getElementById("time-ap-lbl").innerText = val;
+            document.querySelectorAll("#sch-ampm-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        }
+        element.classList.add("selected");
+    }
+
+    function confirmTimeSelection(e) {
+        if (e) e.stopPropagation();
+        selectedTimeVal = `${timeSelectedH}:${timeSelectedM} ${timeSelectedAP}`;
+        document.getElementById("sch-time-display").value = selectedTimeVal;
+        document.getElementById("time-dropdown").classList.remove("active");
+    }
+
+    function openSchedulePopup(paperName, difficulty, questions, duration) {
+        const subjectVal = document.getElementById("w-subject").value;
+        const topicVal = document.getElementById("w-topic").value;
+        const moduleVal = document.getElementById("w-module").value;
+
+        let modeDisplayName = "Module Blitz";
+        let rawModeName = "Module Blitz";
+        
+        if (currentMode === 1) {
+            modeDisplayName = "Module Blitz";
+            rawModeName = "Module Blitz";
+        } else if (currentMode === 2) {
+            modeDisplayName = "Topic Master";
+            rawModeName = "Topic Master";
+        } else if (currentMode === 3) {
+            modeDisplayName = "Subject Marathon";
+            rawModeName = "Subject Marathon";
+        }
+
+        selectedConfig = {
+            mode: modeDisplayName,
+            subject: subjectVal,
+            topic: currentMode !== 3 ? topicVal : "All Topics included",
+            module: currentMode === 1 ? moduleVal : "All Modules included",
+            paper: paperName,
+            questions: questions,
+            duration: duration,
+            rawModeName: rawModeName
+        };
+
+        // Populate Schedule Modal metadata
+        document.getElementById("sch-mode-val").innerText = selectedConfig.mode;
+        document.getElementById("sch-paper-val").innerText = selectedConfig.paper;
+        document.getElementById("sch-subject-val").innerText = selectedConfig.subject;
+
+        // Reset inputs to defaults
+        const today = new Date();
+        const year = today.getFullYear();
+        const monthNum = String(today.getMonth() + 1).padStart(2, '0');
+        const dayNum = today.getDate();
+        selectedDateVal = `${year}-${monthNum}-${String(dayNum).padStart(2, '0')}`;
+        
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        document.getElementById("sch-date-display").value = `${monthNames[today.getMonth()]} ${dayNum}, ${year}`;
+        
+        calCurrentDate = new Date(year, today.getMonth(), 1);
+        renderCalendarDropdown();
+        
+        timeSelectedH = "09";
+        timeSelectedM = "00";
+        timeSelectedAP = "AM";
+        document.getElementById("time-h-lbl").innerText = "09";
+        document.getElementById("time-m-lbl").innerText = "00";
+        document.getElementById("time-ap-lbl").innerText = "AM";
+        selectedTimeVal = "09:00 AM";
+        document.getElementById("sch-time-display").value = selectedTimeVal;
+
+        // Clear active classes from scroll lists
+        document.getElementById("sch-hour-scroll").innerHTML = "";
+        document.getElementById("sch-minute-scroll").innerHTML = "";
+
+        document.getElementById("scheduleModal").classList.add("active");
+    }
+
+    function closeScheduleModal() {
+        document.getElementById("scheduleModal").classList.remove("active");
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        if (dateDrop) dateDrop.classList.remove("active");
+        if (timeDrop) timeDrop.classList.remove("active");
+    }
+
+    function confirmScheduleFromPopup() {
+        if (!selectedDateVal) {
+            alert("Please select a date to schedule this test.");
+            return;
+        }
+
+        const dateObj = new Date(selectedDateVal);
+        const dayNum = dateObj.getDate();
+        
+        let dayElement = null;
+        document.querySelectorAll('.cal-day').forEach(dayEl => {
+            if (!dayEl.classList.contains('muted') && dayEl.childNodes[0].textContent.trim() == dayNum) {
+                dayElement = dayEl;
+            }
+        });
+
+        if (dayElement) {
+            let dotsContainer = dayElement.querySelector('.dots');
+            if (!dotsContainer) {
+                dotsContainer = document.createElement('div');
+                dotsContainer.className = 'dots';
+                dayElement.appendChild(dotsContainer);
+            }
+            
+            let dotColorClass = 'dot-blue';
+            if (selectedConfig.mode === 'Module Blitz') {
+                dotColorClass = 'dot-orange';
+            } else if (selectedConfig.mode === 'Subject Marathon') {
+                dotColorClass = 'dot-grey';
+            }
+
+            const newDot = document.createElement('span');
+            newDot.className = `dot ${dotColorClass}`;
+            dotsContainer.appendChild(newDot);
+        }
+
+        let bgClass = 'bg-blue';
+        if (selectedConfig.mode === 'Module Blitz') {
+            bgClass = 'bg-orange';
+        } else if (selectedConfig.mode === 'Subject Marathon') {
+            bgClass = 'bg-grey';
+        }
+
+        const agendaSection = document.querySelector('.agenda-section');
+        const newAgendaItem = document.createElement('div');
+        newAgendaItem.className = 'agenda-item';
+        newAgendaItem.style.animation = 'slideUpFade 0.4s ease forwards';
+        newAgendaItem.innerHTML = `
+            <div class="agenda-left">
+                <span class="indicator-circle ${bgClass}"></span>
+                <div class="agenda-text">
+                    <h4>Scheduled: ${selectedConfig.mode}</h4>
+                    <p>${selectedConfig.subject} (Jan ${dayNum})</p>
+                </div>
+            </div>
+            <div class="agenda-right">
+                <span class="agenda-time">${selectedTimeVal}</span>
+            </div>
+        `;
+        agendaSection.insertBefore(newAgendaItem, agendaSection.children[1]);
+
+        closeScheduleModal();
+        
+        showToast(`Success! Scheduled ${selectedConfig.mode} (${selectedConfig.subject}) for January ${dayNum} at ${selectedTimeVal}`);
+    }
+
+    function showToast(message) {
+        if (!document.getElementById('toastNotification')) {
+            const toastHtml = `
+                <div id="toastNotification" class="sticky-note-toast">
+                    <i class="fas fa-thumbtack sticky-note-pin"></i>
+                    <i class="fas fa-calendar-check text-[#120a21] text-base" id="toastIcon"></i>
+                    <span id="toastMessage" class="tracking-wide"></span>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+        }
+        
+        const toast = document.getElementById('toastNotification');
+        const toastMsg = document.getElementById('toastMessage');
+        toastMsg.innerText = message;
+        
+        toast.classList.add('show-sticky');
+        
+        setTimeout(() => {
+            toast.classList.remove('show-sticky');
+        }, 4000);
     }
 </script>
 {% endblock %}
