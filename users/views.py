@@ -282,3 +282,84 @@ def calendar_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     return render(request, 'users/calendar.html')
+
+
+def notifications_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    notifications = [
+        {
+            'id': 1,
+            'title': 'New Mock Test Available',
+            'message': 'A new full-length mock test "Subject Marathon - General Aptitude A" is now live. Test your skills today!',
+            'type': 'test',
+            'time': '2 hours ago',
+            'read': False
+        },
+        {
+            'id': 2,
+            'title': 'Streak Milestone Achieved!',
+            'message': 'Congratulations! You have completed a 12-day study streak. Keep the momentum going!',
+            'type': 'milestone',
+            'time': '1 day ago',
+            'read': False
+        },
+        {
+            'id': 3,
+            'title': 'New Book Recommendation',
+            'message': 'We have added Norman Lewis\'s "Word Power Made Easy" to your English Proficiency preparation guides.',
+            'type': 'book',
+            'time': '2 days ago',
+            'read': True
+        },
+        {
+            'id': 4,
+            'title': 'System Maintenance Completed',
+            'message': 'Our scheduled database optimization and server upgrades are complete. You may experience faster page load speeds.',
+            'type': 'system',
+            'time': '4 days ago',
+            'read': True
+        }
+    ]
+    
+    return render(request, 'users/notifications.html', {'notifications': notifications})
+
+
+from django.contrib.auth import update_session_auth_hash
+
+def profile_edit_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
+    error = None
+    success = None
+    
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        password = request.POST.get('password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+        
+        # Email field is read-only (not editable)
+        if first_name:
+            request.user.first_name = first_name
+        if last_name:
+            request.user.last_name = last_name
+            
+        if password:
+            if password == confirm_password:
+                request.user.set_password(password)
+                request.user.save()
+                update_session_auth_hash(request, request.user) # Keep logged in
+                success = "Profile and password updated successfully!"
+            else:
+                error = "Passwords do not match."
+        else:
+            request.user.save()
+            success = "Profile details updated successfully!"
+            
+    return render(request, 'users/profile_edit.html', {
+        'error': error,
+        'success': success
+    })

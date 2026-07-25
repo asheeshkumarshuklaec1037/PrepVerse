@@ -130,6 +130,7 @@
     }
 
     .podium-card {
+        cursor: pointer;
         flex: 1;
         max-width: 320px;
         width: 100%;
@@ -312,6 +313,7 @@
 
     /* Standing Highlight Box */
     .user-standing-card {
+        cursor: pointer;
         background: linear-gradient(135deg, rgba(192, 132, 252, 0.12) 0%, rgba(13, 11, 29, 0.8) 100%);
         border: 1px solid rgba(192, 132, 252, 0.35);
         border-radius: 20px;
@@ -326,6 +328,7 @@
         gap: 12px;
     }
     .leader-row {
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -421,9 +424,9 @@
     .cand-modal-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(4, 2, 12, 0.85);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        background: rgba(4, 2, 12, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         z-index: 10000;
         display: flex;
         align-items: center;
@@ -438,12 +441,12 @@
         pointer-events: auto;
     }
     .cand-modal-card {
-        background: rgba(13, 11, 29, 0.9) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        backdrop-filter: blur(25px) saturate(180%) !important;
-        -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+        background: linear-gradient(135deg, rgba(22, 18, 50, 0.82) 0%, rgba(10, 8, 26, 0.92) 100%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        backdrop-filter: blur(35px) saturate(200%) !important;
+        -webkit-backdrop-filter: blur(35px) saturate(200%) !important;
         border-radius: 28px;
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(192, 132, 252, 0.15);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 50px rgba(192, 132, 252, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
         max-width: 480px;
         width: 100%;
         padding: 30px;
@@ -647,57 +650,82 @@
 <!-- Candidate Detail Modal Overlay -->
 <div id="candidateModal" class="cand-modal-overlay" onclick="if(event.target===this)closeCandidateModal()">
     <div class="cand-modal-card" id="candidateModalCard">
+        <!-- Ambient Glowing Background Orbs inside Modal -->
+        <div style="position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(192, 132, 252, 0.25) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+        <div style="position: absolute; bottom: -40px; left: -40px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(42, 245, 152, 0.2) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+
         <!-- Close Button -->
-        <button onclick="closeCandidateModal()" class="cand-modal-close">
-            <i class="fas fa-times text-sm"></i>
+        <button onclick="closeCandidateModal()" class="cand-modal-close" style="z-index: 10;">
+            <i class="fas fa-times"></i>
         </button>
 
         <!-- Header Info -->
-        <div class="flex items-center gap-4 border-b border-white/10 pb-5 mb-5">
-            <div class="relative">
-                <div id="modalAvatarBox" class="w-16 h-16 rounded-full overflow-hidden border-2 border-[#2af598] flex items-center justify-center bg-white/10 text-white text-2xl font-bold shadow-md">
+        <div style="display: flex; align-items: center; gap: 16px; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); position: relative; z-index: 2;">
+            <div style="position: relative;">
+                <div id="modalAvatarBox" style="width: 68px; height: 68px; border-radius: 50%; overflow: hidden; border: 2.5px solid #2af598; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.08); color: #fff; font-size: 1.5rem; font-weight: 800; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(42, 245, 152, 0.3);">
                     <!-- Avatar img or initial -->
                 </div>
-                <span id="modalRankBadge" class="absolute -bottom-1 -right-1 bg-[#fbcd0b] text-black font-black text-[10px] px-2 py-0.5 rounded-full shadow-md">#1</span>
+                <span id="modalRankBadge" style="position: absolute; bottom: -4px; right: -4px; background: linear-gradient(135deg, #fbcd0b, #d97706); color: #000; font-weight: 900; font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.4);">#1</span>
             </div>
-            <div>
-                <h2 id="modalName" class="text-xl font-black text-white font-['Outfit']">Candidate Name</h2>
-                <div class="flex items-center gap-2 mt-1">
-                    <span id="modalTierBadge" class="tier-badge">GRANDMASTER</span>
-                    <span class="text-xs text-gray-400 font-medium"><i class="fas fa-fire text-[#fb7185] mr-1"></i><span id="modalStreak">7-Day Streak</span></span>
+            <div style="min-width: 0; flex-grow: 1;">
+                <h2 id="modalName" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 6px 0; background: linear-gradient(90deg, #ffffff, #e2e8f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Candidate Name</h2>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span id="modalTierBadge" class="tier-badge" style="background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.4); color: #c084fc; font-weight: 800; padding: 4px 12px; border-radius: 10px; font-size: 0.7rem;">GRANDMASTER</span>
+                    <span style="font-size: 0.78rem; color: rgba(255,255,255,0.6); font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-fire" style="color: #fb7185;"></i> <span id="modalStreak">7-Day Streak</span>
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!-- Performance Statistics Grid -->
-        <div class="grid grid-cols-2 gap-3 mb-5">
-            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
-                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Total Score</div>
-                <div id="modalXP" class="text-xl font-black text-[#c084fc] font-['Outfit']">2,450 XP</div>
+        <!-- Performance Statistics Grid (2x2 Cards with Icons & Glass effects) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; position: relative; z-index: 2;">
+            <!-- Score Card -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 16px; backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(192, 132, 252, 0.3)'; this.style.background='rgba(192, 132, 252, 0.05)';" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.08)'; this.style.background='rgba(255, 255, 255, 0.03)';">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Score</span>
+                    <i class="fas fa-gem" style="color: #c084fc; font-size: 0.85rem;"></i>
+                </div>
+                <div id="modalXP" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #c084fc;">2,450 XP</div>
             </div>
-            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
-                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Overall Accuracy</div>
-                <div id="modalAccuracy" class="text-xl font-black text-[#2af598] font-['Outfit']">94%</div>
+
+            <!-- Accuracy Card -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 16px; backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(42, 245, 152, 0.3)'; this.style.background='rgba(42, 245, 152, 0.05)';" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.08)'; this.style.background='rgba(255, 255, 255, 0.03)';">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Accuracy</span>
+                    <i class="fas fa-crosshair" style="color: #2af598; font-size: 0.85rem;"></i>
+                </div>
+                <div id="modalAccuracy" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #2af598;">94%</div>
             </div>
-            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
-                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Questions Solved</div>
-                <div id="modalSolved" class="text-xl font-black text-white font-['Outfit']">380 Solved</div>
+
+            <!-- Solved Questions Card -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 16px; backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(56, 189, 248, 0.3)'; this.style.background='rgba(56, 189, 248, 0.05)';" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.08)'; this.style.background='rgba(255, 255, 255, 0.03)';">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Questions</span>
+                    <i class="fas fa-check-circle" style="color: #38bdf8; font-size: 0.85rem;"></i>
+                </div>
+                <div id="modalSolved" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #ffffff;">380 Solved</div>
             </div>
-            <div class="bg-white/[0.03] border border-white/5 p-3.5 rounded-2xl text-center">
-                <div class="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Primary Mastery</div>
-                <div id="modalTopic" class="text-xs font-extrabold text-[#38bdf8] truncate mt-1">Quant Aptitude</div>
+
+            <!-- Primary Mastery Card -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 16px; backdrop-filter: blur(10px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(251, 205, 11, 0.3)'; this.style.background='rgba(251, 205, 11, 0.05)';" onmouseout="this.style.borderColor='rgba(255, 255, 255, 0.08)'; this.style.background='rgba(255, 255, 255, 0.03)';">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Top Subject</span>
+                    <i class="fas fa-brain" style="color: #fbcd0b; font-size: 0.85rem;"></i>
+                </div>
+                <div id="modalTopic" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 0.92rem; font-weight: 800; color: #fbcd0b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 4px;">Quant Aptitude</div>
             </div>
         </div>
 
-        <!-- Special Mastery Badges -->
-        <div class="bg-white/[0.02] border border-white/5 rounded-2xl p-4">
-            <div class="text-xs font-extrabold text-white uppercase tracking-wider mb-2 flex items-center gap-2">
-                <i class="fas fa-award text-[#fbcd0b]"></i> Verified Candidate Badges
+        <!-- Special Mastery Badges Container -->
+        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 20px; padding: 16px; position: relative; z-index: 2;">
+            <div style="font-size: 0.72rem; font-weight: 800; color: rgba(255, 255, 255, 0.8); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-award" style="color: #fbcd0b;"></i> Verified Candidate Badges
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-[10px] bg-[#fbcd0b]/10 text-[#fbcd0b] border border-[#fbcd0b]/20 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5"><i class="fas fa-bolt"></i> Speed Demon</span>
-                <span class="text-[10px] bg-[#2af598]/10 text-[#2af598] border border-[#2af598]/20 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5"><i class="fas fa-bullseye"></i> Accuracy Elite</span>
-                <span class="text-[10px] bg-[#c084fc]/10 text-[#c084fc] border border-[#c084fc]/20 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5"><i class="fas fa-fire"></i> Daily Warrior</span>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 0.7rem; background: rgba(251, 205, 11, 0.1); color: #fbcd0b; border: 1px solid rgba(251, 205, 11, 0.25); padding: 5px 12px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-bolt"></i> Speed Demon</span>
+                <span style="font-size: 0.7rem; background: rgba(42, 245, 152, 0.1); color: #2af598; border: 1px solid rgba(42, 245, 152, 0.25); padding: 5px 12px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-bullseye"></i> Accuracy Elite</span>
+                <span style="font-size: 0.7rem; background: rgba(192, 132, 252, 0.1); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.25); padding: 5px 12px; border-radius: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-fire"></i> Daily Warrior</span>
             </div>
         </div>
     </div>

@@ -1045,16 +1045,27 @@
     </div>
 
     <div class="quiz-card">
-      <div class="quiz-head">
-        <span class="quiz-tag">Try it now · Logical Reasoning</span>
-        <span class="timer" id="timer">00:15</span>
+      <div class="quiz-head" style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-bolt" style="color: #f59e0b;"></i> Daily Challenge Quiz
+        </h3>
+        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.4); font-family: var(--mono);">Interactive Practice</span>
       </div>
       <p class="quiz-q" id="qtext">Loading question…</p>
       <div class="quiz-opts" id="opts"></div>
       <div class="feedback" id="feedback"></div>
-      <div class="quiz-foot">
-        <span class="streak">🔥 Solve to preview your streak</span>
-        <button class="link-btn" id="nextBtn">Next question →</button>
+      <div class="quiz-foot" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 15px;">
+        <button id="prevBtn" class="quiz-nav-arrow" title="Previous Question" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'; this.style.borderColor='rgba(255,255,255,0.25)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <a href="{% url 'daily_challenges' %}" class="btn-spark-center" style="flex-grow: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2)); border: 1px solid rgba(245, 158, 11, 0.5); color: #fbbf24; padding: 10px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);" onmouseover="this.style.background='linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(234, 88, 12, 0.35))'" onmouseout="this.style.background='linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2))'">
+          ⚡ Daily Spark Arena →
+        </a>
+
+        <button id="nextBtn" class="quiz-nav-arrow" title="Next Question" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'; this.style.borderColor='rgba(255,255,255,0.25)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+          <i class="fas fa-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -1367,34 +1378,12 @@
         const optsContainer = $('#opts');
         const feedback = $('#feedback');
         const nextBtn = $('#nextBtn');
-        const timerVal = $('#timer');
-
-        // Timer setup
-        let timeRemaining = 15;
-        let timerInterval;
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            timeRemaining = 15;
-            timerVal.text(`00:${timeRemaining < 10 ? '0' : ''}${timeRemaining}`).css('color', '#f59e0b');
-            timerInterval = setInterval(() => {
-                timeRemaining--;
-                timerVal.text(`00:${timeRemaining < 10 ? '0' : ''}${timeRemaining}`);
-                if (timeRemaining <= 5) {
-                    timerVal.css('color', '#ef4444');
-                }
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    autoSubmit();
-                }
-            }, 1000);
-        }
+        const prevBtn = $('#prevBtn');
 
         function loadQuestion(index) {
             answered = false;
             selectedOpt = null;
             feedback.removeClass('show').hide();
-            nextBtn.text("Skip question →").css('color', 'rgba(255,255,255,0.4)');
             
             const item = QUESTIONS[index];
             qtext.text(item.q);
@@ -1409,28 +1398,11 @@
                 `);
                 optsContainer.append(optEl);
             });
-
-            startTimer();
-        }
-
-        function autoSubmit() {
-            if (answered) return;
-            answered = true;
-            clearInterval(timerInterval);
-            
-            const correctIdx = QUESTIONS[currentQIndex].correct;
-            // Mark correct answer
-            optsContainer.find(`.opt[data-index="${correctIdx}"]`).addClass('correct');
-            optsContainer.find('.opt').prop('disabled', true);
-            
-            feedback.text(`Time's up! ${QUESTIONS[currentQIndex].explanation}`).addClass('show').fadeIn();
-            nextBtn.text("Next question →").css('color', '#3b82f6');
         }
 
         // Handle Option Select
         optsContainer.on('click', '.opt', function() {
             if (answered) return;
-            clearInterval(timerInterval);
             answered = true;
             
             const selectedIdx = parseInt($(this).data('index'), 10);
@@ -1448,12 +1420,16 @@
             }
 
             feedback.addClass('show').fadeIn();
-            nextBtn.text("Next question →").css('color', '#3b82f6');
         });
 
-        // Handle Next / Skip Button
+        // Handle Next / Prev Arrow Buttons
         nextBtn.on('click', function() {
             currentQIndex = (currentQIndex + 1) % QUESTIONS.length;
+            loadQuestion(currentQIndex);
+        });
+
+        prevBtn.on('click', function() {
+            currentQIndex = (currentQIndex - 1 + QUESTIONS.length) % QUESTIONS.length;
             loadQuestion(currentQIndex);
         });
 

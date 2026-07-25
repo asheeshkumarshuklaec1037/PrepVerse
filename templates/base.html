@@ -322,6 +322,12 @@
         }
 
         /* User Info & Avatar */
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .sidebar-user {
             padding: 20px 0;
             display: flex;
@@ -331,12 +337,31 @@
             padding-left: 18px;
             gap: 15px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, rgba(13, 17, 48, 0.6), rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+            background-size: 200% 200%;
+            animation: bgShift 8s ease infinite;
+            transition: all 0.3s ease;
+        }
+        .sidebar-user:hover {
+            background: linear-gradient(135deg, rgba(13, 17, 48, 0.8), rgba(42, 245, 152, 0.1), rgba(168, 85, 247, 0.15));
+            border-bottom-color: rgba(42, 245, 152, 0.2);
         }
 
         @media (max-width: 992px) {
             .sidebar-user {
                 padding-left: 13px;
             }
+        }
+
+        @keyframes avatarPulse {
+            0% { box-shadow: 0 0 0 0 rgba(42, 245, 152, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(42, 245, 152, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(42, 245, 152, 0); }
+        }
+        @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .sidebar-user-avatar {
@@ -350,18 +375,20 @@
             justify-content: center;
             font-weight: 700;
             font-size: 1.1rem;
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            border: 2px solid #2af598 !important;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             cursor: pointer;
             position: relative;
             transition: all 0.3s ease;
             flex-shrink: 0;
+            animation: avatarPulse 2.5s infinite;
+            overflow: hidden;
         }
 
         .sidebar-user-avatar:hover {
             transform: scale(1.08);
-            border-color: #2af598;
-            box-shadow: 0 0 12px rgba(42, 245, 152, 0.4);
+            border-color: #c084fc !important;
+            box-shadow: 0 0 12px rgba(192, 132, 252, 0.5);
         }
 
         .sidebar-user-info {
@@ -376,7 +403,12 @@
         .sidebar-user-name {
             font-weight: 700;
             font-size: 0.95rem;
-            color: #ffffff;
+            background: linear-gradient(90deg, #ffffff, #2af598, #c084fc, #ffffff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textShine 6s ease infinite;
         }
 
         .sidebar-user-role {
@@ -629,9 +661,13 @@
             </a>
         </div>
         
-        <div class="sidebar-user">
+        <div class="sidebar-user" onclick="window.location.href='{% url 'profile_edit' %}'" style="cursor: pointer;">
             <div class="sidebar-user-avatar" data-title="{{ user.first_name }} {{ user.last_name }}">
-                {{ user.first_name|slice:":1"|upper }}
+                <img src="{% static 'images/candidate_profile_avatar.jpg' %}" alt="Profile Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="sidebar-user-info">
+                <span class="sidebar-user-name">Hey, {{ user.first_name }}!</span>
+                <span style="font-size: 0.72rem; color: #2af598; font-weight: 600; font-family: var(--mono); opacity: 0.85;">Manage Profile ↗</span>
             </div>
         </div>
 
@@ -655,6 +691,10 @@
             <a href="{% url 'calendar' %}" class="sidebar-link" data-sidebar-route="calendar" data-title="Calendar">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Calendar</span>
+            </a>
+            <a href="{% url 'notifications' %}" class="sidebar-link" data-sidebar-route="notifications" data-title="Notifications">
+                <i class="fa-solid fa-bell"></i>
+                <span>Notifications</span>
             </a>
         </nav>
 
@@ -694,23 +734,14 @@
             <div class="search-trigger"><i class="fas fa-search"></i></div>
             {% if user.is_authenticated %}
                 <div class="user-menu-container">
-                    <div class="user-avatar-btn" id="userAvatarBtn">
-                        {{ user.first_name|slice:":1"|upper }}
+                    <div class="user-avatar-btn" id="userAvatarBtn" style="overflow: hidden; border: 2px solid rgba(255,255,255,0.1); border-radius: 50%;">
+                        <img src="{% static 'images/candidate_profile_avatar.jpg' %}" alt="Profile Avatar" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <div class="user-dropdown-menu" id="userDropdownMenu">
-                        <div class="user-dropdown-header">
+                        <div class="user-dropdown-header" onclick="window.location.href='{% url 'profile_edit' %}'" style="cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='none'">
                             <strong>{{ user.first_name }} {{ user.last_name }}</strong>
-                            {{ user.email }}
+                            <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5); display: block; margin-top: 3px;">{{ user.email }}</span>
                         </div>
-                        <a href="{% url 'dashboard' %}" class="user-dropdown-item">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
-                        <a href="{% url 'practice' %}" class="user-dropdown-item">
-                            <i class="fas fa-brain"></i> Practice Arena
-                        </a>
-                        <a href="{% url 'courses' %}" class="user-dropdown-item">
-                            <i class="fas fa-graduation-cap"></i> Courses
-                        </a>
                         <a href="{% url 'logout' %}" class="user-dropdown-item logout-item">
                             <i class="fas fa-sign-out-alt"></i> Log Out
                         </a>
@@ -789,7 +820,15 @@
             }
         });
 
-
+        // Load custom profile avatar from localStorage
+        const customAvatar = localStorage.getItem("prepverse-custom-avatar");
+        if (customAvatar) {
+            document.querySelectorAll("img").forEach(img => {
+                if (img.src.includes("candidate_profile_avatar.jpg")) {
+                    img.src = customAvatar;
+                }
+            });
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notifications | PrepVerse{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --bg-dark: #070412;
+        --card-bg: rgba(13, 11, 29, 0.35);
+        --border-glass: rgba(255, 255, 255, 0.05);
+        --border-glass-hover: rgba(255, 255, 255, 0.12);
+        --text-primary: #ffffff;
+        --text-secondary: #e2e8f0;
+        --text-tertiary: #94a3b8;
+        --accent-blue: #38bdf8;
+        --accent-purple: #c084fc;
+        --accent-rose: #fb7185;
+        --accent-gold: #fbcd0b;
+        --accent-green: #2af598;
+    }
+
+    body {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-primary) !important;
+    }
+
+    #bgPatternLayer {
+        position: fixed;
+        top: -15vh; left: 0; width: 100vw; height: 130vh;
+        z-index: -3; pointer-events: none;
+        background-image: 
+            linear-gradient(rgba(139, 92, 246, 0.012) 1.5px, transparent 1.5px),
+            linear-gradient(90deg, rgba(139, 92, 246, 0.012) 1.5px, transparent 1.5px),
+            radial-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 0);
+        background-size: 60px 60px, 60px 60px, 30px 30px;
+        background-position: center center;
+    }
+
+    .glow-orb {
+        position: fixed; border-radius: 50%; filter: blur(140px); opacity: 0.12; z-index: -2; pointer-events: none;
+    }
+    .orb-1 { width: 600px; height: 600px; top: -150px; right: -100px; background: radial-gradient(circle, rgba(192, 132, 252, 0.8) 0%, transparent 70%); }
+    .orb-2 { width: 500px; height: 500px; bottom: -100px; left: -100px; background: radial-gradient(circle, rgba(56, 189, 248, 0.7) 0%, transparent 70%); }
+
+    .notifications-container {
+        max-width: 1000px;
+        margin: 0 auto 80px;
+        padding: 0 5%;
+        opacity: 0;
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes pageFadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-header {
+        margin-bottom: 40px;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .header-text h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, #fff, #c084fc);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .header-text p {
+        font-size: 1rem;
+        color: var(--text-tertiary);
+        margin: 0;
+    }
+
+    .clear-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-glass);
+        color: var(--text-secondary);
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .clear-btn:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+    }
+
+    /* Notifications List */
+    .notifications-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .notification-item {
+        background: var(--card-bg);
+        border: 1px solid var(--border-glass);
+        border-radius: 20px;
+        padding: 25px;
+        backdrop-filter: blur(25px);
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+    }
+    .notification-item:hover {
+        transform: translateY(-2px);
+        border-color: var(--border-glass-hover);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .notification-item.unread {
+        border-color: rgba(192, 132, 252, 0.2);
+        background: rgba(192, 132, 252, 0.02);
+    }
+    .notification-item.unread:before {
+        content: "";
+        position: absolute;
+        top: 25px; right: 25px;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--accent-purple);
+    }
+
+    .notif-icon-box {
+        width: 48px; height: 48px;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+    .notif-icon-box.test { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+    .notif-icon-box.milestone { background: rgba(42, 245, 152, 0.1); color: var(--accent-green); }
+    .notif-icon-box.book { background: rgba(251, 205, 11, 0.1); color: var(--accent-gold); }
+    .notif-icon-box.system { background: rgba(251, 113, 133, 0.1); color: var(--accent-rose); }
+
+    .notif-content {
+        flex-grow: 1;
+        min-width: 0;
+    }
+    .notif-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .notif-message {
+        font-size: 0.9rem;
+        color: var(--text-tertiary);
+        line-height: 1.6;
+        margin: 0 0 10px;
+    }
+    .notif-time {
+        font-size: 0.75rem;
+        color: var(--text-tertiary);
+        font-family: var(--mono);
+        opacity: 0.6;
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="bgPatternLayer"></div>
+<div class="glow-orb orb-1"></div>
+<div class="glow-orb orb-2"></div>
+
+<div class="notifications-container">
+    <div class="page-header">
+        <div class="header-text">
+            <h1>Notifications Hub</h1>
+            <p>Stay updated with your mock results, roadmap updates and scheduled tasks.</p>
+        </div>
+        <button class="clear-btn" onclick="markAllAsRead()"><i class="fas fa-check-double"></i> Mark all read</button>
+    </div>
+
+    <div class="notifications-list" id="notifList">
+        {% for notif in notifications %}
+        <div class="notification-item {% if not notif.read %}unread{% endif %}" id="notif-{{ notif.id }}">
+            <div class="notif-icon-box {{ notif.type }}">
+                {% if notif.type == 'test' %}
+                    <i class="fa-solid fa-chart-line"></i>
+                {% elif notif.type == 'milestone' %}
+                    <i class="fa-solid fa-trophy"></i>
+                {% elif notif.type == 'book' %}
+                    <i class="fa-solid fa-book"></i>
+                {% else %}
+                    <i class="fa-solid fa-gears"></i>
+                {% endif %}
+            </div>
+            <div class="notif-content">
+                <strong class="notif-title">{{ notif.title }}</strong>
+                <p class="notif-message">{{ notif.message }}</p>
+                <span class="notif-time">{{ notif.time }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function markAllAsRead() {
+        document.querySelectorAll('.notification-item.unread').forEach(item => {
+            item.classList.remove('unread');
+        });
+        
+        // Highlight status toast
+        if (window.showStickyNotification) {
+            window.showStickyNotification("All notifications marked as read!");
+        }
+    }
+</script>
+{% endblock %}
