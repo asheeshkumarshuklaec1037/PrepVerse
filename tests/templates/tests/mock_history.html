@@ -1228,6 +1228,24 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Book affiliate block -->
+                <div class="glass-card" style="padding: 25px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); text-align: left; margin-top: 20px;">
+                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-book" style="color: #60a5fa;"></i> Recommended Prep Book
+                    </h3>
+                    <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; margin-bottom: 15px;">
+                        Strengthen your weak areas with targeted questions from the best preparation books.
+                    </p>
+                    <a id="recommended-book-link" href="https://www.amazon.in" target="_blank" style="display: flex; align-items: center; gap: 10px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 12px; text-decoration: none; color: #fff; transition: all 0.3s;" onmouseover="this.style.background='rgba(59,130,246,0.15)'" onmouseout="this.style.background='rgba(59,130,246,0.1)'">
+                        <span style="font-size: 1.5rem;">📖</span>
+                        <div style="flex-grow: 1;">
+                            <span style="font-size: 0.72rem; font-family: var(--mono); color: #fbbf24; text-transform: uppercase; font-weight: 700; display: block;">Top Recommendation</span>
+                            <span style="font-size: 0.84rem; font-weight: 600; display: block;" id="recommended-book-title">Quantitative Aptitude by R.S. Aggarwal</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="font-size: 0.8rem; opacity: 0.6;"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -2385,6 +2403,26 @@
         document.getElementById("analysis-val-percentile").innerText = `${attempt.percentile}%`;
         document.getElementById("analysis-val-strong").innerText = attempt.strong_topic || "All Topics";
         document.getElementById("analysis-val-weak").innerText = attempt.weak_topic || "None";
+        
+        // Dynamic Book Recommendation
+        const bookTitle = document.getElementById("recommended-book-title");
+        const bookLink = document.getElementById("recommended-book-link");
+        if (bookTitle && bookLink) {
+            const subj = attempt.subject || "";
+            if (subj.includes("Quant") || subj.includes("Aptitude")) {
+                bookTitle.innerText = "Quantitative Aptitude by R.S. Aggarwal";
+                bookLink.href = "https://www.amazon.in/s?k=quantitative+aptitude+rs+aggarwal&tag=prepverse0d-21";
+            } else if (subj.includes("Logic") || subj.includes("Reasoning")) {
+                bookTitle.innerText = "A Modern Approach to Verbal & Non-Verbal Reasoning by R.S. Aggarwal";
+                bookLink.href = "https://www.amazon.in/s?k=verbal+and+non+verbal+reasoning+rs+aggarwal&tag=prepverse0d-21";
+            } else if (subj.includes("English") || subj.includes("Verbal")) {
+                bookTitle.innerText = "Word Power Made Easy by Norman Lewis";
+                bookLink.href = "https://www.amazon.in/s?k=word+power+made+easy&tag=prepverse0d-21";
+            } else {
+                bookTitle.innerText = "High School English Grammar & Composition by Wren & Martin";
+                bookLink.href = "https://www.amazon.in/s?k=wren+and+martin&tag=prepverse0d-21";
+            }
+        }
         
         // Doughnut Chart update
         const accuracy = attempt.accuracy;

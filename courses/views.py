@@ -238,3 +238,63 @@ def module_detail(request, course_id, topic_id, module_name):
     })
 
 
+def recommended_books_view(request):
+    books = [
+        {
+            'title': 'Quantitative Aptitude for Competitive Examinations',
+            'author': 'Dr. R.S. Aggarwal',
+            'category': 'Quantitative Aptitude',
+            'description': 'The definitive textbook for numerical aptitude tests covering over 5500+ solved queries and multiple practice questions.',
+            'image': 'https://images-na.ssl-images-amazon.com/images/I/81o1cWd-L5L.jpg',
+            'link': 'https://www.amazon.in/s?k=quantitative+aptitude+rs+aggarwal&tag=prepverse0d-21',
+            'price': '₹550'
+        },
+        {
+            'title': 'Fast Track Objective Arithmetic',
+            'author': 'Rajesh Verma',
+            'category': 'Quantitative Aptitude',
+            'description': 'Features simple methods and shortcuts to solve mathematical queries in competitive placement tests.',
+            'image': 'https://images-na.ssl-images-amazon.com/images/I/71nZ+0x1P5L.jpg',
+            'link': 'https://www.amazon.in/s?k=fast+track+objective+arithmetic+rajesh+verma&tag=prepverse0d-21',
+            'price': '₹310'
+        },
+        {
+            'title': 'A Modern Approach to Verbal & Non-Verbal Reasoning',
+            'author': 'Dr. R.S. Aggarwal',
+            'category': 'Logical Reasoning',
+            'description': 'Detailed explanations and mock exercises for syllogisms, blood relations, puzzles and non-verbal logic systems.',
+            'image': 'https://images-na.ssl-images-amazon.com/images/I/81bS4LwHk-L.jpg',
+            'link': 'https://www.amazon.in/s?k=verbal+and+non+verbal+reasoning+rs+aggarwal&tag=prepverse0d-21',
+            'price': '₹620'
+        },
+        {
+            'title': 'How to Prepare for Logical Reasoning for CAT',
+            'author': 'Arun Sharma',
+            'category': 'Logical Reasoning',
+            'description': 'Advanced problems, shortcuts and caselets matching modern proctored test formats.',
+            'image': 'https://images-na.ssl-images-amazon.com/images/I/71+ZqY3UjXL.jpg',
+            'link': 'https://www.amazon.in/s?k=logical+reasoning+arun+sharma&tag=prepverse0d-21',
+            'price': '₹590'
+        },
+        {
+            'title': 'Word Power Made Easy',
+            'author': 'Norman Lewis',
+            'category': 'English Proficiency',
+            'description': 'The go-to guide to enhance vocabulary, word derivations, synonyms, and verbal expression.',
+            'image': 'https://images-na.ssl-images-amazon.com/images/I/818e+gq5V5L.jpg',
+            'link': 'https://www.amazon.in/s?k=word+power+made+easy&tag=prepverse0d-21',
+            'price': '₹150'
+        },
+        {
+            'title': 'High School English Grammar and Composition',
+            'author': 'Wren & Martin',
+            'category': 'English Proficiency',
+            'description': 'The classic guide to grammar, sentence constructions, correct usage, and reading skills.',
+            'image': 'https://images-na.ssl-images-amazon.com/images/I/81N0mRCE-IL.jpg',
+            'link': 'https://www.amazon.in/s?k=wren+and+martin&tag=prepverse0d-21',
+            'price': '₹380'
+        }
+    ]
+    return render(request, 'courses/recommended_books.html', {'books': books})
+
+

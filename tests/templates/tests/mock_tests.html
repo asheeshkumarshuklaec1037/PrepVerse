@@ -1262,21 +1262,40 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 4px;
-        padding: 12px 14px;
-        margin-bottom: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        gap: 6px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
         background: rgba(255, 255, 255, 0.02);
-        border-radius: 10px;
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         text-align: left;
+        position: relative;
+    }
+    .tree-item::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 4px; height: 100%;
+        background: linear-gradient(180deg, #3b82f6, #8b5cf6);
+        opacity: 0;
+        transition: all 0.3s ease;
+        border-radius: 12px 0 0 12px;
+    }
+    .tree-item:hover::before {
+        opacity: 1;
     }
     .tree-item:hover {
-        background: rgba(59, 130, 246, 0.06);
-        border-color: rgba(59, 130, 246, 0.3);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+        background: rgba(59, 130, 246, 0.08);
+        border-color: rgba(59, 130, 246, 0.25);
+        transform: translateY(-2px) translateX(2px);
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12), inset 0 0 10px rgba(59, 130, 246, 0.05);
+    }
+    .tree-item-title {
+        font-weight: 700;
+        color: #ffffff;
+        font-size: 0.85rem;
     }
     .tree-item-meta {
         font-size: 0.65rem;
@@ -2663,10 +2682,10 @@
                                 const badgeColor = attempted ? "#3b82f6" : m.color;
 
                                 html += `
-                                    <div class="tree-item" onclick="triggerSidebarNavigation(1, '${sub.name.replace(/'/g, "\\'")}', '${t.name.replace(/'/g, "\\'")}', '${mod.replace(/'/g, "\\'")}', '${m.name}', ${attempted})" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06); background: rgba(255, 255, 255, 0.02); border-radius: 10px; transition: 0.2s;">
+                                    <div class="tree-item" onclick="triggerSidebarNavigation(1, '${sub.name.replace(/'/g, "\\'")}', '${t.name.replace(/'/g, "\\'")}', '${mod.replace(/'/g, "\\'")}', '${m.name}', ${attempted})">
                                         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                            <span style="font-weight: 700; color: #ffffff; font-size: 0.85rem;">${m.name}</span>
-                                            <span class="tree-item-meta" style="background: ${badgeColor}; color: #ffffff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">${badgeText}</span>
+                                            <span class="tree-item-title">${m.name}</span>
+                                            <span class="tree-item-meta" style="background: ${badgeColor};">${badgeText}</span>
                                         </div>
                                         <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
                                             <span class="nav-pill pill-sub">${sub.name}</span>
@@ -2709,10 +2728,10 @@
                         const badgeColor = attempted ? "#3b82f6" : m.color;
 
                         html += `
-                            <div class="tree-item" onclick="triggerSidebarNavigation(2, '${sub.name.replace(/'/g, "\\'")}', '${t.name.replace(/'/g, "\\'")}', '', '${m.name}', ${attempted})" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06); background: rgba(255, 255, 255, 0.02); border-radius: 10px; transition: 0.2s;">
+                            <div class="tree-item" onclick="triggerSidebarNavigation(2, '${sub.name.replace(/'/g, "\\'")}', '${t.name.replace(/'/g, "\\'")}', '', '${m.name}', ${attempted})">
                                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <span style="font-weight: 700; color: #ffffff; font-size: 0.85rem;">${m.name}</span>
-                                    <span class="tree-item-meta" style="background: ${badgeColor}; color: #ffffff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">${badgeText}</span>
+                                    <span class="tree-item-title">${m.name}</span>
+                                    <span class="tree-item-meta" style="background: ${badgeColor};">${badgeText}</span>
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
                                     <span class="nav-pill pill-sub">${sub.name}</span>
@@ -2750,10 +2769,10 @@
                 const badgeColor = attempted ? "#3b82f6" : m.color;
 
                 html += `
-                    <div class="tree-item" onclick="triggerSidebarNavigation(3, '${sub.name.replace(/'/g, "\\'")}', '', '', '${m.name}', ${attempted})" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06); background: rgba(255, 255, 255, 0.02); border-radius: 10px; transition: 0.2s;">
+                    <div class="tree-item" onclick="triggerSidebarNavigation(3, '${sub.name.replace(/'/g, "\\'")}', '', '', '${m.name}', ${attempted})">
                         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <span style="font-weight: 700; color: #ffffff; font-size: 0.85rem;">${m.name}</span>
-                            <span class="tree-item-meta" style="background: ${badgeColor}; color: #ffffff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">${badgeText}</span>
+                            <span class="tree-item-title">${m.name}</span>
+                            <span class="tree-item-meta" style="background: ${badgeColor};">${badgeText}</span>
                         </div>
                         <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
                             <span class="nav-pill pill-sub">${sub.name}</span>

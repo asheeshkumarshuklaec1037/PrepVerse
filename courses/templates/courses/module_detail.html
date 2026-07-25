@@ -503,6 +503,56 @@
         </div>
     </div>
     {% endfor %}
+
+    <!-- Option 1: Study Resources / Best Book Recommendation banner at the bottom of the practice set -->
+    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 24px; padding: 35px; text-align: left; margin: 40px 0; backdrop-filter: blur(25px); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+            <span style="font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #2af598; font-weight: 700; display: block; margin-bottom: 10px;">Recommended Resource</span>
+            <h3 style="font-size: 1.4rem; font-weight: 800; margin: 0 0 10px; color: #fff;">Want to master this topic?</h3>
+            <p style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.6); line-height: 1.6; margin: 0;">
+                Accelerate your preparation with top recommended books packed with shortcut tricks, mock question banks, and detailed concept explanations.
+            </p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 15px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 16px; padding: 18px 24px;">
+            <div style="font-size: 2.2rem;">📖</div>
+            <div>
+                <span style="font-size: 0.8rem; opacity: 0.6; display: block;">Top Book Choice</span>
+                <a id="affiliate-book-link" href="" target="_blank" style="font-size: 1rem; font-weight: 700; color: #60a5fa; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <span id="affiliate-book-title">Quantitative Aptitude by R.S. Aggarwal</span> <i class="fas fa-external-link-alt" style="font-size: 0.8rem;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if "Quant" in topic.title or "Aptitude" in topic.title %}
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.getElementById("affiliate-book-title").innerText = "Quantitative Aptitude by R.S. Aggarwal";
+                document.getElementById("affiliate-book-link").href = "https://www.amazon.in/s?k=quantitative+aptitude+rs+aggarwal&tag=prepverse0d-21";
+            });
+        </script>
+    {% elif "Logic" in topic.title or "Reasoning" in topic.title %}
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.getElementById("affiliate-book-title").innerText = "Verbal & Non-Verbal Reasoning by R.S. Aggarwal";
+                document.getElementById("affiliate-book-link").href = "https://www.amazon.in/s?k=verbal+and+non+verbal+reasoning+rs+aggarwal&tag=prepverse0d-21";
+            });
+        </script>
+    {% elif "English" in topic.title or "Verbal" in topic.title or "Grammar" in topic.title %}
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.getElementById("affiliate-book-title").innerText = "Word Power Made Easy by Norman Lewis";
+                document.getElementById("affiliate-book-link").href = "https://www.amazon.in/s?k=word+power+made+easy&tag=prepverse0d-21";
+            });
+        </script>
+    {% else %}
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                document.getElementById("affiliate-book-title").innerText = "High School English Grammar by Wren & Martin";
+                document.getElementById("affiliate-book-link").href = "https://www.amazon.in/s?k=wren+and+martin&tag=prepverse0d-21";
+            });
+        </script>
+    {% endif %}
 </div>
 {% endblock %}
 

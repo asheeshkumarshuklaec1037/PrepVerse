@@ -265,7 +265,6 @@ def solved_questions_view(request):
         solved_list = [item for item in solved_list if item['status'] == 'Correct']
     elif status_filter == 'incorrect':
         solved_list = [item for item in solved_list if item['status'] == 'Incorrect']
-        
     paginator = Paginator(solved_list, 50)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
@@ -276,3 +275,10 @@ def solved_questions_view(request):
         'q': q,
         'status_filter': status_filter
     })
+
+
+
+def calendar_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'users/calendar.html')
