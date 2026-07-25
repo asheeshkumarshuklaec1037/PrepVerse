@@ -241,8 +241,6 @@
             cursor: pointer;
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            margin-right: 15px;
             z-index: 2100;
         }
 
@@ -708,25 +706,25 @@
     {% endif %}
 
     <nav class="navbar" id="navbar">
-        {% if user.is_authenticated %}
-            <div class="sidebar-hover-trigger" id="sidebarHoverTrigger">
-                <i class="fas fa-bars"></i>
-            </div>
-        {% endif %}
-        
-        <a href="{% url 'home' %}" class="logo">
-            <i class="fas fa-bolt"></i>
-            <span>PrepVerse</span>
-        </a>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            {% if user.is_authenticated %}
+                <div class="sidebar-hover-trigger" id="sidebarHoverTrigger">
+                    <i class="fas fa-bars"></i>
+                </div>
+            {% endif %}
+            
+            <a href="{% url 'home' %}" class="logo">
+                <i class="fas fa-bolt"></i>
+                <span>PrepVerse</span>
+            </a>
+        </div>
 
         <div class="nav-links">
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'courses' %}">Courses</a>
-            <a href="{% url 'practice' %}">Practice</a>
             <a href="{% url 'mock_test' %}">Mock Test</a>
             <a href="{% url 'blog' %}">Blog</a>
             <a href="{% url 'recommended_books' %}">Prep Books</a>
-            <a href="#">Community</a>
             <a href="#">About</a>
         </div>
 
