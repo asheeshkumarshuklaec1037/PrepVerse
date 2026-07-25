@@ -1085,7 +1085,249 @@
         color: #e53935;
         font-size: 1.1rem;
         filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4));
-        transform: rotate(-15deg);
+    }
+
+    /* Collapsible Navigation Sidebar */
+    .quick-nav-sidebar {
+        position: fixed;
+        top: 0;
+        right: -390px;
+        width: 390px;
+        height: 100vh;
+        background: rgba(10, 17, 32, 0.94);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: -15px 0 45px rgba(0, 0, 0, 0.6);
+        z-index: 9999;
+        transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        color: #ffffff;
+        font-family: 'Outfit', sans-serif;
+    }
+    .quick-nav-sidebar.active {
+        right: 0;
+    }
+    .quick-nav-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .quick-nav-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .quick-nav-close {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        color: #94a3b8;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .quick-nav-close:hover {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.25);
+        transform: rotate(90deg);
+    }
+    .quick-nav-search-container {
+        padding: 15px 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .quick-nav-search {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 10px 15px;
+        color: #ffffff;
+        outline: none;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+    .quick-nav-search:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .quick-nav-tree {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 25px;
+    }
+    .quick-nav-tree::-webkit-scrollbar {
+        width: 6px;
+    }
+    .quick-nav-tree::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.01);
+        border-radius: 10px;
+    }
+    .quick-nav-tree::-webkit-scrollbar-thumb {
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .quick-nav-tree::-webkit-scrollbar-thumb:hover {
+        background: rgba(59, 130, 246, 0.4);
+    }
+    .tree-folder {
+        margin-bottom: 15px;
+    }
+    .tree-folder-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        color: #e2e8f0;
+    }
+    .tree-folder-title:hover {
+        background: rgba(59, 130, 246, 0.06);
+        border-color: rgba(59, 130, 246, 0.2);
+        color: #ffffff;
+    }
+    .tree-folder-title i.chevron {
+        font-size: 0.75rem;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        opacity: 0.6;
+    }
+    .tree-folder.collapsed i.chevron {
+        transform: rotate(-90deg);
+    }
+    .tree-folder-content {
+        padding-left: 0;
+        margin-top: 5px;
+        border-left: none;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                    opacity 0.3s ease-out;
+        will-change: max-height, opacity;
+    }
+    .tree-folder:not(.collapsed) > .tree-folder-content {
+        opacity: 1;
+    }
+
+    /* Colorful Configuration Nav Pills */
+    .nav-pill {
+        font-size: 0.62rem;
+        font-weight: 800;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+        margin: 2px 0;
+    }
+    .pill-sub {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: #60a5fa !important;
+        border: 1px solid rgba(59, 130, 246, 0.3) !important;
+    }
+    .pill-top {
+        background: rgba(168, 85, 247, 0.15) !important;
+        color: #c084fc !important;
+        border: 1px solid rgba(168, 85, 247, 0.3) !important;
+    }
+    .pill-mod {
+        background: rgba(245, 158, 11, 0.15) !important;
+        color: #fbbf24 !important;
+        border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    }
+    .tree-item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        text-align: left;
+    }
+    .tree-item:hover {
+        background: rgba(59, 130, 246, 0.06);
+        border-color: rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+    }
+    .tree-item-meta {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    /* Sticky Toggle Button on Right Edge */
+    .sidebar-trigger-btn {
+        position: fixed;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-right: none;
+        border-radius: 20px 0 0 20px;
+        color: #ffffff;
+        padding: 18px 12px;
+        cursor: pointer;
+        z-index: 9998;
+        font-weight: 800;
+        font-size: 0.78rem;
+        letter-spacing: 0.5px;
+        writing-mode: vertical-rl;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: -4px 0 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .sidebar-trigger-btn:hover {
+        padding-right: 18px;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    /* Scrollable papers container */
+    .test-papers-list-container {
+        max-height: 720px;
+        overflow-y: auto;
+        padding-right: 15px;
+    }
+    .test-papers-list-container::-webkit-scrollbar {
+        width: 6px;
+    }
+    .test-papers-list-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.08);
+        border-radius: 3px;
     }
 </style>
 {% endblock %}
@@ -1185,8 +1427,15 @@
 
             <!-- Available papers side panel -->
             <div class="test-papers-list-container" id="w-tests-container">
-                <h3>Available Mock Tests</h3>
-                <p class="subtitle">Pick a simulated test sheet below to begin the assessment.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <h3 style="margin: 0;">Available Mock Tests</h3>
+                    <select id="w-attempt-filter" onchange="onAttemptFilterChange()" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; color: #1e293b; padding: 6px 12px; font-weight: 700; outline: none; cursor: pointer; font-size: 0.85rem; font-family: 'Outfit', sans-serif;">
+                        <option value="all">All Tests</option>
+                        <option value="attempted">Attempted</option>
+                        <option value="unattempted">Not Attempted</option>
+                    </select>
+                </div>
+                <p class="subtitle" style="margin-top: 0;">Pick a simulated test sheet below to begin the assessment.</p>
                 
                 <div class="papers-grid" id="w-papers-grid">
                     <!-- Cards will be populated here -->
@@ -1379,6 +1628,13 @@
                     <p>Do not refresh the page or use browser back/forward buttons during the active session.</p>
                 </div>
             </div>
+            
+            <div id="retake-disclaimer-box" style="display: none; margin-top: 25px; padding: 15px; border-radius: 12px; background: rgba(251, 205, 11, 0.08); border: 1px solid rgba(251, 205, 11, 0.2); color: #fbcd0b; font-size: 0.8rem; line-height: 1.4; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; margin-bottom: 5px;">
+                    <i class="fas fa-exclamation-circle"></i> Practice Run Standing
+                </div>
+                This is a practice retake session. Please note that only your 1st attempt score counts towards the global leaderboard rank. Retaking tests will not affect your ranking profile.
+            </div>
         </div>
 
         <!-- Right: confirmation check sheet -->
@@ -1523,6 +1779,25 @@
             <button class="modal-btn modal-btn-back" onclick="closeScheduleModal()" style="border-radius: 14px;">Cancel</button>
             <button class="modal-btn modal-btn-start" onclick="confirmScheduleFromPopup()" style="background: #3b82f6; border-radius: 14px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);">Confirm Schedule</button>
         </div>
+    </div>
+</div>
+
+<!-- Sticky Trigger Button -->
+<button class="sidebar-trigger-btn" onclick="toggleQuickNavSidebar()">
+    <i class="fas fa-list-ul"></i> Mock Tests Navigation
+</button>
+
+<!-- Collapsible Sidebar -->
+<div class="quick-nav-sidebar" id="quickNavSidebar">
+    <div class="quick-nav-header">
+        <h3><i class="fas fa-compass"></i> Quick Navigation</h3>
+        <button class="quick-nav-close" onclick="toggleQuickNavSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="quick-nav-search-container">
+        <input type="text" id="quick-nav-search-input" class="quick-nav-search" placeholder="Search tests, topics, modules..." oninput="onSidebarSearchInput()">
+    </div>
+    <div class="quick-nav-tree" id="quick-nav-tree-container">
+        <!-- Dynamically populated tree items -->
     </div>
 </div>
 {% endblock %}
@@ -1701,14 +1976,56 @@
             qCount = "50 MCQs";
             duration = "60 Mins";
         }
-        
+
         const mocks = [
             { name: "Mock Test 01", difficulty: "Easy", dClass: "diff-easy", cClass: "easy-card", xp: "+100 XP" },
             { name: "Mock Test 02", difficulty: "Medium", dClass: "diff-medium", cClass: "medium-card", xp: "+250 XP" },
             { name: "Mock Test 03", difficulty: "Hard", dClass: "diff-hard", cClass: "hard-card", xp: "+500 XP" }
         ];
 
+        // Retrieve attempts history
+        let localHistory = [];
+        try {
+            localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history') || '[]');
+        } catch (e) {
+            console.error(e);
+        }
+
+        const staticDbHistory = [
+            { test_name: 'Mock Test 01 - Quant Essentials', subject: 'Quantitative Aptitude', mode: 'Module Blitz' },
+            { test_name: 'Mock Test 02 - Time & Work Sprint', subject: 'Quantitative Aptitude', mode: 'Module Blitz' },
+            { test_name: 'Mock Test 03 - Number Systems Speedrun', subject: 'Quantitative Aptitude', mode: 'Module Blitz' },
+            { test_name: 'Mock Test 02 - Logical Reasoning Boost', subject: 'Logical Reasoning', mode: 'Topic Master' },
+            { test_name: 'Topic Test 01 - Arithmetic Composite', subject: 'Quantitative Aptitude', mode: 'Topic Master' },
+            { test_name: 'Topic Test 03 - Data Interpretation Charts', subject: 'Data Interpretation', mode: 'Topic Master' },
+            { test_name: 'Mock Test 03 - Verbal Aptitude Core', subject: 'Verbal Ability', mode: 'Subject Marathon' }
+        ];
+
+        const combinedHistory = [...localHistory, ...staticDbHistory];
+        const filterVal = document.getElementById("w-attempt-filter").value;
+        let renderedCount = 0;
+
         mocks.forEach(m => {
+            // Check if this test paper was already attempted under the selected configuration parameters
+            const attempted = combinedHistory.some(item => {
+                const nameMatch = item.test_name && (item.test_name === m.name || item.test_name.includes(m.name) || (m.name === "Mock Test 01" && item.test_name.includes("Topic Test 01")));
+                const subjectMatch = !subject || (item.subject && item.subject === subject);
+                
+                let modeMatch = false;
+                if (currentMode === 1 && item.mode === "Module Blitz") modeMatch = true;
+                else if (currentMode === 2 && item.mode === "Topic Master") modeMatch = true;
+                else if (currentMode === 3 && item.mode === "Subject Marathon") modeMatch = true;
+                
+                return nameMatch && subjectMatch && modeMatch;
+            });
+
+            // Filter condition matching
+            if (filterVal === "attempted" && !attempted) return;
+            if (filterVal === "unattempted" && attempted) return;
+
+            renderedCount++;
+            const btnText = attempted ? "Re-take Test" : "Select Test";
+
             grid.innerHTML += `
                 <div class="paper-card ${m.cClass}">
                     <div class="paper-card-header">
@@ -1730,12 +2047,16 @@
                         </div>
                     </div>
                     <div style="display: flex; gap: 10px; width: 100%;">
-                        <button class="paper-start-btn" onclick="initiateConfirm('${m.name}', '${m.difficulty}', '${qCount}', '${duration}')" style="flex: 1;">Select Test</button>
+                        <button class="paper-start-btn" onclick="initiateConfirm('${m.name}', '${m.difficulty}', '${qCount}', '${duration}', ${attempted})" style="flex: 1;">${btnText}</button>
                         <button class="paper-schedule-btn" onclick="openSchedulePopup('${m.name}', '${m.difficulty}', '${qCount}', '${duration}')" style="padding: 12px 15px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; color: #475569; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;" title="Schedule Test"><i class="far fa-calendar-plus" style="font-size: 1.1rem;"></i></button>
                     </div>
                 </div>
             `;
         });
+
+        if (renderedCount === 0) {
+            grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: #64748b; padding: 40px; font-weight: 600; width: 100%;">No mock papers match the selected filter status.</div>`;
+        }
 
         // Inject custom hover style dynamically if not already present
         if (!document.getElementById('sch-btn-style')) {
@@ -1748,10 +2069,104 @@
         document.getElementById("w-tests-container").classList.add("show");
     }
 
-    function initiateConfirm(paperName, difficulty, questions, duration) {
+    window.initiateConfirmFromCard = function(paperName, difficulty, questions, duration, isRetake, sub, top, mod) {
+        // Set dropdown selectors to reflect selection
+        document.getElementById("w-subject").value = sub;
+        
+        // Sync topic dropdown options & value
+        const topicSelect = document.getElementById("w-topic");
+        topicSelect.innerHTML = `<option value="">-- Choose Topic --</option>`;
+        if (sub) {
+            const subObj = subjectsData.find(s => s.name === sub);
+            if (subObj && subObj.topics) {
+                subObj.topics.forEach(t => {
+                    topicSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+                });
+                topicSelect.disabled = false;
+            }
+        }
+        topicSelect.value = top || "";
+        
+        // Sync module dropdown options & value
+        const moduleSelect = document.getElementById("w-module");
+        moduleSelect.innerHTML = `<option value="">-- Choose Module --</option>`;
+        if (top && currentMode === 1) {
+            const subObj = subjectsData.find(s => s.name === sub);
+            if (subObj) {
+                const topObj = subObj.topics.find(t => t.name === top);
+                if (topObj && topObj.modules) {
+                    topObj.modules.forEach(m => {
+                        moduleSelect.innerHTML += `<option value="${m}">${m}</option>`;
+                    });
+                    moduleSelect.disabled = false;
+                }
+            }
+        }
+        moduleSelect.value = mod || "";
+        
+        // Launch standard initiateConfirm
+        initiateConfirm(paperName, difficulty, questions, duration, isRetake);
+    }
+
+    window.openSchedulePopupFromCard = function(paperName, difficulty, questions, duration, sub, top, mod) {
+        // Sync values to dropdowns
+        document.getElementById("w-subject").value = sub;
+        
+        const topicSelect = document.getElementById("w-topic");
+        topicSelect.innerHTML = `<option value="">-- Choose Topic --</option>`;
+        if (sub) {
+            const subObj = subjectsData.find(s => s.name === sub);
+            if (subObj && subObj.topics) {
+                subObj.topics.forEach(t => {
+                    topicSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+                });
+                topicSelect.disabled = false;
+            }
+        }
+        topicSelect.value = top || "";
+        
+        const moduleSelect = document.getElementById("w-module");
+        moduleSelect.innerHTML = `<option value="">-- Choose Module --</option>`;
+        if (top && currentMode === 1) {
+            const subObj = subjectsData.find(s => s.name === sub);
+            if (subObj) {
+                const topObj = subObj.topics.find(t => t.name === top);
+                if (topObj && topObj.modules) {
+                    topObj.modules.forEach(m => {
+                        moduleSelect.innerHTML += `<option value="${m}">${m}</option>`;
+                    });
+                    moduleSelect.disabled = false;
+                }
+            }
+        }
+        moduleSelect.value = mod || "";
+
+        // Trigger configuration state parameters compilation
+        let modeDisplayName = currentMode === 1 ? "Module Blitz" : currentMode === 2 ? "Topic Master" : "Subject Marathon";
+        selectedConfig = {
+            mode: modeDisplayName,
+            subject: sub,
+            topic: currentMode !== 3 ? top : "All Topics included",
+            module: currentMode === 1 ? mod : "All Modules included",
+            paper: paperName,
+            questions: questions,
+            duration: duration,
+            rawModeName: modeDisplayName
+        };
+
+        openSchedulePopup(paperName, difficulty, questions, duration);
+    }
+
+    function initiateConfirm(paperName, difficulty, questions, duration, isRetake) {
         const subjectVal = document.getElementById("w-subject").value;
         const topicVal = document.getElementById("w-topic").value;
         const moduleVal = document.getElementById("w-module").value;
+
+        // Toggle disclaimer display
+        const disclaimerBox = document.getElementById("retake-disclaimer-box");
+        if (disclaimerBox) {
+            disclaimerBox.style.display = isRetake ? "block" : "none";
+        }
 
         let modeDisplayName = "Module Blitz";
         let rawModeName = "Module Blitz";
@@ -2150,5 +2565,254 @@
             toast.classList.remove('show-sticky');
         }, 4000);
     }
+    function onAttemptFilterChange() {
+        checkConfigState();
+    }
+
+    window.toggleQuickNavSidebar = function() {
+        const sidebar = document.getElementById("quickNavSidebar");
+        const isActive = sidebar.classList.toggle("active");
+        
+        // Auto-collapse all folders if sidebar is closed
+        if (!isActive) {
+            const folders = sidebar.querySelectorAll(".tree-folder");
+            folders.forEach(folder => {
+                folder.classList.add("collapsed");
+                const content = folder.querySelector(".tree-folder-content");
+                if (content) {
+                    content.style.maxHeight = "0px";
+                    content.style.opacity = "0";
+                }
+                const chevron = folder.querySelector(".chevron");
+                if (chevron) {
+                    chevron.style.transform = "rotate(-90deg)";
+                }
+            });
+        }
+    }
+
+    window.toggleFolder = function(element) {
+        const folder = element.closest('.tree-folder');
+        const content = folder.querySelector('.tree-folder-content');
+        const chevron = folder.querySelector('.chevron');
+        
+        const isCollapsed = folder.classList.contains('collapsed');
+        
+        if (isCollapsed) {
+            folder.classList.remove('collapsed');
+            content.style.maxHeight = content.scrollHeight + "px";
+            content.style.opacity = "1";
+            if (chevron) chevron.style.transform = "rotate(0deg)";
+        } else {
+            content.style.maxHeight = "0px";
+            content.style.opacity = "0";
+            folder.classList.add('collapsed');
+            if (chevron) chevron.style.transform = "rotate(-90deg)";
+        }
+    }
+
+    window.buildNavigationTree = function() {
+        const treeContainer = document.getElementById("quick-nav-tree-container");
+        if (!treeContainer) return;
+
+        // Retrieve attempts history to see if attempted
+        let localHistory = [];
+        try {
+            localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history') || '[]');
+        } catch (e) {}
+
+        const staticDbHistory = [
+            { test_name: 'Mock Test 01 - Quant Essentials', subject: 'Quantitative Aptitude', mode: 'Module Blitz' },
+            { test_name: 'Mock Test 02 - Time & Work Sprint', subject: 'Quantitative Aptitude', mode: 'Module Blitz' },
+            { test_name: 'Mock Test 03 - Number Systems Speedrun', subject: 'Quantitative Aptitude', mode: 'Module Blitz' },
+            { test_name: 'Mock Test 02 - Logical Reasoning Boost', subject: 'Logical Reasoning', mode: 'Topic Master' },
+            { test_name: 'Topic Test 01 - Arithmetic Composite', subject: 'Quantitative Aptitude', mode: 'Topic Master' },
+            { test_name: 'Topic Test 03 - Data Interpretation Charts', subject: 'Data Interpretation', mode: 'Topic Master' },
+            { test_name: 'Mock Test 03 - Verbal Aptitude Core', subject: 'Verbal Ability', mode: 'Subject Marathon' }
+        ];
+
+        const combinedHistory = [...localHistory, ...staticDbHistory];
+        
+        let html = "";
+        
+        // Mode 1: Module Blitz
+        html += `
+            <div class="tree-folder collapsed">
+                <div class="tree-folder-title" onclick="toggleFolder(this)">
+                    <span>🧩 Module Blitz (Drill Exam)</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="tree-folder-content" style="padding-left: 0; border-left: none;">
+        `;
+        subjectsData.forEach(sub => {
+            if (sub.topics) {
+                sub.topics.forEach(t => {
+                    if (t.modules) {
+                        t.modules.forEach(mod => {
+                            const mocks = [
+                                { name: "Mock Test 01", difficulty: "Easy", color: "#10b981" },
+                                { name: "Mock Test 02", difficulty: "Medium", color: "#f59e0b" },
+                                { name: "Mock Test 03", difficulty: "Hard", color: "#ef4444" }
+                            ];
+                            mocks.forEach(m => {
+                                const attempted = combinedHistory.some(item => {
+                                    const nameMatch = item.test_name && (item.test_name === m.name || item.test_name.includes(m.name) || (m.name === "Mock Test 01" && item.test_name.includes("Topic Test 01")));
+                                    return nameMatch && item.subject === sub.name && item.mode === "Module Blitz";
+                                });
+                                const badgeText = attempted ? "Retake" : m.difficulty;
+                                const badgeColor = attempted ? "#3b82f6" : m.color;
+
+                                html += `
+                                    <div class="tree-item" onclick="triggerSidebarNavigation(1, '${sub.name.replace(/'/g, "\\'")}', '${t.name.replace(/'/g, "\\'")}', '${mod.replace(/'/g, "\\'")}', '${m.name}', ${attempted})" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06); background: rgba(255, 255, 255, 0.02); border-radius: 10px; transition: 0.2s;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                            <span style="font-weight: 700; color: #ffffff; font-size: 0.85rem;">${m.name}</span>
+                                            <span class="tree-item-meta" style="background: ${badgeColor}; color: #ffffff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">${badgeText}</span>
+                                        </div>
+                                        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
+                                            <span class="nav-pill pill-sub">${sub.name}</span>
+                                            <span class="nav-pill pill-top">${t.name}</span>
+                                            <span class="nav-pill pill-mod">${mod}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        });
+                    }
+                });
+            }
+        });
+        html += `</div></div>`; // Close Mode 1
+        
+        // Mode 2: Topic Master
+        html += `
+            <div class="tree-folder collapsed">
+                <div class="tree-folder-title" onclick="toggleFolder(this)">
+                    <span>📋 Topic Master (Full Test)</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="tree-folder-content" style="padding-left: 0; border-left: none;">
+        `;
+        subjectsData.forEach(sub => {
+            if (sub.topics) {
+                sub.topics.forEach(t => {
+                    const mocks = [
+                        { name: "Mock Test 01", difficulty: "Easy", color: "#10b981" },
+                        { name: "Mock Test 02", difficulty: "Medium", color: "#f59e0b" },
+                        { name: "Mock Test 03", difficulty: "Hard", color: "#ef4444" }
+                    ];
+                    mocks.forEach(m => {
+                        const attempted = combinedHistory.some(item => {
+                            const nameMatch = item.test_name && (item.test_name === m.name || item.test_name.includes(m.name) || (m.name === "Mock Test 01" && item.test_name.includes("Topic Test 01")));
+                            return nameMatch && item.subject === sub.name && item.mode === "Topic Master";
+                        });
+                        const badgeText = attempted ? "Retake" : m.difficulty;
+                        const badgeColor = attempted ? "#3b82f6" : m.color;
+
+                        html += `
+                            <div class="tree-item" onclick="triggerSidebarNavigation(2, '${sub.name.replace(/'/g, "\\'")}', '${t.name.replace(/'/g, "\\'")}', '', '${m.name}', ${attempted})" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06); background: rgba(255, 255, 255, 0.02); border-radius: 10px; transition: 0.2s;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                    <span style="font-weight: 700; color: #ffffff; font-size: 0.85rem;">${m.name}</span>
+                                    <span class="tree-item-meta" style="background: ${badgeColor}; color: #ffffff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">${badgeText}</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
+                                    <span class="nav-pill pill-sub">${sub.name}</span>
+                                    <span class="nav-pill pill-top">${t.name}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                });
+            }
+        });
+        html += `</div></div>`; // Close Mode 2
+
+        // Mode 3: Subject Marathon
+        html += `
+            <div class="tree-folder collapsed">
+                <div class="tree-folder-title" onclick="toggleFolder(this)">
+                    <span>🏆 Subject Marathon (Subject Test)</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </div>
+                <div class="tree-folder-content" style="padding-left: 0; border-left: none;">
+        `;
+        subjectsData.forEach(sub => {
+            const mocks = [
+                { name: "Mock Test 01", difficulty: "Easy", color: "#10b981" },
+                { name: "Mock Test 02", difficulty: "Medium", color: "#f59e0b" },
+                { name: "Mock Test 03", difficulty: "Hard", color: "#ef4444" }
+            ];
+            mocks.forEach(m => {
+                const attempted = combinedHistory.some(item => {
+                    const nameMatch = item.test_name && (item.test_name === m.name || item.test_name.includes(m.name) || (m.name === "Mock Test 01" && item.test_name.includes("Topic Test 01")));
+                    return nameMatch && item.subject === sub.name && item.mode === "Subject Marathon";
+                });
+                const badgeText = attempted ? "Retake" : m.difficulty;
+                const badgeColor = attempted ? "#3b82f6" : m.color;
+
+                html += `
+                    <div class="tree-item" onclick="triggerSidebarNavigation(3, '${sub.name.replace(/'/g, "\\'")}', '', '', '${m.name}', ${attempted})" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 12px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06); background: rgba(255, 255, 255, 0.02); border-radius: 10px; transition: 0.2s;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span style="font-weight: 700; color: #ffffff; font-size: 0.85rem;">${m.name}</span>
+                            <span class="tree-item-meta" style="background: ${badgeColor}; color: #ffffff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">${badgeText}</span>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;">
+                            <span class="nav-pill pill-sub">${sub.name}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+        html += `</div></div>`; // Close Mode 3
+        
+        treeContainer.innerHTML = html;
+    }
+
+    window.triggerSidebarNavigation = function(modeNum, subjectName, topicName, moduleName, paperName, attempted) {
+        // 1. Close sidebar (which auto-collapses folders)
+        toggleQuickNavSidebar();
+        
+        // 2. Open Config
+        openConfig(modeNum);
+        
+        // 3. Sync configuration values in main dropdown panel and launch confirm directly
+        let qCount = modeNum === 1 ? "10 MCQs" : modeNum === 2 ? "25 MCQs" : "50 MCQs";
+        let duration = modeNum === 1 ? "15 Mins" : modeNum === 2 ? "30 Mins" : "60 Mins";
+        let difficulty = paperName === "Mock Test 01" ? "Easy" : paperName === "Mock Test 02" ? "Medium" : "Hard";
+
+        initiateConfirmFromCard(paperName, difficulty, qCount, duration, attempted, subjectName, topicName, moduleName);
+    }
+
+    window.onSidebarSearchInput = function() {
+        const query = document.getElementById("quick-nav-search-input").value.toLowerCase();
+        const treeContainer = document.getElementById("quick-nav-tree-container");
+        
+        const items = treeContainer.querySelectorAll(".tree-item");
+        
+        items.forEach(item => {
+            const text = item.innerText.toLowerCase();
+            if (query.trim() === "" || text.includes(query)) {
+                item.style.display = "flex";
+                // If query matched, expand its parent folder with scroll height set
+                if (query.trim() !== "") {
+                    let parent = item.closest(".tree-folder");
+                    if (parent && parent.classList.contains("collapsed")) {
+                        parent.classList.remove("collapsed");
+                        const content = parent.querySelector(".tree-folder-content");
+                        if (content) {
+                            content.style.maxHeight = content.scrollHeight + "px";
+                            content.style.opacity = "1";
+                        }
+                    }
+                }
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+
+    // Call build navigation on page load
+    document.addEventListener("DOMContentLoaded", () => {
+        buildNavigationTree();
+    });
 </script>
 {% endblock %}

@@ -38,6 +38,248 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* ---------- HERO & QUIZ CARD ---------- */
+    .hero {
+        max-width: 1400px;
+        margin: 80px auto;
+        padding: 0 5%;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .hero-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 56px;
+        align-items: center;
+    }
+    .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #3b82f6;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+        font-weight: 600;
+    }
+    .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        display: inline-block;
+    }
+    .hero h1 {
+        font-size: 3.2rem;
+        line-height: 1.1;
+        font-weight: 800;
+        margin: 0 0 20px;
+        color: #fff;
+    }
+    .hero h1 span {
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline;
+    }
+    .hero p.sub {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.6;
+        margin: 0 0 30px;
+    }
+    .hero-ctas {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+    .hero-ctas .btn-brand {
+        background: #3b82f6;
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+    }
+    .hero-ctas .btn-brand:hover {
+        background: #2563eb;
+    }
+    .hero-ctas .btn-ghost {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.02);
+    }
+    .hero-ctas .btn-ghost:hover {
+        border-color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .trust-row {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .trust-row b {
+        color: #fff;
+        font-family: var(--mono);
+        font-weight: 600;
+    }
+
+    /* --- OMR quiz card --- */
+    .quiz-card {
+        background: rgba(12, 12, 28, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(25px);
+        position: relative;
+    }
+    .quiz-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .quiz-tag {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.8);
+        padding: 5px 12px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .timer {
+        font-family: var(--mono);
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #f59e0b;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .quiz-q {
+        font-size: 1.1rem;
+        font-weight: 600;
+        line-height: 1.5;
+        margin: 0 0 20px;
+        min-height: 60px;
+        color: #fff;
+    }
+    .quiz-opts {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    .opt {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        transition: all 0.2s ease;
+        text-align: left;
+        width: 100%;
+        font-family: var(--body);
+    }
+    .opt:hover:not(:disabled) {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.05);
+        color: #fff;
+    }
+    .bubble {
+        width: 26px;
+        height: 26px;
+        min-width: 26px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.6);
+        transition: all 0.2s;
+    }
+    .opt.selected .bubble {
+        background: #3b82f6;
+        border-color: #3b82f6;
+        color: #fff;
+    }
+    .opt.correct {
+        border-color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        color: #fff;
+    }
+    .opt.correct .bubble {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+    }
+    .opt.wrong {
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        color: #fff;
+    }
+    .opt.wrong .bubble {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #fff;
+    }
+    .feedback {
+        display: none;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .feedback.show {
+        display: block;
+    }
+    .quiz-foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .quiz-foot .streak {
+        font-size: 0.82rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-family: var(--mono);
+    }
+    .link-btn {
+        background: none;
+        border: none;
+        color: #3b82f6;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        font-family: var(--body);
+        padding: 0;
+        transition: color 0.2s;
+    }
+    .link-btn:hover {
+        color: #60a5fa;
+    }
+
     /* Background Glows (Purple/Pink Theme matching EternaCloud design) */
     .glow {
         position: fixed;
@@ -301,33 +543,6 @@
         .as-side-slider .swiper-slide { width: 180px !important; }
     }
 
-    /* Daily Spark Section (Redesigned with EternaCloud Theme) */
-    .daily-spark-section {
-        max-width: 1400px;
-        margin: 100px auto;
-        padding: 100px 5%;
-        display: grid;
-        grid-template-columns: 1fr 450px;
-        gap: 60px;
-        align-items: center;
-        position: relative;
-        background: radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-                    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%);
-        border-radius: 60px;
-        border: 1px solid rgba(255,255,255,0.04);
-        opacity: 0;
-        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
-    }
-
-    .daily-spark-section:before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-        opacity: 0.05;
-        pointer-events: none;
-    }
-
     /* EternaCloud Style Pills */
     .pill-badge {
         display: inline-flex;
@@ -371,406 +586,399 @@
         display: inline;
     }
 
-    .spark-content h2 { 
-        font-size: 3rem; 
-        font-weight: 800; 
-        line-height: 1.15; 
-        margin-bottom: 25px;
-        color: #ffffff;
-    }
-    .spark-content p { font-size: 1.1rem; opacity: 0.6; line-height: 1.7; margin-bottom: 40px; max-width: 500px; }
-
-    .spark-stats { 
-        display: flex; 
-        gap: 40px; 
-        margin-bottom: 40px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding-top: 30px;
-    }
-    .stat-box h3 { 
-        font-size: 2.2rem; 
-        font-weight: 800; 
-        color: #fff; 
-        margin-bottom: 5px;
-        background: linear-gradient(135deg, #ffffff, #a5b4fc);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .stat-box span { font-size: 0.8rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.5px; }
-
-    /* Mini Card Slider */
-    .spark-slider-container {
-        width: 100%;
-        position: relative;
-    }
-    .spark-mini-slider {
-        width: 100%;
-        height: 320px;
-        border-radius: 30px;
-        background: rgba(12, 12, 28, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(25px);
-        overflow: hidden;
-        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s, box-shadow 0.4s;
-    }
-    .spark-mini-slider:hover {
-        transform: translateY(-8px);
-        border-color: rgba(139, 92, 246, 0.4);
-        box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15), inset 0 0 20px rgba(139, 92, 246, 0.05);
-    }
-    .spark-mini-slider .swiper-slide {
-        width: 100%;
-        height: 100%;
-    }
-    .spark-card {
-        padding: 40px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    
-    .spark-card h4 { font-size: 1.4rem; font-weight: 700; line-height: 1.4; margin-bottom: 20px; color: #ffffff; }
-    
-    .card-footer { display: flex; justify-content: space-between; align-items: center; }
-    .card-meta { display: flex; gap: 20px; font-size: 0.8rem; opacity: 0.5; }
-    .card-meta span { display: flex; align-items: center; gap: 8px; }
-
-    .open-btn {
-        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-        color: #fff;
-        padding: 10px 24px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-size: 0.85rem;
-        font-weight: 600;
-        border: none;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: inline-flex; align-items: center; gap: 8px;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-    }
-    .open-btn:hover { 
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
-        background: linear-gradient(135deg, #8b5cf6, #ec4899);
-    }
-
-    .spark-controls {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-top: 25px;
-        padding-left: 10px;
-    }
-    .s-arrow { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); }
-    .s-arrow:hover { border-color: #8b5cf6; color: #8b5cf6; }
-    
-    .s-pagination { display: flex; gap: 8px; }
-    .s-dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: 0.3s; }
-    .s-dot.active { width: 20px; background: #8b5cf6; border-radius: 10px; }
-    .s-count { font-size: 0.85rem; opacity: 0.4; margin-left: auto; color: #fff; }
-
-    /* Learning Path Section */
-    .learning-path-section {
+    /* ---------- ACCESS EXPLAINER ---------- */
+    .access-band {
         max-width: 1400px;
-        margin: 100px auto 150px;
-        padding: 80px 5%;
+        margin: 80px auto;
+        padding: 0 5%;
         opacity: 0;
-        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.6s;
-        position: relative;
-        background: rgba(8, 8, 16, 0.6);
-        border-radius: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        overflow: hidden;
+        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
     }
-
-    /* Subtle Dot Pattern Background */
-    .learning-path-section::after {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-        background-size: 30px 30px;
-        opacity: 0.3;
-        z-index: 0;
-        pointer-events: none;
-    }
-
-    /* Soft Glow behind the section */
-    .learning-path-section::before {
-        content: "";
-        position: absolute;
-        top: 50%; left: 50%;
-        width: 80%; height: 80%;
-        background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(139, 92, 246, 0.04) 50%, transparent 100%);
-        transform: translate(-50%, -50%);
-        z-index: 0;
-        filter: blur(80px);
-        pointer-events: none;
-    }
-
-    .section-heading, .path-grid {
-        position: relative;
-        z-index: 2;
-    }
-
-    .section-heading {
-        text-align: center;
-        margin-bottom: 70px;
-    }
-    .section-heading h2 {
-        font-size: 3rem;
-        font-weight: 800;
-        letter-spacing: -1px;
-        margin-bottom: 15px;
-        color: #ffffff;
-        line-height: 1.15;
-    }
-    .section-heading p {
-        font-size: 1.1rem;
-        opacity: 0.6;
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.6;
-    }
-
-    .path-grid {
+    .access-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 30px;
-        position: relative;
-    }
-    /* Connecting Line */
-    .path-grid::before {
-        content: "";
-        position: absolute;
-        top: 70px; /* Align with center of the icon */
-        left: 12.5%;
-        width: 75%;
-        height: 2px;
-        background: linear-gradient(90deg, 
-            rgba(59, 130, 246, 0) 0%, 
-            rgba(59, 130, 246, 0.3) 20%, 
-            rgba(168, 85, 247, 0.3) 50%, 
-            rgba(236, 72, 153, 0.3) 80%, 
-            rgba(16, 185, 129, 0) 100%
-        );
-        z-index: 1;
-    }
-
-    .path-step {
-        background: rgba(12, 12, 28, 0.7);
+        background: rgba(12, 12, 28, 0.5);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 30px;
-        padding: 40px 30px;
-        text-align: left;
-        position: relative;
-        z-index: 2;
+        border-radius: 24px;
+        padding: 40px;
         backdrop-filter: blur(25px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        min-height: 320px;
     }
-    .path-step:hover {
-        transform: translateY(-8px);
+    .access-step {
+        padding: 10px 20px;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
-    .path-step.step-1:hover {
-        border-color: rgba(59, 130, 246, 0.4);
-        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.12), inset 0 0 15px rgba(59, 130, 246, 0.05);
+    .access-step:last-child {
+        border-right: none;
     }
-    .path-step.step-2:hover {
-        border-color: rgba(168, 85, 247, 0.4);
-        box-shadow: 0 15px 35px rgba(168, 85, 247, 0.12), inset 0 0 15px rgba(168, 85, 247, 0.05);
-    }
-    .path-step.step-3:hover {
-        border-color: rgba(236, 72, 153, 0.4);
-        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.12), inset 0 0 15px rgba(236, 72, 153, 0.05);
-    }
-    .path-step.step-4:hover {
-        border-color: rgba(16, 185, 129, 0.4);
-        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.12), inset 0 0 15px rgba(16, 185, 129, 0.05);
-    }
-
-    .step-number {
-        position: absolute;
-        top: 40px;
-        right: 30px;
+    .access-num {
+        font-family: var(--mono);
         font-size: 0.9rem;
         font-weight: 700;
-        color: rgba(255, 255, 255, 0.25);
-        background: rgba(255, 255, 255, 0.04);
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .step-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        transition: all 0.4s ease;
-    }
-    .step-1 .step-icon { color: #3b82f6; }
-    .step-2 .step-icon { color: #a855f7; }
-    .step-3 .step-icon { color: #ec4899; }
-    .step-4 .step-icon { color: #10b981; }
-
-    .path-step:hover .step-icon {
-        transform: scale(1.1);
-    }
-    .step-1:hover .step-icon {
+        color: #3b82f6;
+        letter-spacing: 0.05em;
         background: rgba(59, 130, 246, 0.1);
-        border-color: rgba(59, 130, 246, 0.3);
-        box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        padding: 4px 10px;
+        border-radius: 8px;
     }
-    .step-2:hover .step-icon {
-        background: rgba(168, 85, 247, 0.1);
-        border-color: rgba(168, 85, 247, 0.3);
-        box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
-    }
-    .step-3:hover .step-icon {
-        background: rgba(236, 72, 153, 0.1);
-        border-color: rgba(236, 72, 153, 0.3);
-        box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
-    }
-    .step-4:hover .step-icon {
-        background: rgba(16, 185, 129, 0.1);
-        border-color: rgba(16, 185, 129, 0.3);
-        box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
-    }
-
-    .path-step h3 {
-        font-size: 1.35rem;
+    .access-step h4 {
+        font-size: 1.2rem;
+        margin: 20px 0 10px;
         font-weight: 700;
-        margin: 15px 0 10px;
         color: #fff;
-        letter-spacing: -0.3px;
     }
-    .path-step p {
+    .access-step p {
         font-size: 0.95rem;
         color: rgba(255, 255, 255, 0.6);
         line-height: 1.6;
         margin: 0;
     }
 
-    /* Testimonials Section */
-    .testimonials-section {
+    /* ---------- SECTION LABELS ---------- */
+    .section {
         max-width: 1400px;
-        margin: 0 auto 150px;
+        margin: 80px auto;
         padding: 0 5%;
-        opacity: 0;
-        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.8s;
-        position: relative;
     }
-    .testimonials-section::before {
-        content: "";
-        position: absolute;
-        bottom: -50px; left: 30%;
-        width: 500px; height: 500px;
-        background: radial-gradient(circle, rgba(236, 72, 153, 0.05) 0%, transparent 70%);
-        z-index: -1;
-        filter: blur(80px);
-        pointer-events: none;
+    .section-head {
+        max-width: 640px;
+        margin: 0 0 48px;
+    }
+    .section-tag {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #3b82f6;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+    }
+    .section-head h2 {
+        font-size: 2.2rem;
+        letter-spacing: -0.015em;
+        margin: 0 0 12px;
+        line-height: 1.15;
+        color: #fff;
+    }
+    .section-head p {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.02rem;
+        line-height: 1.6;
+        margin: 0;
     }
 
-    .testimonial-slider {
-        padding: 40px 0 80px;
-        overflow: hidden;
+    /* ---------- WHAT YOU CAN DO ---------- */
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
     }
-    .testimonial-card {
+    .action-card {
         background: rgba(12, 12, 28, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 30px;
-        padding: 40px;
+        border-radius: 24px;
+        padding: 35px;
         backdrop-filter: blur(25px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        gap: 15px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
     }
-    .testimonial-card:hover {
+    .action-card:hover {
         transform: translateY(-8px);
-    }
-    .testimonial-card.card-glow-purple:hover {
-        border-color: rgba(168, 85, 247, 0.4);
-        box-shadow: 0 15px 35px rgba(168, 85, 247, 0.12), inset 0 0 15px rgba(168, 85, 247, 0.05);
-    }
-    .testimonial-card.card-glow-pink:hover {
-        border-color: rgba(236, 72, 153, 0.4);
-        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.12), inset 0 0 15px rgba(236, 72, 153, 0.05);
-    }
-    .testimonial-card.card-glow-blue:hover {
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.1), inset 0 0 20px rgba(59, 130, 246, 0.02);
         border-color: rgba(59, 130, 246, 0.4);
-        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.12), inset 0 0 15px rgba(59, 130, 246, 0.05);
     }
-    .testimonial-card.card-glow-green:hover {
-        border-color: rgba(16, 185, 129, 0.4);
-        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.12), inset 0 0 15px rgba(16, 185, 129, 0.05);
+    .action-card:nth-child(2n):hover {
+        box-shadow: 0 15px 35px rgba(168, 85, 247, 0.1), inset 0 0 20px rgba(168, 85, 247, 0.02);
+        border-color: rgba(168, 85, 247, 0.4);
     }
-    
-    .t-header {
+    .action-card:nth-child(3n):hover {
+        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.1), inset 0 0 20px rgba(236, 72, 153, 0.02);
+        border-color: rgba(236, 72, 153, 0.4);
+    }
+    .action-card .icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
-        gap: 15px;
-        margin-bottom: 25px;
+        justify-content: center;
+        font-size: 1.5rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .t-avatar {
-        width: 60px; height: 60px;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.3rem; font-weight: 800; color: #fff;
-        border: 1px solid rgba(255,255,255,0.08);
+    .action-card h3 {
+        font-size: 1.3rem;
+        margin: 0;
+        font-weight: 700;
+        color: #fff;
+    }
+    .action-card p {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.6;
+        margin: 0;
+        flex-grow: 1;
+    }
+    .action-card .tag-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 5px;
+    }
+    .pill {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+    }
+    .pill-free { background: rgba(31, 157, 85, 0.15); color: #2af598; border: 1px solid rgba(31, 157, 85, 0.3); }
+    .pill-premium { background: rgba(232, 163, 61, 0.15); color: #f59e0b; border: 1px solid rgba(232, 163, 61, 0.3); }
+    .pill-login { background: rgba(53, 85, 255, 0.15); color: #60a5fa; border: 1px solid rgba(53, 85, 255, 0.3); }
+    .action-card .go {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #3b82f6;
+        text-decoration: none;
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.2s;
+    }
+    .action-card .go:hover {
+        color: #60a5fa;
+    }
+
+    /* ---------- FREE VS PREMIUM ---------- */
+    .compare-band {
+        background: transparent;
+        position: relative;
+    }
+    .compare-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 50px;
+    }
+    .compare-col {
+        background: rgba(12, 12, 28, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        padding: 40px 35px;
+        backdrop-filter: blur(25px);
+        position: relative;
         transition: all 0.3s;
     }
-    .t-avatar.avatar-purple {
-        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.05));
-        border-color: rgba(168, 85, 247, 0.3);
+    .compare-col:hover {
+        transform: translateY(-5px);
     }
-    .t-avatar.avatar-pink {
-        background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));
-        border-color: rgba(236, 72, 153, 0.3);
-    }
-    .t-avatar.avatar-blue {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+    .compare-col.recommended {
+        background: rgba(59, 130, 246, 0.04);
         border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.1);
     }
-    .t-avatar.avatar-green {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
-        border-color: rgba(16, 185, 129, 0.3);
+    .compare-col.premium {
+        background: rgba(245, 158, 11, 0.04);
+        border-color: rgba(245, 158, 11, 0.3);
+        box-shadow: 0 15px 35px rgba(245, 158, 11, 0.1);
+    }
+    .col-kicker {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #3b82f6;
+        display: block;
+        margin-bottom: 12px;
+    }
+    .compare-col.premium .col-kicker {
+        color: #f59e0b;
+    }
+    .compare-col h3 {
+        font-size: 1.5rem;
+        margin: 0 0 8px;
+        color: #fff;
+        font-weight: 700;
+    }
+    .compare-col .price {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0 0 25px;
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .compare-col.recommended .price {
+        color: #60a5fa;
+    }
+    .compare-col.premium .price {
+        color: #fbbf24;
+    }
+    .compare-col ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .compare-col li {
+        display: flex;
+        gap: 10px;
+        font-size: 0.95rem;
+        align-items: flex-start;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.75);
+    }
+    .compare-col li::before {
+        content: "✓";
+        font-weight: 700;
+        color: #10b981;
+    }
+    .compare-col.premium li::before {
+        color: #f59e0b;
     }
 
-    .t-info h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; color: #fff; }
-    
-    .t-body { position: relative; }
-    .t-body i { font-size: 1.5rem; color: rgba(168, 85, 247, 0.06); position: absolute; top: -10px; left: -10px; transition: color 0.4s; }
-    .testimonial-card:hover .t-body i { color: rgba(168, 85, 247, 0.15); }
-    .t-body p { font-size: 1rem; line-height: 1.7; opacity: 0.7; position: relative; z-index: 2; padding-left: 15px; font-style: italic; color: rgba(255, 255, 255, 0.8); }
-
-    .t-pagination {
-        display: flex; justify-content: center; gap: 8px; margin-top: 20px;
+    /* ---------- STATS ---------- */
+    .stats-band {
+        background: rgba(12, 12, 28, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 30px;
+        padding: 50px 40px;
+        backdrop-filter: blur(25px);
+        margin: 80px auto;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        text-align: left;
+    }
+    .stat b {
+        font-family: var(--mono);
+        font-size: 2.4rem;
+        display: block;
+        font-weight: 800;
+        color: #f59e0b;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .stat span {
+        font-size: 0.86rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    @media (max-width: 1200px) {
-        .path-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
-        .path-grid::before { display: none; } /* Hide line on smaller screens */
+    /* ---------- BLOG ---------- */
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 40px;
+    }
+    .blog-card {
+        background: rgba(12, 12, 28, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        overflow: hidden;
+        backdrop-filter: blur(25px);
+        transition: all 0.4s ease;
+    }
+    .blog-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(59, 130, 246, 0.4);
+    }
+    .blog-card .thumb {
+        height: 180px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        position: relative;
+    }
+    .blog-card .thumb span {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .blog-card .body {
+        padding: 25px;
+    }
+    .blog-card h4 {
+        font-size: 1.15rem;
+        margin: 0 0 10px;
+        line-height: 1.4;
+        color: #fff;
+        font-weight: 700;
+    }
+    .blog-card p {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0 0 15px;
+        line-height: 1.6;
+    }
+    .blog-card .meta {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.4);
+        font-family: var(--mono);
+    }
+
+    /* ---------- FINAL CTA ---------- */
+    .final-cta {
+        background: linear-gradient(120deg, rgba(13, 17, 48, 0.8), rgba(27, 33, 96, 0.8));
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: #fff;
+        border-radius: 28px;
+        padding: 60px 48px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        backdrop-filter: blur(25px);
+        margin: 80px auto;
+    }
+    .final-cta h2 {
+        font-size: 2.2rem;
+        margin: 0;
+        max-width: 560px;
+        line-height: 1.25;
+        font-weight: 800;
+    }
+    .final-cta p {
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+        max-width: 480px;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 992px) {
+        .access-grid, .compare-grid { grid-template-columns: 1fr; gap: 40px; }
+        .access-step { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 30px; }
+        .access-step:last-child { border-bottom: none; padding-bottom: 0; }
+        .action-grid { grid-template-columns: 1fr 1fr; }
+        .stats-grid { grid-template-columns: 1fr 1fr; }
+        .blog-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
-        .path-grid { grid-template-columns: 1fr; }
+        .action-grid { grid-template-columns: 1fr; }
+        .stats-grid { grid-template-columns: 1fr; }
+        .blog-grid { grid-template-columns: 1fr; }
     }
 </style>
 {% endblock %}
@@ -782,7 +990,6 @@
 <div class="glow glow-3"></div>
 
 <div class="as-slider" id="mainSlider">
-    <!-- Slider content same -->
     <div class="as-slider-background">
         {% for course in courses %}
         <img src="{{ course.bg_image }}" data-index="{{ forloop.counter0 }}">
@@ -820,185 +1027,235 @@
     </div>
 </div>
 
-<section class="daily-spark-section">
-    <div class="spark-content">
-        <div class="pill-badge badge-purple" style="margin-bottom: 20px;">Refreshes Daily</div>
-        <h2>Sharpen your skills, <br><span class="gradient-text">one question at a time</span></h2>
-        <p>Practice makes placement. Every day brings fresh questions across Aptitude, Logic, and Verbal — crafted to match real campus interview patterns.</p>
-        
-        <div class="spark-stats">
-            <div class="stat-box">
-                <h3>5</h3>
-                <span>Questions today</span>
-            </div>
-            <div class="stat-box">
-                <h3>4</h3>
-                <span>Topics covered</span>
-            </div>
-            <div class="stat-box">
-                <h3>512+</h3>
-                <span>Students solving</span>
-            </div>
-        </div>
-
-        <div class="pill-badge badge-pink">
-            <i class="fas fa-fire" style="margin-right: 5px;"></i> Your streak: 7 days
-        </div>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">No account needed to explore</div>
+      <h1>Practice like it's<br>exam day. <span>Every day.</span></h1>
+      <p class="sub">Browse every course, daily challenge and practice question with zero sign-up. We'll only ask you to log in the moment you attempt a mock test — that's when we save your score, analysis and leaderboard rank.</p>
+      <div class="hero-ctas">
+        <a href="#compare" class="btn btn-brand">Take a free mock test →</a>
+        <a href="#actions" class="btn btn-ghost">Browse without logging in</a>
+      </div>
+      <div class="trust-row">
+        <div><b>12,400+</b> questions, open to everyone</div>
+        <div><b>3</b> mock tests, free with login</div>
+        <div>Login <b>only</b> for mock tests</div>
+      </div>
     </div>
 
-    <div class="spark-slider-container">
-        <div class="spark-mini-slider swiper">
-            <div class="swiper-wrapper">
-                {% for q in daily_questions %}
-                <div class="swiper-slide">
-                    <div class="spark-card">
-                        <div class="card-top">
-                            <span class="pill-badge badge-blue">{{ q.category }}</span>
-                        </div>
-                        <h4>{{ q.text|truncatechars:80 }}</h4>
-                        <div class="card-footer">
-                            <div class="card-meta">
-                                <span><i class="fas fa-circle" style="color: {% if q.difficulty == 'Medium' %}#fccb90{% else %}#ff4757{% endif %}; font-size: 8px;"></i> {{ q.difficulty }}</span>
-                                <span><i class="far fa-clock"></i> {{ q.time }}</span>
-                            </div>
-                            <a href="{% url 'daily_challenges' %}" class="open-btn">Open <i class="fas fa-external-link-alt"></i></a>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="spark-controls">
-            <div class="s-arrow spark-prev"><i class="fas fa-chevron-left"></i></div>
-            <div class="s-pagination"></div>
-            <div class="s-arrow spark-next"><i class="fas fa-chevron-right"></i></div>
-            <div class="s-count">1/{{ daily_questions|length }}</div>
-        </div>
+    <div class="quiz-card">
+      <div class="quiz-head">
+        <span class="quiz-tag">Try it now · Logical Reasoning</span>
+        <span class="timer" id="timer">00:15</span>
+      </div>
+      <p class="quiz-q" id="qtext">Loading question…</p>
+      <div class="quiz-opts" id="opts"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="quiz-foot">
+        <span class="streak">🔥 Solve to preview your streak</span>
+        <button class="link-btn" id="nextBtn">Next question →</button>
+      </div>
     </div>
+  </div>
 </section>
 
-<!-- Learning Path Section -->
-<section class="learning-path-section">
-    <div class="section-heading">
-        <h2>Your Journey to <span class="gradient-text">Placement</span></h2>
-        <p>A proven, structured roadmap designed by industry experts to take you from a beginner to a top-tier candidate.</p>
+<section class="access-band">
+  <div class="access-grid">
+    <div class="access-step">
+      <span class="access-num">01</span>
+      <h4>Browse everything, no account</h4>
+      <p>Courses, daily challenge, practice arena and the blog are open the moment you land — nothing is gated.</p>
     </div>
-
-    <div class="path-grid">
-        <div class="path-step step-1">
-            <div class="step-number">1</div>
-            <span class="pill-badge badge-blue">Concept</span>
-            <div class="step-icon"><i class="fas fa-book-reader"></i></div>
-            <h3>Learn Concepts</h3>
-            <p>Dive deep into our curated study materials, cheat sheets, and video lectures to build a strong foundation.</p>
-        </div>
-
-        <div class="path-step step-2">
-            <div class="step-number">2</div>
-            <span class="pill-badge badge-purple">Daily Spark</span>
-            <div class="step-icon"><i class="fas fa-dumbbell"></i></div>
-            <h3>Practice Daily</h3>
-            <p>Solve targeted module-wise questions and maintain your Daily Spark streak to sharpen your problem-solving skills.</p>
-        </div>
-
-        <div class="path-step step-3">
-            <div class="step-number">3</div>
-            <span class="pill-badge badge-pink">Mock Tests</span>
-            <div class="step-icon"><i class="fas fa-laptop-code"></i></div>
-            <h3>Assess Yourself</h3>
-            <p>Take full-length, company-specific mock tests in a simulated environment to identify and work on your weak areas.</p>
-        </div>
-
-        <div class="path-step step-4">
-            <div class="step-number">4</div>
-            <span class="pill-badge badge-green">Placements</span>
-            <div class="step-icon"><i class="fas fa-trophy"></i></div>
-            <h3>Conquer Interviews</h3>
-            <p>Walk into your campus placements with confidence, armed with the right knowledge and extensive practice.</p>
-        </div>
+    <div class="access-step">
+      <span class="access-num">02</span>
+      <h4>Attempt a mock test</h4>
+      <p>The first three are free, so you can see exactly how a mock test works. A quick login saves your attempt.</p>
     </div>
+    <div class="access-step">
+      <span class="access-num">03</span>
+      <h4>Unlock your analysis &amp; rank</h4>
+      <p>Right after submitting, your sectional breakdown, percentile and leaderboard position appear — tied to your account.</p>
+    </div>
+  </div>
 </section>
 
-<!-- Testimonials Section -->
-<section class="testimonials-section">
-    <div class="section-heading">
-        <h2>Wall of <span class="gradient-text">Love</span></h2>
-        <p>See what our successful candidates have to say about their journey with PrepVerse.</p>
+<section class="section" id="actions">
+  <div class="section-head">
+    <span class="section-tag">On PrepVerse</span>
+    <h2>Everything you can do here — no guesswork</h2>
+    <p>Five of these need nothing but a browser. Only mock tests ask for a login — and that's just so your score, analysis and leaderboard rank are actually yours.</p>
+  </div>
+  <div class="action-grid">
+
+    <div class="action-card">
+      <div class="icon">🔥</div>
+      <h3>Daily Challenge</h3>
+      <p>Two fresh questions every day across quant, logic and English. Keeps your streak alive and your fundamentals sharp in under 10 minutes.</p>
+      <div class="tag-row"><span class="pill pill-free">No login needed</span></div>
+      <a href="{% url 'daily_challenges' %}" class="go">Solve today's set →</a>
     </div>
 
-    <div class="testimonial-slider swiper">
-        <div class="swiper-wrapper">
-            <!-- Testimonial 1 -->
-            <div class="swiper-slide">
-                <div class="testimonial-card card-glow-purple">
-                    <div class="t-header">
-                        <div class="t-avatar avatar-purple">AS</div>
-                        <div class="t-info">
-                            <h4>Amit Sharma</h4>
-                            <span class="pill-badge badge-purple" style="margin-top: 5px;">Placed at Amazon</span>
-                        </div>
-                    </div>
-                    <div class="t-body">
-                        <i class="fas fa-quote-left"></i>
-                        <p>"The Daily Spark feature is a game-changer. Practicing just 5 questions every day kept me consistent, and the detailed explanations helped me clear the Amazon OA."</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Testimonial 2 -->
-            <div class="swiper-slide">
-                <div class="testimonial-card card-glow-pink">
-                    <div class="t-header">
-                        <div class="t-avatar avatar-pink">PR</div>
-                        <div class="t-info">
-                            <h4>Priya Reddy</h4>
-                            <span class="pill-badge badge-pink" style="margin-top: 5px;">Placed at TCS Digital</span>
-                        </div>
-                    </div>
-                    <div class="t-body">
-                        <i class="fas fa-quote-left"></i>
-                        <p>"I was really weak in Quantitative Aptitude. The structured modules and practice sets on PrepVerse helped me build my logic from scratch. Highly recommended!"</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Testimonial 3 -->
-            <div class="swiper-slide">
-                <div class="testimonial-card card-glow-blue">
-                    <div class="t-header">
-                        <div class="t-avatar avatar-blue">VK</div>
-                        <div class="t-info">
-                            <h4>Vikas Kumar</h4>
-                            <span class="pill-badge badge-blue" style="margin-top: 5px;">Placed at Infosys</span>
-                        </div>
-                    </div>
-                    <div class="t-body">
-                        <i class="fas fa-quote-left"></i>
-                        <p>"The UI is just so premium and distraction-free! It doesn't feel like studying. The curated cheat sheets and video explanations are top-notch."</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Testimonial 4 -->
-            <div class="swiper-slide">
-                <div class="testimonial-card card-glow-green">
-                    <div class="t-header">
-                        <div class="t-avatar avatar-green">SM</div>
-                        <div class="t-info">
-                            <h4>Sneha Mishra</h4>
-                            <span class="pill-badge badge-green" style="margin-top: 5px;">Placed at Cognizant</span>
-                        </div>
-                    </div>
-                    <div class="t-body">
-                        <i class="fas fa-quote-left"></i>
-                        <p>"I followed the 4-step journey exactly as laid out here. From learning concepts to giving mocks, PrepVerse was my only companion for campus placements."</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="t-pagination"></div>
+    <div class="action-card">
+      <div class="icon">📚</div>
+      <h3>Structured Courses</h3>
+      <p>Topic-by-topic modules — Aptitude, Logical Reasoning, English, Quant — each with concept notes and practice sets you can revisit anytime.</p>
+      <div class="tag-row"><span class="pill pill-free">No login needed</span></div>
+      <a href="{% url 'courses' %}" class="go">Browse courses →</a>
     </div>
+
+    <div class="action-card">
+      <div class="icon">🎯</div>
+      <h3>Practice Arena</h3>
+      <p>Unlimited topic-wise practice with instant explanations. Filter by difficulty and track exactly which sub-topics are pulling your score down.</p>
+      <div class="tag-row"><span class="pill pill-free">No login needed</span></div>
+      <a href="{% url 'practice' %}" class="go">Start practicing →</a>
+    </div>
+
+    <div class="action-card">
+      <div class="icon">📝</div>
+      <h3>Mock Tests</h3>
+      <p>Full-length, timed tests that mirror real exam pressure — with sectional breakdown, percentile rank and topic-wise weak-spot report. First 3 tests are free.</p>
+      <div class="tag-row"><span class="pill pill-login">Login to attempt</span></div>
+      <a href="{% url 'mock_test' %}" class="go">Try a free test →</a>
+    </div>
+
+    <div class="action-card">
+      <div class="icon">🏆</div>
+      <h3>Leaderboard</h3>
+      <p>See where you stand against other candidates preparing for the same exams — by XP, accuracy and current streak, updated live.</p>
+      <div class="tag-row"><span class="pill pill-login">Unlocks after 1st test</span></div>
+      <a href="{% url 'leaderboard' %}" class="go">See how to unlock →</a>
+    </div>
+
+    <div class="action-card">
+      <div class="icon">✍️</div>
+      <h3>Prep Blog</h3>
+      <p>Shortcut techniques, time-management strategies and topic breakdowns written by mentors — the stuff that doesn't fit in a question bank.</p>
+      <div class="tag-row"><span class="pill pill-free">No login needed</span></div>
+      <a href="{% url 'blog' %}" class="go">Read latest posts →</a>
+    </div>
+
+  </div>
+</section>
+
+<section class="compare-band" id="compare">
+  <div class="section">
+    <div class="section-head">
+      <span class="section-tag">Transparent, always</span>
+      <h2>What needs a login, what doesn't</h2>
+      <p>Only one thing on PrepVerse ever asks you to sign in: attempting a mock test. Everything else stays open.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-col">
+        <span class="col-kicker">Step 1</span>
+        <h3>Just Browsing</h3>
+        <p class="price">₹0 · no account</p>
+        <ul>
+          <li>Daily challenge questions</li>
+          <li>All structured courses &amp; concept notes</li>
+          <li>Unlimited topic-wise practice questions</li>
+        </ul>
+      </div>
+      
+      <div class="compare-col recommended">
+        <span class="col-kicker">Step 2</span>
+        <h3>Taking a Test</h3>
+        <p class="price">₹0 · requires login</p>
+        <ul>
+          <li>Attempt first 3 mock tests for free</li>
+          <li>Simulated exam timer and rules</li>
+          <li>Leaderboard position &amp; rank mapping</li>
+        </ul>
+      </div>
+
+      <div class="compare-col premium">
+        <span class="col-kicker">Step 3</span>
+        <h3>Unlocking Stats</h3>
+        <p class="price">₹999 / year · premium</p>
+        <ul>
+          <li>Access to all proctored mock tests</li>
+          <li>Detailed sectional weak-spot diagnostics</li>
+          <li>Percentile analysis reports</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="section stats-band">
+  <div class="stats-grid">
+    <div class="stat">
+      <b class="stat-count" data-count="12400">0</b>
+      <span>Practice Questions</span>
+    </div>
+    <div class="stat">
+      <b class="stat-count" data-count="3">0</b>
+      <span>Free Mock Tests</span>
+    </div>
+    <div class="stat">
+      <b class="stat-count" data-count="512">0</b>
+      <span>Daily Active Solvers</span>
+    </div>
+    <div class="stat">
+      <b class="stat-count" data-count="15">0</b>
+      <span>Placement Partners</span>
+    </div>
+  </div>
+</section>
+
+<!-- Blog Section -->
+<section class="section" id="blog">
+  <div class="section-head">
+    <span class="section-tag">Prep Blog</span>
+    <h2>Latest Insights &amp; Shortcut Strategies</h2>
+    <p>Handcrafted shortcuts, placement test reports, and exam analysis written directly by mentors.</p>
+  </div>
+  
+  <div class="blog-grid">
+    <div class="blog-card">
+      <div class="thumb">
+        <span class="badge">Shortcuts</span>
+      </div>
+      <div class="body">
+        <h4>10 Quantitative Aptitude Hacks You Must Know</h4>
+        <p>Master percentage calculations, ratio shortcuts, and equations solving tricks to shave off precious seconds during mock sessions.</p>
+        <span class="meta">5 min read · By Admin</span>
+      </div>
+    </div>
+    
+    <div class="blog-card">
+      <div class="thumb" style="background: linear-gradient(135deg, #a855f7, #ec4899);">
+        <span class="badge">Logical Reasoning</span>
+      </div>
+      <div class="body">
+        <h4>Cracking Syllabus Seating Arrangement Puzzles</h4>
+        <p>A step-by-step breakdown of circular and linear arrangements with easy notation methods that prevent silly placement mistakes.</p>
+        <span class="meta">8 min read · By Placement Cell</span>
+      </div>
+    </div>
+    
+    <div class="blog-card">
+      <div class="thumb" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+        <span class="badge">Placement Guide</span>
+      </div>
+      <div class="body">
+        <h4>What Companies Look For In Aptitude Tests</h4>
+        <p>An inside look at placement assessment criteria from top hiring recruiters, and how percentile scores influence shortlistings.</p>
+        <span class="meta">6 min read · By HR Team</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA Section -->
+<section class="section">
+  <div class="final-cta">
+    <h2>Ready to Level Up Your Placement Prep?</h2>
+    <p>Launch your first free mock test now. Track sectional percentiles, mapping analytics, and identify structural weak points immediately.</p>
+    <a href="{% url 'mock_test' %}" class="btn" style="background: #fff; color: #000; font-weight: 700; border-radius: 50px; padding: 15px 35px; box-shadow: 0 10px 25px rgba(255,255,255,0.15); margin-top: 10px; text-transform: uppercase;">Get Started For Free →</a>
+  </div>
 </section>
 {% endblock %}
 
@@ -1079,51 +1336,151 @@
             }
         });
 
-        // Mini Spark Slider
-        var sparkSwiper = new Swiper('.spark-mini-slider', {
-            loop: false,
-            speed: 600,
-            pagination: {
-                el: '.s-pagination',
-                clickable: true,
-                renderBullet: function (index, className) {
-                    return '<span class="' + className + ' s-dot"></span>';
-                },
-                bulletActiveClass: 'active'
+        // Interactive Quiz Data
+        const QUESTIONS = [
+            {
+                q: "If 5 workers can build a wall in 12 days, how many days will it take 6 workers to build the same wall?",
+                opts: ["8 days", "10 days", "12 days", "15 days"],
+                correct: 1,
+                explanation: "Inverse proportion: M1 * D1 = M2 * D2. So, 5 * 12 = 6 * D2 => 60 = 6 * D2 => D2 = 10 days."
             },
-            navigation: {
-                nextEl: '.spark-next',
-                prevEl: '.spark-prev',
+            {
+                q: "Look at this series: 2, 1, (1/2), (1/4), ... What number should come next?",
+                opts: ["(1/3)", "(1/8)", "(2/8)", "(1/16)"],
+                correct: 1,
+                explanation: "This is a geometric progression where each term is multiplied by 1/2. (1/4) * (1/2) = (1/8)."
             },
-            on: {
-                slideChange: function() {
-                    $('.s-count').text((this.activeIndex + 1) + '/' + this.slides.length);
-                }
+            {
+                q: "A sum of money at simple interest amounts to Rs. 815 in 3 years and to Rs. 854 in 4 years. The sum is:",
+                opts: ["Rs. 650", "Rs. 690", "Rs. 698", "Rs. 700"],
+                correct: 2,
+                explanation: "S.I. for 1 year = 854 - 815 = Rs. 39. S.I. for 3 years = 39 * 3 = Rs. 117. Principal = 815 - 117 = Rs. 698."
             }
+        ];
+
+        let currentQIndex = 0;
+        let selectedOpt = null;
+        let answered = false;
+
+        // OMR Quiz DOM Elements
+        const qtext = $('#qtext');
+        const optsContainer = $('#opts');
+        const feedback = $('#feedback');
+        const nextBtn = $('#nextBtn');
+        const timerVal = $('#timer');
+
+        // Timer setup
+        let timeRemaining = 15;
+        let timerInterval;
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeRemaining = 15;
+            timerVal.text(`00:${timeRemaining < 10 ? '0' : ''}${timeRemaining}`).css('color', '#f59e0b');
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                timerVal.text(`00:${timeRemaining < 10 ? '0' : ''}${timeRemaining}`);
+                if (timeRemaining <= 5) {
+                    timerVal.css('color', '#ef4444');
+                }
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion(index) {
+            answered = false;
+            selectedOpt = null;
+            feedback.removeClass('show').hide();
+            nextBtn.text("Skip question →").css('color', 'rgba(255,255,255,0.4)');
+            
+            const item = QUESTIONS[index];
+            qtext.text(item.q);
+            optsContainer.empty();
+
+            item.opts.forEach((optText, optIdx) => {
+                const optEl = $(`
+                    <button class="opt" data-index="${optIdx}">
+                        <div class="bubble">${String.fromCharCode(65 + optIdx)}</div>
+                        <span>${optText}</span>
+                    </button>
+                `);
+                optsContainer.append(optEl);
+            });
+
+            startTimer();
+        }
+
+        function autoSubmit() {
+            if (answered) return;
+            answered = true;
+            clearInterval(timerInterval);
+            
+            const correctIdx = QUESTIONS[currentQIndex].correct;
+            // Mark correct answer
+            optsContainer.find(`.opt[data-index="${correctIdx}"]`).addClass('correct');
+            optsContainer.find('.opt').prop('disabled', true);
+            
+            feedback.text(`Time's up! ${QUESTIONS[currentQIndex].explanation}`).addClass('show').fadeIn();
+            nextBtn.text("Next question →").css('color', '#3b82f6');
+        }
+
+        // Handle Option Select
+        optsContainer.on('click', '.opt', function() {
+            if (answered) return;
+            clearInterval(timerInterval);
+            answered = true;
+            
+            const selectedIdx = parseInt($(this).data('index'), 10);
+            const correctIdx = QUESTIONS[currentQIndex].correct;
+
+            optsContainer.find('.opt').prop('disabled', true);
+            
+            if (selectedIdx === correctIdx) {
+                $(this).addClass('correct');
+                feedback.text(`Correct! ${QUESTIONS[currentQIndex].explanation}`).css('border-color', 'rgba(16, 185, 129, 0.3)');
+            } else {
+                $(this).addClass('wrong');
+                optsContainer.find(`.opt[data-index="${correctIdx}"]`).addClass('correct');
+                feedback.text(`Incorrect. ${QUESTIONS[currentQIndex].explanation}`).css('border-color', 'rgba(239, 68, 68, 0.3)');
+            }
+
+            feedback.addClass('show').fadeIn();
+            nextBtn.text("Next question →").css('color', '#3b82f6');
         });
 
-        // Testimonial Slider
-        var testimonialSwiper = new Swiper('.testimonial-slider', {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            loop: true,
-            autoplay: {
-                delay: 4000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.t-pagination',
-                clickable: true,
-                renderBullet: function (index, className) {
-                    return '<span class="' + className + ' s-dot"></span>';
-                },
-                bulletActiveClass: 'active'
-            },
-            breakpoints: {
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 }
-            }
+        // Handle Next / Skip Button
+        nextBtn.on('click', function() {
+            currentQIndex = (currentQIndex + 1) % QUESTIONS.length;
+            loadQuestion(currentQIndex);
         });
+
+        // Initialize First Question
+        loadQuestion(0);
+
+        // Stats count-up on scroll
+        const stats = document.querySelectorAll('.stat-count');
+        let counted = false;
+        function countUp(el){
+            const target = parseInt(el.getAttribute('data-count'), 10);
+            const dur = 1500;
+            const start = performance.now();
+            function tick(now){
+                const p = Math.min((now - start)/dur, 1);
+                el.textContent = Math.floor(p * target).toLocaleString() + (target >= 1000 ? "+" : "");
+                if(p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+        const obs = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting && !counted){
+                counted = true;
+                stats.forEach(countUp);
+            }
+        }, { threshold: 0.2 });
+        if(stats.length) obs.observe(stats[0]);
     });
 </script>
 {% endblock %}
