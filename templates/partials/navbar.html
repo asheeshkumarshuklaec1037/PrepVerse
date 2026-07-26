@@ -1,11 +1,9 @@
 {% load static %}
 <nav class="navbar" id="navbar">
     <div style="display: flex; align-items: center; gap: 12px;">
-        {% if user.is_authenticated %}
-            <div class="sidebar-hover-trigger" id="sidebarHoverTrigger">
-                <i class="fas fa-bars"></i>
-            </div>
-        {% endif %}
+        <div class="sidebar-hover-trigger {% if not user.is_authenticated %}mobile-only-trigger{% endif %}" id="sidebarHoverTrigger">
+            <i class="fas fa-bars"></i>
+        </div>
         
         <a href="{% url 'home' %}" class="logo">
             <i class="fas fa-bolt"></i>

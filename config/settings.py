@@ -35,6 +35,15 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
+# Trust ngrok & localhost tunneling origins for CSRF protection
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
+    'https://*.ngrok-free.dev',
+    'https://*.ngrok.io',
+    'http://127.0.0.1',
+    'http://localhost',
+]
+
 
 # Application definition
 

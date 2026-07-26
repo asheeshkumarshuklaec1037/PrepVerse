@@ -755,6 +755,18 @@
         gap: 40px;
         align-items: center;
     }
+    @media (max-width: 992px) {
+        .modal-overlay {
+            padding: 30px 15px !important;
+            align-items: flex-start !important;
+        }
+        .modal-split-wrapper {
+            grid-template-columns: 1fr !important;
+            gap: 25px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+    }
 
     /* Modal Left Guide Info */
     .modal-left-info {
@@ -1395,6 +1407,49 @@
         background: linear-gradient(135deg, #3b82f6, #2563eb);
     }
 
+    @media (max-width: 768px) {
+        .sidebar-trigger-btn {
+            right: 20px !important;
+            bottom: 30px !important;
+            top: auto !important;
+            transform: none !important;
+            width: 52px !important;
+            height: 52px !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            writing-mode: horizontal-tb !important;
+            justify-content: center !important;
+            align-items: center !important;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        .sidebar-trigger-btn span {
+            display: none !important;
+        }
+        .sidebar-trigger-btn i {
+            font-size: 1.25rem !important;
+        }
+        .config-workspace {
+            padding: 0 16px !important;
+            border-radius: 20px !important;
+        }
+        .config-workspace.active {
+            padding: 24px 16px !important;
+            margin-top: 20px !important;
+            margin-bottom: 25px !important;
+        }
+        .config-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+        }
+        .selector-card {
+            padding: 20px 16px !important;
+        }
+        .papers-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
     /* Scrollable papers container */
     .test-papers-list-container {
         max-height: 720px;
@@ -1868,7 +1923,7 @@
 
 <!-- Sticky Trigger Button -->
 <button class="sidebar-trigger-btn" onmouseenter="openQuickNavSidebar()" onclick="toggleQuickNavSidebar()">
-    <i class="fas fa-list-ul"></i> Mock Tests Navigation
+    <i class="fas fa-list-ul"></i> <span>Mock Tests Navigation</span>
 </button>
 
 <!-- Collapsible Sidebar -->
