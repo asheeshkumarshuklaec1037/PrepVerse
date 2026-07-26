@@ -1,0 +1,88 @@
+/* Project-Wide Centralized Button System (Enforced Site-Wide) */
+.card-action-btn, 
+.btn-primary, 
+.btn-secondary,
+.btn-action,
+.retake-btn,
+.modal-btn,
+.login-btn {
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: var(--font-main);
+}
+
+/* Single Unified Hover Physics for ALL Buttons Across Site */
+.card-action-btn:hover, 
+.btn-primary:hover, 
+.btn-secondary:hover,
+.btn-action:hover,
+.retake-btn:hover,
+.modal-btn:hover,
+.login-btn:hover {
+    transform: translateY(-4px) scale(1.02) !important;
+}
+
+/* Button Color Palette Variants */
+.btn-green, .btn-neon, .modal-btn-confirm {
+    background: #2af598 !important;
+    color: #000000 !important;
+}
+.btn-green:hover, .btn-neon:hover, .modal-btn-confirm:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: 0 8px 25px rgba(42, 245, 152, 0.4) !important;
+}
+
+.btn-orange {
+    background: #f59e0b !important;
+    color: #ffffff !important;
+}
+.btn-orange:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4) !important;
+}
+
+.btn-blue {
+    background: #3b82f6 !important;
+    color: #ffffff !important;
+}
+.btn-blue:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+}
+
+.btn-purple {
+    background: #a855f7 !important;
+    color: #ffffff !important;
+}
+.btn-purple:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4) !important;
+}
+
+.btn-glass, .modal-btn-cancel {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+.btn-glass:hover, .modal-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15) !important;
+}

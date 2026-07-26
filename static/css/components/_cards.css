@@ -1,0 +1,44 @@
+/* Project-Wide Centralized Card System (Enforced Site-Wide) */
+.glass-card,
+.dashboard-card,
+.sidebar-panel,
+.stat-card,
+.attempt-card,
+.metric-card {
+    background: rgba(255, 255, 255, 0.04) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-radius: 28px !important;
+    padding: 30px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+                background 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Single Unified Hover Physics for ALL Cards Across Dashboard, Mock Tests, Analytics, Blog */
+.glass-card:hover,
+.dashboard-card:hover,
+.sidebar-panel:hover,
+.stat-card:hover,
+.attempt-card:hover,
+.metric-card:hover {
+    transform: translateY(-8px) !important;
+    border-color: rgba(42, 245, 152, 0.4) !important;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 22px rgba(42, 245, 152, 0.18) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Unified Card Image Illustration Scaling */
+.glass-card:hover .card-illustration,
+.dashboard-card:hover .card-illustration {
+    transform: scale(1.05) !important;
+}
+
+.card-illustration {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}

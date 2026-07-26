@@ -94,25 +94,6 @@
         padding: 40px 4% 80px;
     }
 
-    /* Glassmorphism Cards with Soft Shadows and Gradients */
-    .glass-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-glass);
-        border-radius: 24px;
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        position: relative;
-        overflow: hidden;
-    }
-    .glass-card:hover {
-        background: rgba(18, 15, 42, 0.55);
-        border-color: var(--border-glass-hover);
-        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), 0 0 25px rgba(139, 92, 246, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        transform: translateY(-5px) scale(1.01);
-    }
-
     /* Widget Header Styling */
     .widget-header {
         display: flex;
@@ -283,26 +264,63 @@
         width: 65px; height: 35px;
     }
 
-    /* Subject Cards List Grid */
-    .subject-cards-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
+    /* Subject Cards Carousel Slider (3 Cards Viewport + Infinite Navigation) */
+    .subject-carousel-wrapper {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        padding: 10px 0;
     }
-    @media (max-width: 1200px) {
-        .subject-cards-grid {
-            grid-template-columns: repeat(2, 1fr);
+    .subject-carousel-track {
+        display: flex;
+        gap: 20px;
+        transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform;
+    }
+    .subject-card {
+        flex: 0 0 calc((100% - 40px) / 3);
+        min-width: calc((100% - 40px) / 3);
+        padding: 18px;
+        cursor: pointer;
+        border-radius: 24px;
+        box-sizing: border-box;
+    }
+    @media (max-width: 992px) {
+        .subject-card {
+            flex: 0 0 calc((100% - 20px) / 2);
+            min-width: calc((100% - 20px) / 2);
         }
     }
     @media (max-width: 640px) {
-        .subject-cards-grid {
-            grid-template-columns: 1fr;
+        .subject-card {
+            flex: 0 0 100%;
+            min-width: 100%;
         }
     }
-    .subject-card {
-        padding: 14px;
-        cursor: pointer;
-        border-radius: 20px;
+    
+    /* Carousel side navigation buttons (matching Attempted Tests page) */
+    .carousel-btn {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid var(--border-glass) !important;
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        color: #ffffff !important;
+        font-size: 1rem !important;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        z-index: 10 !important;
+        flex-shrink: 0 !important;
+    }
+    .carousel-btn:hover {
+        background: #3b82f6 !important;
+        border-color: #3b82f6 !important;
+        color: #ffffff !important;
+        box-shadow: 0 0 18px rgba(59, 130, 246, 0.5) !important;
+        transform: scale(1.08) !important;
     }
     .subject-cover-img-box {
         width: 100%;
@@ -1298,89 +1316,99 @@
 
     </div>
 
-    <!-- Subject Preparations Horizontal Row -->
-    <div class="glass-card p-6 mt-8" data-aos="fade-up" data-aos-delay="150">
-        <div class="widget-header">
-            <i class="fas fa-book-open text-[#c084fc]"></i>
-            <span>Subject Preparations</span>
+    <!-- Subject Preparations Horizontal Row (3 Cards Viewport + Infinite Carousel) -->
+    <div class="glass-card" style="width: 100%; overflow: visible; padding: 35px 40px; margin-top: 32px;" data-aos="fade-up" data-aos-delay="150">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-book-open" style="color: #c084fc; font-size: 1.25rem;"></i>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0;">Subject Preparations</h2>
+            </div>
+            <span style="font-size: 0.88rem; color: #c084fc; font-weight: 700; background: rgba(192, 132, 252, 0.08); border: 1px solid rgba(192, 132, 252, 0.2); padding: 8px 16px; border-radius: 12px; display: flex; align-items: center; gap: 6px;">Total Subjects: <strong style="color: #ffffff;">{{ categories|length }}</strong></span>
         </div>
         
-        <div class="subject-cards-grid">
-            {% for cat in categories %}
-            <div class="glass-card subject-card relative overflow-hidden" onclick="location.href='{% url 'courses' %}'">
-                {% if cat.title == "Quantitative Aptitude" %}
-                <!-- Background Pattern: Concentric Rings (Zano style) -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="50" y="50" width="80" height="80" rx="20" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
-                        <rect x="50" y="50" width="110" height="110" rx="30" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
-                        <rect x="50" y="50" width="140" height="140" rx="40" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
-                    </svg>
-                </div>
-                {% elif cat.title == "Logical Reasoning" %}
-                <!-- Background Pattern: Isometric columns (Kudoe style) -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M80 60 L90 55 L100 60 L90 65 Z" fill="{{ cat.color }}" opacity="0.6"/>
-                        <path d="M80 60 L80 85 L90 90 L90 65 Z" fill="{{ cat.color }}" opacity="0.4"/>
-                        <path d="M90 65 L90 90 L100 85 L100 60 Z" fill="{{ cat.color }}" opacity="0.8"/>
-                        
-                        <path d="M60 70 L70 65 L80 70 L70 75 Z" fill="{{ cat.color }}" opacity="0.6"/>
-                        <path d="M60 70 L60 95 L70 100 L70 75 Z" fill="{{ cat.color }}" opacity="0.4"/>
-                        <path d="M70 75 L70 100 L80 95 L80 70 Z" fill="{{ cat.color }}" opacity="0.8"/>
-                    </svg>
-                </div>
-                {% elif cat.title == "Verbal Ability" %}
-                <!-- Background Pattern: Wavy ribbon paths (wavy style) -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M-20,50 Q10,20 40,50 T100,50 T160,50" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M-20,60 Q10,30 40,60 T100,60 T160,60" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
-                        <path d="M-20,70 Q10,40 40,70 T100,70 T160,70" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
-                    </svg>
-                </div>
-                {% else %}
-                <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <polygon points="100,60 75,85 100,100" fill="{{ cat.color }}" opacity="0.4"/>
-                        <polygon points="75,85 55,70 100,60" fill="{{ cat.color }}" opacity="0.6"/>
-                        <polygon points="55,70 85,50 100,60" fill="{{ cat.color }}" opacity="0.5"/>
-                        <polygon points="75,85 55,70 65,95" fill="{{ cat.color }}" opacity="0.3"/>
-                    </svg>
-                </div>
-                {% endif %}
-                <div class="relative z-10">
-                    <div class="subject-cover-img-box mb-4">
-                        <img src="{{ cat.image }}" alt="{{ cat.title }}">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#070412] via-transparent to-transparent"></div>
-                        <div class="subject-icon-badge" style="color: {{ cat.color }}; border: 1px solid {{ cat.color }}44; box-shadow: 0 0 10px {{ cat.color }}33;">
-                            <i class="fas {{ cat.icon }}"></i>
+        <div class="carousel-container" style="display: flex; align-items: center; position: relative; width: 100%; gap: 15px;">
+            <button class="carousel-btn prev-btn" onclick="slideSubjectCarousel(-1)" title="Previous Cards"><i class="fas fa-chevron-left"></i></button>
+            
+            <div class="carousel-viewport" style="overflow: hidden; width: 100%; padding: 10px 0;">
+                <div class="carousel-track" id="subjectCarouselTrack" style="display: flex; gap: 20px; transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform;">
+                    {% for cat in categories %}
+                    <div class="glass-card subject-card relative overflow-hidden" onclick="location.href='{% url 'courses' %}'">
+                        {% if cat.title == "Quantitative Aptitude" %}
+                        <!-- Background Pattern: Concentric Rings (Zano style) -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="50" y="50" width="80" height="80" rx="20" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
+                                <rect x="50" y="50" width="110" height="110" rx="30" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
+                                <rect x="50" y="50" width="140" height="140" rx="40" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        {% elif cat.title == "Logical Reasoning" %}
+                        <!-- Background Pattern: Isometric columns (Kudoe style) -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M80 60 L90 55 L100 60 L90 65 Z" fill="{{ cat.color }}" opacity="0.6"/>
+                                <path d="M80 60 L80 85 L90 90 L90 65 Z" fill="{{ cat.color }}" opacity="0.4"/>
+                                <path d="M90 65 L90 90 L100 85 L100 60 Z" fill="{{ cat.color }}" opacity="0.8"/>
+                                
+                                <path d="M60 70 L70 65 L80 70 L70 75 Z" fill="{{ cat.color }}" opacity="0.6"/>
+                                <path d="M60 70 L60 95 L70 100 L70 75 Z" fill="{{ cat.color }}" opacity="0.4"/>
+                                <path d="M70 75 L70 100 L80 95 L80 70 Z" fill="{{ cat.color }}" opacity="0.8"/>
+                            </svg>
+                        </div>
+                        {% elif cat.title == "Verbal Ability" %}
+                        <!-- Background Pattern: Wavy ribbon paths (wavy style) -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M-20,50 Q10,20 40,50 T100,50 T160,50" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M-20,60 Q10,30 40,60 T100,60 T160,60" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                                <path d="M-20,70 Q10,40 40,70 T100,70 T160,70" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+                            </svg>
+                        </div>
+                        {% else %}
+                        <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
+                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
+                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="100,60 75,85 100,100" fill="{{ cat.color }}" opacity="0.4"/>
+                                <polygon points="75,85 55,70 100,60" fill="{{ cat.color }}" opacity="0.6"/>
+                                <polygon points="55,70 85,50 100,60" fill="{{ cat.color }}" opacity="0.5"/>
+                                <polygon points="75,85 55,70 65,95" fill="{{ cat.color }}" opacity="0.3"/>
+                            </svg>
+                        </div>
+                        {% endif %}
+                        <div class="relative z-10">
+                            <div class="subject-cover-img-box mb-4">
+                                <img src="{{ cat.image }}" alt="{{ cat.title }}">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#070412] via-transparent to-transparent"></div>
+                                <div class="subject-icon-badge" style="color: {{ cat.color }}; border: 1px solid {{ cat.color }}44; box-shadow: 0 0 10px {{ cat.color }}33;">
+                                    <i class="fas {{ cat.icon }}"></i>
+                                </div>
+                            </div>
+                            <h4 class="font-extrabold text-sm text-white">{{ cat.title }}</h4>
+                            <p class="text-[10px] text-gray-400 font-bold mb-4">
+                                {% if cat.title == "Quantitative Aptitude" %}Prof. Arun Sharma
+                                {% elif cat.title == "Logical Reasoning" %}Prof. R.S. Aggarwal
+                                {% elif cat.title == "Verbal Ability" %}Prof. Wren & Martin
+                                {% else %}Prof. Jonathan Reyes{% endif %}
+                            </p>
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
+                                    <span>{% if cat.progress == 45 %}6 lessons left{% elif cat.progress == 60 %}4 lessons left{% elif cat.progress == 30 %}8 lessons left{% else %}9 lessons left{% endif %}</span>
+                                    <span style="color: {{ cat.color }};">{{ cat.progress }}% Complete</span>
+                                </div>
+                                <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full" style="width: {{ cat.progress }}%; background-color: {{ cat.color }};"></div>
+                                </div>
+                            </div>
+                            <div onclick="event.stopPropagation();">
+                                <a href="{% url 'courses' %}" class="card-action-btn btn-blue w-full block text-center" style="font-size: 0.82rem; padding: 10px 14px;">Study Course</a>
+                            </div>
                         </div>
                     </div>
-                    <h4 class="font-extrabold text-sm text-white">{{ cat.title }}</h4>
-                    <p class="text-[10px] text-gray-400 font-bold mb-4">
-                        {% if cat.title == "Quantitative Aptitude" %}Prof. Arun Sharma
-                        {% elif cat.title == "Logical Reasoning" %}Prof. R.S. Aggarwal
-                        {% elif cat.title == "Verbal Ability" %}Prof. Wren & Martin
-                        {% else %}Prof. Jonathan Reyes{% endif %}
-                    </p>
-                    <div class="mb-4">
-                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
-                            <span>{% if cat.progress == 45 %}6 lessons left{% elif cat.progress == 60 %}4 lessons left{% elif cat.progress == 30 %}8 lessons left{% else %}9 lessons left{% endif %}</span>
-                            <span style="color: {{ cat.color }};">{{ cat.progress }}% Complete</span>
-                        </div>
-                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full" style="width: {{ cat.progress }}%; background-color: {{ cat.color }};"></div>
-                        </div>
-                    </div>
-                    <div class="flex gap-3" onclick="event.stopPropagation();">
-                        <a href="{% url 'courses' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90" style="background: {{ cat.color }}; text-decoration: none;">Study Course</a>
-                        <a href="{% url 'courses' %}" class="flex-1 text-center py-2 text-[10px] font-black rounded-lg text-white border border-white/5 bg-white/2 transition-all hover:bg-white/5" style="text-decoration: none;">Practice Meter</a>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
-            {% endfor %}
+            
+            <button class="carousel-btn next-btn" onclick="slideSubjectCarousel(1)" title="Next Cards"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
@@ -1437,7 +1465,7 @@
                         <span id="blitzRemainingVal">Remaining: 15</span>
                         <span>Baseline: 3</span>
                     </div>
-                    <a href="{% url 'mock_test' %}" class="w-full text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90 block" style="background: #2af598; text-decoration: none;">Configure & Start</a>
+                    <a href="{% url 'mock_test' %}" class="card-action-btn btn-green">Configure & Start</a>
                 </div>
             </div>
 
@@ -1479,7 +1507,7 @@
                         <span id="topicRemainingVal">Remaining: 10</span>
                         <span>Baseline: 3</span>
                     </div>
-                    <a href="{% url 'mock_test' %}" class="w-full text-center py-2 text-[10px] font-black rounded-lg text-black transition-all hover:opacity-90 block" style="background: #fbcd0b; text-decoration: none;">Configure & Start</a>
+                    <a href="{% url 'mock_test' %}" class="card-action-btn btn-orange">Configure & Start</a>
                 </div>
             </div>
 
@@ -1522,7 +1550,7 @@
                         <span id="marathonRemainingVal">Remaining: 5</span>
                         <span>Baseline: 3</span>
                     </div>
-                    <a href="{% url 'mock_test' %}" class="w-full text-center py-2 text-[10px] font-black rounded-lg text-white transition-all hover:opacity-90 block" style="background: linear-gradient(135deg, #fb7185, #f43f5e); text-decoration: none;">Configure & Start</a>
+                    <a href="{% url 'mock_test' %}" class="card-action-btn btn-purple">Configure & Start</a>
                 </div>
             </div>
         </div>
@@ -2706,90 +2734,9 @@
         renderEventsList();
 
         // Initial setup run
-        updateQuests();
-        updateAchievementsUI();
-
-        // Initialize Mock Tests Stats
-        function updateMockStats() {
-            const dbAttempts = [
-                { id: 'mock-01', mode: 'Module Blitz' },
-                { id: 'mock-01b', mode: 'Module Blitz' },
-                { id: 'mock-01c', mode: 'Module Blitz' },
-                { id: 'mock-02', mode: 'Topic Master' },
-                { id: 'mock-02b', mode: 'Topic Master' },
-                { id: 'mock-02c', mode: 'Topic Master' },
-                { id: 'mock-03', mode: 'Subject Marathon' },
-                { id: 'mock-03b', mode: 'Subject Marathon' },
-                { id: 'mock-03c', mode: 'Subject Marathon' }
-            ];
-
-            let localHistory = [];
-            try {
-                localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history')) || [];
-            } catch(e) {
-                localHistory = [];
-            }
-            if (!Array.isArray(localHistory)) { localHistory = []; }
-
-            const allAttempts = [...localHistory, ...dbAttempts];
-            // Deduplicate
-            const uniqueAttempts = [];
-            const seen = new Set();
-            allAttempts.forEach(item => {
-                if (item && item.id && !seen.has(item.id)) {
-                    seen.add(item.id);
-                    uniqueAttempts.push(item);
-                }
-            });
-
-            // Count modes safely
-            const countByMode = (modeName) => {
-                return uniqueAttempts.filter(item => {
-                    const m = item.mode || '';
-                    return m.toLowerCase().trim() === modeName.toLowerCase().trim();
-                }).length;
-            };
-
-            const blitzTaken = countByMode('Module Blitz');
-            const topicTaken = countByMode('Topic Master');
-            const marathonTaken = countByMode('Subject Marathon');
-
-            const blitzTotal = 15;
-            const topicTotal = 10;
-            const marathonTotal = 5;
-
-            // Blitz UI update
-            const blitzTakenEl = document.getElementById("blitzTakenVal");
-            const blitzPctEl = document.getElementById("blitzPctVal");
-            const blitzFillEl = document.getElementById("blitzProgressFill");
-            const blitzRemainingEl = document.getElementById("blitzRemainingVal");
-            if (blitzTakenEl) blitzTakenEl.textContent = blitzTaken;
-            if (blitzPctEl) blitzPctEl.textContent = Math.round((blitzTaken / blitzTotal) * 100) + "%";
-            if (blitzFillEl) blitzFillEl.style.width = Math.min(100, Math.round((blitzTaken / blitzTotal) * 100)) + "%";
-            if (blitzRemainingEl) blitzRemainingEl.textContent = "Remaining: " + Math.max(0, blitzTotal - blitzTaken);
-
-            // Topic UI update
-            const topicTakenEl = document.getElementById("topicTakenVal");
-            const topicPctEl = document.getElementById("topicPctVal");
-            const topicFillEl = document.getElementById("topicProgressFill");
-            const topicRemainingEl = document.getElementById("topicRemainingVal");
-            if (topicTakenEl) topicTakenEl.textContent = topicTaken;
-            if (topicPctEl) topicPctEl.textContent = Math.round((topicTaken / topicTotal) * 100) + "%";
-            if (topicFillEl) topicFillEl.style.width = Math.min(100, Math.round((topicTaken / topicTotal) * 100)) + "%";
-            if (topicRemainingEl) topicRemainingEl.textContent = "Remaining: " + Math.max(0, topicTotal - topicTaken);
-
-            // Marathon UI update
-            const marathonTakenEl = document.getElementById("marathonTakenVal");
-            const marathonPctEl = document.getElementById("marathonPctVal");
-            const marathonFillEl = document.getElementById("marathonProgressFill");
-            const marathonRemainingEl = document.getElementById("marathonRemainingVal");
-            if (marathonTakenEl) marathonTakenEl.textContent = marathonTaken;
-            if (marathonPctEl) marathonPctEl.textContent = Math.round((marathonTaken / marathonTotal) * 100) + "%";
-            if (marathonFillEl) marathonFillEl.style.width = Math.min(100, Math.round((marathonTaken / marathonTotal) * 100)) + "%";
-            if (marathonRemainingEl) marathonRemainingEl.textContent = "Remaining: " + Math.max(0, marathonTotal - marathonTaken);
-        }
-
-        updateMockStats();
+        if (typeof updateQuests === "function") updateQuests();
+        if (typeof updateAchievementsUI === "function") updateAchievementsUI();
     });
 </script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}

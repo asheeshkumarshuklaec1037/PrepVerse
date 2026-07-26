@@ -1,0 +1,71 @@
+:root {
+    --bg-dark: #050505;
+    --bg-surface: #0a0a0f;
+    --accent-green: #2af598;
+    --accent-blue: #3b82f6;
+    --accent-purple: #c084fc;
+    --accent-cyan: #38bdf8;
+    --accent-rose: #ef4444;
+    --accent-gold: #fbcd0b;
+    --text-primary: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
+    --text-subtle: rgba(255, 255, 255, 0.4);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --border-glass-hover: rgba(255, 255, 255, 0.15);
+    --card-bg: rgba(13, 11, 29, 0.45);
+    --sidebar-width: 260px;
+    --font-main: 'Poppins', sans-serif;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: var(--font-main); 
+}
+
+body { 
+    background: var(--bg-dark); 
+    color: var(--text-primary); 
+    overflow-x: hidden; 
+    transition: padding-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+main { 
+    padding-top: 120px; 
+}
+
+/* Animations */
+@keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes avatarPulse {
+    0% { box-shadow: 0 0 0 0 rgba(42, 245, 152, 0.4); }
+    70% { box-shadow: 0 0 0 8px rgba(42, 245, 152, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(42, 245, 152, 0); }
+}
+
+@keyframes textShine {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes boltPulse {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 4px rgba(42, 245, 152, 0.4));
+    }
+    100% {
+        transform: scale(1.15);
+        filter: drop-shadow(0 0 12px rgba(42, 245, 152, 0.8));
+    }
+}
+
+@keyframes dropdownFadeIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}

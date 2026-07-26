@@ -1004,7 +1004,7 @@
                 <div class="text-content">
                     <h1>{{ course.title }}</h1>
                     <p>{{ course.description }}</p>
-                    <a href="{% url 'course_detail' forloop.counter0 %}" class="btn">Explore Course</a>
+                    <a href="{% url 'course_detail' forloop.counter0 %}" class="card-action-btn btn-neon" style="width: auto; display: inline-flex; padding: 12px 24px;">Explore Course</a>
                 </div>
             </div>
             {% endfor %}
@@ -1034,8 +1034,8 @@
       <h1>Practice like it's<br>exam day. <span>Every day.</span></h1>
       <p class="sub">Browse every course, daily challenge and practice question with zero sign-up. We'll only ask you to log in the moment you attempt a mock test — that's when we save your score, analysis and leaderboard rank.</p>
       <div class="hero-ctas">
-        <a href="#compare" class="btn btn-brand">Take a free mock test →</a>
-        <a href="#actions" class="btn btn-ghost">Browse without logging in</a>
+        <a href="{% url 'mock_test' %}" class="card-action-btn btn-blue" style="width: auto; padding: 14px 28px;">Take a free mock test →</a>
+        <a href="#actions" class="card-action-btn btn-glass" style="width: auto; padding: 14px 28px;">Browse without logging in</a>
       </div>
       <div class="trust-row">
         <div><b>12,400+</b> questions, open to everyone</div>
