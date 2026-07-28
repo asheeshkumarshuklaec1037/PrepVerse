@@ -1,0 +1,16 @@
+<div class="empty-state-card {{ extra_class }}" style="text-align: center; padding: 40px 20px; background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 20px; margin: 20px 0;">
+    <div class="empty-state-icon" style="font-size: 2.5rem; color: var(--text-subtle); margin-bottom: 15px;">
+        <i class="{{ icon|default:'fas fa-folder-open' }}"></i>
+    </div>
+    <h3 class="empty-state-title" style="font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">
+        {{ title|default:'No Data Found' }}
+    </h3>
+    <p class="empty-state-message" style="font-size: 0.85rem; color: var(--text-muted); max-width: 400px; margin: 0 auto 20px; line-height: 1.5;">
+        {{ message|default:'There are no items to display right now.' }}
+    </p>
+    {% if action_url and action_text %}
+        <a href="{{ action_url }}" class="card-action-btn btn-blue" style="display: inline-flex; width: auto; padding: 10px 24px; text-decoration: none;">
+            {{ action_text }}
+        </a>
+    {% endif %}
+</div>

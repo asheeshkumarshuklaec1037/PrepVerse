@@ -1,0 +1,19 @@
+<div class="section-header-block {{ extra_class }}" style="display: flex; justify-content: space-between; align-items: {{ align|default:'center' }}; margin-bottom: {{ margin_bottom|default:'25px' }}; flex-wrap: wrap; gap: 15px;">
+    <div>
+        {% if eyebrow %}
+            <span class="section-eyebrow" style="font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-green); font-weight: 700; display: block; margin-bottom: 4px;">{{ eyebrow }}</span>
+        {% endif %}
+        <h2 class="section-title-text" style="font-family: 'Outfit', sans-serif; font-size: {{ title_size|default:'1.6rem' }}; font-weight: 800; color: #ffffff; margin: 0; display: flex; align-items: center; gap: 10px;">
+            {% if icon %}<i class="{{ icon }}" style="color: {{ icon_color|default:'var(--accent-blue)' }};"></i>{% endif %}
+            {{ title }}
+        </h2>
+        {% if subtitle %}
+            <p class="section-subtitle-text" style="font-size: 0.88rem; color: var(--text-muted); margin: 4px 0 0 0; line-height: 1.45;">{{ subtitle }}</p>
+        {% endif %}
+    </div>
+    {% if cta_url and cta_text %}
+        <a href="{{ cta_url }}" class="section-cta-btn {{ cta_class|default:'card-action-btn btn-blue' }}" style="display: inline-flex; width: auto; text-decoration: none; padding: 10px 20px;">
+            {{ cta_text }}
+        </a>
+    {% endif %}
+</div>

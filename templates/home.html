@@ -8,7 +8,7 @@
 <style>
     /* Slider specific styles */
     body { overflow-x: hidden; }
-    main { padding-top: 0; } /* Remove default padding for homepage as it has a full-screen slider */
+    main { padding-top: 0 !important; } /* Override main padding-top for full viewport hero */
     
     :root {
         --radius: 20px;
@@ -22,20 +22,21 @@
     .as-slider {
         position: relative;
         width: 100%;
-        height: 85vh;
+        height: 100vh;
+        box-sizing: border-box;
         overflow: hidden;
         display: flex;
         align-items: center;
         opacity: 0;
-        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        animation: pageFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
     .as-slider.loaded {
         opacity: 1;
     }
     
     @keyframes pageFadeIn {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 
     /* ---------- HERO & QUIZ CARD ---------- */
@@ -260,6 +261,44 @@
         justify-content: space-between;
         align-items: center;
     }
+    .quiz-nav-arrow {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .quiz-nav-arrow:hover {
+        background: rgba(255,255,255,0.12);
+        border-color: rgba(255,255,255,0.25);
+    }
+    .btn-spark-center {
+        flex-grow: 1;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2));
+        border: 1px solid rgba(245, 158, 11, 0.5);
+        color: #fbbf24;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+    }
+    .btn-spark-center:hover {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(234, 88, 12, 0.35));
+    }
     .quiz-foot .streak {
         font-size: 0.82rem;
         color: rgba(255, 255, 255, 0.5);
@@ -346,10 +385,8 @@
         content: "";
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
-        /* Soft vignette effect to blend edges smoothly */
-        background: radial-gradient(ellipse at center, transparent 50%, rgba(5,5,5,0.7) 100%),
-                    linear-gradient(to bottom, rgba(5,5,5,0.95) 0%, transparent 10%, transparent 90%, rgba(5,5,5,0.95) 100%);
-        box-shadow: inset 0 0 40px 10px rgba(5,5,5,0.5);
+        /* Soft vignette effect to blend top navbar and bottom viewport edge */
+        background: linear-gradient(to bottom, rgba(5,5,5,0.7) 0%, transparent 15%, transparent 85%, rgba(5,5,5,0.6) 100%);
         z-index: 3;
         pointer-events: none;
     }
@@ -1003,7 +1040,7 @@
 <div class="as-slider" id="mainSlider">
     <div class="as-slider-background">
         {% for course in courses %}
-        <img src="{{ course.bg_image }}" data-index="{{ forloop.counter0 }}">
+        <img src="{{ course.bg_image }}" alt="{{ course.title }}" data-index="{{ forloop.counter0 }}" loading="lazy">
         {% endfor %}
     </div>
 
@@ -1013,7 +1050,7 @@
             {% for course in courses %}
             <div class="elementor-widget" data-index="{{ forloop.counter0 }}">
                 <div class="text-content">
-                    <h1>{{ course.title }}</h1>
+                    <h2 style="font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 15px;">{{ course.title }}</h2>
                     <p>{{ course.description }}</p>
                     <a href="{% url 'course_detail' forloop.counter0 %}" class="card-action-btn btn-neon" style="width: auto; display: inline-flex; padding: 12px 24px;">Explore Course</a>
                 </div>
@@ -1024,7 +1061,7 @@
             <div class="swiper-wrapper">
                 {% for course in courses %}
                 <div class="swiper-slide">
-                    <img src="{{ course.bg_image }}">
+                    <img src="{{ course.bg_image }}" alt="{{ course.title }} Thumbnail" loading="lazy">
                     <div class="card-label"><h3>{{ course.title }}</h3></div>
                 </div>
                 {% endfor %}
@@ -1066,15 +1103,15 @@
       <div class="quiz-opts" id="opts"></div>
       <div class="feedback" id="feedback"></div>
       <div class="quiz-foot" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 15px;">
-        <button id="prevBtn" class="quiz-nav-arrow" title="Previous Question" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'; this.style.borderColor='rgba(255,255,255,0.25)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+        <button id="prevBtn" class="quiz-nav-arrow">
           <i class="fas fa-chevron-left"></i>
         </button>
 
-        <a href="{% url 'daily_challenges' %}" class="btn-spark-center" style="flex-grow: 1; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2)); border: 1px solid rgba(245, 158, 11, 0.5); color: #fbbf24; padding: 10px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 700; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);" onmouseover="this.style.background='linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(234, 88, 12, 0.35))'" onmouseout="this.style.background='linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2))'">
+        <a href="{% url 'daily_challenges' %}" class="btn-spark-center">
           ⚡ Daily Spark Arena →
         </a>
 
-        <button id="nextBtn" class="quiz-nav-arrow" title="Next Question" style="width: 42px; height: 42px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'; this.style.borderColor='rgba(255,255,255,0.25)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+        <button id="nextBtn" class="quiz-nav-arrow">
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>

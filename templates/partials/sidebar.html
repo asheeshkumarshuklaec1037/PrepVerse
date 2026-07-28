@@ -10,7 +10,7 @@
     {% if user.is_authenticated %}
     <div class="sidebar-user" onclick="window.location.href='{% url 'profile_edit' %}'" style="cursor: pointer;">
         <div class="sidebar-user-avatar" data-title="{{ user.first_name }} {{ user.last_name }}">
-            <img src="{% static 'images/candidate_profile_avatar.jpg' %}" alt="Profile Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            {% include 'partials/avatar.html' with size="44px" extra_class="sidebar-avatar" %}
         </div>
         <div class="sidebar-user-info">
             <span class="sidebar-user-name">Hey, {{ user.first_name }}!</span>

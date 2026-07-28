@@ -3,8 +3,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}PrepVerse{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}PrepVerse is an advanced placement preparation platform offering mock tests, daily streak challenges, comprehensive topic modules, and real-time performance analytics.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}placement preparation, mock tests, quantitative aptitude, coding challenges, interview prep{% endblock %}">
+    
+    <!-- Open Graph & Social Sharing Meta Tags -->
+    <meta property="og:title" content="{% block og_title %}PrepVerse - Placement Preparation & Mock Test Arena{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Master your placement journey with curated streaks, company-specific mock tests, and real-time rank analytics.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/drill_exam_card.jpg' %}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <title>{% block title %}PrepVerse | Advanced Placement Preparation Platform{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -14,16 +23,19 @@
     <link rel="stylesheet" href="{% static 'css/components/_sidebar.css' %}">
     <link rel="stylesheet" href="{% static 'css/components/_buttons.css' %}">
     <link rel="stylesheet" href="{% static 'css/components/_cards.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components/_badges.css' %}">
     
     {% block extra_css %}{% endblock %}
 </head>
 <body {% if user.is_authenticated %}class="has-sidebar"{% endif %}>
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
 
     <!-- Modular Partial Components -->
     {% include 'partials/sidebar.html' %}
     {% include 'partials/navbar.html' %}
 
-    <main>
+    <main id="main-content" tabindex="-1">
         {% block content %}{% endblock %}
     </main>
 

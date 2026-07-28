@@ -30,8 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const sidebarMenu = document.getElementById('sidebarMenu');
     
     if (sidebarTrigger && sidebarMenu) {
-        let closeTimeout;
-        
         const openSidebar = () => {
             clearTimeout(closeTimeout);
             sidebarMenu.classList.add('active-hover');
@@ -42,12 +40,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 sidebarMenu.classList.remove('active-hover');
             }, 300);
         };
-        
+
+        const toggleSidebar = (e) => {
+            e.stopPropagation();
+            sidebarMenu.classList.toggle('active-hover');
+        };
+
         sidebarTrigger.addEventListener('mouseenter', openSidebar);
         sidebarTrigger.addEventListener('mouseleave', closeSidebar);
+        sidebarTrigger.addEventListener('click', toggleSidebar);
+        sidebarTrigger.addEventListener('touchstart', toggleSidebar, { passive: true });
         
         sidebarMenu.addEventListener('mouseenter', openSidebar);
         sidebarMenu.addEventListener('mouseleave', closeSidebar);
+
+        document.addEventListener('click', (e) => {
+            if (!sidebarMenu.contains(e.target) && !sidebarTrigger.contains(e.target)) {
+                sidebarMenu.classList.remove('active-hover');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                sidebarMenu.classList.remove('active-hover');
+                if (dropdownMenu) dropdownMenu.classList.remove('show');
+            }
+        });
     }
 
     // 4. Highlight active sidebar route

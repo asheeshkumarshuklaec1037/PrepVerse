@@ -193,21 +193,11 @@
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" name="first_name" class="form-input" value="{{ user.first_name }}">
-                </div>
-                <div class="form-group">
-                    <label>Last Name</label>
-                    <input type="text" name="last_name" class="form-input" value="{{ user.last_name }}">
-                </div>
+                {% include 'partials/form_field.html' with label="First Name" name="first_name" value=user.first_name %}
+                {% include 'partials/form_field.html' with label="Last Name" name="last_name" value=user.last_name %}
             </div>
 
-            <div class="form-group">
-                <label>Email Address (Uneditable)</label>
-                <input type="email" class="form-input" value="{{ user.email }}" readonly>
-                <span style="font-size: 0.72rem; color: var(--text-tertiary); opacity: 0.6; margin-top: 4px;">For security reasons, your account email cannot be changed.</span>
-            </div>
+            {% include 'partials/form_field.html' with label="Email Address (Uneditable)" type="email" value=user.email extra_class="readonly-field" %}
 
             <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.06); margin: 30px 0;">
 
@@ -215,15 +205,8 @@
                 <i class="fas fa-key" style="color: var(--accent-purple); margin-right: 8px;"></i> Change Password
             </h3>
 
-            <div class="form-group">
-                <label>New Password</label>
-                <input type="password" name="password" class="form-input" placeholder="Leave blank to keep current password">
-            </div>
-
-            <div class="form-group">
-                <label>Confirm New Password</label>
-                <input type="password" name="confirm_password" class="form-input" placeholder="Re-enter new password">
-            </div>
+            {% include 'partials/form_field.html' with label="New Password" type="password" name="password" placeholder="Leave blank to keep current password" %}
+            {% include 'partials/form_field.html' with label="Confirm New Password" type="password" name="confirm_password" placeholder="Re-enter new password" %}
 
             <button type="submit" class="btn-save">Save Profile Changes</button>
         </form>

@@ -1,0 +1,21 @@
+<div class="modal-overlay {{ extra_class }}" id="{{ modal_id }}" {% if on_click_overlay %}onclick="{{ on_click_overlay }}"{% endif %}>
+    <div class="modal-card-shell" onclick="event.stopPropagation()">
+        {% if show_close %}
+            <button type="button" class="modal-close-btn" onclick="{{ on_close|default:'this.closest(\'.modal-overlay\').classList.remove(\'active\')' }}">
+                <i class="fas fa-times"></i>
+            </button>
+        {% endif %}
+        
+        {% if title %}
+        <div class="modal-shell-header">
+            {% if icon %}<i class="{{ icon }} modal-shell-icon"></i>{% endif %}
+            <h3 class="modal-shell-title">{{ title }}</h3>
+            {% if subtitle %}<p class="modal-shell-subtitle">{{ subtitle }}</p>{% endif %}
+        </div>
+        {% endif %}
+        
+        <div class="modal-shell-body">
+            {{ body_content }}
+        </div>
+    </div>
+</div>

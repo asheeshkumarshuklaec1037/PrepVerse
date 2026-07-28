@@ -17,6 +17,21 @@
         margin-top: -120px; /* Offset main padding to start from top */
         background: #050505;
     }
+    .amazon-book-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 10px;
+        text-decoration: none;
+        color: #fff;
+        transition: 0.3s;
+    }
+    .amazon-book-item:hover {
+        border-color: rgba(59,130,246,0.3);
+    }
     .hero::after {
         content: "";
         position: absolute;
@@ -232,7 +247,7 @@
 <a href="{% url 'home' %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Courses</a>
 
 <section class="hero">
-    <img src="{{ course.bg_image }}" class="hero-bg">
+    <img src="{{ course.bg_image }}" alt="{{ course.title }} Background" class="hero-bg" loading="lazy">
     <div class="hero-content">
         <div class="free-badge">Free Course</div>
         <h1>{{ course.title }}</h1>
@@ -296,14 +311,14 @@
             
             {% if course.id == 0 or course.id == 3 %}
             <!-- Quantitative Aptitude Books -->
-            <a href="https://www.amazon.in/s?k=quantitative+aptitude+rs+aggarwal&tag=prepverse0d-21" target="_blank" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px; text-decoration: none; color: #fff; transition: 0.3s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+            <a href="https://www.amazon.in/s?k=quantitative+aptitude+rs+aggarwal&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
                 <span style="font-size: 1.2rem;">📖</span>
                 <div style="flex-grow: 1;">
                     <span style="font-size: 0.82rem; font-weight: 600; display: block;">Quant Aptitude by RS Aggarwal</span>
                     <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹550 on Amazon ↗</span>
                 </div>
             </a>
-            <a href="https://www.amazon.in/s?k=fast+track+objective+arithmetic+rajesh+verma&tag=prepverse0d-21" target="_blank" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px; text-decoration: none; color: #fff; transition: 0.3s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+            <a href="https://www.amazon.in/s?k=fast+track+objective+arithmetic+rajesh+verma&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
                 <span style="font-size: 1.2rem;">📖</span>
                 <div style="flex-grow: 1;">
                     <span style="font-size: 0.82rem; font-weight: 600; display: block;">Fast Track Objective Arithmetic</span>
@@ -312,14 +327,14 @@
             </a>
             {% elif course.id == 1 %}
             <!-- Logical Reasoning Books -->
-            <a href="https://www.amazon.in/s?k=verbal+and+non+verbal+reasoning+rs+aggarwal&tag=prepverse0d-21" target="_blank" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px; text-decoration: none; color: #fff; transition: 0.3s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+            <a href="https://www.amazon.in/s?k=verbal+and+non+verbal+reasoning+rs+aggarwal&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
                 <span style="font-size: 1.2rem;">📖</span>
                 <div style="flex-grow: 1;">
                     <span style="font-size: 0.82rem; font-weight: 600; display: block;">Reasoning by RS Aggarwal</span>
                     <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹620 on Amazon ↗</span>
                 </div>
             </a>
-            <a href="https://www.amazon.in/s?k=logical+reasoning+arun+sharma&tag=prepverse0d-21" target="_blank" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px; text-decoration: none; color: #fff; transition: 0.3s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+            <a href="https://www.amazon.in/s?k=logical+reasoning+arun+sharma&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
                 <span style="font-size: 1.2rem;">📖</span>
                 <div style="flex-grow: 1;">
                     <span style="font-size: 0.82rem; font-weight: 600; display: block;">Logical Reasoning by Arun Sharma</span>
@@ -328,14 +343,14 @@
             </a>
             {% elif course.id == 2 %}
             <!-- English Books -->
-            <a href="https://www.amazon.in/s?k=word+power+made+easy&tag=prepverse0d-21" target="_blank" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px; text-decoration: none; color: #fff; transition: 0.3s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+            <a href="https://www.amazon.in/s?k=word+power+made+easy&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
                 <span style="font-size: 1.2rem;">📖</span>
                 <div style="flex-grow: 1;">
                     <span style="font-size: 0.82rem; font-weight: 600; display: block;">Word Power Made Easy</span>
                     <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹150 on Amazon ↗</span>
                 </div>
             </a>
-            <a href="https://www.amazon.in/s?k=wren+and+martin&tag=prepverse0d-21" target="_blank" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px; text-decoration: none; color: #fff; transition: 0.3s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+            <a href="https://www.amazon.in/s?k=wren+and+martin&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
                 <span style="font-size: 1.2rem;">📖</span>
                 <div style="flex-grow: 1;">
                     <span style="font-size: 0.82rem; font-weight: 600; display: block;">English Grammar by Wren &amp; Martin</span>
@@ -357,7 +372,7 @@
         {% for c in courses %}
             {% if c.id != course.id %}
             <a href="{% url 'course_detail' c.id %}" class="course-tile">
-                <img src="{{ c.bg_image }}">
+                <img src="{{ c.bg_image }}" alt="{{ c.title }}" loading="lazy">
                 <h4>{{ c.title }}</h4>
             </a>
             {% endif %}

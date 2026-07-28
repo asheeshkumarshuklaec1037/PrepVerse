@@ -24,6 +24,37 @@
         overflow-x: hidden;
     }
 
+    .btn-search-submit {
+        padding: 12px 24px;
+        border-radius: 14px;
+        background: #2af598;
+        border: none;
+        color: #000;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(42, 245, 152, 0.25);
+    }
+    .btn-search-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 25px rgba(42, 245, 152, 0.4);
+    }
+    .btn-go {
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: rgba(42, 245, 152, 0.15);
+        border: 1px solid rgba(42, 245, 152, 0.3);
+        color: #2af598;
+        font-weight: 700;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .btn-go:hover {
+        background: rgba(42, 245, 152, 0.25);
+    }
+
     /* Ambient Background Grid Layer with space-travel scrolling effect */
     @keyframes gridTravel {
         0% { background-position: 0px 0px; }
@@ -346,7 +377,7 @@
                     </select>
                     <span style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); pointer-events: none;"><i class="fas fa-chevron-down text-[10px]"></i></span>
                 </div>
-                <button type="submit" style="padding: 12px 24px; border-radius: 14px; background: #2af598; border: none; color: #000; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(42, 245, 152, 0.25);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 0 25px rgba(42, 245, 152, 0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 0 15px rgba(42, 245, 152, 0.25)';">Search</button>
+                <button type="submit" class="btn-search-submit">Search</button>
             </div>
             <!-- Count Indicator -->
             <div style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; text-align: right; white-space: nowrap;">
@@ -452,7 +483,7 @@
                 <span>Page</span>
                 <input type="number" id="pageJumperInput" min="1" max="{{ page_obj.paginator.num_pages }}" value="{{ page_obj.number }}" class="glass-input" style="width: 55px; padding: 6px 8px; border-radius: 8px; text-align: center; font-weight: 700; outline: none;">
                 <span>of {{ page_obj.paginator.num_pages }}</span>
-                <button type="button" onclick="jumpToPage()" style="padding: 6px 12px; border-radius: 8px; background: rgba(42, 245, 152, 0.15); border: 1px solid rgba(42, 245, 152, 0.3); color: #2af598; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(42, 245, 152, 0.25)'" onmouseout="this.style.background='rgba(42, 245, 152, 0.15)'">Go</button>
+                <button type="button" onclick="jumpToPage()" class="btn-go">Go</button>
             </div>
 
             {% if page_obj.has_next %}
