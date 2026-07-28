@@ -396,10 +396,12 @@
         position: relative;
         z-index: 10;
         width: 100%;
+        max-width: 1600px;
+        margin: 0 auto;
         display: grid;
-        grid-template-columns: 100px 40% 1fr;
+        grid-template-columns: 80px 38% 1fr;
         align-items: center;
-        padding: 0 5%;
+        padding: 0 4%;
     }
 
     /* Pagination Dots */
@@ -498,7 +500,9 @@
     /* Swiper Carousel */
     .as-side-slider {
         width: 100%;
-        height: var(--active-height);
+        min-width: 0;
+        height: calc(var(--active-height) + 40px);
+        padding: 20px 0;
         display: flex;
         align-items: center;
     }
@@ -507,7 +511,7 @@
         align-items: center;
     }
     .as-side-slider .swiper-slide {
-        width: 240px !important;
+        width: calc((100% - 60px) / 3) !important;
         height: var(--height);
         border-radius: var(--radius);
         overflow: hidden;
@@ -516,6 +520,7 @@
         display: flex;
         align-items: flex-end;
         position: relative;
+        flex-shrink: 0;
     }
     .as-side-slider .swiper-slide-active {
         height: var(--active-height);
