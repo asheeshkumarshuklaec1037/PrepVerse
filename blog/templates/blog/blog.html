@@ -61,55 +61,84 @@
   h1,h2,h3,h4 { font-family: 'Playfair Display', serif; color: #fff; }
   .blog-container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
 
-  /* ---------- HERO ---------- */
+  /* ---------- HERO SLIDER (Video Vertical Slide Motion) ---------- */
   .hero{
     position:relative;height:100vh;min-height:640px;overflow:hidden;
     display:flex;align-items:center;justify-content:center;text-align:center;
   }
   .hero-slide{
     position:absolute;inset:0;background-size:cover;background-position:center;
-    opacity:0;transform:scale(1.08);
-    transition:opacity 1.6s ease, transform 6s ease;
+    opacity:0;transform:translateY(100%);
+    transition:transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.2s cubic-bezier(0.77, 0, 0.175, 1);
     z-index:1;
   }
-  .hero-slide.active{opacity:1;transform:scale(1);z-index:2;}
+  .hero-slide.active{
+    opacity:1;
+    transform:translateY(0);
+    z-index:2;
+  }
+  .hero-slide.prev-slide {
+    opacity:0;
+    transform:translateY(-100%);
+    z-index:1;
+  }
   .hero::after{
     content:'';position:absolute;inset:0;
-    background:linear-gradient(180deg, rgba(5,5,8,0.65) 0%, rgba(5,5,8,0.45) 40%, rgba(5,5,8,0.85) 100%);
+    background:linear-gradient(180deg, rgba(5,5,8,0.65) 0%, rgba(5,5,8,0.4) 40%, rgba(5,5,8,0.85) 100%);
     z-index:3;
   }
-  .hero-content{position:relative;z-index:4;color:#fff;padding:0 20px;}
+
+  .hero-content{position:relative;z-index:4;color:#fff;padding:0 20px;max-width:850px;}
   .hero-eyebrow{
-    font-size:14px;letter-spacing:4px;text-transform:uppercase;
-    opacity:0;transform:translateY(16px);
-    animation:riseIn .9s ease .3s forwards;
-    color: #2af598;
+    font-size:16px;letter-spacing:5px;text-transform:uppercase;
+    opacity:0;transform:translateY(30px);
+    color: #ffffff;
+    font-weight: 500;
   }
   .hero-title{
-    font-size:clamp(46px,8vw,110px);font-weight:900;line-height:0.95;
-    margin:14px 0;letter-spacing:2px;
-    opacity:0;transform:translateY(30px);
-    animation:riseIn 1s ease .5s forwards;
+    font-size:clamp(50px,9vw,115px);font-weight:900;line-height:0.95;
+    margin:14px 0 24px;letter-spacing:18px;
+    opacity:0;transform:translateY(40px);
+    color: #ffffff;
   }
   .hero-sub{
-    font-size:17px;font-weight:300;max-width:520px;margin:0 auto;line-height:1.7;
-    opacity:0;transform:translateY(16px);
-    animation:riseIn .9s ease .8s forwards;
-    color: rgba(255,255,255,0.8);
+    font-size:18px;font-weight:300;max-width:620px;margin:0 auto 28px;line-height:1.7;
+    opacity:0;transform:translateY(30px);
+    color: rgba(255,255,255,0.85);
   }
-  @keyframes riseIn{to{opacity:1;transform:translateY(0);}}
 
-  .hero-social{
-    position:absolute;bottom:44px;left:50%;transform:translateX(-50%);
-    display:flex;gap:22px;z-index:4;
+  .hero-content.animate .hero-eyebrow {
+    animation:heroRiseIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
   }
-  .hero-social a{
+  .hero-content.animate .hero-title {
+    animation:heroTitleExpand 1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+  }
+  .hero-content.animate .hero-sub {
+    animation:heroRiseIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+  }
+  .hero-content.animate .hero-social-row {
+    animation:heroRiseIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+  }
+
+  @keyframes heroRiseIn {
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes heroTitleExpand {
+    to { opacity:1; transform:translateY(0); letter-spacing:12px; }
+  }
+
+  .hero-social-row{
+    display:flex;justify-content:center;gap:18px;
+    opacity:0;transform:translateY(25px);
+  }
+  .hero-social-row a{
     width:38px;height:38px;border:1px solid rgba(255,255,255,0.25);border-radius:50%;
     display:flex;align-items:center;justify-content:center;color:#fff;
     backdrop-filter: blur(10px);
-    transition:.3s ease;
+    transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .hero-social a:hover{background:#2af598;color:#000;border-color:#2af598;}
+  .hero-social-row a:hover{background:#2af598;color:#000;border-color:#2af598;transform:translateY(-4px);}
+  .hero-social-row svg{width:15px;height:15px;}
   .hero-social svg{width:15px;height:15px;}
 
   .hero-dots{
@@ -133,8 +162,39 @@
   .section-title em{font-style:italic;color:#2af598;}
   .divider{width:70px;height:2px;background:#2af598;margin:22px auto 0;}
 
-  .reveal{opacity:0;transform:translateY(36px);transition:opacity .8s ease, transform .8s ease;}
-  .reveal.in{opacity:1;transform:translateY(0);}
+  /* Video-matching Scroll Reveal & Stagger Animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Section Title Accent Lines Grow Effect */
+  .divider {
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2af598, #3b82f6);
+    margin: 22px auto 0;
+    border-radius: 99px;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+  }
+  .section-head.in .divider {
+    width: 80px;
+  }
+
+  /* Staggered Grid Delays */
+  .reveal-delay-1 { transition-delay: 0.08s !important; }
+  .reveal-delay-2 { transition-delay: 0.16s !important; }
+  .reveal-delay-3 { transition-delay: 0.24s !important; }
+  .reveal-delay-4 { transition-delay: 0.32s !important; }
 
   /* ---------- POPULAR POSTS GRID ---------- */
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;}
@@ -145,12 +205,12 @@
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-    transition:transform .45s ease, box-shadow .45s ease, border-color .35s ease;
+    transition:transform .45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .45s cubic-bezier(0.16, 1, 0.3, 1), border-color .35s ease;
   }
   .card:hover{
     transform:translateY(-8px);
-    border-color: rgba(42, 245, 152, 0.4);
-    box-shadow:0 25px 50px rgba(0,0,0,0.5), 0 0 20px rgba(42, 245, 152, 0.15);
+    border-color: rgba(139, 124, 240, 0.5);
+    box-shadow:0 25px 50px rgba(0,0,0,0.5), 0 0 22px rgba(139, 124, 240, 0.3);
   }
   .card img{height:230px;width:100%;object-fit:cover;transition:transform .6s ease;}
   .card:hover img{transform:scale(1.08);}
@@ -158,8 +218,7 @@
   .card-date{font-size:12px;color:rgba(255,255,255,0.6);letter-spacing:.5px;}
   .card-title{font-size:17px;font-weight:600;margin:10px 0 8px;line-height:1.4;height:70px;overflow:hidden;color:#fff;}
   .card-meta{font-size:12px;color:rgba(255,255,255,0.6);display:flex;justify-content:space-between;margin-top:12px;}
-
-  /* ---------- CTA BAND ---------- */
+  /* ---------- CTA BAND & VIDEO-MATCHING BUTTON GLIDE ANIMATIONS ---------- */
   .cta-band{
     background: rgba(10, 10, 20, 0.6);
     backdrop-filter: blur(20px);
@@ -170,16 +229,68 @@
     background-size:cover;background-position:center;background-attachment:fixed;
   }
   .cta-band h2{font-size:clamp(26px,3.4vw,40px);max-width:780px;margin:0 auto 36px;line-height:1.4;font-weight:600;color:#fff;}
-  .btn-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
-  .btn{
-    padding:15px 34px;border-radius:40px;font-size:14px;letter-spacing:.5px;
-    text-transform:uppercase;font-weight:600;transition:.35s ease;display:inline-block;
-    border:1px solid transparent;cursor:pointer;
+  .btn-row{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;}
+
+  .btn {
+    padding: 14px 42px;
+    border-radius: 4px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(45px) scale(0.92);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.35s ease,
+                color 0.35s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
   }
-  .btn-solid{background:#2af598;color:#000;}
-  .btn-solid:hover{background:#fff;color:#000;box-shadow: 0 0 25px rgba(42, 245, 152, 0.4);}
-  .btn-outline{border-color:rgba(255,255,255,0.4);color:#fff;}
-  .btn-outline:hover{background:#fff;color:#000;border-color:#fff;}
+
+  /* Trigger video button glide-up when parent .cta-band becomes visible */
+  .cta-band.in .btn-btn1 {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 0.15s;
+  }
+  .cta-band.in .btn-btn2 {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 0.35s;
+  }
+
+  .btn-solid {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+  }
+  .btn-solid:hover {
+    background: #2af598;
+    color: #000000;
+    border-color: #2af598;
+    transform: translateY(-4px) scale(1.02) !important;
+    box-shadow: 0 12px 30px rgba(42, 245, 152, 0.35);
+  }
+
+  .btn-outline {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+  }
+  .btn-outline:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    transform: translateY(-4px) scale(1.02) !important;
+    box-shadow: 0 12px 30px rgba(255, 255, 255, 0.25);
+  };}
 
   /* ---------- RECENT POSTS (alt image/text rows) ---------- */
   .recent-row{
@@ -352,15 +463,16 @@
   <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=1600&q=80')"></div>
 
   <div class="hero-content">
-    <div class="hero-eyebrow">Elevate Your Preparation</div>
-    <h1 class="hero-title">PREPVERSE JOURNAL</h1>
-    <p class="hero-sub">Expert aptitude tricks, cognitive shortcuts, verbal methodologies, and science-backed mock test strategies to conquer competitive exams.</p>
-  </div>
-
-  <div class="hero-social">
-    <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8c0-.9.2-1.5 1.5-1.5h1.6V4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9V10H8v3h2.5v8h3z"/></svg></a>
-    <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
-    <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 5.9c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.3 1.7-2.3-.8.5-1.6.8-2.6 1a4 4 0 0 0-6.9 3.7A11.5 11.5 0 0 1 3.4 4.6a4 4 0 0 0 1.3 5.4c-.7 0-1.3-.2-1.9-.5v.1c0 2 1.4 3.6 3.3 4a4 4 0 0 1-1.9.1a4 4 0 0 0 3.8 2.8A8.1 8.1 0 0 1 2 18.4a11.5 11.5 0 0 0 6.2 1.8c7.4 0 11.5-6.2 11.5-11.5v-.5c.8-.6 1.5-1.3 2.3-2.3z"/></svg></a>
+    <div class="hero-eyebrow">HI I'M</div>
+    <h1 class="hero-title">PREPVERSE</h1>
+    <p class="hero-sub">I travel through comprehensive aptitude resources, cognitive strategies, and real-time exam prep techniques to help you excel.</p>
+    
+    <div class="hero-social-row">
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8c0-.9.2-1.5 1.5-1.5h1.6V4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9V10H8v3h2.5v8h3z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+      <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 5.9c-.7.3-1.5.6-2.3.7.8-.5 1.4-1.3 1.7-2.3-.8.5-1.6.8-2.6 1a4 4 0 0 0-6.9 3.7A11.5 11.5 0 0 1 3.4 4.6a4 4 0 0 0 1.3 5.4c-.7 0-1.3-.2-1.9-.5v.1c0 2 1.4 3.6 3.3 4a4 4 0 0 1-1.9.1a4 4 0 0 0 3.8 2.8A8.1 8.1 0 0 1 2 18.4a11.5 11.5 0 0 0 6.2 1.8c7.4 0 11.5-6.2 11.5-11.5v-.5c.8-.6 1.5-1.3 2.3-2.3z"/></svg></a>
+      <a href="#" aria-label="Vimeo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.4 7.2c-.1 2.3-1.7 5.4-4.8 9.5-3.2 4.2-5.9 6.3-8.1 6.3-1.4 0-2.5-1.3-3.4-3.8-.6-2.3-1.2-4.6-1.8-6.9-.7-2.5-1.4-3.7-2.2-3.7-.2 0-.8.4-1.8 1.2L0 8.6c1.2-1 2.4-2.1 3.7-3.1 1.7-1.4 3-2.2 3.8-2.3 2-.2 3.3 1.1 3.7 4 .5 3.3.8 5.4 1 6.2.6 2.3 1.3 3.5 2.2 3.5.7 0 1.6-.9 2.7-2.7 1.1-1.8 1.7-3.2 1.8-4.2.1-1.4-.4-2.1-1.6-2.1-.6 0-1.2.1-1.8.4 1.2-3.9 3.4-5.8 6.7-5.6 2.4.2 3.6 1.7 3.5 4.6z"/></svg></a>
+    </div>
   </div>
 
   <div class="hero-dots" id="heroDots"></div>
@@ -380,8 +492,8 @@
 <div class="cta-band reveal">
   <h2>I believe that strategic, continuous preparation is the key to unlocking your dream percentiles. Learn from the best minds in test design.</h2>
   <div class="btn-row">
-    <a href="{% url 'courses' %}" class="btn btn-solid">View Syllabus</a>
-    <a href="{% url 'courses' %}" class="btn btn-outline">Start Practice</a>
+    <a href="{% url 'courses' %}" class="btn btn-solid btn-btn1">View Syllabus</a>
+    <a href="{% url 'courses' %}" class="btn btn-outline btn-btn2">Start Practice</a>
   </div>
 </div>
 
@@ -489,8 +601,8 @@ const weekly = [
 
 /* ---------------- RENDER: popular grid ---------------- */
 const popularGrid = document.getElementById('popularGrid');
-popularGrid.innerHTML = posts.map(p => `
-  <div class="card" style="cursor:pointer;" onclick="location.href='/blog/${p.id}/'">
+popularGrid.innerHTML = posts.map((p, index) => `
+  <div class="card reveal reveal-delay-${(index % 4) + 1}" style="cursor:pointer;" onclick="location.href='/blog/${p.id}/'">
     <img src="${p.img}" alt="${p.title}" loading="lazy">
     <div class="card-body">
       <div class="card-date">${p.date}</div>
@@ -502,8 +614,8 @@ popularGrid.innerHTML = posts.map(p => `
 
 /* ---------------- RENDER: recent posts ---------------- */
 const playIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
-document.getElementById('recentList').innerHTML = recentPosts.map(p => `
-  <div class="recent-row">
+document.getElementById('recentList').innerHTML = recentPosts.map((p, index) => `
+  <div class="recent-row reveal reveal-delay-${(index % 2) + 1}">
     <div class="recent-img" style="cursor:pointer;" onclick="location.href='/blog/${p.id}/'">
       <img src="${p.img}" alt="${p.title}" loading="lazy">
       <div class="recent-tag">
@@ -522,8 +634,8 @@ document.getElementById('recentList').innerHTML = recentPosts.map(p => `
 `).join('');
 
 /* ---------------- RENDER: featured carousel ---------------- */
-document.getElementById('featuredTrack').innerHTML = featured.map(f => `
-  <div class="feat-card" style="cursor:pointer;" onclick="location.href='/blog/${f.id}/'">
+document.getElementById('featuredTrack').innerHTML = featured.map((f, index) => `
+  <div class="feat-card reveal reveal-delay-${(index % 4) + 1}" style="cursor:pointer;" onclick="location.href='/blog/${f.id}/'">
     <img src="${f.img}" alt="${f.title}" loading="lazy">
     <div class="feat-overlay">
       <span>${f.date}</span>
@@ -537,8 +649,8 @@ document.getElementById('featNext').onclick = () => track.scrollBy({left:300, be
 document.getElementById('featPrev').onclick = () => track.scrollBy({left:-300, behavior:'smooth'});
 
 /* ---------------- RENDER: weekly ---------------- */
-document.getElementById('weeklyList').innerHTML = weekly.map(w => `
-  <div class="weekly-item" style="cursor:pointer;" onclick="location.href='/blog/${w.id}/'">
+document.getElementById('weeklyList').innerHTML = weekly.map((w, index) => `
+  <div class="weekly-item reveal reveal-delay-${(index % 2) + 1}" style="cursor:pointer;" onclick="location.href='/blog/${w.id}/'">
     <div class="weekly-img">
       <img src="${w.img}" alt="${w.title}" loading="lazy">
       <div class="weekly-date">
@@ -576,24 +688,49 @@ document.getElementById('instaGrid').innerHTML = [
   <img src="${url}" alt="Instagram Highlight" loading="lazy" style="width:100%; height:100%; object-fit:cover;">
 `).join('');
 
-/* ---------------- HERO SLIDER ---------------- */
+/* ---------------- HERO SLIDER (Vertical Slide-Up Motion) ---------------- */
 const slides = document.querySelectorAll('.hero-slide');
 const dotsWrap = document.getElementById('heroDots');
+const heroContent = document.querySelector('.hero-content');
+
+if (heroContent) {
+  heroContent.classList.add('animate');
+}
+
 slides.forEach((_, i) => {
   const b = document.createElement('button');
   if(i===0) b.classList.add('active');
   b.addEventListener('click', () => goToSlide(i));
   dotsWrap.appendChild(b);
 });
+
 let current = 0;
 function goToSlide(i){
-  slides[current].classList.remove('active');
-  dotsWrap.children[current].classList.remove('active');
+  if (i === current) return;
+
+  // Previous active slide exits upwards
+  const prevIndex = current;
+  slides[prevIndex].classList.remove('active');
+  slides[prevIndex].classList.add('prev-slide');
+  dotsWrap.children[prevIndex].classList.remove('active');
+
+  setTimeout(() => {
+    slides[prevIndex].classList.remove('prev-slide');
+  }, 1200);
+
   current = i;
   slides[current].classList.add('active');
   dotsWrap.children[current].classList.add('active');
+
+  // Re-trigger text riseIn animation for fresh slide
+  if (heroContent) {
+    heroContent.classList.remove('animate');
+    void heroContent.offsetWidth; // Force reflow
+    heroContent.classList.add('animate');
+  }
 }
-setInterval(() => goToSlide((current+1) % slides.length), 5000);
+
+setInterval(() => goToSlide((current + 1) % slides.length), 5500);
 
 /* ---------------- HEADER SCROLL STATE ---------------- */
 const header = document.getElementById('navbar');
@@ -607,17 +744,20 @@ window.addEventListener('scroll', () => {
 });
 backTop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
 
-/* ---------------- SCROLL REVEAL ---------------- */
-const revealEls = document.querySelectorAll('.reveal, .card, .feat-card, .recent-row, .weekly-item');
-revealEls.forEach(el => el.classList.add('reveal'));
-const io = new IntersectionObserver((entries) => {
-  entries.forEach((entry, idx) => {
-    if(entry.isIntersecting){
-      setTimeout(() => entry.target.classList.add('in'), (idx % 4) * 90);
-      io.unobserve(entry.target);
+/* ---------------- SCROLL REVEAL (VIDEO MATCHING) ---------------- */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in');
+      observer.unobserve(entry.target);
     }
   });
-}, {threshold:0.15});
+}, {
+  threshold: 0.15,
+  rootMargin: '0px 0px -50px 0px'
+});
+
 revealEls.forEach(el => io.observe(el));
 </script>
 {% endblock %}
