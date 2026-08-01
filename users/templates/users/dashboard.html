@@ -43,6 +43,26 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* CONTINUOUS SMOOTH HERO IMAGE ZOOM IN - ZOOM OUT ANIMATION (MATCHING SITE-WIDE PREPVERSE SPEED) */
+  .profile-cover-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.68);
+    animation: coverSubtleZoom 20s ease-in-out infinite alternate !important;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  @keyframes coverSubtleZoom {
+    0% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1.12);
+    }
+  }
+
   .surface {
     background: var(--surface-1);
     border: 1px solid var(--border);
@@ -410,8 +430,8 @@
 
 <!-- Full-Width Profile Cover Hero Section Banner -->
 <section class="profile-hero-section" style="position: relative; width: 100%; height: 280px; margin-top: -80px; overflow: hidden; margin-bottom: -90px;">
-    <img id="profileCoverPhoto" src="{% static 'images/evening_hero.jpg' %}" alt="Profile Cover" class="profile-cover-img" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.68);">
-    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,13,0.1) 0%, rgba(10,10,13,0.45) 50%, rgba(10,10,13,0.98) 100%);"></div>
+    <img id="profileCoverPhoto" src="{% static 'images/evening_hero.jpg' %}" alt="Profile Cover" class="profile-cover-img profile-cover-hero-img">
+    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,13,0.1) 0%, rgba(10,10,13,0.45) 50%, rgba(10,10,13,0.98) 100%); z-index: 3;"></div>
     
     <!-- Floating Category Badge -->
     <span class="absolute top-24 left-[5%] bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white flex items-center gap-1.5 z-10 shadow-lg">
@@ -421,8 +441,8 @@
 
 <div class="dashboard-container relative z-10">
 
-    <!-- Profile Info Card Section (Static Card with Increased Opacity & Vertically Centered Avatar) -->
-    <div class="profile-info-static-card p-6 mb-8" style="background: rgba(18, 19, 23, 0.88); backdrop-filter: blur(16px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); transform: none !important; transition: none !important;">
+    <!-- Profile Info Card Section (High Transparency Glass Card showing background photo) -->
+    <div class="profile-info-static-card p-6 mb-8" style="background: rgba(18, 19, 23, 0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); transform: none !important; transition: none !important;">
         <div class="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
             <!-- Vertically Centered Profile Avatar -->
             <div class="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-[#0B1020] overflow-hidden bg-gradient-to-tr from-[#8b5cf6] to-[#3b82f6] shadow-xl flex-shrink-0 relative z-10 my-auto">
