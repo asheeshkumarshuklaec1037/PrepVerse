@@ -5,6 +5,24 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/mock_tests.css' %}">
+<style>
+/* Scroll Reveal Animation Styles */
+    .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Staggered delay helpers */
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.15s; }
+    .reveal-delay-3 { transition-delay: 0.22s; }
+    .reveal-delay-4 { transition-delay: 0.3s; }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +34,7 @@
 <div class="dashboard-container">
     
     <!-- Top banner -->
-    <div class="top-banner">
+    <div class="top-banner reveal-on-scroll">
         <div class="banner-text">
             <p>Attend exams and boost confidence</p>
             <h1>All Exams</h1>
@@ -25,9 +43,9 @@
     </div>
 
     <!-- Top Row: Three Test Cards (100% width grid) -->
-    <div class="cards-row">
+    <div class="cards-row reveal-on-scroll">
         <!-- Card 1: Module Blitz (Drill Exam) -->
-        <div class="dashboard-card card-module-blitz">
+        <div class="dashboard-card card-module-blitz reveal-on-scroll reveal-delay-1">
             <div class="card-header-info">
                 <div class="card-title-group">
                     <span class="card-icon">🧩</span>
@@ -40,7 +58,7 @@
         </div>
 
         <!-- Card 2: Topic Master (Full Test) -->
-        <div class="dashboard-card card-topic-master">
+        <div class="dashboard-card card-topic-master reveal-on-scroll reveal-delay-2">
             <div class="card-header-info">
                 <div class="card-title-group">
                     <span class="card-icon">📋</span>
@@ -53,7 +71,7 @@
         </div>
 
         <!-- Card 3: Subject Marathon -->
-        <div class="dashboard-card card-subject-marathon">
+        <div class="dashboard-card card-subject-marathon reveal-on-scroll reveal-delay-3">
             <div class="card-header-info">
                 <div class="card-title-group">
                     <span class="card-icon">🏆</span>
@@ -126,9 +144,9 @@
     </div>
 
     <!-- Bottom Section: Grid of History, Calendar, and Stress analytics side-by-side -->
-    <div class="bottom-grid">
+    <div class="bottom-grid reveal-on-scroll">
         <!-- Column 1: Exam History -->
-        <div class="dashboard-card card-exam-history">
+        <div class="dashboard-card card-exam-history reveal-on-scroll reveal-delay-1">
             <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
                 <div class="card-header-info">
                     <div class="card-title-group" style="margin-bottom: 5px;">
@@ -145,7 +163,7 @@
         </div>
 
         <!-- Column 2: Calendar -->
-        <div class="sidebar-panel">
+        <div class="sidebar-panel reveal-on-scroll reveal-delay-2">
             <div class="calendar-title">January</div>
             
             <div class="calendar-grid">
@@ -233,7 +251,7 @@
         </div>
 
         <!-- Column 3: Stress Endurance -->
-        <div class="sidebar-panel">
+        <div class="sidebar-panel reveal-on-scroll reveal-delay-3">
             <span class="stress-badge">Needs Improvement</span>
             <div class="stress-title" title="Stress Endurance Test for Student">Stress Endurance Test for Student (SA...</div>
             
@@ -264,6 +282,7 @@
             </div>
         </div>
     </div>
+
 
 
 
@@ -1249,10 +1268,15 @@
         checkConfigState();
     }
 
+    let isTreeBuilt = false;
     window.openQuickNavSidebar = function() {
         const sidebar = document.getElementById("quickNavSidebar");
         if (sidebar && !sidebar.classList.contains("active")) {
             sidebar.classList.add("active");
+            if (!isTreeBuilt) {
+                buildNavigationTree();
+                isTreeBuilt = true;
+            }
         }
     }
 
@@ -1507,7 +1531,22 @@
 
     // Call build navigation on page load
     document.addEventListener("DOMContentLoaded", () => {
-        buildNavigationTree();
+        // Scroll Reveal Intersection Observer
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+            revealObserver.observe(el);
+        });
 
         // Close sidebar on clicking anywhere outside of sidebar and trigger button
         document.addEventListener("click", (event) => {
@@ -1522,3 +1561,4 @@
     });
 </script>
 {% endblock %}
+

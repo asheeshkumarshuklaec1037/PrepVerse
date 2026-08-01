@@ -13,33 +13,27 @@ body {
 
 .glow-patch {
     position: fixed;
-    width: 600px;
-    height: 600px;
+    width: 450px;
+    height: 450px;
     border-radius: 50%;
     z-index: -1;
-    filter: blur(140px);
+    opacity: 0.4;
     pointer-events: none;
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 .glow-patch-left {
     top: -100px;
     left: -120px;
-    background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(139, 92, 246, 0.12) 40%, transparent 70%);
-    opacity: 0.8;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.12) 0%, transparent 70%);
 }
 .glow-patch-right {
     top: 15%;
     right: -150px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, rgba(30, 27, 75, 0.2) 50%, transparent 70%);
-    opacity: 0.85;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%);
 }
 .glow-patch-bottom-left {
     bottom: -150px;
     left: 5%;
-    background: radial-gradient(circle, rgba(42, 245, 152, 0.12) 0%, transparent 70%);
-    opacity: 0.75;
+    background: radial-gradient(circle, rgba(42, 245, 152, 0.1) 0%, transparent 70%);
 }
 
 /* Layout Container */
@@ -52,9 +46,7 @@ body {
 
 /* Top Banner Card */
 .top-banner {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(20, 20, 30, 0.7);
     border-radius: 24px;
     padding: 35px 45px;
     margin-bottom: 35px;
@@ -65,9 +57,6 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     overflow: hidden;
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 .top-banner::before {
     content: '';
@@ -106,7 +95,6 @@ body {
     align-items: center;
     gap: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
 .ai-assistant-btn:hover {
@@ -137,9 +125,7 @@ body {
 
 /* Main Dashboard Cards */
 .dashboard-card {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(20, 20, 30, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 28px;
     padding: 35px 30px;
@@ -151,24 +137,21 @@ body {
     overflow: hidden;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     min-height: 480px;
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 .dashboard-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     border-color: rgba(42, 245, 152, 0.4);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(42, 245, 152, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(42, 245, 152, 0.15);
 }
 
 .card-module-blitz {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(20, 20, 30, 0.7) 100%);
 }
 .card-topic-master {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(20, 20, 30, 0.7) 100%);
 }
 .card-subject-marathon {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(20, 20, 30, 0.7) 100%);
 }
 
 /* Bottom Grid Workspace */
@@ -189,7 +172,7 @@ body {
 }
 
 .card-exam-history {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(20, 20, 30, 0.7) 100%);
     min-height: auto;
     height: 100%;
     padding: 40px;
