@@ -7,100 +7,43 @@ def dashboard_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
         
-    # Mock data for the Dashboard
     stats = {
         'questions_solved': 342,
         'accuracy': '85%',
         'current_streak': 12,
-        'global_rank': 1450
+        'global_rank': 1450,
+        'exam_track': 'TCS NQT Prep Track',
+        'exam_days_left': 18
     }
     
     categories = [
-        {'title': 'Quantitative Aptitude', 'icon': 'fa-calculator', 'color': '#fccb90', 'count': 450, 'progress': 45, 'image': 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=500&auto=format&fit=crop'},
-        {'title': 'Logical Reasoning', 'icon': 'fa-puzzle-piece', 'color': '#2af598', 'count': 320, 'progress': 60, 'image': 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=500&auto=format&fit=crop'},
-        {'title': 'Verbal Ability', 'icon': 'fa-book-open', 'color': '#ff9a9e', 'count': 280, 'progress': 30, 'image': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=500&auto=format&fit=crop'},
-        {'title': 'Data Interpretation', 'icon': 'fa-chart-pie', 'color': '#009efd', 'count': 150, 'progress': 15, 'image': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=500&auto=format&fit=crop'},
+        {'id': 0, 'title': 'Quantitative Aptitude', 'icon': 'fa-calculator', 'color': '#fccb90', 'count': 450, 'progress': 45, 'image': 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=500&auto=format&fit=crop'},
+        {'id': 1, 'title': 'Logical Reasoning', 'icon': 'fa-puzzle-piece', 'color': '#2af598', 'count': 320, 'progress': 60, 'image': 'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=500&auto=format&fit=crop'},
+        {'id': 2, 'title': 'Verbal Ability', 'icon': 'fa-book-open', 'color': '#ff9a9e', 'count': 280, 'progress': 30, 'image': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=500&auto=format&fit=crop'},
+        {'id': 3, 'title': 'Data Interpretation', 'icon': 'fa-chart-pie', 'color': '#009efd', 'count': 150, 'progress': 15, 'image': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=500&auto=format&fit=crop'},
     ]
 
-    recent_challenges = [
-        {'title': 'Time, Speed & Distance Masterclass', 'type': 'Quant', 'difficulty': 'Hard', 'time': '15 min'},
-        {'title': 'Syllogism Tricks & Shortcuts', 'type': 'Logic', 'difficulty': 'Medium', 'time': '10 min'},
-        {'title': 'Reading Comprehension Advanced', 'type': 'Verbal', 'difficulty': 'Hard', 'time': '20 min'},
+    focus_topics = [
+        {'rank': '01', 'title': 'Quantitative Aptitude', 'sub': 'Time, Speed & Distance', 'attempted': 18, 'acc': '34%', 'course_id': 0},
+        {'rank': '02', 'title': 'Logical Reasoning', 'sub': 'Syllogism & Seating Arrangement', 'attempted': 22, 'acc': '48%', 'course_id': 1},
+        {'rank': '03', 'title': 'Verbal Ability', 'sub': 'Reading Comprehension', 'attempted': 15, 'acc': '58%', 'course_id': 2},
     ]
 
-    posts = [
-        {
-            'id': 1,
-            'title': 'Mastering Quantitative Aptitude: Tips & Shortcuts',
-            'summary': 'Quantitative aptitude can be a game-changer in competitive exams. Learn the top tips, tricks, and calculation shortcuts to solve complex math problems in seconds.',
-            'category': 'Aptitude',
-            'author': 'Dr. Alok Verma',
-            'date': 'June 20, 2026',
-            'read_time': '5 min read',
-            'image_url': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=600',
-            'featured': True,
-            'tags': ['Math', 'ExamPrep', 'Shortcuts'],
-            'views': '98.8K',
-            'likes': '45.6K',
-            'comments_count': '10K'
-        },
-        {
-            'id': 2,
-            'title': 'How to Build a Powerful English Vocabulary',
-            'summary': 'Vocabulary is not built overnight. Explore systematic vocabulary methods like root words, mnemonic techniques, and contextual reading to dramatically boost your word power.',
-            'category': 'Verbal Ability',
-            'author': 'Sarah Jenkins',
-            'date': 'June 18, 2026',
-            'read_time': '4 min read',
-            'image_url': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=600',
-            'featured': False,
-            'tags': ['Vocabulary', 'English', 'LearningTips'],
-            'views': '76.4K',
-            'likes': '32.1K',
-            'comments_count': '8.5K'
-        },
-        {
-            'id': 3,
-            'title': 'The Psychology of Mock Tests: Managing Exam Anxiety',
-            'summary': 'Ever panicked during a mock test despite preparation? Discover science-backed psychological strategies to maintain your calm and focus under pressure.',
-            'category': 'Exam Strategy',
-            'author': 'Dr. Rohan Mehra',
-            'date': 'June 15, 2026',
-            'read_time': '6 min read',
-            'image_url': 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&q=80&w=600',
-            'featured': False,
-            'tags': ['Mindset', 'Anxiety', 'ExamTips'],
-            'views': '54.2K',
-            'likes': '22.8K',
-            'comments_count': '5.2K'
-        },
-        {
-            'id': 4,
-            'title': 'Time Management in Competitive Exams: The 3-Round Strategy',
-            'summary': 'Dividing your exam time into three strategic rounds can increase your attempt count by up to 20%. Read this step-by-step implementation guide.',
-            'category': 'Exam Strategy',
-            'author': 'Aditi Rao (CAT 99.9%iler)',
-            'date': 'June 12, 2026',
-            'read_time': '7 min read',
-            'image_url': 'https://images.unsplash.com/photo-1508962914676-134849a727f0?auto=format&fit=crop&q=80&w=600',
-            'featured': False,
-            'tags': ['TimeManagement', 'Strategy', 'Tips'],
-            'views': '88.3K',
-            'likes': '39.4K',
-            'comments_count': '9.1K'
-        }
+    upcoming_events = [
+        {'day': '03', 'month': 'Aug', 'title': 'Full-length Grand Mock Test', 'info': '10:00 AM · 90 min'},
+        {'day': '05', 'month': 'Aug', 'title': 'Daily Speed Challenge', 'info': '4:00 PM · Live session'},
+        {'day': '18', 'month': 'Aug', 'title': 'TCS NQT — Exam Day', 'info': '9:00 AM'},
     ]
 
     return render(request, 'users/dashboard.html', {
         'stats': stats,
         'categories': categories,
-        'recent_challenges': recent_challenges,
-        'posts': posts
+        'focus_topics': focus_topics,
+        'upcoming_events': upcoming_events,
     })
 
 
 def login_view(request):
-    print("DEBUG: login_view called with method:", request.method)
     if request.user.is_authenticated:
         next_url = request.GET.get('next') or request.POST.get('next')
         if next_url:

@@ -122,8 +122,68 @@ document.addEventListener("DOMContentLoaded", function () {
         track.style.transform = `translateX(-${shiftAmount}px)`;
     };
 
-    // Recalculate transform on resize
-    window.addEventListener("resize", () => {
-        if (track) slideSubjectCarousel(0);
-    });
+    // ---------- Practice Grid Dynamic Subject Launcher ----------
+    const practiceGridEl = document.getElementById("practiceGrid");
+    if (practiceGridEl) {
+        const subjects = [
+            { id: 0, title: "DSA", pct: "82%", accent: "#2af598", url: "/course/0/" },
+            { id: 1, title: "DBMS", pct: "88%", accent: "#2af598", url: "/course/1/" },
+            { id: 2, title: "OS", pct: "71%", accent: "#fdcb6e", url: "/course/2/" },
+            { id: 3, title: "Networks", pct: "54%", accent: "#ff7675", url: "/course/3/" },
+            { id: 4, title: "Aptitude", pct: "90%", accent: "#2af598", url: "/course/0/" },
+            { id: 5, title: "Verbal", pct: "65%", accent: "#fdcb6e", url: "/course/2/" }
+        ];
+
+        practiceGridEl.innerHTML = subjects.map(s => `
+            <div class="surface subj-tile" style="--tile-accent: ${s.accent};" onclick="location.href='${s.url}'">
+                <div class="pct-val">${s.pct}</div>
+                <h4>${s.title}</h4>
+                <div class="prac-link">Practice &rarr;</div>
+            </div>
+        `).join("");
+    }
+
+    // ---------- Heatmap Activity Grid Populator ----------
+    const heatGridEl = document.getElementById("heatGrid");
+    if (heatGridEl && heatGridEl.children.length === 0) {
+        let html = '';
+        for (let i = 0; i < 98; i++) {
+            let level = 0;
+            const rand = Math.random();
+            if (rand > 0.75) level = 3;
+            else if (rand > 0.5) level = 2;
+            else if (rand > 0.3) level = 1;
+
+            let bg = 'var(--surface-3)';
+            if (level === 1) bg = 'rgba(108,92,231,.3)';
+            if (level === 2) bg = 'rgba(108,92,231,.6)';
+            if (level === 3) bg = 'var(--accent)';
+
+            html += `<span class="heat-cell" style="background:${bg}" title="Day ${i + 1}: ${level * 5} questions solved"></span>`;
+        }
+        heatGridEl.innerHTML = html;
+    }
+
+    // ---------- Topic Mastery List Populator ----------
+    const masteryListEl = document.getElementById("masteryList");
+    if (masteryListEl && masteryListEl.children.length === 0) {
+        const topics = [
+            { name: "Quantitative Aptitude", pct: 85, color: "var(--success)" },
+            { name: "Logical Reasoning", pct: 72, color: "var(--accent-2)" },
+            { name: "Verbal Ability", pct: 64, color: "var(--warning)" },
+            { name: "Data Interpretation", pct: 45, color: "var(--danger)" }
+        ];
+
+        masteryListEl.innerHTML = topics.map(t => `
+            <div class="mastery-item" style="margin-bottom: 12px;">
+                <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:var(--text-1);">
+                    <span>${t.name}</span>
+                    <span style="font-family:var(--f-mono);color:${t.color};">${t.pct}%</span>
+                </div>
+                <div style="width:100%;height:6px;background:var(--surface-3);border-radius:4px;overflow:hidden;">
+                    <div style="width:${t.pct}%;height:100%;background:${t.color};border-radius:4px;"></div>
+                </div>
+            </div>
+        `).join("");
+    }
 });

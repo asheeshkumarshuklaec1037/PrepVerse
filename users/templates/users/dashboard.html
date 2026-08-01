@@ -4,11 +4,380 @@
 {% block title %}PrepVerse Premium Dashboard{% endblock %}
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root {
+    --bg:#0a0a0d; --surface-1:#121317; --surface-2:#17181f; --surface-3:#1d1f28;
+    --border:rgba(255,255,255,.08); --border-hi:rgba(255,255,255,.16);
+    --text-1:#f5f5f7; --text-2:rgba(245,245,247,.62); --text-3:rgba(245,245,247,.36);
+
+    --accent:#6c5ce7; --accent-2:#8b7cf0; --accent-glow:rgba(108,92,231,.35);
+    --accent-soft:rgba(108,92,231,.12); --accent-border:rgba(108,92,231,.3);
+
+    --success:#00b894; --success-soft:rgba(0,184,148,.12);
+    --warning:#fdcb6e; --warning-soft:rgba(253,203,110,.12);
+    --danger:#ff7675;  --danger-soft:rgba(255,118,117,.12);
+    --info:#0984e3;    --info-soft:rgba(9,132,227,.12);
+
+    --f-display:'Space Grotesk', system-ui, sans-serif;
+    --f-sans:'Inter', system-ui, sans-serif;
+    --f-mono:'JetBrains Mono', monospace;
+
+    --r-lg:16px; --r-md:12px; --r-sm:8px;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+
+  body { background: var(--bg) !important; color: var(--text-1) !important; font-family: var(--f-sans) !important; }
+
+  .dashboard-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+
+  .surface {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    transition: transform .25s var(--ease), border-color .25s var(--ease), box-shadow .25s var(--ease);
+  }
+
+  .lift:hover,
+  .surface:hover:not(.profile-info-static-card) {
+    transform: translateY(-2px);
+    border-color: var(--accent-2);
+    box-shadow: 0 12px 32px rgba(139, 124, 240, 0.25), 0 0 16px var(--accent-glow);
+  }
+
+  /* TOPBAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .greet { display: flex; align-items: center; gap: 14px; }
+  .greet-ring {
+    position: relative; width: 46px; height: 46px;
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .greet-ring svg { position: absolute; inset: 0; }
+  .greet-ring .init {
+    font-family: var(--f-display); font-weight: 700; font-size: .95rem; color: var(--accent-2);
+  }
+  .greet h1 {
+    font-family: var(--f-display); font-size: 1.45rem; font-weight: 700; color: var(--text-1);
+    line-height: 1.2; letter-spacing: -.02em; margin: 0;
+  }
+  .greet p { color: var(--text-2); font-size: .82rem; margin: 2px 0 0; }
+  .greet p b { color: var(--text-1); font-weight: 600; }
+
+  .top-actions { display: flex; align-items: center; gap: 10px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 13px; border-radius: 99px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    font-size: .78rem; font-weight: 500; color: var(--text-2);
+    white-space: nowrap;
+  }
+  .chip.warn {
+    background: var(--warning-soft); border-color: rgba(253,203,110,.3); color: var(--warning);
+  }
+  .icon-btn {
+    position: relative; width: 36px; height: 36px; border-radius: var(--r-md);
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-2); display: grid; place-items: center;
+    cursor: pointer; transition: all .2s var(--ease);
+  }
+  .icon-btn:hover { color: var(--text-1); border-color: var(--border-hi); background: var(--surface-3); }
+  .dot-badge {
+    position: absolute; top: 7px; right: 7px; width: 7px; height: 7px;
+    border-radius: 50%; background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* BENTO HERO */
+  .bento {
+    display: grid;
+    grid-template-columns: 1.75fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 960px) { .bento { grid-template-columns: 1fr; } }
+
+  .continue {
+    position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .continue-glow {
+    position: relative; padding: 22px 24px;
+    background: linear-gradient(135deg, rgba(108,92,231,.18) 0%, rgba(139,124,240,.04) 50%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .continue-glow::before {
+    content: ""; position: absolute; top: -60px; right: -60px; width: 180px; height: 180px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .path-crumb {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--f-mono); font-size: .72rem; color: var(--text-3); margin-bottom: 10px;
+  }
+  .path-crumb .sep { color: rgba(255,255,255,.15); }
+  .path-crumb .cur { color: var(--accent-2); font-weight: 600; }
+  .continue-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .continue-top h2 {
+    font-family: var(--f-display); font-size: 1.22rem; font-weight: 700; color: var(--text-1);
+    margin: 0 0 4px; letter-spacing: -.01em;
+  }
+  .continue-top p { color: var(--text-2); font-size: .83rem; margin: 0; }
+  .resume-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: var(--r-md);
+    background: var(--text-1); color: var(--bg);
+    font-weight: 600; font-size: .83rem; border: none; cursor: pointer;
+    transition: all .2s var(--ease); flex-shrink: 0;
+  }
+  .resume-btn:hover { background: #fff; box-shadow: 0 0 20px rgba(255,255,255,.3); transform: translateX(2px); }
+
+  .continue-progress { margin-top: 16px; }
+  .progress-track {
+    height: 6px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  }
+  .progress-meta {
+    display: flex; justify-content: space-between;
+    font-family: var(--f-mono); font-size: .71rem; color: var(--text-3); margin-top: 6px;
+  }
+
+  .focus-list { padding: 18px 24px; display: flex; flex-direction: column; gap: 10px; }
+  .focus-title {
+    font-family: var(--f-mono); font-size: .68rem; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--text-3); margin-bottom: 2px;
+  }
+  .focus-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: var(--r-md);
+    background: var(--surface-2); border: 1px solid var(--border);
+    transition: all .2s var(--ease); cursor: pointer;
+  }
+  .focus-item:hover { border-color: var(--border-hi); transform: translateX(3px); }
+  .focus-check {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--border-hi); display: grid; place-items: center;
+    flex-shrink: 0; transition: all .2s var(--ease);
+  }
+  .focus-check.done { background: var(--success); border-color: var(--success); color: #000; font-size: .65rem; }
+  .focus-text { font-size: .83rem; font-weight: 500; color: var(--text-1); flex: 1; }
+  .focus-item.completed .focus-text { color: var(--text-3); text-decoration: line-through; }
+  .focus-meta { font-family: var(--f-mono); font-size: .7rem; color: var(--text-3); }
+
+  /* TERMINAL CARD */
+  .terminal { display: flex; flex-direction: column; overflow: hidden; }
+  .term-head {
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px 16px; background: rgba(255,255,255,.02);
+    border-bottom: 1px solid var(--border);
+  }
+  .term-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .term-title { font-family: var(--f-mono); font-size: .72rem; color: var(--text-3); margin-left: 6px; }
+  .term-body { padding: 18px; font-family: var(--f-mono); flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .term-prompt { font-size: .74rem; color: var(--text-2); margin-bottom: 10px; }
+  .term-prompt span { color: var(--accent-2); }
+
+  .score-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+  .score-num { font-family: var(--f-display); font-size: 2.2rem; font-weight: 700; color: var(--text-1); line-height: 1; }
+  .delta { font-size: .72rem; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+  .delta.up { color: var(--success); }
+  .score-label { font-size: .72rem; color: var(--text-3); margin-bottom: 14px; text-transform: lowercase; }
+
+  .subj-row { display: flex; align-items: center; gap: 10px; font-size: .75rem; margin-bottom: 7px; }
+  .subj-name { width: 62px; color: var(--text-2); flex-shrink: 0; }
+  .subj-track { flex: 1; height: 5px; border-radius: 99px; background: rgba(255,255,255,.06); overflow: hidden; }
+  .subj-fill { height: 100%; border-radius: 99px; }
+  .subj-tag { font-size: .65rem; font-weight: 700; width: 34px; text-align: right; }
+  .t-pass { color: var(--success); } .t-warn { color: var(--warning); } .t-fail { color: var(--danger); }
+
+  .term-foot {
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
+    font-size: .71rem; color: var(--text-3); font-family: var(--f-sans); line-height: 1.4;
+  }
+  .term-foot .arrow { color: var(--accent-2); }
+
+  /* SECTION HEADINGS */
+  .sec-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin: 28px 0 14px;
+  }
+  .sec-head h3 {
+    font-family: var(--f-display); font-size: 1.05rem; font-weight: 700; color: var(--text-1);
+    margin: 0; letter-spacing: -.01em;
+  }
+  .sec-sub { font-size: .78rem; color: var(--text-3); margin-top: 2px; }
+  .sec-link {
+    font-size: .78rem; font-weight: 600; color: var(--accent-2);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    transition: gap .2s var(--ease);
+  }
+  .sec-link:hover { gap: 7px; color: #fff; }
+
+  /* WEAK LIST (FOCUS ZONE) */
+  .weak-list { display: flex; flex-direction: column; gap: 10px; }
+  .weak-row {
+    display: flex; align-items: center; gap: 16px; padding: 14px 20px;
+  }
+  .weak-rank { font-family: var(--f-mono); font-size: .8rem; color: var(--text-3); font-weight: 600; }
+  .weak-info { flex: 1; }
+  .weak-info h4 { font-size: .88rem; font-weight: 600; color: var(--text-1); margin: 0 0 2px; }
+  .weak-info p { font-size: .75rem; color: var(--text-3); margin: 0; }
+  .weak-acc { font-family: var(--f-display); font-weight: 700; font-size: .98rem; color: var(--danger); }
+  .weak-cta {
+    padding: 7px 14px; border-radius: var(--r-sm);
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-1); font-size: .76rem; font-weight: 600;
+    cursor: pointer; transition: all .2s var(--ease);
+  }
+  .weak-cta:hover { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
+
+  /* ANALYTICS GRID */
+  .analytics-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-top: 14px; }
+  @media (max-width: 880px) { .analytics-grid { grid-template-columns: 1fr; } }
+
+  .chart-card, .heat-card { padding: 20px 22px; }
+  .trend-legend { display: flex; gap: 16px; font-size: .72rem; color: var(--text-3); margin-top: 10px; }
+  .trend-legend span { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .heat-grid {
+    display: grid; grid-template-columns: repeat(14, 1fr); gap: 5px; margin: 16px 0 10px;
+  }
+  .heat-cell {
+    aspect-ratio: 1; border-radius: 3px; background: var(--surface-3);
+    transition: transform .15s var(--ease);
+  }
+  .heat-cell:hover { transform: scale(1.3); z-index: 2; }
+  .heat-legend {
+    display: flex; align-items: center; justify-content: flex-end; gap: 4px;
+    font-size: .68rem; color: var(--text-3); margin-top: 8px;
+  }
+  .heat-legend .heat-cell { width: 10px; height: 10px; }
+
+  /* UTILITY RAIL */
+  .util-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+  @media (max-width: 960px) { .util-grid { grid-template-columns: 1fr; } }
+  .util-card { padding: 20px; }
+  .util-card h4 {
+    font-family: var(--f-display); font-size: .92rem; font-weight: 700; color: var(--text-1);
+    margin: 0 0 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .util-ic {
+    width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-size: .75rem;
+  }
+
+  .sched-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .sched-item:last-child { border: none; }
+  .sched-date {
+    width: 38px; height: 38px; border-radius: var(--r-sm); background: var(--surface-2);
+    border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center;
+    flex-shrink: 0; text-align: center; line-height: 1;
+  }
+  .sched-date .d { font-family: var(--f-display); font-weight: 700; font-size: .85rem; color: var(--text-1); }
+  .sched-date .m { font-size: .58rem; text-transform: uppercase; color: var(--text-3); font-weight: 600; margin-top: 2px; }
+  .sched-info p { font-size: .8rem; font-weight: 600; color: var(--text-1); margin: 0 0 2px; }
+  .sched-info span { font-size: .7rem; color: var(--text-3); font-family: var(--f-mono); }
+
+  .mastery-item { margin-bottom: 10px; }
+  .mastery-head { display: flex; justify-content: space-between; font-size: .76rem; margin-bottom: 4px; }
+  .mastery-head span:first-child { color: var(--text-2); font-weight: 500; }
+  .mastery-head span:last-child { font-family: var(--f-mono); font-weight: 600; color: var(--text-1); }
+
+  .lb-row {
+    display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: .78rem;
+  }
+  .lb-row:last-child { border: none; }
+  .lb-rank { font-family: var(--f-mono); width: 18px; color: var(--text-3); font-weight: 600; text-align: center; }
+  .lb-rank.gold { color: #f1c40f; }
+  .lb-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--surface-3); border: 1px solid var(--border); }
+  .lb-name { flex: 1; color: var(--text-2); font-weight: 500; }
+  .lb-xp { font-family: var(--f-mono); font-weight: 600; color: var(--accent-2); font-size: .74rem; }
+  .lb-you { background: var(--accent-soft); margin: 4px -8px 0; padding: 7px 8px; border-radius: var(--r-sm); border: none; }
+  .lb-you .lb-name { color: var(--text-1); font-weight: 700; }
+
+  /* PRACTICE GRID */
+  .practice-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); 
+    gap: 16px; 
+    margin-top: 14px; 
+  }
+  .subj-tile {
+    padding: 22px 16px 18px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer; 
+    position: relative; 
+    overflow: hidden;
+    transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .subj-tile:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-hi);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  }
+  .subj-tile::before {
+    content: ""; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    height: 4px; 
+    background: var(--tile-accent, var(--accent));
+  }
+  .subj-tile .pct-val {
+    font-family: var(--f-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--tile-accent, var(--accent));
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+  .subj-tile h4 { 
+    font-family: var(--f-sans); 
+    font-size: 1.05rem; 
+    font-weight: 700; 
+    color: var(--text-1); 
+    margin: 0 0 12px; 
+  }
+  .subj-tile .prac-link { 
+    font-size: .75rem; 
+    font-weight: 500;
+    color: var(--text-3); 
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+  }
+  .subj-tile:hover .prac-link {
+    color: var(--text-1);
+  }
+</style>
+
 <!-- Include AOS (Animate on Scroll) CSS -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -30,722 +399,355 @@
     }
 </script>
 
-<!-- Parallax Grid Background Layer -->
-<div id="bgPatternLayer"></div>
 
-<!-- Ambient Blurred Glowing Orbs -->
-<div class="glow-orb orb-1"></div>
-<div class="glow-orb orb-2"></div>
-<div class="glow-orb orb-3"></div>
 
-<!-- Background particles canvas -->
-<canvas id="particlesCanvas"></canvas>
 
-<!-- Full-Width Profile Cover Section (styled exactly like course detail hero page style) -->
-<section class="profile-hero-section">
-    <img id="profileCoverPhoto" src="" alt="Profile Cover" class="profile-cover-img">
+<!-- Full-Width Profile Cover Hero Section Banner -->
+<section class="profile-hero-section" style="position: relative; width: 100%; height: 280px; margin-top: -80px; overflow: hidden; margin-bottom: -90px;">
+    <img id="profileCoverPhoto" src="{% static 'images/evening_hero.jpg' %}" alt="Profile Cover" class="profile-cover-img" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.68);">
+    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,13,0.1) 0%, rgba(10,10,13,0.45) 50%, rgba(10,10,13,0.98) 100%);"></div>
     
-    <!-- Glowing Crescent Moon Overlay (only visible/active during evening) -->
-    <div id="crescentMoonOverlay" class="absolute top-16 right-[5%] w-10 h-10 z-10 pointer-events-none hidden" style="filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.95));">
-        <!-- Inline SVG crescent moon -->
-        <svg viewBox="0 0 24 24" fill="none" class="w-full h-full text-yellow-100/90 transform -rotate-12">
-            <path d="M12 3a9 9 0 1 0 9 9 9.75 9.75 0 0 1-9-9Z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/>
-        </svg>
-    </div>
-
     <!-- Floating Category Badge -->
-    <span class="absolute top-28 left-[5%] bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white flex items-center gap-1.5 z-10 shadow-lg">
+    <span class="absolute top-24 left-[5%] bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white flex items-center gap-1.5 z-10 shadow-lg">
         <i class="fas fa-shield-halved text-[#38bdf8]"></i> PrepVerse Premium Candidate
     </span>
 </section>
 
-<div class="dashboard-container relative z-10 -mt-24 md:-mt-32">
+<div class="dashboard-container relative z-10">
 
-    <!-- Profile Info Card Section -->
-    <div class="glass-card p-6 mb-8" data-aos="fade-up" data-aos-duration="800">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div class="flex flex-col md:flex-row items-center md:items-end gap-5 text-center md:text-left">
-                <!-- Overlapping Profile Avatar -->
-                <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-[#0B1020] overflow-hidden bg-gradient-to-tr from-[#8b5cf6] to-[#3b82f6] shadow-xl flex-shrink-0 relative group -mt-16 md:-mt-20 z-10">
-                    <img class="w-full h-full object-cover" src="{% static 'images/candidate_profile_avatar.jpg' %}" alt="Candidate Avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop';">
-                    <!-- Hover Glow -->
-                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center text-white text-[10px] font-extrabold uppercase tracking-wider cursor-pointer">
-                        <i class="fas fa-camera mr-1"></i> Edit Profile
-                    </div>
+    <!-- Profile Info Card Section (Static Card with Increased Opacity & Vertically Centered Avatar) -->
+    <div class="profile-info-static-card p-6 mb-8" style="background: rgba(18, 19, 23, 0.88); backdrop-filter: blur(16px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); transform: none !important; transition: none !important;">
+        <div class="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <!-- Vertically Centered Profile Avatar -->
+            <div class="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-[#0B1020] overflow-hidden bg-gradient-to-tr from-[#8b5cf6] to-[#3b82f6] shadow-xl flex-shrink-0 relative z-10 my-auto">
+                <img class="w-full h-full object-cover" src="{% static 'images/candidate_profile_avatar.jpg' %}" alt="Candidate Avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop';">
+            </div>
+            
+            <div class="w-full my-auto">
+                <div class="flex flex-col md:flex-row items-center gap-2.5">
+                    <h1 class="text-xl md:text-3xl font-black text-white font-['Outfit'] tracking-tight" id="dynamicGreeting">Good Evening, {% if user.is_authenticated %}{{ user.first_name }}{% else %}Ashish{% endif %}! 👋</h1>
+                    <span class="level-badge bg-gradient-to-r from-purple-500 to-indigo-500 font-extrabold text-[9px] px-2.5 py-1 rounded-full text-white uppercase tracking-wider" id="levelBadge">Level 4</span>
                 </div>
+                <p class="text-xs md:text-sm text-gray-300 font-medium mt-1 leading-relaxed" id="dynamicGreetingSubtitle">Syncing your personal study goals... Let's make it count today!</p>
                 
-                <div class="mb-1 w-full">
-                    <div class="flex flex-col md:flex-row items-center gap-2.5">
-                        <h1 class="text-xl md:text-3xl font-black text-white font-['Outfit'] tracking-tight" id="dynamicGreeting">Namaste, {{ user.first_name }}! 👋</h1>
-                        <span class="level-badge bg-gradient-to-r from-purple-500 to-indigo-500 font-extrabold text-[9px] px-2.5 py-1 rounded-full text-white uppercase tracking-wider" id="levelBadge">Level 4</span>
+                <!-- XP Progress inside Header -->
+                <div class="mt-3 flex items-center gap-3 w-full max-w-sm mx-auto md:mx-0">
+                    <div class="flex-1 bg-white/5 border border-white/10 h-2.5 rounded-full overflow-hidden">
+                        <div class="xp-progress-fill h-full rounded-full" id="xpProgressFill" style="width: 90%; background: linear-gradient(90deg, #c084fc, #2af598);"></div>
                     </div>
-                    <p class="text-xs md:text-sm text-gray-300 font-medium mt-1 leading-relaxed" id="dynamicGreetingSubtitle">Syncing your personal study goals... Let's make it count today!</p>
-                    
-                    <!-- XP Progress inside Header -->
-                    <div class="mt-3 flex items-center gap-3 w-full max-w-sm mx-auto md:mx-0">
-                        <div class="flex-1 bg-white/5 border border-white/10 h-2.5 rounded-full overflow-hidden">
-                            <div class="xp-progress-fill h-full rounded-full" id="xpProgressFill" style="width: 90%; background: linear-gradient(90deg, #c084fc, #2af598);"></div>
-                        </div>
-                        <span class="xp-ratio text-[10px] font-black text-[#2af598] whitespace-nowrap" id="xpRatio">450 / 500 XP</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Beautiful Glassmorphic Clock & Date Widget -->
-            <div class="relative flex items-center gap-4 bg-[#0d0b1d]/40 border border-white/10 backdrop-blur-xl px-5 py-3 rounded-2xl shadow-[0_15px_30px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.08)] hover:border-[#c084fc]/30 transition-all duration-300 w-fit mx-auto md:mx-0 group overflow-hidden">
-                <!-- Glowing Ambient Accent Lights inside widget -->
-                <div class="absolute -top-10 -left-10 w-24 h-24 bg-[#c084fc]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[#c084fc]/15 transition-all duration-300"></div>
-                <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-[#2af598]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[#2af598]/15 transition-all duration-300"></div>
-
-                <!-- Clock Icon / indicator with breathing glow -->
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#c084fc]/15 to-[#2af598]/15 border border-white/10 flex items-center justify-center text-base text-white shadow-lg relative overflow-hidden">
-                    <i class="far fa-clock text-[#2af598] animate-pulse"></i>
-                </div>
-                
-                <div class="flex flex-col text-left relative z-10">
-                    <!-- Current Time (Hour:Minute AM/PM) -->
-                    <div class="text-xl md:text-2xl font-black text-white leading-none font-['Outfit'] tracking-tight" id="liveHeaderTime">--:--</div>
-                    <!-- Current Date with live status indicator -->
-                    <div class="text-[9px] text-[#2af598] font-black uppercase tracking-wider mt-1.5 font-['Plus Jakarta Sans'] flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#2af598] inline-block animate-ping"></span>
-                        <span id="liveHeaderDate">-- --, ----</span>
-                    </div>
+                    <span class="xp-ratio text-[10px] font-black text-[#2af598] whitespace-nowrap" id="xpRatio">450 / 500 XP</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. High-End Key Stats Counter Cards Row -->
-    <div class="stats-grid-row" data-aos="fade-up" data-aos-delay="100">
-        <!-- Card 1: Solved Problems -->
-        <div class="glass-card stat-counter-card" style="cursor: pointer;" onclick="location.href='{% url 'solved_questions' %}'">
-            <!-- Background Pattern: Concentric Rings (Zano style) -->
-            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
-                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="85" cy="15" r="20" stroke="#38bdf8" stroke-width="1.2"/>
-                    <circle cx="85" cy="15" r="35" stroke="#38bdf8" stroke-width="1.2"/>
-                    <circle cx="85" cy="15" r="50" stroke="#38bdf8" stroke-width="1.2"/>
-                    <circle cx="85" cy="15" r="65" stroke="#38bdf8" stroke-width="1.2"/>
-                    <circle cx="85" cy="15" r="80" stroke="#38bdf8" stroke-width="1.2"/>
-                </svg>
-            </div>
-            <div class="relative z-10">
-                <div class="stat-icon-box text-[#38bdf8] bg-[#38bdf8]/10 border border-[#38bdf8]/20">
-                    <i class="fas fa-check-double"></i>
-                </div>
-                <div class="stat-title-val text-white mt-4" id="counter-solved">{{ stats.questions_solved }}</div>
-                <div class="stat-title-label">Solved Problems</div>
-            </div>
-            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
-                <path d="M0,25 Q15,5 30,20 T60,5" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-        </div>
 
-        <!-- Card 2: Accuracy Rate -->
-        <div class="glass-card stat-counter-card" onclick="openStatsModal('accuracy')">
-            <!-- Background Pattern: Isometric columns (Kudoe style) -->
-            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.08] z-0">
-                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Column 1 -->
-                    <path d="M70 70 L80 65 L90 70 L80 75 Z" fill="#c084fc" opacity="0.6"/>
-                    <path d="M70 70 L70 95 L80 100 L80 75 Z" fill="#c084fc" opacity="0.4"/>
-                    <path d="M80 75 L80 100 L90 95 L90 70 Z" fill="#c084fc" opacity="0.8"/>
-                    <!-- Column 2 -->
-                    <path d="M52 52 L62 47 L72 52 L62 57 Z" fill="#c084fc" opacity="0.6"/>
-                    <path d="M52 52 L52 95 L62 100 L62 57 Z" fill="#c084fc" opacity="0.4"/>
-                    <path d="M62 57 L62 100 L72 95 L72 52 Z" fill="#c084fc" opacity="0.8"/>
-                    <!-- Column 3 -->
-                    <path d="M35 75 L45 70 L55 75 L45 80 Z" fill="#c084fc" opacity="0.6"/>
-                    <path d="M35 75 L35 95 L45 100 L45 80 Z" fill="#c084fc" opacity="0.4"/>
-                    <path d="M45 80 L45 100 L55 95 L55 75 Z" fill="#c084fc" opacity="0.8"/>
-                </svg>
-            </div>
-            <div class="relative z-10">
-                <div class="stat-icon-box text-[#c084fc] bg-[#c084fc]/10 border border-[#c084fc]/20">
-                    <i class="fas fa-bullseye"></i>
-                </div>
-                <div class="stat-title-val text-white mt-4" id="counter-accuracy">85%</div>
-                <div class="stat-title-label">Accuracy Rate</div>
-            </div>
-            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
-                <path d="M0,15 L15,10 L30,20 L45,8 L60,12" fill="none" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-        </div>
 
-        <!-- Card 3: Active Streak -->
-        <div class="glass-card stat-counter-card" onclick="openStatsModal('streak')">
-            <!-- Background Pattern: 3D Diagonal bands (Rootcube style) -->
-            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.08] z-0">
-                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M-20 80 L80 -20 L95 -5 L-5 95 Z" fill="#fb7185" opacity="0.4"/>
-                    <path d="M-5 95 L95 -5 L100 0 L0 100 Z" fill="#fb7185" opacity="0.7"/>
-                    <path d="M15 115 L115 15 L130 30 L30 130 Z" fill="#fb7185" opacity="0.4"/>
-                    <path d="M30 130 L130 30 L135 35 L35 135 Z" fill="#fb7185" opacity="0.7"/>
-                    <path d="M-55 45 L45 -55 L60 -40 L-40 60 Z" fill="#fb7185" opacity="0.4"/>
-                    <path d="M-40 60 L60 -40 L65 -35 L-35 65 Z" fill="#fb7185" opacity="0.7"/>
-                </svg>
-            </div>
-            <div class="relative z-10">
-                <div class="stat-icon-box text-[#fb7185] bg-[#fb7185]/10 border border-[#fb7185]/20">
-                    <i class="fas fa-fire"></i>
-                </div>
-                <div class="stat-title-val text-white mt-4" id="counter-streak">{{ stats.current_streak }} Days</div>
-                <div class="stat-title-label">Active Streak</div>
-            </div>
-            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
-                <path d="M0,28 L10,24 L20,20 L30,12 L40,16 L50,8 L60,4" fill="none" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-        </div>
+  <!-- ============ HERO BENTO ============ -->
+  <div class="bento">
 
-        <!-- Card 4: Global Rank -->
-        <div class="glass-card stat-counter-card" style="cursor: pointer;" onclick="location.href='{% url 'leaderboard' %}'">
-            <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
-            <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.08] z-0">
-                <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="100,45 68,78 100,100" fill="#fbcd0b" opacity="0.4"/>
-                    <polygon points="68,78 48,58 100,45" fill="#fbcd0b" opacity="0.6"/>
-                    <polygon points="48,58 38,88 68,78" fill="#fbcd0b" opacity="0.3"/>
-                    <polygon points="68,78 38,88 100,100" fill="#fbcd0b" opacity="0.8"/>
-                    <polygon points="48,58 78,38 100,45" fill="#fbcd0b" opacity="0.5"/>
-                </svg>
-            </div>
-            <div class="relative z-10">
-                <div class="stat-icon-box text-[#fbcd0b] bg-[#fbcd0b]/10 border border-[#fbcd0b]/20">
-                    <i class="fas fa-trophy"></i>
-                </div>
-                <div class="stat-title-val text-white mt-4" id="counter-rank">#{{ stats.global_rank }}</div>
-                <div class="stat-title-label">Global Rank</div>
-            </div>
-            <svg class="stat-sparkline-graph relative z-10" viewBox="0 0 60 30">
-                <path d="M0,22 Q12,18 24,10 T48,6 T60,2" fill="none" stroke="#fbcd0b" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
+    <div class="surface continue lift">
+      <div class="continue-glow">
+        <div class="path-crumb">
+          <span>Courses</span><span class="sep">/</span><span>DBMS</span><span class="sep">/</span><span>Normalization</span><span class="sep">/</span><span class="cur">practice-set-3</span>
         </div>
+        <div class="continue-top">
+          <div>
+            <h2>Continue: Practice Set 3</h2>
+            <p>Normalization · Database Management Systems</p>
+          </div>
+          <a href="{% url 'courses' %}" class="resume-btn" style="text-decoration:none;">Resume <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="continue-progress">
+          <div class="progress-track"><div class="progress-fill" style="width:68%"></div></div>
+          <div class="progress-meta"><span>17 / 25 questions</span><span>68%</span></div>
+        </div>
+      </div>
+
+      <div class="focus-list">
+        <div class="focus-title">Today's plan · 3 tasks · ~50 min</div>
+        <div class="focus-item completed" id="task-1">
+          <div class="focus-check done" onclick="toggleTask(1)"><i class="fa-solid fa-check"></i></div>
+          <span class="focus-text">Revise: SQL Joins &amp; Subqueries</span>
+          <span class="focus-meta">15 MIN</span>
+        </div>
+        <div class="focus-item" id="task-2">
+          <div class="focus-check" onclick="toggleTask(2)"></div>
+          <span class="focus-text">Practice: 10 Aptitude MCQs — Time &amp; Work</span>
+          <span class="focus-meta">20 MIN</span>
+        </div>
+        <div class="focus-item" id="task-3">
+          <div class="focus-check" onclick="toggleTask(3)"></div>
+          <span class="focus-text">Attempt: Full-length Mock Test #7</span>
+          <span class="focus-meta">60 MIN</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Sticky Notes Row -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 mb-4" data-aos="fade-up" data-aos-delay="150">
-        <!-- Sticky Note 1: Motivational Quote -->
-        <div class="sticky-note-card note-purple" style="transform: rotate(-0.5deg);">
-            <!-- Floating Tape & Glowing Pin -->
-            <div class="note-tape"></div>
-            <div class="note-pin note-pin-purple"></div>
-            
-            <div class="relative z-10 flex flex-col justify-between h-full pt-4">
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[9px] font-black text-[#c084fc] uppercase tracking-widest block"><i class="fas fa-quote-left"></i> Quote of the Day <span id="quoteDateDisplay" class="ml-2 opacity-60 text-[8px] normal-case font-bold bg-[#c084fc]/15 px-1.5 py-0.5 rounded">Today</span></span>
-                        <div class="flex gap-2">
-                            <button id="prevQuoteBtn" onclick="changeQuote(1)" class="text-[10px] text-white/40 hover:text-[#c084fc] transition-all"><i class="fas fa-chevron-left"></i></button>
-                            <button id="nextQuoteBtn" onclick="changeQuote(-1)" class="text-[10px] text-white/40 hover:text-[#c084fc] transition-all"><i class="fas fa-chevron-right"></i></button>
-                        </div>
-                    </div>
-                    <div class="quote-slider-wrapper" style="transition: all 0.25s ease;">
-                        <p class="font-extrabold text-sm text-white/90 leading-relaxed font-['Outfit']" id="motivationQuoteDisplay">
-                            "Your limitation—it's only your imagination. Push yourself, because no one else is going to do it for you."
-                        </p>
-                    </div>
-                </div>
-                <div class="text-[10px] text-gray-500 font-bold mt-4 text-right" id="quoteAuthorDisplay">— PrepVerse AI</div>
-            </div>
+    <div class="surface terminal lift">
+      <div class="term-head">
+        <span class="term-dot" style="background:var(--danger)"></span>
+        <span class="term-dot" style="background:var(--warning)"></span>
+        <span class="term-dot" style="background:var(--success)"></span>
+        <span class="term-title">readiness.sh</span>
+      </div>
+      <div class="term-body">
+        <div class="term-prompt"><span>$</span> readiness --check --all-subjects</div>
+        <div class="score-row">
+          <span class="score-num">74%</span>
+          <span class="delta up"><i class="fa-solid fa-arrow-up"></i>6% this week</span>
         </div>
-        
-        <!-- Sticky Note 2: Tip of the Day -->
-        <div class="sticky-note-card note-emerald" style="transform: rotate(0.5deg);">
-            <!-- Floating Tape & Glowing Pin -->
-            <div class="note-tape"></div>
-            <div class="note-pin note-pin-emerald"></div>
-            
-            <div class="relative z-10 flex flex-col justify-between h-full pt-4">
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[9px] font-black text-[#2af598] uppercase tracking-widest block"><i class="fas fa-lightbulb"></i> Tip of the Day <span id="tipDateDisplay" class="ml-2 opacity-60 text-[8px] normal-case font-bold bg-[#2af598]/15 px-1.5 py-0.5 rounded">Today</span></span>
-                        <div class="flex gap-2">
-                            <button id="prevTipBtn" onclick="changeTip(1)" class="text-[10px] text-white/40 hover:text-[#2af598] transition-all"><i class="fas fa-chevron-left"></i></button>
-                            <button id="nextTipBtn" onclick="changeTip(-1)" class="text-[10px] text-white/40 hover:text-[#2af598] transition-all"><i class="fas fa-chevron-right"></i></button>
-                        </div>
-                    </div>
-                    <div class="tip-slider-wrapper" style="transition: all 0.25s ease;">
-                        <p class="font-extrabold text-sm text-white/90 leading-relaxed font-['Outfit']" id="tipDisplay">
-                            <strong>Quant Trick:</strong> To multiply any 2-digit number by 11, simply add the two digits together and place the sum in the middle! (e.g. 24 x 11 = 264).
-                        </p>
-                    </div>
-                </div>
-                <div class="text-[10px] text-gray-500 font-bold mt-4 text-right" id="tipAuthorDisplay">— Aptitude Masterclass</div>
-            </div>
+        <div class="score-label">overall placement readiness</div>
+
+        <div class="subj-row"><span class="subj-name">DSA</span><div class="subj-track"><div class="subj-fill" style="width:82%;background:var(--success)"></div></div><span class="subj-tag t-pass">PASS</span></div>
+        <div class="subj-row"><span class="subj-name">Aptitude</span><div class="subj-track"><div class="subj-fill" style="width:90%;background:var(--success)"></div></div><span class="subj-tag t-pass">PASS</span></div>
+        <div class="subj-row"><span class="subj-name">DBMS</span><div class="subj-track"><div class="subj-fill" style="width:88%;background:var(--success)"></div></div><span class="subj-tag t-pass">PASS</span></div>
+        <div class="subj-row"><span class="subj-name">OS</span><div class="subj-track"><div class="subj-fill" style="width:71%;background:var(--warning)"></div></div><span class="subj-tag t-warn">WARN</span></div>
+        <div class="subj-row"><span class="subj-name">Verbal</span><div class="subj-track"><div class="subj-fill" style="width:65%;background:var(--warning)"></div></div><span class="subj-tag t-warn">WARN</span></div>
+        <div class="subj-row"><span class="subj-name">Networks</span><div class="subj-track"><div class="subj-fill" style="width:54%;background:var(--danger)"></div></div><span class="subj-tag t-fail">FAIL</span></div>
+
+        <div class="term-foot"><span class="arrow">→</span> Fix Computer Networks before your next full mock (recommended by Aug 5)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FOCUS ZONE ============ -->
+  <div class="sec-head">
+    <div><h3>Focus zone</h3><div class="sec-sub">Topics where you're losing the most marks — ranked by impact</div></div>
+    <a href="{% url 'courses' %}" class="sec-link">View full breakdown <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+  <div class="weak-list">
+    {% for topic in focus_topics %}
+    <div class="surface lift weak-row">
+      <span class="weak-rank">{{ topic.rank }}</span>
+      <div class="weak-info"><h4>{{ topic.sub }}</h4><p>{{ topic.title }} · {{ topic.attempted }} questions attempted</p></div>
+      <span class="weak-acc">{{ topic.acc }}</span>
+      <a href="{% url 'course_detail' topic.course_id %}" class="weak-cta" style="text-decoration:none;">Practice now</a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ============ ANALYTICS ============ -->
+  <div class="analytics-grid">
+    <div class="surface chart-card lift">
+      <div class="sec-head" style="margin:0 0 4px;">
+        <div>
+          <h3 style="font-size:.94rem;">Mock test performance</h3>
+          <div class="sec-sub">Last 6 attempts</div>
         </div>
+        <div class="stat-inline">
+          <span style="font-family:var(--f-display);font-weight:700;font-size:1.3rem;">{{ stats.accuracy }}</span>
+          <span class="delta up"><i class="fa-solid fa-arrow-up"></i>9%</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 560 170" style="width:100%;height:auto;margin-top:10px;">
+        <line x1="0" y1="30" x2="560" y2="30" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+        <line x1="0" y1="80" x2="560" y2="80" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+        <line x1="0" y1="130" x2="560" y2="130" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+        <defs>
+          <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8b7cf0" stop-opacity=".28"/>
+            <stop offset="100%" stop-color="#8b7cf0" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <polygon points="10,120 100,110 190,95 280,100 370,60 460,45 550,38 550,160 10,160" fill="url(#trendFill)"/>
+        <polyline points="10,120 100,110 190,95 280,100 370,60 460,45 550,38"
+          fill="none" stroke="var(--accent-2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="10,150 100,145 190,140 280,142 370,138 460,135 550,133"
+          fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1.5" stroke-dasharray="3 4" stroke-linecap="round"/>
+        <g fill="var(--accent-2)"><circle cx="550" cy="38" r="4.5"/></g>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--text-3);font-family:var(--f-mono);padding:0 4px;">
+        <span>T1</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span>
+      </div>
+      <div class="trend-legend">
+        <span><i class="legend-dot" style="background:var(--accent-2)"></i>Your accuracy</span>
+        <span><i class="legend-dot" style="background:rgba(255,255,255,.3)"></i>Class average</span>
+      </div>
     </div>
 
-    <!-- 3. Dashboard Main Grid Blocks (3-Column Layout) -->
-    <div class="dashboard-grid">
+    <div class="surface heat-card lift">
+      <div class="sec-head" style="margin:0 0 4px;">
+        <div><h3 style="font-size:.94rem;">Consistency</h3><div class="sec-sub">98 days of activity</div></div>
+      </div>
+      <div class="heat-grid" id="heatGrid">
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+      </div>
+      <div class="heat-legend">
+        <span>Less</span>
+        <span class="heat-cell" style="background:var(--surface-3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
+        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span>More</span>
+      </div>
+    </div>
+  </div>
 
-        <!-- COLUMN 1: Subject Cards Grid & Navigation -->
-        <div class="flex flex-col gap-6 lg:col-span-2" data-aos="fade-up" data-aos-delay="200">
-            <!-- Monthly Progress Wave Chart Section -->
-            <div class="glass-card p-6 text-left flex flex-col justify-between h-full">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-extrabold text-base text-white font-['Outfit']">Monthly Progress</h3>
-                    <div class="flex items-center gap-4 text-[10px] font-black uppercase tracking-wider">
-                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#8b5cf6]"></span> Current</span>
-                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#d946ef]"></span> Previous</span>
-                        <select id="chartTypeSelector" onchange="toggleDashboardChart(this.value)" class="bg-white/5 border border-white/8 rounded-lg px-2.5 py-1 text-white focus:outline-none text-[10px] font-black cursor-pointer hover:bg-white/10 transition-all">
-                            <option value="wave" class="bg-[#0f0b24] text-white">Wave Area Chart</option>
-                            <option value="bar" class="bg-[#0f0b24] text-white">Column Bar Chart</option>
-                            <option value="line" class="bg-[#0f0b24] text-white">Neon Line Chart</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- Wave SVG chart mimicking mockup -->
-                <div class="relative h-[380px] w-full mt-4">
-                    <svg class="w-full h-full" viewBox="0 0 800 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="currentGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.45"/>
-                                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
-                            </linearGradient>
-                            <linearGradient id="previousGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#d946ef" stop-opacity="0.25"/>
-                                <stop offset="100%" stop-color="#d946ef" stop-opacity="0"/>
-                            </linearGradient>
-                        </defs>
-                        <!-- Grid lines -->
-                        <line x1="0" y1="40" x2="800" y2="40" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="0" y1="160" x2="800" y2="160" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-                        <line x1="0" y1="220" x2="800" y2="220" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-
-                        <!-- Wave Area Chart Group -->
-                        <g id="svgWaveChartGroup" class="chart-group active-chart">
-                            <!-- Previous Year Peak Path -->
-                            <path d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140 L 800 240 L 0 240 Z" fill="url(#previousGrad)"/>
-                            <path class="chart-draw-path" d="M 0 160 Q 70 170 140 140 T 280 160 T 420 120 T 560 170 T 700 130 T 800 140" stroke="#d946ef" stroke-width="3" stroke-linecap="round" fill="none"/>
-
-                            <!-- Current Year Peak Path -->
-                            <path d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90 L 800 240 L 0 240 Z" fill="url(#currentGrad)"/>
-                            <path class="chart-draw-path" d="M 0 160 Q 70 130 140 170 T 280 110 T 420 80 T 560 130 T 700 70 T 800 90" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round" fill="none"/>
-                        </g>
-
-                        <!-- Column Bar Chart Group -->
-                        <g id="svgBarChartGroup" class="chart-group">
-                            <!-- Jan -->
-                            <rect class="chart-grow-bar" x="80" y="100" width="16" height="120" rx="4" fill="#8b5cf6" opacity="0.85" />
-                            <rect class="chart-grow-bar" x="100" y="130" width="16" height="90" rx="4" fill="#d946ef" opacity="0.7" />
-                            <!-- Mar -->
-                            <rect class="chart-grow-bar" x="200" y="80" width="16" height="140" rx="4" fill="#8b5cf6" opacity="0.85" />
-                            <rect class="chart-grow-bar" x="220" y="110" width="16" height="110" rx="4" fill="#d946ef" opacity="0.7" />
-                            <!-- May -->
-                            <rect class="chart-grow-bar" x="320" y="60" width="16" height="160" rx="4" fill="#8b5cf6" opacity="0.85" />
-                            <rect class="chart-grow-bar" x="340" y="90" width="16" height="130" rx="4" fill="#d946ef" opacity="0.7" />
-                            <!-- Jul -->
-                            <rect class="chart-grow-bar" x="440" y="70" width="16" height="150" rx="4" fill="#8b5cf6" opacity="0.85" />
-                            <rect class="chart-grow-bar" x="460" y="120" width="16" height="100" rx="4" fill="#d946ef" opacity="0.7" />
-                            <!-- Sep -->
-                            <rect class="chart-grow-bar" x="560" y="50" width="16" height="170" rx="4" fill="#8b5cf6" opacity="0.85" />
-                            <rect class="chart-grow-bar" x="580" y="80" width="16" height="140" rx="4" fill="#d946ef" opacity="0.7" />
-                            <!-- Nov -->
-                            <rect class="chart-grow-bar" x="680" y="30" width="16" height="190" rx="4" fill="#8b5cf6" opacity="0.85" />
-                            <rect class="chart-grow-bar" x="700" y="60" width="16" height="160" rx="4" fill="#d946ef" opacity="0.7" />
-                        </g>
-
-                        <!-- Neon Line Chart Group -->
-                        <g id="svgLineChartGroup" class="chart-group">
-                            <!-- Previous Line -->
-                            <polyline class="chart-draw-path" points="50,150 150,130 250,160 350,120 450,140 550,90 650,110 750,80" fill="none" stroke="#d946ef" stroke-width="3" stroke-dasharray="3,3" />
-                            <!-- Current Line -->
-                            <polyline class="chart-draw-path" points="50,110 150,140 250,90 350,70 450,120 550,60 650,80 750,40" fill="none" stroke="#8b5cf6" stroke-width="4" />
-                            <!-- Glowing Dots on Current Line -->
-                            <circle class="chart-pop-point" cx="50" cy="110" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                            <circle class="chart-pop-point" cx="150" cy="140" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                            <circle class="chart-pop-point" cx="250" cy="90" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                            <circle class="chart-pop-point" cx="350" cy="70" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                            <circle class="chart-pop-point" cx="450" cy="120" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                            <circle class="chart-pop-point" cx="550" cy="60" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                            <circle class="chart-pop-point" cx="650" cy="80" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                            <circle class="chart-pop-point" cx="750" cy="40" r="5" fill="#38bdf8" stroke="#fff" stroke-width="1.5" />
-                        </g>
-
-                        <!-- Marker dot highlight -->
-                        <circle cx="280" cy="110" r="6" fill="#8b5cf6" stroke="#fff" stroke-width="2"/>
-                        <line x1="280" y1="110" x2="280" y2="220" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4 4"/>
-                    </svg>
-                    <!-- Peak tag popup -->
-                    <div class="absolute bg-[#8b5cf6] text-white text-[9px] font-black px-2 py-0.5 rounded-md shadow-lg" style="left: 32.5%; top: 32%;">
-                        $3533
-                    </div>
-                    <!-- X-axis Labels -->
-                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-extrabold uppercase mt-2 px-2">
-                        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
-                    </div>
-                </div>
-            </div>
-
-            
-        </div>
-
-        <!-- COLUMN 3: Streak Tracker, Exam Readiness, Checklist, Spark MCQ, Achievements, Leaderboard -->
-        <div class="flex flex-col gap-6" data-aos="fade-up" data-aos-delay="400">
-            <!-- Active Streak tracker widget -->
-            <div class="glass-card streak-card">
-                <div class="streak-header">
-                    <span class="streak-badge"><i class="fas fa-fire"></i> Practice Streak</span>
-                    <span class="text-[10px] text-gray-500 font-extrabold uppercase tracking-widest">Milestones</span>
-                </div>
-                <div class="streak-days-display">
-                    <div class="streak-count text-white" id="streakCounterDisplay">{{ stats.current_streak }} <span class="text-gray-500 text-xs">Days Active</span></div>
-                </div>
-                <!-- Week fire checkpoints -->
-                <div class="fire-week-row">
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">M</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">W</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">T</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">F</span></div>
-                    <div class="fire-day-dot active"><i class="fas fa-circle-check text-xs"></i><span class="text-[9px] text-gray-400 block mt-1 font-bold">S</span></div>
-                    <div class="fire-day-dot" id="streakSundayDot"><i class="far fa-circle text-xs text-gray-600" id="streakSundayIcon"></i><span class="text-[9px] text-gray-500 block mt-1 font-bold">S</span></div>
-                </div>
-            </div>
-
-            <!-- Scheduled Events Widget -->
-            <div class="glass-card p-6 flex flex-col justify-between flex-1" id="eventsWidget" style="height: 350px; min-height: 350px;">
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-tasks text-[#c084fc]"></i>
-                            <span class="font-extrabold text-sm text-white">Scheduled Activity</span>
-                        </div>
-                        <div class="flex gap-1.5">
-                            <button id="filterSelectedDayBtn" class="text-[9px] font-black border border-white/5 bg-[#c084fc]/15 text-[#c084fc] px-2.5 py-1 rounded-lg transition-all">Today</button>
-                            <button id="filterAllBtn" class="text-[9px] font-black border border-white/5 bg-white/2 text-gray-400 px-2.5 py-1 rounded-lg transition-all">All</button>
-                        </div>
-                    </div>
-
-                    <div id="eventsListContainer" class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1 mb-4">
-                        <!-- Dynamic events list items -->
-                    </div>
-                </div>
-
-                <button id="openAddEventModalBtn" class="w-full py-2.5 rounded-xl font-black text-xs text-center border border-white/5 bg-white/2 hover:bg-white/5 text-[#38bdf8] flex items-center justify-center gap-1.5 transition-all">
-                    <i class="fas fa-plus"></i> Add Study Activity
-                </button>
-            </div>
-
-        </div>
-
+  <!-- ============ UTILITY RAIL ============ -->
+  <div class="util-grid">
+    <div class="surface util-card lift">
+      <h4><span class="util-ic" style="background:var(--accent-soft);color:var(--accent-2)"><i class="fa-regular fa-calendar"></i></span>Upcoming</h4>
+      {% for event in upcoming_events %}
+      <div class="sched-item"><div class="sched-date"><div class="d">{{ event.day }}</div><div class="m">{{ event.month }}</div></div><div class="sched-info"><p>{{ event.title }}</p><span>{{ event.info }}</span></div></div>
+      {% endfor %}
     </div>
 
-    <!-- Subject Preparations Horizontal Row (3 Cards Viewport + Infinite Carousel) -->
-    <div class="glass-card" style="width: 100%; overflow: visible; padding: 35px 40px; margin-top: 32px;" data-aos="fade-up" data-aos-delay="150">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-book-open" style="color: #c084fc; font-size: 1.25rem;"></i>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0;">Subject Preparations</h2>
-            </div>
-            <span style="font-size: 0.88rem; color: #c084fc; font-weight: 700; background: rgba(192, 132, 252, 0.08); border: 1px solid rgba(192, 132, 252, 0.2); padding: 8px 16px; border-radius: 12px; display: flex; align-items: center; gap: 6px;">Total Subjects: <strong style="color: #ffffff;">{{ categories|length }}</strong></span>
+    <div class="surface util-card lift">
+      <h4><span class="util-ic" style="background:var(--success-soft);color:var(--success)"><i class="fa-solid fa-layer-group"></i></span>Topic mastery</h4>
+      <div id="masteryList">
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:var(--text-1);">
+            <span>Quantitative Aptitude</span><span style="font-family:var(--f-mono);color:var(--success);">85%</span>
+          </div>
+          <div style="width:100%;height:6px;background:var(--surface-3);border-radius:4px;overflow:hidden;">
+            <div style="width:85%;height:100%;background:var(--success);border-radius:4px;"></div>
+          </div>
         </div>
-        
-        <div class="carousel-container" style="display: flex; align-items: center; position: relative; width: 100%; gap: 15px;">
-            <button class="carousel-btn prev-btn" onclick="slideSubjectCarousel(-1)" title="Previous Cards"><i class="fas fa-chevron-left"></i></button>
-            
-            <div class="carousel-viewport" style="overflow: hidden; width: 100%; padding: 10px 0;">
-                <div class="carousel-track" id="subjectCarouselTrack" style="display: flex; gap: 20px; transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform;">
-                    {% for cat in categories %}
-                    <div class="glass-card subject-card relative overflow-hidden" onclick="location.href='{% url 'courses' %}'">
-                        {% if cat.title == "Quantitative Aptitude" %}
-                        <!-- Background Pattern: Concentric Rings (Zano style) -->
-                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
-                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="50" y="50" width="80" height="80" rx="20" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
-                                <rect x="50" y="50" width="110" height="110" rx="30" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
-                                <rect x="50" y="50" width="140" height="140" rx="40" transform="rotate(45 50 50)" stroke="{{ cat.color }}" stroke-width="1.5"/>
-                            </svg>
-                        </div>
-                        {% elif cat.title == "Logical Reasoning" %}
-                        <!-- Background Pattern: Isometric columns (Kudoe style) -->
-                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
-                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M80 60 L90 55 L100 60 L90 65 Z" fill="{{ cat.color }}" opacity="0.6"/>
-                                <path d="M80 60 L80 85 L90 90 L90 65 Z" fill="{{ cat.color }}" opacity="0.4"/>
-                                <path d="M90 65 L90 90 L100 85 L100 60 Z" fill="{{ cat.color }}" opacity="0.8"/>
-                                
-                                <path d="M60 70 L70 65 L80 70 L70 75 Z" fill="{{ cat.color }}" opacity="0.6"/>
-                                <path d="M60 70 L60 95 L70 100 L70 75 Z" fill="{{ cat.color }}" opacity="0.4"/>
-                                <path d="M70 75 L70 100 L80 95 L80 70 Z" fill="{{ cat.color }}" opacity="0.8"/>
-                            </svg>
-                        </div>
-                        {% elif cat.title == "Verbal Ability" %}
-                        <!-- Background Pattern: Wavy ribbon paths (wavy style) -->
-                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
-                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M-20,50 Q10,20 40,50 T100,50 T160,50" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M-20,60 Q10,30 40,60 T100,60 T160,60" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
-                                <path d="M-20,70 Q10,40 40,70 T100,70 T160,70" fill="none" stroke="{{ cat.color }}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
-                            </svg>
-                        </div>
-                        {% else %}
-                        <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
-                        <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.07] z-0">
-                            <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <polygon points="100,60 75,85 100,100" fill="{{ cat.color }}" opacity="0.4"/>
-                                <polygon points="75,85 55,70 100,60" fill="{{ cat.color }}" opacity="0.6"/>
-                                <polygon points="55,70 85,50 100,60" fill="{{ cat.color }}" opacity="0.5"/>
-                                <polygon points="75,85 55,70 65,95" fill="{{ cat.color }}" opacity="0.3"/>
-                            </svg>
-                        </div>
-                        {% endif %}
-                        <div class="relative z-10">
-                            <div class="subject-cover-img-box mb-4">
-                                <img src="{{ cat.image }}" alt="{{ cat.title }}">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#070412] via-transparent to-transparent"></div>
-                                <div class="subject-icon-badge" style="color: {{ cat.color }}; border: 1px solid {{ cat.color }}44; box-shadow: 0 0 10px {{ cat.color }}33;">
-                                    <i class="fas {{ cat.icon }}"></i>
-                                </div>
-                            </div>
-                            <h4 class="font-extrabold text-sm text-white">{{ cat.title }}</h4>
-                            <p class="text-[10px] text-gray-400 font-bold mb-4">
-                                {% if cat.title == "Quantitative Aptitude" %}Prof. Arun Sharma
-                                {% elif cat.title == "Logical Reasoning" %}Prof. R.S. Aggarwal
-                                {% elif cat.title == "Verbal Ability" %}Prof. Wren & Martin
-                                {% else %}Prof. Jonathan Reyes{% endif %}
-                            </p>
-                            <div class="mb-4">
-                                <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
-                                    <span>{% if cat.progress == 45 %}6 lessons left{% elif cat.progress == 60 %}4 lessons left{% elif cat.progress == 30 %}8 lessons left{% else %}9 lessons left{% endif %}</span>
-                                    <span style="color: {{ cat.color }};">{{ cat.progress }}% Complete</span>
-                                </div>
-                                <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
-                                    <div class="h-full rounded-full" style="width: {{ cat.progress }}%; background-color: {{ cat.color }};"></div>
-                                </div>
-                            </div>
-                            <div onclick="event.stopPropagation();">
-                                <a href="{% url 'courses' %}" class="card-action-btn btn-blue w-full block text-center" style="font-size: 0.82rem; padding: 10px 14px;">Study Course</a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            
-            <button class="carousel-btn next-btn" onclick="slideSubjectCarousel(1)" title="Next Cards"><i class="fas fa-chevron-right"></i></button>
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:var(--text-1);">
+            <span>Logical Reasoning</span><span style="font-family:var(--f-mono);color:var(--accent-2);">72%</span>
+          </div>
+          <div style="width:100%;height:6px;background:var(--surface-3);border-radius:4px;overflow:hidden;">
+            <div style="width:72%;height:100%;background:var(--accent-2);border-radius:4px;"></div>
+          </div>
         </div>
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:var(--text-1);">
+            <span>Verbal Ability</span><span style="font-family:var(--f-mono);color:var(--warning);">64%</span>
+          </div>
+          <div style="width:100%;height:6px;background:var(--surface-3);border-radius:4px;overflow:hidden;">
+            <div style="width:64%;height:100%;background:var(--warning);border-radius:4px;"></div>
+          </div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:0.75rem;font-weight:600;margin-bottom:4px;color:var(--text-1);">
+            <span>Data Interpretation</span><span style="font-family:var(--f-mono);color:var(--danger);">45%</span>
+          </div>
+          <div style="width:100%;height:6px;background:var(--surface-3);border-radius:4px;overflow:hidden;">
+            <div style="width:45%;height:100%;background:var(--danger);border-radius:4px;"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    
-    <!-- Mock Tests Overview Section -->
-    <div class="glass-card p-6 mt-8" data-aos="fade-up" data-aos-delay="180">
-        <div class="widget-header">
-            <i class="fas fa-graduation-cap text-[#fb7185]"></i>
-            <span>Mock Test Performance Overview</span>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Card 1: Module Blitz -->
-            <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between border border-white/5">
-                <!-- Background Pattern: Isometric columns (Kudoe style) -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M85 55 L95 50 L105 55 L95 60 Z" fill="#2af598" opacity="0.6"/>
-                        <path d="M85 55 L85 85 L95 90 L95 60 Z" fill="#2af598" opacity="0.4"/>
-                        <path d="M95 60 L95 90 L105 85 L105 55 Z" fill="#2af598" opacity="0.8"/>
-                        
-                        <path d="M65 65 L75 60 L85 65 L75 70 Z" fill="#2af598" opacity="0.6"/>
-                        <path d="M65 65 L65 95 L75 100 L75 70 Z" fill="#2af598" opacity="0.4"/>
-                        <path d="M75 70 L75 100 L85 95 L85 65 Z" fill="#2af598" opacity="0.8"/>
-
-                        <path d="M45 75 L55 70 L65 75 L55 80 Z" fill="#2af598" opacity="0.6"/>
-                        <path d="M45 75 L45 103 L55 108 L55 80 Z" fill="#2af598" opacity="0.4"/>
-                        <path d="M55 80 L55 103 L65 108 L65 75 Z" fill="#2af598" opacity="0.8"/>
-                    </svg>
-                </div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <h4 class="font-extrabold text-sm text-white">Module Blitz</h4>
-                            <span class="text-[9px] text-[#2af598] font-bold uppercase tracking-wider bg-[#2af598]/10 border border-[#2af598]/20 px-2 py-0.5 rounded">15 Mins | 10 MCQs</span>
-                        </div>
-                        <div class="w-8 h-8 rounded-full bg-[#2af598]/15 border border-[#2af598]/30 flex items-center justify-center text-[#2af598] text-xs">
-                            <i class="fas fa-puzzle-piece"></i>
-                        </div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">Focus deeply on a single, isolated module within a topic. Highly recommended for drilling specific weak concepts.</p>
-                </div>
-                <div class="relative z-10">
-                    <div class="mb-4">
-                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
-                            <span>Completed: <strong class="text-white" id="blitzTakenVal">0</strong> / 15</span>
-                            <span class="text-[#2af598]" id="blitzPctVal">0%</span>
-                        </div>
-                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full bg-[#2af598]" id="blitzProgressFill" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-bold mb-4">
-                        <span id="blitzRemainingVal">Remaining: 15</span>
-                        <span>Baseline: 3</span>
-                    </div>
-                    <a href="{% url 'mock_test' %}" class="card-action-btn btn-green">Configure & Start</a>
-                </div>
-            </div>
-
-            <!-- Card 2: Topic Master -->
-            <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between border border-white/5">
-                <!-- Background Pattern: Crystalline Polygons (Nuntio style) -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <polygon points="100,50 70,80 100,100" fill="#fbcd0b" opacity="0.4"/>
-                        <polygon points="70,80 50,60 100,50" fill="#fbcd0b" opacity="0.6"/>
-                        <polygon points="50,60 40,90 70,80" fill="#fbcd0b" opacity="0.3"/>
-                        <polygon points="70,80 40,90 100,100" fill="#fbcd0b" opacity="0.8"/>
-                        <polygon points="50,60 80,40 100,50" fill="#fbcd0b" opacity="0.5"/>
-                    </svg>
-                </div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <h4 class="font-extrabold text-sm text-white">Topic Master</h4>
-                            <span class="text-[9px] text-[#fbcd0b] font-bold uppercase tracking-wider bg-[#fbcd0b]/10 border border-[#fbcd0b]/20 px-2 py-0.5 rounded">30 Mins | 25 MCQs</span>
-                        </div>
-                        <div class="w-8 h-8 rounded-full bg-[#fbcd0b]/15 border border-[#fbcd0b]/30 flex items-center justify-center text-[#fbcd0b] text-xs">
-                            <i class="fas fa-layer-group"></i>
-                        </div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">Covers all modules under a selected topic. Ideal for testing overall grasp of a composite topic category.</p>
-                </div>
-                <div class="relative z-10">
-                    <div class="mb-4">
-                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
-                            <span>Completed: <strong class="text-white" id="topicTakenVal">0</strong> / 10</span>
-                            <span class="text-[#fbcd0b]" id="topicPctVal">0%</span>
-                        </div>
-                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full bg-[#fbcd0b]" id="topicProgressFill" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-bold mb-4">
-                        <span id="topicRemainingVal">Remaining: 10</span>
-                        <span>Baseline: 3</span>
-                    </div>
-                    <a href="{% url 'mock_test' %}" class="card-action-btn btn-orange">Configure & Start</a>
-                </div>
-            </div>
-
-            <!-- Card 3: Subject Marathon -->
-            <div class="glass-card p-5 relative overflow-hidden flex flex-col justify-between border border-white/5">
-                <!-- Background Pattern: Concentric Rings (Zano style) -->
-                <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.06] z-0">
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="90" cy="10" r="15" stroke="#fb7185" stroke-width="1.2"/>
-                        <circle cx="90" cy="10" r="28" stroke="#fb7185" stroke-width="1.2"/>
-                        <circle cx="90" cy="10" r="41" stroke="#fb7185" stroke-width="1.2"/>
-                        <circle cx="90" cy="10" r="54" stroke="#fb7185" stroke-width="1.2"/>
-                        <circle cx="90" cy="10" r="67" stroke="#fb7185" stroke-width="1.2"/>
-                        <circle cx="90" cy="10" r="80" stroke="#fb7185" stroke-width="1.2"/>
-                    </svg>
-                </div>
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-3">
-                        <div>
-                            <h4 class="font-extrabold text-sm text-white">Subject Marathon</h4>
-                            <span class="text-[9px] text-[#fb7185] font-bold uppercase tracking-wider bg-[#fb7185]/10 border border-[#fb7185]/20 px-2 py-0.5 rounded">60 Mins | 50 MCQs</span>
-                        </div>
-                        <div class="w-8 h-8 rounded-full bg-[#fb7185]/15 border border-[#fb7185]/30 flex items-center justify-center text-[#fb7185] text-xs">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                    </div>
-                    <p class="text-[10px] text-gray-400 mb-4 leading-relaxed">A full scope test covering all topics and modules inside a major subject. Prepares you for general aptitude rounds.</p>
-                </div>
-                <div class="relative z-10">
-                    <div class="mb-4">
-                        <div class="flex justify-between items-center text-[10px] font-bold text-gray-400 mb-1.5">
-                            <span>Completed: <strong class="text-white" id="marathonTakenVal">0</strong> / 5</span>
-                            <span class="text-[#fb7185]" id="marathonPctVal">0%</span>
-                        </div>
-                        <div class="h-1.5 w-100 bg-white/5 rounded-full overflow-hidden">
-                            <div class="h-full rounded-full bg-[#fb7185]" id="marathonProgressFill" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center text-[9px] text-gray-500 font-bold mb-4">
-                        <span id="marathonRemainingVal">Remaining: 5</span>
-                        <span>Baseline: 3</span>
-                    </div>
-                    <a href="{% url 'mock_test' %}" class="card-action-btn btn-purple">Configure & Start</a>
-                </div>
-            </div>
-        </div>
+    <div class="surface util-card lift" onclick="location.href='{% url 'leaderboard' %}'" style="cursor:pointer;">
+      <h4><span class="util-ic" style="background:var(--warning-soft);color:var(--warning)"><i class="fa-solid fa-ranking-star"></i></span>Leaderboard</h4>
+      <div class="lb-row"><span class="lb-rank gold">1</span><div class="lb-avatar"></div><span class="lb-name">Ananya S.</span><span class="lb-xp">4,820 XP</span></div>
+      <div class="lb-row"><span class="lb-rank">2</span><div class="lb-avatar"></div><span class="lb-name">Kabir M.</span><span class="lb-xp">4,510 XP</span></div>
+      <div class="lb-row"><span class="lb-rank">3</span><div class="lb-avatar"></div><span class="lb-name">Divya R.</span><span class="lb-xp">4,290 XP</span></div>
+      <div class="lb-row lb-you"><span class="lb-rank">#{{ stats.global_rank }}</span><div class="lb-avatar" style="background:var(--accent-soft);border-color:var(--accent-border);"></div><span class="lb-name">You</span><span class="lb-xp">2,150 XP</span></div>
     </div>
+  </div>
 
-    
-<!-- STATS DETAIL MODAL OVERLAY -->
-    <div id="statsDetailModal" class="overlay-modal-fullscreen">
-        <div class="glass-card modal-glass-container text-left" style="max-width: 500px; width: 100%;">
-            <div class="flex justify-between items-center mb-5">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-white">
-                        <i id="modalIcon" class="fas fa-chart-line"></i>
-                    </div>
-                    <div>
-                        <h3 id="modalTitle" class="font-black text-sm text-white font-['Outfit']">Stats Detail</h3>
-                        <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">Performance Insights</span>
-                    </div>
-                </div>
-                <button onclick="closeStatsModal()" class="text-gray-500 hover:text-white transition-all text-base"><i class="fas fa-times"></i></button>
-            </div>
-            
-            <div id="modalContent" class="text-xs text-gray-300">
-                <!-- Dynamic Content injected here -->
-            </div>
-        </div>
-    </div>
+  <!-- ============ PRACTICE LAUNCHER ============ -->
+  <div class="sec-head">
+    <div><h3>Practice by subject</h3><div class="sec-sub">Jump straight into any subject's topic list</div></div>
+  </div>
+  <div class="practice-grid" id="practiceGrid"></div>
 
-    <!-- ADD EVENT MODAL OVERLAY -->
-<div id="addEventModal" class="overlay-modal-fullscreen">
-    <div class="glass-card modal-glass-container text-left" style="max-width: 420px;">
-        <div class="flex justify-between items-center mb-5">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-[#38bdf8]">
-                    <i class="fas fa-calendar-plus"></i>
-                </div>
-                <div>
-                    <h3 class="font-black text-sm text-white font-['Outfit']">Add Study Event</h3>
-                    <span class="text-[9px] text-gray-500 uppercase font-black tracking-widest">Plan your milestone</span>
-                </div>
-            </div>
-            <button onclick="closeAddEventModal()" class="text-gray-500 hover:text-white transition-all text-base"><i class="fas fa-times"></i></button>
-        </div>
 
-        <form id="addEventForm" onsubmit="handleSaveEvent(event)" class="flex flex-col gap-4 text-xs">
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Event Title</label>
-                <input type="text" id="eventTitleInput" required placeholder="e.g. Quant Speed Test revision" class="w-full bg-white/3 border border-white/8 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
-            </div>
 
-            <div class="grid grid-cols-2 gap-4">
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Date</label>
-                    <input type="date" id="eventDateInput" required class="w-full bg-white/3 border border-white/8 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
-                </div>
-                <div class="flex flex-col gap-1.5">
-                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Time</label>
-                    <input type="time" id="eventTimeInput" required class="w-full bg-white/3 border border-white/8 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Type</label>
-                <select id="eventTypeInput" class="w-full bg-white/3 border border-white/8 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-[#38bdf8]/50 transition-all">
-                    <option value="test" class="bg-[#0f0b24] text-white">Mock Test</option>
-                    <option value="revision" class="bg-[#0f0b24] text-white">Revision</option>
-                    <option value="study" class="bg-[#0f0b24] text-white">Study Session</option>
-                    <option value="mcq" class="bg-[#0f0b24] text-white">MCQ Practice</option>
-                </select>
-            </div>
-
-            <div class="flex gap-3 mt-2">
-                <button type="button" onclick="closeAddEventModal()" class="w-1/2 py-2.5 text-[10px] font-black rounded-lg border border-white/5 bg-white/2 hover:bg-white/5 text-white transition-all">Cancel</button>
-                <button type="submit" class="w-1/2 py-2.5 text-[10px] font-black rounded-lg text-white border border-white/5 hover:opacity-90 transition-all" style="background: linear-gradient(135deg, #38bdf8, #8b5cf6);">Save Event</button>
-            </div>
-        </form>
-    </div>
 </div>
 {% endblock %}
+
 
 {% block extra_js %}
 <!-- Include GSAP and AOS scripts -->
@@ -1700,6 +1702,30 @@
             const d = String(date.getDate()).padStart(2, '0');
             return `${y}-${m}-${d}`;
         }
+
+        window.toggleDashboardTask = function(n) {
+            const item = document.getElementById('task-' + n);
+            if (!item) return;
+            const check = item.querySelector('.focus-check');
+            const text = item.querySelector('.focus-text');
+            const done = item.classList.toggle('completed');
+            
+            if (done) {
+                check.className = 'focus-check w-5 h-5 rounded-lg border-2 border-[#2af598] bg-[#2af598] text-[#0a0a0d] flex items-center justify-center text-[10px] font-bold flex-shrink-0';
+                check.innerHTML = '<i class="fas fa-check"></i>';
+                if (text) {
+                    text.classList.add('line-through', 'text-gray-400');
+                    text.classList.remove('text-white');
+                }
+            } else {
+                check.className = 'focus-check w-5 h-5 rounded-lg border-2 border-white/30 flex items-center justify-center text-[10px] font-bold flex-shrink-0';
+                check.innerHTML = '';
+                if (text) {
+                    text.classList.remove('line-through', 'text-gray-400');
+                    text.classList.add('text-white');
+                }
+            }
+        };
 
         const openAddModalBtn = document.getElementById("openAddEventModalBtn");
         const addModal = document.getElementById("addEventModal");

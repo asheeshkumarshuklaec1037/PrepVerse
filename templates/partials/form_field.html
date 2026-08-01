@@ -1,14 +1,15 @@
 <div class="form-group {{ extra_class }}">
     {% if label %}
-        <label for="{{ id|default:name }}">{{ label }}</label>
+        <label for="{% if id %}{{ id }}{% elif name %}{{ name }}{% else %}field{% endif %}">{{ label }}</label>
     {% endif %}
     <input type="{{ type|default:'text' }}" 
-           name="{{ name }}" 
-           id="{{ id|default:name }}" 
+           {% if name %}name="{{ name }}"{% endif %} 
+           id="{% if id %}{{ id }}{% elif name %}{{ name }}{% else %}field{% endif %}" 
            class="form-control" 
-           placeholder="{{ placeholder }}" 
-           value="{{ value }}" 
+           placeholder="{{ placeholder|default:'' }}" 
+           value="{{ value|default:'' }}" 
            {% if required %}required{% endif %}
+           {% if readonly %}readonly disabled{% endif %}
            {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}>
     {% if error %}
         <span class="field-error" style="color: var(--accent-rose); font-size: 0.75rem; margin-top: 4px; display: block;">{{ error }}</span>
