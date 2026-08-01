@@ -6,15 +6,36 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/mock_tests.css' %}">
 <style>
-/* Scroll Reveal Animation Styles */
+    /* Scroll Reveal Animation Styles */
     .reveal-on-scroll {
         opacity: 0;
         transform: translateY(30px);
-        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .reveal-on-scroll.is-visible {
         opacity: 1;
         transform: translateY(0);
+    }
+
+    /* Dashboard-Matching Hover Glow for Mock Test Cards (Only on Mouse Hover) */
+    .dashboard-card,
+    .sidebar-panel,
+    .paper-card,
+    .top-banner {
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    .dashboard-card:hover,
+    .sidebar-panel:hover,
+    .paper-card:hover {
+        transform: translateY(-4px) !important;
+        border-color: #8b7cf0 !important;
+        box-shadow: 0 12px 32px rgba(139, 124, 240, 0.25), 0 0 20px rgba(108, 92, 231, 0.35) !important;
     }
 
     /* Staggered delay helpers */
