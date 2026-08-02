@@ -1,90 +1,127 @@
-<!-- Modal Overlay for Scheduling Mock Test (Reusable Partial) -->
+<!-- Modal Overlay for Scheduling Mock Test (Matching Dark Glassmorphism Aesthetics) -->
 <div class="modal-overlay" id="scheduleModal">
-    <div class="modal-confirm-card" style="max-width: 500px; width: 95%; padding: 35px;">
-        <div class="modal-close-trigger" onclick="closeScheduleModal()"><i class="fas fa-times"></i></div>
-        
-        <div class="modal-card-header" style="margin-bottom: 25px;">
-            <i class="fas fa-calendar-plus" style="color: #3b82f6; font-size: 2.2rem; margin-bottom: 10px; display: inline-block;"></i>
-            <h3 style="font-size: 1.6rem; font-weight: 800; color: #0f172a;">Schedule Mock Test</h3>
-            <p style="font-size: 0.85rem; color: #64748b;">Select a date and time to reserve your mock test seat.</p>
-        </div>
-
-        <!-- Meta Summary Box -->
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 15px 20px; margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div>
-                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #94a3b8; display: block;">Mock Paper</span>
-                <span id="sch-paper-val" style="font-size: 0.88rem; font-weight: 700; color: #1e293b;">-</span>
-            </div>
-            <div>
-                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #94a3b8; display: block;">Test Mode</span>
-                <span id="sch-mode-val" style="font-size: 0.88rem; font-weight: 700; color: #1e293b;">-</span>
-            </div>
-            <div style="grid-column: span 2; border-top: 1px solid #f1f5f9; padding-top: 8px; margin-top: 4px;">
-                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: #94a3b8; display: block;">Subject</span>
-                <span id="sch-subject-val" style="font-size: 0.88rem; font-weight: 700; color: #1e293b;">-</span>
-            </div>
-        </div>
-
-        <!-- Custom Date Picker Field -->
-        <div class="custom-picker-container" id="date-picker-wrapper">
-            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block;">Select Date</span>
-            <div class="custom-time-input-row" onclick="togglePicker('date', event)" style="cursor: pointer;">
-                <i class="far fa-calendar-alt"></i>
-                <input type="text" id="sch-date-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #1e293b;" placeholder="Select Date">
-            </div>
+    <div class="modal-split-wrapper">
+        <!-- Left: Rules & Information -->
+        <div class="modal-left-info">
+            <h3>Schedule <span class="highlight-green">Mock Test</span><br><span class="highlight-blue">& Reminders</span></h3>
             
-            <!-- Custom Date Calendar Dropdown -->
-            <div class="picker-dropdown" id="date-dropdown" style="bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0;" onclick="event.stopPropagation()">
-                <div class="cal-drop-header">
-                    <button type="button" onclick="changeMonth(-1, event)"><i class="fas fa-chevron-left"></i></button>
-                    <span id="cal-month-title">August 2026</span>
-                    <button type="button" onclick="changeMonth(1, event)"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div class="cal-drop-grid" id="cal-days-grid">
-                    <!-- Populated by JS -->
+            <div class="rule-item">
+                <i class="fas fa-calendar-check" style="color: #2af598;"></i>
+                <div class="rule-item-text">
+                    <h4>Timely Reminders</h4>
+                    <p>Receive email & in-app reminder notifications before your session starts.</p>
                 </div>
             </div>
+
+            <div class="rule-item">
+                <i class="fas fa-bullseye" style="color: #2af598;"></i>
+                <div class="rule-item-text">
+                    <h4>Goal Tracking</h4>
+                    <p>Maintain consistent practice routines to build accuracy, speed, and confidence.</p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <i class="fas fa-clock" style="color: #2af598;"></i>
+                <div class="rule-item-text">
+                    <h4>Flexible Reservation</h4>
+                    <p>You can adjust or re-schedule your booked test slot anytime from your dashboard.</p>
+                </div>
+            </div>
+
+            <div class="practice-standing-box">
+                <div class="practice-standing-title">
+                    <i class="fas fa-exclamation-circle" style="color: #fbcd0b;"></i> Scheduled Test Standing
+                </div>
+                <p class="practice-standing-desc">Scheduling reserves your slot and sends reminders. When the scheduled time arrives, launch the test directly from your notification panel.</p>
+            </div>
         </div>
 
-        <!-- Custom Time Picker Field -->
-        <div class="custom-picker-container" id="time-picker-wrapper" style="margin-bottom: 30px;">
-            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 8px; display: block;">Select Time</span>
-            <div class="custom-time-input-row" onclick="togglePicker('time', event)" style="cursor: pointer;">
-                <i class="far fa-clock"></i>
-                <input type="text" id="sch-time-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #1e293b;" placeholder="Select Time">
-            </div>
+        <!-- Right: Matching Dark Glassmorphism Card with Pickers -->
+        <div class="modal-confirm-card" style="background: rgba(15, 23, 42, 0.95) !important; color: #ffffff !important;">
+
+            <div class="modal-close-trigger" onclick="closeScheduleModal()"><i class="fas fa-times"></i></div>
             
-            <!-- Custom Time Picker Dropdown -->
-            <div class="picker-dropdown" id="time-dropdown" style="padding: 15px; bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0;" onclick="event.stopPropagation()">
-                <!-- Fixed Display Columns in Header -->
-                <div class="time-drop-header">
-                    <div class="time-header-column" id="time-h-lbl">09</div>
-                    <div class="time-header-column" style="background:none; border:none; flex:0.2;">:</div>
-                    <div class="time-header-column" id="time-m-lbl">00</div>
-                    <div class="time-header-column" style="background:none; border:none; flex:0.2;"></div>
-                    <div class="time-header-column" id="time-ap-lbl">AM</div>
+            <div class="modal-card-header">
+                <i class="fas fa-calendar-plus" style="color: #fbcd0b;"></i>
+                <h3>Schedule Mock Test</h3>
+                <p>Select a date and time to reserve your mock test seat.</p>
+            </div>
+
+            <!-- Meta Details Box -->
+            <div class="modal-details-list">
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Mock Paper</span>
+                    <span class="m-val" id="sch-paper-val">Mock Test 01</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Test Mode</span>
+                    <span class="m-val" id="sch-mode-val">Module Blitz</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Subject</span>
+                    <span class="m-val" id="sch-subject-val">Aptitude Mastery</span>
+                </div>
+            </div>
+
+
+            <!-- Custom Date Picker Field -->
+            <div class="custom-picker-container" id="date-picker-wrapper" style="margin-bottom: 16px;">
+                <span class="select-label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: block;">Select Date</span>
+                <div class="custom-time-input-row" onclick="togglePicker('date', event)" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 14px 18px;">
+                    <i class="far fa-calendar-alt" style="color: #2af598;"></i>
+                    <input type="text" id="sch-date-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #ffffff; font-family: inherit;" placeholder="Select Date">
                 </div>
                 
-                <!-- Scrolling Columns -->
-                <div class="time-columns-container">
-                    <!-- Hour Column -->
-                    <div class="time-scroll-column" id="sch-hour-scroll"></div>
-                    <!-- Minute Column -->
-                    <div class="time-scroll-column" id="sch-minute-scroll"></div>
-                    <!-- AM/PM Column -->
-                    <div class="time-scroll-column" id="sch-ampm-scroll">
-                        <div class="time-val-item selected" onclick="selectTimeComponent('ampm', 'AM', this)">AM</div>
-                        <div class="time-val-item" onclick="selectTimeComponent('ampm', 'PM', this)">PM</div>
+                <!-- Custom Date Calendar Dropdown -->
+                <div class="picker-dropdown" id="date-dropdown" style="bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0;" onclick="event.stopPropagation()">
+                    <div class="cal-drop-header" style="color:#ffffff;">
+                        <button type="button" onclick="changeMonth(-1, event)" style="background:rgba(255,255,255,0.08); color:#fff;"><i class="fas fa-chevron-left"></i></button>
+                        <span id="cal-month-title" style="color:#ffffff;">August 2026</span>
+                        <button type="button" onclick="changeMonth(1, event)" style="background:rgba(255,255,255,0.08); color:#fff;"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="cal-drop-grid" id="cal-days-grid">
+                        <!-- Populated by JS -->
                     </div>
                 </div>
-                
-                <button type="button" class="modal-btn modal-btn-start" onclick="confirmTimeSelection(event)" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem; border-radius: 10px;">Done</button>
             </div>
-        </div>
 
-        <div class="modal-action-row" style="display: flex; gap: 15px;">
-            <button class="modal-btn modal-btn-back" onclick="closeScheduleModal()" style="border-radius: 14px;">Cancel</button>
-            <button class="modal-btn modal-btn-start" onclick="saveSchedule()" style="background: #3b82f6; border-radius: 14px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);">Confirm Schedule</button>
+            <!-- Custom Time Picker Field -->
+            <div class="custom-picker-container" id="time-picker-wrapper" style="margin-bottom: 24px;">
+                <span class="select-label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 8px; display: block;">Select Time</span>
+                <div class="custom-time-input-row" onclick="togglePicker('time', event)" style="cursor: pointer; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 14px; padding: 14px 18px;">
+                    <i class="far fa-clock" style="color: #2af598;"></i>
+                    <input type="text" id="sch-time-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #ffffff; font-family: inherit;" placeholder="Select Time">
+                </div>
+                
+                <!-- Custom Time Picker Dropdown -->
+                <div class="picker-dropdown" id="time-dropdown" style="padding: 15px; bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0;" onclick="event.stopPropagation()">
+                    <div class="time-drop-header" style="background:rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);">
+                        <div class="time-header-column" id="time-h-lbl">09</div>
+                        <div class="time-header-column" style="background:none; border:none; flex:0.2;">:</div>
+                        <div class="time-header-column" id="time-m-lbl">00</div>
+                        <div class="time-header-column" style="background:none; border:none; flex:0.2;"></div>
+                        <div class="time-header-column" id="time-ap-lbl">AM</div>
+                    </div>
+                    
+                    <div class="time-columns-container" style="background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.1);">
+                        <div class="time-scroll-column" id="sch-hour-scroll"></div>
+                        <div class="time-scroll-column" id="sch-minute-scroll"></div>
+                        <div class="time-scroll-column" id="sch-ampm-scroll">
+                            <div class="time-val-item selected" onclick="selectTimeComponent('ampm', 'AM', this)">AM</div>
+                            <div class="time-val-item" onclick="selectTimeComponent('ampm', 'PM', this)">PM</div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="modal-btn modal-btn-confirm" onclick="confirmTimeSelection(event)" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem; border-radius: 10px;">Done</button>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="closeScheduleModal()">Cancel</button>
+                <button class="modal-btn modal-btn-confirm" onclick="saveSchedule()">Confirm Schedule</button>
+            </div>
         </div>
     </div>
 </div>
+

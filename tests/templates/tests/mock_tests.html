@@ -1112,7 +1112,7 @@
         if (timeDrop) timeDrop.classList.remove("active");
     }
 
-    function confirmScheduleFromPopup() {
+    function saveSchedule() {
         if (!selectedDateVal) {
             alert("Please select a date to schedule this test.");
             return;
@@ -1156,27 +1156,41 @@
         }
 
         const agendaSection = document.querySelector('.agenda-section');
-        const newAgendaItem = document.createElement('div');
-        newAgendaItem.className = 'agenda-item';
-        newAgendaItem.style.animation = 'slideUpFade 0.4s ease forwards';
-        newAgendaItem.innerHTML = `
-            <div class="agenda-left">
-                <span class="indicator-circle ${bgClass}"></span>
-                <div class="agenda-text">
-                    <h4>Scheduled: ${selectedConfig.mode}</h4>
-                    <p>${selectedConfig.subject} (Jan ${dayNum})</p>
+        if (agendaSection) {
+            const newAgendaItem = document.createElement('div');
+            newAgendaItem.className = 'agenda-item';
+            newAgendaItem.style.animation = 'slideUpFade 0.4s ease forwards';
+            newAgendaItem.innerHTML = `
+                <div class="agenda-left">
+                    <span class="indicator-circle ${bgClass}"></span>
+                    <div class="agenda-text">
+                        <h4>Scheduled: ${selectedConfig.mode}</h4>
+                        <p>${selectedConfig.subject} (${dayNum})</p>
+                    </div>
                 </div>
-            </div>
-            <div class="agenda-right">
-                <span class="agenda-time">${selectedTimeVal}</span>
-            </div>
-        `;
-        agendaSection.insertBefore(newAgendaItem, agendaSection.children[1]);
+                <div class="agenda-right">
+                    <span class="agenda-time">${selectedTimeVal}</span>
+                </div>
+            `;
+            if (agendaSection.children.length > 1) {
+                agendaSection.insertBefore(newAgendaItem, agendaSection.children[1]);
+            } else {
+                agendaSection.appendChild(newAgendaItem);
+            }
+        }
 
         closeScheduleModal();
-        
-        showToast(`Success! Scheduled ${selectedConfig.mode} (${selectedConfig.subject}) for January ${dayNum} at ${selectedTimeVal}`);
+        const toast = document.getElementById('stickyToast');
+        if (toast) {
+            document.getElementById('stickyToastText').textContent = `Test scheduled for ${selectedDateVal} at ${selectedTimeVal}!`;
+            toast.classList.add('show-sticky');
+            setTimeout(() => {
+                toast.classList.remove('show-sticky');
+            }, 4000);
+        }
     }
+    const confirmScheduleFromPopup = saveSchedule;
+
 
     function showToast(message) {
         if (!document.getElementById('toastNotification')) {
