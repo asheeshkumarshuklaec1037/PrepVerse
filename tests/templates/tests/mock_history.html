@@ -162,14 +162,37 @@
   .insight-box.weak .lbl{color:var(--warning);}
   .insight-box .topic{font-size:.88rem;font-weight:600;}
 
-  .q-log{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;}
-  .q-item{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;}
-  .q-num{font-family:var(--f-mono);font-size:.68rem;color:var(--text-3);width:26px;}
-  .q-text{flex:1;font-size:.78rem;color:var(--text-2);}
+  .q-log{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow-y:auto;padding-right:6px;}
+  .q-item-expandable{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;transition:all 0.3s ease;}
+  .q-item-header{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;user-select:none;}
+  .q-num{font-family:var(--f-mono);font-size:.68rem;color:var(--accent-2);background:rgba(139,124,240,0.12);padding:3px 7px;border-radius:5px;}
+  .q-text{flex:1;font-size:.78rem;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .q-status{font-family:var(--f-mono);font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;}
   .q-status.correct{color:var(--success);background:var(--success-soft);}
   .q-status.wrong{color:var(--danger);background:var(--danger-soft);}
   .q-status.skip{color:var(--text-3);background:var(--surface-3);}
+  
+  .q-detail-drawer{max-height:0;opacity:0;overflow:hidden;transition:max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;padding:0 14px;background:rgba(0,0,0,0.25);}
+  .q-detail-drawer.open{max-height:800px;opacity:1;padding:14px;border-top:1px solid var(--border);}
+  .q-full-title{font-size:.84rem;font-weight:700;color:var(--text-1);line-height:1.45;margin-bottom:12px;}
+  .q-options-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+  .q-option-pill{background:var(--surface-3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--text-2);}
+  .q-option-pill.opt-correct{background:var(--success-soft)!important;border-color:rgba(16,185,129,0.4)!important;color:var(--success)!important;font-weight:700;}
+  .q-option-pill.opt-user-wrong{background:var(--danger-soft)!important;border-color:rgba(239,68,68,0.4)!important;color:var(--danger)!important;font-weight:700;}
+  .opt-badge{font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:uppercase;}
+  .correct-badge{background:var(--success);color:#030307;}
+  .wrong-badge{background:var(--danger);color:#fff;}
+  
+  .q-stats-bar{display:flex;gap:8px;margin-bottom:12px;}
+  .stat-box{flex:1;padding:8px 10px;border-radius:8px;font-size:.72rem;font-weight:600;display:flex;align-items:center;gap:6px;}
+  .green-stat{background:var(--success-soft);color:var(--success);border:1px solid rgba(16,185,129,0.2);}
+  .red-stat{background:var(--danger-soft);color:var(--danger);border:1px solid rgba(239,68,68,0.2);}
+  .time-stat{background:rgba(139,124,240,0.1);color:var(--accent-2);border:1px solid rgba(139,124,240,0.2);}
+  
+  .q-solution-box{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:8px;padding:10px 12px;}
+  .sol-head{font-size:.74rem;font-weight:700;color:var(--warning);margin-bottom:4px;}
+  .sol-text{font-size:.78rem;color:var(--text-2);line-height:1.45;margin:0;}
+
 
   /* ---------- Sponsored — clearly separated, not competing with diagnostics ---------- */
   .sponsor-strip{display:flex;align-items:center;gap:14px;background:var(--surface-2);border:1px dashed var(--border);
@@ -310,9 +333,15 @@
       </div>
 
       <div>
-        <div class="card-title" style="margin-bottom:12px;"><i class="fa-solid fa-list-check"></i> Question-wise log</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <div class="card-title" style="margin-bottom: 0;"><i class="fa-solid fa-list-check"></i> Question-wise log</div>
+          <a href="#" id="viewFullLogBtn" class="external-log-btn" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; font-size: 0.76rem; font-weight: 700; text-decoration: none; transition: all 0.2s ease;" title="Open All Questions Page">
+            View All Detailed Solutions <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem;"></i>
+          </a>
+        </div>
         <div class="q-log" id="qLog"></div>
       </div>
+
     </div>
   </div>
 
@@ -680,46 +709,236 @@ const historyData = [
   {id:1, testKey:'number-systems-blitz', attemptNumber:1, mode:'Module Blitz', title:'Number Systems — Blitz', date:'10 Jul 2026', score:20, total:40, accuracy:50, percentile:52, duration:'15:20',
     correct:20, wrong:16, skip:4, strong:'Basic Divisibility', weak:'HCF/LCM',
     questions:[
-      {q:'HCF of 24 and 36', status:'wrong'},
-      {q:'Find the next prime after 47', status:'correct'},
-      {q:'LCM of 12, 18 and 30', status:'wrong'},
+      {
+        q:'What is the Highest Common Factor (HCF) of 24 and 36?',
+        options:['6', '12', '18', '24'],
+        userAns:'6',
+        correctAns:'12',
+        status:'wrong',
+        timeTaken:'45s',
+        correctPct:78,
+        wrongPct:22,
+        solution:'Factors of 24 = {1, 2, 3, 4, 6, 8, 12, 24}. Factors of 36 = {1, 2, 3, 4, 6, 9, 12, 18, 36}. The highest common factor shared between both numbers is 12.'
+      },
+      {
+        q:'Find the next prime number after 47.',
+        options:['49', '51', '53', '57'],
+        userAns:'53',
+        correctAns:'53',
+        status:'correct',
+        timeTaken:'28s',
+        correctPct:84,
+        wrongPct:16,
+        solution:'49 = 7×7 (composite), 51 = 3×17 (composite). 53 has no divisors other than 1 and itself, making 53 the next prime after 47.'
+      },
+      {
+        q:'Calculate the Least Common Multiple (LCM) of 12, 18 and 30.',
+        options:['120', '150', '180', '360'],
+        userAns:'120',
+        correctAns:'180',
+        status:'wrong',
+        timeTaken:'62s',
+        correctPct:62,
+        wrongPct:38,
+        solution:'Prime factorizations: 12 = 2² × 3, 18 = 2 × 3², 30 = 2 × 3 × 5. Highest powers: LCM = 2² × 3² × 5 = 4 × 9 × 5 = 180.'
+      }
     ]},
   {id:2, testKey:'number-systems-blitz', attemptNumber:2, mode:'Module Blitz', title:'Number Systems — Blitz', date:'19 Jul 2026', score:27, total:40, accuracy:67, percentile:71, duration:'13:50',
     correct:27, wrong:10, skip:3, strong:'Number Systems', weak:'HCF/LCM',
     questions:[
-      {q:'HCF of 24 and 36', status:'correct'},
-      {q:'Find the next prime after 47', status:'correct'},
-      {q:'LCM of 12, 18 and 30', status:'wrong'},
+      {
+        q:'What is the Highest Common Factor (HCF) of 24 and 36?',
+        options:['6', '12', '18', '24'],
+        userAns:'12',
+        correctAns:'12',
+        status:'correct',
+        timeTaken:'22s',
+        correctPct:78,
+        wrongPct:22,
+        solution:'Factors of 24 = {1, 2, 3, 4, 6, 8, 12, 24}, 36 = {1, 2, 3, 4, 6, 9, 12, 18, 36}. HCF = 12.'
+      },
+      {
+        q:'Find the next prime number after 47.',
+        options:['49', '51', '53', '57'],
+        userAns:'53',
+        correctAns:'53',
+        status:'correct',
+        timeTaken:'18s',
+        correctPct:84,
+        wrongPct:16,
+        solution:'53 is prime since prime factors check up to √53 ≈ 7.28 gives no divisor.'
+      },
+      {
+        q:'Calculate the Least Common Multiple (LCM) of 12, 18 and 30.',
+        options:['120', '150', '180', '360'],
+        userAns:'360',
+        correctAns:'180',
+        status:'wrong',
+        timeTaken:'54s',
+        correctPct:62,
+        wrongPct:38,
+        solution:'LCM(12, 18, 30) = 2² × 3² × 5 = 180.'
+      }
     ]},
   {id:3, testKey:'number-systems-blitz', attemptNumber:3, mode:'Module Blitz', title:'Number Systems — Blitz', date:'28 Jul 2026', score:34, total:40, accuracy:85, percentile:91, duration:'12:40',
     correct:34, wrong:4, skip:2, strong:'Number Systems', weak:'Inequalities',
     questions:[
-      {q:'If x + 1/x = 3, find x² + 1/x²', status:'correct'},
-      {q:'Solve: 2x - 5 > 3 and x < 10', status:'wrong'},
-      {q:'HCF of 24 and 36', status:'correct'},
-      {q:'Simplify: (a+b)² - (a-b)²', status:'skip'},
-      {q:'Find the next prime after 47', status:'correct'},
+      {
+        q:'If x + 1/x = 3, find the value of x² + 1/x².',
+        options:['7', '9', '11', '14'],
+        userAns:'7',
+        correctAns:'7',
+        status:'correct',
+        timeTaken:'32s',
+        correctPct:72,
+        wrongPct:28,
+        solution:'Square both sides: (x + 1/x)² = 3² ⇒ x² + 1/x² + 2(x)(1/x) = 9 ⇒ x² + 1/x² = 9 - 2 = 7.'
+      },
+      {
+        q:'Solve the inequality: 2x - 5 > 3 and x < 10.',
+        options:['4 < x < 10', 'x > 4', 'x < 10', '3 < x < 8'],
+        userAns:'x > 4',
+        correctAns:'4 < x < 10',
+        status:'wrong',
+        timeTaken:'58s',
+        correctPct:59,
+        wrongPct:41,
+        solution:'2x - 5 > 3 ⇒ 2x > 8 ⇒ x > 4. Combined with x < 10, the range is 4 < x < 10.'
+      },
+      {
+        q:'What is the HCF of 24 and 36?',
+        options:['6', '12', '18', '24'],
+        userAns:'12',
+        correctAns:'12',
+        status:'correct',
+        timeTaken:'15s',
+        correctPct:78,
+        wrongPct:22,
+        solution:'HCF(24, 36) = 12.'
+      },
+      {
+        q:'Simplify: (a+b)² - (a-b)²',
+        options:['2a² + 2b²', '4ab', '2ab', 'a² - b²'],
+        userAns:null,
+        correctAns:'4ab',
+        status:'skip',
+        timeTaken:'0s',
+        correctPct:81,
+        wrongPct:19,
+        solution:'(a² + 2ab + b²) - (a² - 2ab + b²) = a² + 2ab + b² - a² + 2ab - b² = 4ab.'
+      },
+      {
+        q:'Find the next prime after 47.',
+        options:['49', '51', '53', '57'],
+        userAns:'53',
+        correctAns:'53',
+        status:'correct',
+        timeTaken:'12s',
+        correctPct:84,
+        wrongPct:16,
+        solution:'The next prime after 47 is 53.'
+      }
     ]},
   {id:4, testKey:'time-work-master', attemptNumber:1, mode:'Topic Master', title:'Time & Work — Master', date:'25 Jul 2026', score:28, total:40, accuracy:70, percentile:76, duration:'22:10',
     correct:28, wrong:9, skip:3, strong:'Ratios', weak:'Pipes & Cisterns',
     questions:[
-      {q:'A can do a job in 6 days, B in 8. Together?', status:'correct'},
-      {q:'Pipe fills tank in 4 hrs, leak empties in 12', status:'wrong'},
-      {q:'Work efficiency ratio problem', status:'correct'},
+      {
+        q:'A can complete a job in 6 days, and B in 8 days. Working together, how many days will they take?',
+        options:['3.43 days (24/7)', '4 days', '4.5 days', '5 days'],
+        userAns:'3.43 days (24/7)',
+        correctAns:'3.43 days (24/7)',
+        status:'correct',
+        timeTaken:'40s',
+        correctPct:75,
+        wrongPct:25,
+        solution:'1 day work of A = 1/6, B = 1/8. Together 1 day work = 1/6 + 1/8 = 7/24. Total days = 24/7 = 3.43 days.'
+      },
+      {
+        q:'A pipe fills a tank in 4 hrs, while a leak empties it in 12 hrs. How long will it take to fill the tank if both are open?',
+        options:['3 hrs', '6 hrs', '8 hrs', '9 hrs'],
+        userAns:'3 hrs',
+        correctAns:'6 hrs',
+        status:'wrong',
+        timeTaken:'65s',
+        correctPct:54,
+        wrongPct:46,
+        solution:'Net filling per hour = 1/4 - 1/12 = (3 - 1)/12 = 2/12 = 1/6. Tank will be filled in 6 hours.'
+      },
+      {
+        q:'If 5 workers build a wall in 12 days, how many workers are needed to build it in 4 days?',
+        options:['12 workers', '15 workers', '18 workers', '20 workers'],
+        userAns:'15 workers',
+        correctAns:'15 workers',
+        status:'correct',
+        timeTaken:'25s',
+        correctPct:88,
+        wrongPct:12,
+        solution:'Work = Man × Days = 5 × 12 = 60 man-days. For 4 days, workers needed = 60 / 4 = 15 workers.'
+      }
     ]},
   {id:5, testKey:'full-aptitude-marathon', attemptNumber:1, mode:'Subject Marathon', title:'Full Aptitude — Marathon', date:'20 Jul 2026', score:61, total:80, accuracy:76, percentile:83, duration:'58:30',
     correct:61, wrong:14, skip:5, strong:'Percentages', weak:'Probability',
     questions:[
-      {q:'A bag has 4 red, 5 blue balls. P(both red)?', status:'wrong'},
-      {q:'Compound interest for 2 years at 10%', status:'correct'},
-      {q:'Permutation of 5 letters taken 3 at a time', status:'correct'},
+      {
+        q:'A bag contains 4 red and 5 blue balls. If two balls are drawn at random, what is the probability that both are red?',
+        options:['1/6', '2/9', '4/9', '5/18'],
+        userAns:'2/9',
+        correctAns:'1/6',
+        status:'wrong',
+        timeTaken:'72s',
+        correctPct:46,
+        wrongPct:54,
+        solution:'Total outcomes = ⁹C₂ = (9×8)/2 = 36. Favorable outcomes = ⁴C₂ = (4×3)/2 = 6. P(both red) = 6/36 = 1/6.'
+      },
+      {
+        q:'Calculate the compound interest on ₹10,000 for 2 years at 10% per annum compounded annually.',
+        options:['₹2,000', '₹2,100', '₹2,200', '₹2,500'],
+        userAns:'₹2,100',
+        correctAns:'₹2,100',
+        status:'correct',
+        timeTaken:'35s',
+        correctPct:82,
+        wrongPct:18,
+        solution:'Amount A = 10000 × (1 + 10/100)² = 10000 × 1.21 = ₹12,100. CI = 12100 - 10000 = ₹2,100.'
+      },
+      {
+        q:'Find the number of permutations of 5 distinct letters taken 3 at a time (⁵P₃).',
+        options:['30', '60', '120', '15'],
+        userAns:'60',
+        correctAns:'60',
+        status:'correct',
+        timeTaken:'20s',
+        correctPct:79,
+        wrongPct:21,
+        solution:'⁵P₃ = 5! / (5-3)! = 5! / 2! = (5 × 4 × 3 × 2 × 1) / 2 = 60.'
+      }
     ]},
   {id:6, testKey:'inequalities-blitz', attemptNumber:1, mode:'Module Blitz', title:'Inequalities — Blitz', date:'15 Jul 2026', score:22, total:40, accuracy:55, percentile:58, duration:'14:05',
     correct:22, wrong:15, skip:3, strong:'Basic Algebra', weak:'Quadratic Inequalities',
     questions:[
-      {q:'Solve: x² - 5x + 6 < 0', status:'wrong'},
-      {q:'Solve: |x - 3| ≤ 5', status:'correct'},
-    ]},
+      {
+        q:'Solve the quadratic inequality: x² - 5x + 6 < 0',
+        options:['2 < x < 3', 'x < 2 or x > 3', 'x < 6', '3 < x < 5'],
+        userAns:'x < 2 or x > 3',
+        correctAns:'2 < x < 3',
+        status:'wrong',
+        timeTaken:'50s',
+        correctPct:52,
+        wrongPct:48,
+        solution:'Factorize: (x - 2)(x - 3) < 0. Roots are 2 and 3. The quadratic expression is negative between the roots, so 2 < x < 3.'
+      },
+      {
+        q:'Solve the absolute inequality: |x - 3| ≤ 5',
+        options:['-2 ≤ x ≤ 8', 'x ≤ 8', '-5 ≤ x ≤ 5', '2 ≤ x ≤ 8'],
+        userAns:'-2 ≤ x ≤ 8',
+        correctAns:'-2 ≤ x ≤ 8',
+        status:'correct',
+        timeTaken:'38s',
+        correctPct:69,
+        wrongPct:31,
+        solution:'-5 ≤ x - 3 ≤ 5 ⇒ Add 3 to all parts: -5 + 3 ≤ x ≤ 5 + 3 ⇒ -2 ≤ x ≤ 8.'
+      }
+    ]}
 ];
 
 const scopeLabels = {all:'All Tests', 'Module Blitz':'Module Blitz', 'Topic Master':'Topic Master', 'Subject Marathon':'Subject Marathon'};
@@ -739,84 +958,121 @@ function groupByTest(data){
   });
   return [...map.values()].map(attempts => {
     attempts.sort((a,b) => a.attemptNumber - b.attemptNumber);
-    const best = attempts.reduce((m,a) => a.score > m.score ? a : m, attempts[0]);
-    const latest = attempts[attempts.length-1];
-    return {testKey: latest.testKey, title: latest.title, mode: latest.mode, attempts, best, latest};
+    return attempts;
   });
 }
 
 function renderScope(){
   const data = filtered();
-  document.getElementById('scopeCount').textContent = data.length;
-  document.getElementById('metricsScopeLabel').textContent = scopeLabels[currentScope];
+  const groups = groupByTest(data);
 
-  const avgAcc = Math.round(data.reduce((s,h)=>s+h.accuracy,0)/data.length) || 0;
-  const avgPct = Math.round(data.reduce((s,h)=>s+h.percentile,0)/data.length) || 0;
-  const best = data.reduce((m,h)=> h.score>m.score ? h : m, data[0] || {score:0,total:40});
+  let totalAttempts = 0;
+  let totalAcc = 0;
+  let totalPct = 0;
+  let maxScoreRatio = 0;
+  let bestStr = '0/40';
 
-  document.getElementById('accNum').textContent = avgAcc+'%';
-  document.getElementById('pctNum').textContent = avgPct+'%';
-  document.getElementById('totalTests').textContent = data.length;
-  document.getElementById('bestScore').textContent = (best.score||0)+'/'+(best.total||40);
+  data.forEach(h => {
+    totalAttempts++;
+    totalAcc += h.accuracy;
+    totalPct += h.percentile;
+    const ratio = h.score/h.total;
+    if(ratio > maxScoreRatio){
+      maxScoreRatio = ratio;
+      bestStr = `${h.score}/${h.total}`;
+    }
+  });
 
-  const C = 2*Math.PI*44;
+  const avgAcc = totalAttempts ? Math.round(totalAcc/totalAttempts) : 0;
+  const avgPct = totalAttempts ? Math.round(totalPct/totalAttempts) : 0;
+
+  document.getElementById('accNum').textContent = avgAcc + '%';
+  document.getElementById('pctNum').textContent = avgPct + '%';
+  document.getElementById('totalTests').textContent = totalAttempts;
+  document.getElementById('bestScore').textContent = bestStr;
+  document.getElementById('scopeCount').textContent = totalAttempts;
+  document.getElementById('metricsScopeLabel').textContent = scopeLabels[currentScope] || currentScope;
+
+  const C = 2 * Math.PI * 44;
   document.getElementById('accCircle').style.strokeDasharray = C;
   document.getElementById('accCircle').style.strokeDashoffset = C - (avgAcc/100)*C;
   document.getElementById('pctCircle').style.strokeDasharray = C;
   document.getElementById('pctCircle').style.strokeDashoffset = C - (avgPct/100)*C;
 
-  const pts = [...data].sort((a,b) => a.id - b.id);
-  const n = pts.length || 1;
-  const stepX = 540/Math.max(n-1,1);
-  const line = pts.map((h,i)=> `${10+i*stepX},${150 - (h.accuracy/100)*130}`).join(' ');
-  document.getElementById('trendLine').setAttribute('points', line);
-  document.getElementById('trendFillPoly').setAttribute('points', line + ` 550,160 10,160`);
-
-  renderTestCards(groupByTest(data));
-}
-
-function renderTestCards(groups){
-  const track = document.getElementById('attemptsTrack');
-  track.innerHTML = '';
-  groups.forEach(g => {
-    const card = document.createElement('div');
-    card.className = 'surface attempt-card lift reveal' + (g.testKey === selectedTestKey ? ' selected' : '');
-    card.innerHTML = `
-      <span class="mode-tag">${g.mode}</span>
-      <h4>${g.title}</h4>
-      <div class="date">Latest: ${g.latest.date} · ${g.latest.duration}</div>
-      <div class="score-line"><span class="score">${g.best.score}/${g.best.total}</span><span class="pct">${g.best.percentile}th pct</span></div>
-      ${g.attempts.length > 1 ? `<div class="attempt-count"><i class="fa-solid fa-rotate-right"></i> ${g.attempts.length} attempts · best shown</div>` : ''}`;
-    card.addEventListener('click', () => selectTest(g.testKey, g.latest.id));
-    track.appendChild(card);
+  const pts = data.map((h, i) => {
+    const x = data.length === 1 ? 280 : 40 + (i / (data.length - 1)) * 480;
+    const y = 150 - (h.accuracy / 100) * 110;
+    return `${x},${y}`;
   });
-  if(!groups.find(g=>g.testKey===selectedTestKey) && groups.length){
-    selectTest(groups[0].testKey, groups[0].latest.id);
-  } else if(selectedAttemptId){
-    renderAnalysis(historyData.find(h => h.id === selectedAttemptId));
-  }
-}
+  const lineStr = pts.join(' ');
+  const polyStr = pts.length ? `40,150 ${lineStr} ${pts[pts.length-1].split(',')[0]},150` : '';
+  document.getElementById('trendLine').setAttribute('points', lineStr);
+  document.getElementById('trendFillPoly').setAttribute('points', polyStr);
 
-function selectTest(testKey, attemptId){
-  selectedTestKey = testKey;
-  selectedAttemptId = attemptId;
-  renderTestCards(groupByTest(filtered()));
-  renderAttemptPills(testKey);
-  renderAnalysis(historyData.find(h => h.id === attemptId));
+  const attemptsTrack = document.getElementById('attemptsTrack');
+  if(!groups.length){
+    attemptsTrack.innerHTML = '<div style="padding:24px;color:var(--text-3);font-size:.85rem;">No attempts found for this filter scope.</div>';
+    document.getElementById('analysisPanel').style.display = 'none';
+    return;
+  }
+  document.getElementById('analysisPanel').style.display = 'block';
+
+  attemptsTrack.innerHTML = groups.map(attempts => {
+    const latest = attempts[attempts.length - 1];
+    const best = attempts.reduce((m,a) => a.score > m.score ? a : m, attempts[0]);
+    const isSelected = latest.testKey === selectedTestKey;
+    return `
+      <div class="surface attempt-card lift reveal ${isSelected ? 'selected' : ''}" data-key="${latest.testKey}">
+        <span class="mode-tag">${latest.mode}</span>
+        <h4>${latest.title}</h4>
+        <div class="date">Latest: ${latest.date} · ${latest.duration}</div>
+        <div class="score-line"><span class="score">${best.score}/${best.total}</span><span class="pct">${best.percentile}th pct</span></div>
+        ${attempts.length > 1 ? `<div class="attempt-count"><i class="fa-solid fa-rotate-right"></i> ${attempts.length} attempts · best shown</div>` : ''}
+      </div>`;
+  }).join('');
+
+  document.querySelectorAll('.attempt-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.attempt-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedTestKey = card.dataset.key;
+      const attempts = groups.find(g => g[0].testKey === selectedTestKey);
+      const latestAttempt = attempts[attempts.length - 1];
+      selectedAttemptId = latestAttempt.id;
+      renderAttemptPills(selectedTestKey);
+      renderAnalysis(latestAttempt);
+    });
+  });
+
+  if(!selectedTestKey || !groups.some(g => g[0].testKey === selectedTestKey)){
+    selectedTestKey = groups[0][0].testKey;
+  }
+  const firstCard = document.querySelector(`.attempt-card[data-key="${selectedTestKey}"]`);
+  if(firstCard){
+    firstCard.classList.add('selected');
+    const attempts = groups.find(g => g[0].testKey === selectedTestKey);
+    const latestAttempt = attempts[attempts.length - 1];
+    selectedAttemptId = latestAttempt.id;
+    renderAttemptPills(selectedTestKey);
+    renderAnalysis(latestAttempt);
+  }
+
 }
 
 function renderAttemptPills(testKey){
-  const attempts = historyData.filter(h => h.testKey === testKey).sort((a,b)=>a.attemptNumber-b.attemptNumber);
-  const wrap = document.getElementById('attemptPills');
-  if(attempts.length <= 1){ wrap.innerHTML = ''; return; }
-  const bestId = attempts.reduce((m,a)=> a.score>m.score ? a : m, attempts[0]).id;
-  wrap.innerHTML = attempts.map(a => `
-    <button class="attempt-pill ${a.id===selectedAttemptId?'active':''}" data-id="${a.id}">
-      Attempt ${a.attemptNumber} · ${a.score}/${a.total}
-      ${a.id===bestId ? '<span class="best-badge">BEST</span>' : ''}
-    </button>`).join('');
-  wrap.querySelectorAll('.attempt-pill').forEach(btn => {
+  const data = filtered();
+  const attempts = data.filter(h => h.testKey === testKey);
+  attempts.sort((a,b) => a.attemptNumber - b.attemptNumber);
+
+  const pills = document.getElementById('attemptPills');
+  pills.innerHTML = attempts.map(h => `
+    <button class="pill-btn ${h.id === selectedAttemptId ? 'active' : ''}" data-id="${h.id}">Attempt ${h.attemptNumber}</button>
+  `).join('');
+
+  pills.querySelectorAll('.pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      pills.querySelectorAll('.pill-btn').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
       selectedAttemptId = Number(btn.dataset.id);
       renderAttemptPills(testKey);
       renderAnalysis(historyData.find(h => h.id === selectedAttemptId));
@@ -850,14 +1106,93 @@ function renderAnalysis(h){
   document.getElementById('strongTopic').textContent = h.strong;
   document.getElementById('weakTopic').textContent = h.weak;
 
+  const fullLogBtn = document.getElementById('viewFullLogBtn');
+  if (fullLogBtn) {
+    fullLogBtn.href = "{% url 'question_log' %}?id=" + encodeURIComponent(h.id) + "&attempt=" + encodeURIComponent(h.attemptNumber);
+  }
+
   const qlog = document.getElementById('qLog');
+
   qlog.innerHTML = h.questions.map((q,i) => `
-    <div class="q-item">
-      <span class="q-num">Q${i+1}</span>
-      <span class="q-text">${q.q}</span>
-      <span class="q-status ${q.status}">${q.status === 'correct' ? 'Correct' : q.status === 'wrong' ? 'Wrong' : 'Skipped'}</span>
-    </div>`).join('');
+    <div class="q-item-expandable" id="qItem_${i}">
+      <div class="q-item-header" onclick="toggleQuestionDetail(${i})">
+        <span class="q-num">Q${i+1}</span>
+        <span class="q-text">${q.q}</span>
+        <span class="q-status ${q.status}">${q.status === 'correct' ? '<i class="fa-solid fa-circle-check"></i> Correct' : q.status === 'wrong' ? '<i class="fa-solid fa-circle-xmark"></i> Wrong' : '<i class="fa-solid fa-forward"></i> Skipped'}</span>
+        <i class="fa-solid fa-chevron-down q-expand-icon" id="qChevron_${i}"></i>
+      </div>
+      
+      <div class="q-detail-drawer" id="qDrawer_${i}">
+        <!-- Question Full Content -->
+        <div class="q-full-title">${q.q}</div>
+        
+        <!-- Options Grid -->
+        <div class="q-options-grid">
+          ${q.options ? q.options.map(opt => {
+            let isUser = q.userAns === opt;
+            let isCorrect = q.correctAns === opt;
+            let cls = '';
+            let icon = '';
+            if (isCorrect) {
+              cls = 'opt-correct';
+              icon = '<span class="opt-badge correct-badge"><i class="fa-solid fa-check"></i> Correct Answer</span>';
+            } else if (isUser && !isCorrect) {
+              cls = 'opt-user-wrong';
+              icon = '<span class="opt-badge wrong-badge"><i class="fa-solid fa-xmark"></i> Your Answer</span>';
+            }
+            return `
+              <div class="q-option-pill ${cls}">
+                <div class="opt-text">${opt}</div>
+                ${icon}
+              </div>
+            `;
+          }).join('') : ''}
+        </div>
+
+        <!-- Student Performance Comparison Bar -->
+        <div class="q-stats-bar">
+          <div class="stat-box green-stat">
+            <i class="fa-solid fa-user-check"></i> <b>${q.correctPct || 70}%</b> of students got this right
+          </div>
+          <div class="stat-box red-stat">
+            <i class="fa-solid fa-user-xmark"></i> <b>${q.wrongPct || 30}%</b> got it wrong
+          </div>
+          <div class="stat-box time-stat">
+            <i class="fa-solid fa-clock"></i> Avg Time: <b>${q.timeTaken || '45s'}</b>
+          </div>
+        </div>
+
+        <!-- Detailed Solution Box -->
+        <div class="q-solution-box">
+          <div class="sol-head"><i class="fa-solid fa-lightbulb"></i> Step-by-Step Solution & Explanation:</div>
+          <p class="sol-text">${q.solution || 'No detailed solution available for this question.'}</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
+
+function toggleQuestionDetail(index) {
+  const drawer = document.getElementById(`qDrawer_${index}`);
+  const chevron = document.getElementById(`qChevron_${index}`);
+  const item = document.getElementById(`qItem_${index}`);
+  
+  if (drawer.classList.contains('open')) {
+    drawer.classList.remove('open');
+    if (chevron) chevron.style.transform = 'rotate(0deg)';
+    if (item) item.classList.remove('expanded');
+  } else {
+    // Close other drawers for clean accordions
+    document.querySelectorAll('.q-detail-drawer').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.q-expand-icon').forEach(c => c.style.transform = 'rotate(0deg)');
+    document.querySelectorAll('.q-item-expandable').forEach(it => it.classList.remove('expanded'));
+    
+    drawer.classList.add('open');
+    if (chevron) chevron.style.transform = 'rotate(180deg)';
+    if (item) item.classList.add('expanded');
+  }
+}
+window.toggleQuestionDetail = toggleQuestionDetail;
 
 document.querySelectorAll('.scope-tab').forEach(tab => {
   tab.addEventListener('click', () => {

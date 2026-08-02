@@ -692,3 +692,17 @@ def mock_history_view(request):
     })
 
 
+def question_log_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+        
+    test_id = request.GET.get('id', '1')
+    attempt_num = request.GET.get('attempt', '1')
+    
+    return render(request, 'tests/question_log_detail.html', {
+        'test_id': test_id,
+        'attempt_num': attempt_num
+    })
+
+
+

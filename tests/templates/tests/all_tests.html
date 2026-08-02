@@ -106,6 +106,12 @@
         <option value="Medium">Medium</option>
         <option value="Hard">Hard</option>
       </select>
+
+      <select id="attemptFilter" class="f-select" onchange="applyFilters()">
+        <option value="all">All Tests</option>
+        <option value="unattempted">Unattempted Only</option>
+        <option value="attempted">Attempted / Retakes</option>
+      </select>
     </div>
   </div>
 
@@ -124,51 +130,52 @@
 
 </div>
 
-<!-- Modal Overlay for Confirmation split view -->
+<!-- Modal Overlay for Confirmation split view (Identical to Mock Test Arena) -->
 <div class="modal-overlay" id="confirmModal">
     <div class="modal-split-wrapper">
         <!-- Left: rules -->
         <div class="modal-left-info">
-            <h3>Test <span class="highlight-green">Arena Rules &</span><br><span class="highlight-blue">Guidelines</span></h3>
+            <h3>Test <span>Arena Rules & Guidelines</span></h3>
             
             <div class="rule-item">
-                <i class="fas fa-history" style="color: #2af598;"></i>
+                <i class="fas fa-history"></i>
                 <div class="rule-item-text">
                     <h4>Strict Simulated Timer</h4>
                     <p>The timer runs continuously once you begin. The test will auto-submit when the duration ends.</p>
                 </div>
             </div>
-
+            
             <div class="rule-item">
-                <i class="fas fa-shield-alt" style="color: #2af598;"></i>
+                <i class="fas fa-shield-halved"></i>
                 <div class="rule-item-text">
                     <h4>Anti-Cheat Monitoring</h4>
                     <p>Tab switching or leaving the screen will warn you. Exceeding warnings will force auto-submit.</p>
                 </div>
             </div>
-
+            
             <div class="rule-item">
-                <i class="fas fa-chart-line" style="color: #2af598;"></i>
+                <i class="fas fa-chart-line"></i>
                 <div class="rule-item-text">
                     <h4>Instant Score Analytics</h4>
                     <p>You will get a comprehensive performance report card and analytics breakdown immediately upon completion.</p>
                 </div>
             </div>
-
+            
             <div class="rule-item">
-                <i class="fas fa-ban" style="color: #2af598;"></i>
+                <i class="fas fa-ban"></i>
                 <div class="rule-item-text">
                     <h4>Input Restrictions</h4>
                     <p>Do not refresh the page or use browser back/forward buttons during the active session.</p>
                 </div>
             </div>
-
-            <div class="practice-standing-box">
-                <div class="practice-standing-title">
-                    <i class="fas fa-exclamation-circle" style="color: #fbcd0b;"></i> Practice Run Standing
+            
+            <div id="retake-disclaimer-box" style="display: none; margin-top: 25px; padding: 15px; border-radius: 12px; background: rgba(251, 205, 11, 0.08); border: 1px solid rgba(251, 205, 11, 0.2); color: #fbcd0b; font-size: 0.8rem; line-height: 1.4; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; margin-bottom: 5px;">
+                    <i class="fas fa-exclamation-circle"></i> Practice Run Standing
                 </div>
-                <p class="practice-standing-desc">This is a practice retake session. Please note that only your 1st attempt score counts towards the global leaderboard rank. Retaking tests will not affect your ranking profile.</p>
+                This is a practice retake session. Please note that only your 1st attempt score counts towards the global leaderboard rank. Retaking tests will not affect your ranking profile.
             </div>
+
         </div>
 
         <!-- Right: confirmation check sheet -->
@@ -176,55 +183,87 @@
             <div class="modal-close-trigger" onclick="closeConfirmModal()"><i class="fas fa-times"></i></div>
             
             <div class="modal-card-header">
-                <i class="fas fa-sticky-note" style="color: #fbcd0b;"></i>
+                <i class="fas fa-file-invoice"></i>
                 <h3>Mock Test Ready</h3>
                 <p>Double check test parameters before launching session.</p>
             </div>
 
-            <div class="modal-details">
-                <div class="detail-row">
-                    <span class="detail-label">Test Mode</span>
-                    <span class="detail-value" id="cfm-mode">-</span>
+            <div class="modal-details-list">
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Test Mode</span>
+                    <span class="m-val" id="cfm-mode">-</span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Subject</span>
-                    <span class="detail-value" id="cfm-subject">-</span>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Subject</span>
+                    <span class="m-val" id="cfm-subject">-</span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Topic</span>
-                    <span class="detail-value" id="cfm-topic">-</span>
+                <div class="modal-detail-row" id="cfm-row-topic">
+                    <span class="m-lbl">Topic</span>
+                    <span class="m-val" id="cfm-topic">-</span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Module</span>
-                    <span class="detail-value" id="cfm-module">-</span>
+                <div class="modal-detail-row" id="cfm-row-module">
+                    <span class="m-lbl">Module</span>
+                    <span class="m-val" id="cfm-module">-</span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Mock Paper</span>
-                    <span class="detail-value" id="cfm-paper">-</span>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Mock Paper</span>
+                    <span class="m-val" id="cfm-paper">-</span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Total Questions</span>
-                    <span class="detail-value" id="cfm-questions">-</span>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Total Questions</span>
+                    <span class="m-val" id="cfm-questions">-</span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Duration</span>
-                    <span class="detail-value" id="cfm-duration">-</span>
+                <div class="modal-detail-row">
+                    <span class="m-lbl">Duration</span>
+                    <span class="m-val" id="cfm-duration">-</span>
                 </div>
             </div>
 
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-cancel" onclick="closeConfirmModal()">Go Back</button>
-                <button class="modal-btn modal-btn-confirm" id="modalConfirmStartBtn" onclick="launchTestSession()">Begin Test</button>
+            <div class="modal-action-row">
+                <button class="modal-btn modal-btn-back" onclick="closeConfirmModal()">Go Back</button>
+                <button class="modal-btn modal-btn-start" id="modalConfirmStartBtn" onclick="launchTestSession()">Begin Test</button>
             </div>
+
         </div>
     </div>
 </div>
 {% endblock %}
 
+
 {% block extra_js %}
-{{ all_tests_json|json_script:"all-tests-catalog-data" }}
 <script>
-const testsCatalog = JSON.parse(document.getElementById('all-tests-catalog-data').textContent);
+const testsCatalog = [
+    { id: 't1', name: 'Number Systems — Blitz 01', mode: 'Module Blitz', subject: 'Aptitude Mastery', topic: 'Quantitative Aptitude', module: 'Number Systems', difficulty: 'Easy', dClass: 'diff-easy', qCount: '10 MCQs', duration: '15 Mins', xp: '+100 XP' },
+    { id: 't2', name: 'Number Systems — Blitz 02', mode: 'Module Blitz', subject: 'Aptitude Mastery', topic: 'Quantitative Aptitude', module: 'Number Systems', difficulty: 'Medium', dClass: 'diff-medium', qCount: '10 MCQs', duration: '15 Mins', xp: '+250 XP' },
+    { id: 't3', name: 'Percentages — Speed Run', mode: 'Module Blitz', subject: 'Aptitude Mastery', topic: 'Quantitative Aptitude', module: 'Percentages', difficulty: 'Easy', dClass: 'diff-easy', qCount: '10 MCQs', duration: '15 Mins', xp: '+100 XP' },
+    { id: 't4', name: 'Time & Work — Sprint', mode: 'Module Blitz', subject: 'Aptitude Mastery', topic: 'Quantitative Aptitude', module: 'Time & Work', difficulty: 'Hard', dClass: 'diff-hard', qCount: '10 MCQs', duration: '15 Mins', xp: '+500 XP' },
+    { id: 't5', name: 'Blood Relations — Puzzle Blitz', mode: 'Module Blitz', subject: 'Logical Reasoning', topic: 'Analytical Reasoning', module: 'Blood Relations', difficulty: 'Medium', dClass: 'diff-medium', qCount: '10 MCQs', duration: '15 Mins', xp: '+250 XP' },
+    { id: 't6', name: 'Syllogisms — Logic Blitz', mode: 'Module Blitz', subject: 'Logical Reasoning', topic: 'Verbal Reasoning', module: 'Syllogisms', difficulty: 'Hard', dClass: 'diff-hard', qCount: '10 MCQs', duration: '15 Mins', xp: '+500 XP' },
+    { id: 't7', name: 'Pie Charts — DI Blitz', mode: 'Module Blitz', subject: 'Aptitude Mastery', topic: 'Data Interpretation', module: 'Pie Charts', difficulty: 'Easy', dClass: 'diff-easy', qCount: '10 MCQs', duration: '15 Mins', xp: '+100 XP' },
+    { id: 't8_b', name: 'Profit & Loss — Formula Blitz', mode: 'Module Blitz', subject: 'Aptitude Mastery', topic: 'Quantitative Aptitude', module: 'Profit & Loss', difficulty: 'Medium', dClass: 'diff-medium', qCount: '10 MCQs', duration: '15 Mins', xp: '+200 XP' },
+    { id: 't9_b', name: 'Seating Arrangement — Line Drill', mode: 'Module Blitz', subject: 'Aptitude Mastery', topic: 'Logical Reasoning', module: 'Seating Arrangement', difficulty: 'Hard', dClass: 'diff-hard', qCount: '10 MCQs', duration: '15 Mins', xp: '+450 XP' },
+    { id: 't10_b', name: 'Synonyms & Antonyms — Vocabulary Drill', mode: 'Module Blitz', subject: 'English Proficiency', topic: 'Vocabulary Building', module: 'Synonyms & Antonyms', difficulty: 'Easy', dClass: 'diff-easy', qCount: '10 MCQs', duration: '15 Mins', xp: '+150 XP' },
+    { id: 't11_b', name: 'Permutations & Combinations — Drill', mode: 'Module Blitz', subject: 'Quantitative Aptitude', topic: 'Modern Math', module: 'Permutations & Combinations', difficulty: 'Hard', dClass: 'diff-hard', qCount: '10 MCQs', duration: '15 Mins', xp: '+500 XP' },
+    { id: 't12_b', name: 'Coding-Decoding — Logic Sprint', mode: 'Module Blitz', subject: 'Logical Reasoning', topic: 'Verbal Reasoning', module: 'Coding-Decoding', difficulty: 'Medium', dClass: 'diff-medium', qCount: '10 MCQs', duration: '15 Mins', xp: '+250 XP' },
+
+    { id: 't8', name: 'Quantitative Aptitude — Master 01', mode: 'Topic Master', subject: 'Aptitude Mastery', topic: 'Quantitative Aptitude', module: 'All Modules', difficulty: 'Medium', dClass: 'diff-medium', qCount: '25 MCQs', duration: '30 Mins', xp: '+350 XP' },
+    { id: 't9', name: 'Logical Reasoning — Master 01', mode: 'Topic Master', subject: 'Logical Reasoning', topic: 'Analytical Reasoning', module: 'All Modules', difficulty: 'Hard', dClass: 'diff-hard', qCount: '25 MCQs', duration: '30 Mins', xp: '+500 XP' },
+    { id: 't10', name: 'Grammar Essentials — Topic Test', mode: 'Topic Master', subject: 'English Proficiency', topic: 'Grammar Essentials', module: 'All Modules', difficulty: 'Easy', dClass: 'diff-easy', qCount: '25 MCQs', duration: '30 Mins', xp: '+200 XP' },
+    { id: 't11', name: 'Arithmetic Composite — Master', mode: 'Topic Master', subject: 'Quantitative Aptitude', topic: 'Arithmetic', module: 'All Modules', difficulty: 'Medium', dClass: 'diff-medium', qCount: '25 MCQs', duration: '30 Mins', xp: '+300 XP' },
+    { id: 't12', name: 'Algebra & Logarithms — Master', mode: 'Topic Master', subject: 'Quantitative Aptitude', topic: 'Algebra', module: 'All Modules', difficulty: 'Hard', dClass: 'diff-hard', qCount: '25 MCQs', duration: '30 Mins', xp: '+550 XP' },
+    { id: 't13_m', name: 'Data Interpretation — Charts Master', mode: 'Topic Master', subject: 'Aptitude Mastery', topic: 'Data Interpretation', module: 'All Modules', difficulty: 'Hard', dClass: 'diff-hard', qCount: '25 MCQs', duration: '30 Mins', xp: '+600 XP' },
+    { id: 't14_m', name: 'Reading Comprehension — Passage Master', mode: 'Topic Master', subject: 'English Proficiency', topic: 'Reading Comprehension', module: 'All Modules', difficulty: 'Medium', dClass: 'diff-medium', qCount: '25 MCQs', duration: '30 Mins', xp: '+400 XP' },
+    { id: 't15_m', name: 'Non-Verbal Reasoning — Visual Master', mode: 'Topic Master', subject: 'Logical Reasoning', topic: 'Non-Verbal Reasoning', module: 'All Modules', difficulty: 'Easy', dClass: 'diff-easy', qCount: '25 MCQs', duration: '30 Mins', xp: '+250 XP' },
+
+    { id: 't13', name: 'Full Aptitude — Grand Marathon 01', mode: 'Subject Marathon', subject: 'Aptitude Mastery', topic: 'All Topics', module: 'All Modules', difficulty: 'Hard', dClass: 'diff-hard', qCount: '50 MCQs', duration: '60 Mins', xp: '+1000 XP' },
+    { id: 't14', name: 'Logical Reasoning — Full Marathon', mode: 'Subject Marathon', subject: 'Logical Reasoning', topic: 'All Topics', module: 'All Modules', difficulty: 'Medium', dClass: 'diff-medium', qCount: '50 MCQs', duration: '60 Mins', xp: '+800 XP' },
+    { id: 't15', name: 'Verbal Ability — Subject Marathon', mode: 'Subject Marathon', subject: 'English Proficiency', topic: 'All Topics', module: 'All Modules', difficulty: 'Medium', dClass: 'diff-medium', qCount: '50 MCQs', duration: '60 Mins', xp: '+750 XP' },
+    { id: 't16', name: 'Quantitative Aptitude — Complete Marathon', mode: 'Subject Marathon', subject: 'Quantitative Aptitude', topic: 'All Topics', module: 'All Modules', difficulty: 'Hard', dClass: 'diff-hard', qCount: '50 MCQs', duration: '60 Mins', xp: '+1200 XP' },
+    { id: 't17_s', name: 'Placement Readiness — All-In-One Marathon', mode: 'Subject Marathon', subject: 'Aptitude Mastery', topic: 'All Topics', module: 'All Modules', difficulty: 'Hard', dClass: 'diff-hard', qCount: '60 MCQs', duration: '90 Mins', xp: '+1500 XP' },
+    { id: 't18_s', 'name': 'CS & Logical Fundamentals — Marathon', mode: 'Subject Marathon', subject: 'Logical Reasoning', topic: 'All Topics', module: 'All Modules', difficulty: 'Medium', dClass: 'diff-medium', qCount: '50 MCQs', duration: '60 Mins', xp: '+850 XP' }
+];
+
+
 let activeMode = 'all';
 let activeSelectedTest = null;
 
@@ -242,22 +281,48 @@ function updateCounters() {
   document.getElementById('countMarathon').textContent = testsCatalog.filter(t => t.mode === 'Subject Marathon').length;
 }
 
+function getCombinedHistory() {
+  let localHistory = [];
+  try {
+    localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history') || '[]');
+  } catch (e) { console.error(e); }
+
+  const staticDbHistory = [
+    { test_name: 'Number Systems — Blitz 01', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 01 - Quant Essentials', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 02 - Time & Work Sprint', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 03 - Number Systems Speedrun', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 02 - Logical Reasoning Boost', mode: 'Topic Master' }
+  ];
+  return [...localHistory, ...staticDbHistory];
+}
+
+function isTestAttempted(testObj, history) {
+  return history.some(item => {
+    return item.test_name && (item.test_name === testObj.name || item.test_name.includes(testObj.name) || testObj.name.includes(item.test_name));
+  });
+}
+
 function applyFilters() {
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
   const subjectVal = document.getElementById('subjectFilter').value;
   const diffVal = document.getElementById('diffFilter').value;
+  const attemptVal = document.getElementById('attemptFilter').value;
+  const history = getCombinedHistory();
 
   const filtered = testsCatalog.filter(t => {
+    const attempted = isTestAttempted(t, history);
     const matchMode = activeMode === 'all' || t.mode === activeMode;
     const matchSubject = subjectVal === 'all' || t.subject === subjectVal;
     const matchDiff = diffVal === 'all' || t.difficulty === diffVal;
+    const matchAttempt = attemptVal === 'all' || (attemptVal === 'attempted' && attempted) || (attemptVal === 'unattempted' && !attempted);
     const matchQuery = !query || 
       t.name.toLowerCase().includes(query) || 
       t.subject.toLowerCase().includes(query) || 
       t.topic.toLowerCase().includes(query) || 
       t.module.toLowerCase().includes(query);
     
-    return matchMode && matchSubject && matchDiff && matchQuery;
+    return matchMode && matchSubject && matchDiff && matchAttempt && matchQuery;
   });
 
   renderGrid(filtered);
@@ -270,33 +335,70 @@ function renderGrid(items) {
     return;
   }
 
-  container.innerHTML = items.map(t => `
-    <div class="test-card">
-      <div>
-        <div class="t-card-top">
-          <span class="t-mode-tag">${t.mode}</span>
-          <span class="difficulty-badge ${t.dClass}">${t.difficulty}</span>
+  const history = getCombinedHistory();
+
+  container.innerHTML = items.map(t => {
+    const attempted = isTestAttempted(t, history);
+    const btnLabel = attempted ? "Re-take Test" : "Select Test";
+    const btnStyle = attempted 
+      ? "background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff;"
+      : "background: var(--accent); color: #ffffff;";
+
+    return `
+      <div class="test-card">
+        <div>
+          <div class="t-card-top">
+            <span class="t-mode-tag">${t.mode}</span>
+            <span class="difficulty-badge ${t.dClass}">${t.difficulty}</span>
+          </div>
+          <div class="t-card-title">${t.name}</div>
+          <div class="t-card-meta">${t.subject} · ${t.topic}</div>
         </div>
-        <div class="t-card-title">${t.name}</div>
-        <div class="t-card-meta">${t.subject} · ${t.topic}</div>
-      </div>
 
-      <div class="t-card-info">
-        <div class="t-info-row"><span>Module</span><b>${t.module}</b></div>
-        <div class="t-info-row"><span>Questions</span><b>${t.qCount}</b></div>
-        <div class="t-info-row"><span>Duration</span><b>${t.duration}</b></div>
-        <div class="t-info-row"><span>Reward</span><b style="color:var(--success);">${t.xp}</b></div>
-      </div>
+        <div class="t-card-info">
+          <div class="t-info-row"><span>Module</span><b>${t.module}</b></div>
+          <div class="t-info-row"><span>Questions</span><b>${t.qCount}</b></div>
+          <div class="t-info-row"><span>Duration</span><b>${t.duration}</b></div>
+          <div class="t-info-row"><span>Reward</span><b style="color:var(--success);">${t.xp}</b></div>
+        </div>
 
-      <button class="t-start-btn" onclick="openTestModal('${t.id}')">Start Assessment</button>
-    </div>
-  `).join('');
+        <button class="t-start-btn" style="${btnStyle}" onclick="openTestModal('${t.id}')">${btnLabel}</button>
+      </div>
+    `;
+  }).join('');
 }
+
 
 function openTestModal(testId) {
   const t = testsCatalog.find(x => x.id === testId);
   if (!t) return;
   activeSelectedTest = t;
+
+  // Retrieve user attempt history from localStorage & static attempts DB
+  let localHistory = [];
+  try {
+    localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history') || '[]');
+  } catch (e) { console.error(e); }
+
+  const staticDbHistory = [
+    { test_name: 'Number Systems — Blitz 01', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 01 - Quant Essentials', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 02 - Time & Work Sprint', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 03 - Number Systems Speedrun', mode: 'Module Blitz' },
+    { test_name: 'Mock Test 02 - Logical Reasoning Boost', mode: 'Topic Master' }
+  ];
+
+  const combinedHistory = [...localHistory, ...staticDbHistory];
+  const isRetake = combinedHistory.some(item => {
+    return item.test_name && (item.test_name === t.name || item.test_name.includes(t.name) || t.name.includes(item.test_name));
+  });
+
+  // Toggle disclaimer box based on retake condition
+  const disclaimerBox = document.getElementById("retake-disclaimer-box");
+  if (disclaimerBox) {
+    disclaimerBox.style.display = isRetake ? "block" : "none";
+  }
+
   document.getElementById('cfm-mode').textContent = t.mode;
   document.getElementById('cfm-subject').textContent = t.subject;
   document.getElementById('cfm-topic').textContent = t.topic;
@@ -307,6 +409,7 @@ function openTestModal(testId) {
   
   document.getElementById('confirmModal').classList.add('active');
 }
+
 
 function closeConfirmModal() {
   document.getElementById('confirmModal').classList.remove('active');

@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Question-wise Full Log & Detailed Analysis - PrepVerse{% endblock %}
+
+{% block content %}
+{% include 'partials/navbar.html' %}
+
+<main id="main-content" style="padding-top: 100px; padding-bottom: 80px; min-height: 100vh; background: #070412; color: #ffffff;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        
+        <!-- Header & Breadcrumbs -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <a href="{% url 'mock_history' %}" style="color: #38bdf8; text-decoration: none; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px;">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Test Performance History
+                </a>
+                <h1 id="fullLogTitle" style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 800; margin: 0;">Detailed Question Solutions</h1>
+                <p id="fullLogSub" style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-top: 5px;">Comprehensive breakdown of every question, options, answers, explanations & peer metrics.</p>
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button onclick="window.print()" style="padding: 10px 18px; border-radius: 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #fff; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-print"></i> Print / Save Report
+                </button>
+                <a href="{% url 'mock_history' %}" style="padding: 10px 20px; border-radius: 12px; background: #2af598; color: #08080b; text-decoration: none; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(42, 245, 152, 0.3);">
+                    <i class="fa-solid fa-check"></i> Done Reviewing
+                </a>
+            </div>
+        </div>
+
+        <!-- Filter Controls Bar -->
+        <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 16px;">
+            <span style="font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-right: 10px;">Filter Questions:</span>
+            <button class="q-filter-btn active" onclick="filterQuestions('all', this)" style="padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; font-weight: 700; font-size: 0.8rem; cursor: pointer;">All Questions (<span id="countAll">0</span>)</button>
+            <button class="q-filter-btn" onclick="filterQuestions('correct', this)" style="padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(42, 245, 152, 0.25); background: rgba(42, 245, 152, 0.08); color: #2af598; font-weight: 700; font-size: 0.8rem; cursor: pointer;">Correct Only (<span id="countCorrect">0</span>)</button>
+            <button class="q-filter-btn" onclick="filterQuestions('wrong', this)" style="padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(251, 113, 133, 0.25); background: rgba(251, 113, 133, 0.08); color: #fb7185; font-weight: 700; font-size: 0.8rem; cursor: pointer;">Incorrect Only (<span id="countWrong">0</span>)</button>
+            <button class="q-filter-btn" onclick="filterQuestions('skip', this)" style="padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: #cbd5e1; font-weight: 700; font-size: 0.8rem; cursor: pointer;">Skipped (<span id="countSkip">0</span>)</button>
+        </div>
+
+        <!-- Questions Full Expanded List -->
+        <div id="fullQuestionsList" style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Populated by JS -->
+        </div>
+
+    </div>
+</main>
+
+<style>
+.full-q-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 24px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.full-q-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.full-q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+.full-q-status {
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.full-q-status.correct { color: #2af598; background: rgba(42, 245, 152, 0.12); border: 1px solid rgba(42, 245, 152, 0.3); }
+.full-q-status.wrong { color: #fb7185; background: rgba(251, 113, 133, 0.12); border: 1px solid rgba(251, 113, 133, 0.3); }
+.full-q-status.skip { color: #cbd5e1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); }
+
+.full-q-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.55;
+    margin-bottom: 20px;
+}
+
+.full-options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+}
+@media (max-width: 640px) {
+    .full-options-grid { grid-template-columns: 1fr; }
+}
+
+.full-opt-pill {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+.full-opt-pill.opt-correct {
+    background: rgba(42, 245, 152, 0.1) !important;
+    border-color: rgba(42, 245, 152, 0.45) !important;
+    color: #2af598 !important;
+    font-weight: 800;
+}
+.full-opt-pill.opt-user-wrong {
+    background: rgba(251, 113, 133, 0.1) !important;
+    border-color: rgba(251, 113, 133, 0.45) !important;
+    color: #fb7185 !important;
+    font-weight: 800;
+}
+
+.full-stats-row {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+}
+.full-stat-card {
+    flex: 1;
+    min-width: 180px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.full-solution-card {
+    background: rgba(251, 205, 11, 0.06);
+    border: 1px solid rgba(251, 205, 11, 0.3);
+    border-radius: 16px;
+    padding: 18px 22px;
+}
+</style>
+
+<script>
+const allHistoryData = [
+  {id:1, testKey:'number-systems-blitz', attemptNumber:1, mode:'Module Blitz', title:'Number Systems — Blitz', date:'10 Jul 2026',
+    questions:[
+      {
+        q:'What is the Highest Common Factor (HCF) of 24 and 36?',
+        options:['6', '12', '18', '24'],
+        userAns:'6',
+        correctAns:'12',
+        status:'wrong',
+        timeTaken:'45s',
+        correctPct:78,
+        wrongPct:22,
+        solution:'Factors of 24 = {1, 2, 3, 4, 6, 8, 12, 24}. Factors of 36 = {1, 2, 3, 4, 6, 9, 12, 18, 36}. The highest common factor shared between both numbers is 12.'
+      },
+      {
+        q:'Find the next prime number after 47.',
+        options:['49', '51', '53', '57'],
+        userAns:'53',
+        correctAns:'53',
+        status:'correct',
+        timeTaken:'28s',
+        correctPct:84,
+        wrongPct:16,
+        solution:'49 = 7×7 (composite), 51 = 3×17 (composite). 53 has no divisors other than 1 and itself, making 53 the next prime after 47.'
+      },
+      {
+        q:'Calculate the Least Common Multiple (LCM) of 12, 18 and 30.',
+        options:['120', '150', '180', '360'],
+        userAns:'120',
+        correctAns:'180',
+        status:'wrong',
+        timeTaken:'62s',
+        correctPct:62,
+        wrongPct:38,
+        solution:'Prime factorizations: 12 = 2² × 3, 18 = 2 × 3², 30 = 2 × 3 × 5. Highest powers: LCM = 2² × 3² × 5 = 4 × 9 × 5 = 180.'
+      }
+    ]},
+  {id:3, testKey:'number-systems-blitz', attemptNumber:3, mode:'Module Blitz', title:'Number Systems — Blitz', date:'28 Jul 2026',
+    questions:[
+      {
+        q:'If x + 1/x = 3, find the value of x² + 1/x².',
+        options:['7', '9', '11', '14'],
+        userAns:'7',
+        correctAns:'7',
+        status:'correct',
+        timeTaken:'32s',
+        correctPct:72,
+        wrongPct:28,
+        solution:'Square both sides: (x + 1/x)² = 3² ⇒ x² + 1/x² + 2(x)(1/x) = 9 ⇒ x² + 1/x² = 9 - 2 = 7.'
+      },
+      {
+        q:'Solve the inequality: 2x - 5 > 3 and x < 10.',
+        options:['4 < x < 10', 'x > 4', 'x < 10', '3 < x < 8'],
+        userAns:'x > 4',
+        correctAns:'4 < x < 10',
+        status:'wrong',
+        timeTaken:'58s',
+        correctPct:59,
+        wrongPct:41,
+        solution:'2x - 5 > 3 ⇒ 2x > 8 ⇒ x > 4. Combined with x < 10, the range is 4 < x < 10.'
+      },
+      {
+        q:'What is the HCF of 24 and 36?',
+        options:['6', '12', '18', '24'],
+        userAns:'12',
+        correctAns:'12',
+        status:'correct',
+        timeTaken:'15s',
+        correctPct:78,
+        wrongPct:22,
+        solution:'HCF(24, 36) = 12.'
+      },
+      {
+        q:'Simplify: (a+b)² - (a-b)²',
+        options:['2a² + 2b²', '4ab', '2ab', 'a² - b²'],
+        userAns:null,
+        correctAns:'4ab',
+        status:'skip',
+        timeTaken:'0s',
+        correctPct:81,
+        wrongPct:19,
+        solution:'(a² + 2ab + b²) - (a² - 2ab + b²) = a² + 2ab + b² - a² + 2ab - b² = 4ab.'
+      },
+      {
+        q:'Find the next prime after 47.',
+        options:['49', '51', '53', '57'],
+        userAns:'53',
+        correctAns:'53',
+        status:'correct',
+        timeTaken:'12s',
+        correctPct:84,
+        wrongPct:16,
+        solution:'The next prime after 47 is 53.'
+      }
+    ]}
+];
+
+let currentQuestions = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const testId = Number(urlParams.get('id')) || 3;
+    
+    const testData = allHistoryData.find(t => t.id === testId) || allHistoryData[1];
+    document.getElementById('fullLogTitle').textContent = `${testData.title} — Attempt ${testData.attemptNumber || 1} Solutions`;
+    document.getElementById('fullLogSub').textContent = `Full diagnostic breakdown of all ${testData.questions.length} questions attempted on ${testData.date}.`;
+
+    currentQuestions = testData.questions;
+
+    // Set Filter Counts
+    document.getElementById('countAll').textContent = currentQuestions.length;
+    document.getElementById('countCorrect').textContent = currentQuestions.filter(q => q.status === 'correct').length;
+    document.getElementById('countWrong').textContent = currentQuestions.filter(q => q.status === 'wrong').length;
+    document.getElementById('countSkip').textContent = currentQuestions.filter(q => q.status === 'skip').length;
+
+    renderQuestionsList(currentQuestions);
+});
+
+function renderQuestionsList(questions) {
+    const container = document.getElementById('fullQuestionsList');
+    if (!questions || !questions.length) {
+        container.innerHTML = '<div style="padding: 40px; text-align: center; color: rgba(255,255,255,0.5);">No questions found matching the selected filter.</div>';
+        return;
+    }
+
+    container.innerHTML = questions.map((q, i) => `
+        <div class="full-q-card" id="question_card_${i}">
+            <div class="full-q-header">
+                <span class="full-q-num">Question #${i+1}</span>
+                <span class="full-q-status ${q.status}">
+                    ${q.status === 'correct' ? '<i class="fa-solid fa-circle-check"></i> Correct' : q.status === 'wrong' ? '<i class="fa-solid fa-circle-xmark"></i> Incorrect' : '<i class="fa-solid fa-forward"></i> Skipped'}
+                </span>
+            </div>
+
+            <div class="full-q-title">${q.q}</div>
+
+            <div class="full-options-grid">
+                ${q.options ? q.options.map(opt => {
+                    let isUser = q.userAns === opt;
+                    let isCorrect = q.correctAns === opt;
+                    let cls = '';
+                    let badge = '';
+                    if (isCorrect) {
+                        cls = 'opt-correct';
+                        badge = '<span class="opt-badge correct-badge"><i class="fa-solid fa-check"></i> Correct Answer</span>';
+                    } else if (isUser && !isCorrect) {
+                        cls = 'opt-user-wrong';
+                        badge = '<span class="opt-badge wrong-badge"><i class="fa-solid fa-xmark"></i> Your Selection</span>';
+                    }
+                    return `
+                        <div class="full-opt-pill ${cls}">
+                            <div>${opt}</div>
+                            ${badge}
+                        </div>
+                    `;
+                }).join('') : ''}
+            </div>
+
+            <!-- Stats Row -->
+            <div class="full-stats-row">
+                <div class="full-stat-card" style="background: rgba(42, 245, 152, 0.08); border: 1px solid rgba(42, 245, 152, 0.25); color: #2af598;">
+                    <i class="fa-solid fa-user-check" style="font-size: 1.1rem;"></i>
+                    <div><b>${q.correctPct || 70}%</b> of students answered correctly</div>
+                </div>
+                <div class="full-stat-card" style="background: rgba(251, 113, 133, 0.08); border: 1px solid rgba(251, 113, 133, 0.25); color: #fb7185;">
+                    <i class="fa-solid fa-user-xmark" style="font-size: 1.1rem;"></i>
+                    <div><b>${q.wrongPct || 30}%</b> answered incorrectly</div>
+                </div>
+                <div class="full-stat-card" style="background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); color: #38bdf8;">
+                    <i class="fa-solid fa-clock" style="font-size: 1.1rem;"></i>
+                    <div>Average Time Spent: <b>${q.timeTaken || '45s'}</b></div>
+                </div>
+            </div>
+
+            <!-- Solution Box -->
+            <div class="full-solution-card">
+                <div style="font-size: 0.9rem; font-weight: 800; color: #fbcd0b; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-lightbulb"></i> Comprehensive Solution & Explanation
+                </div>
+                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.88); line-height: 1.6; margin: 0;">
+                    ${q.solution || 'No detailed solution available for this question.'}
+                </p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterQuestions(type, btn) {
+    document.querySelectorAll('.q-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    if (type === 'all') {
+        renderQuestionsList(currentQuestions);
+    } else {
+        renderQuestionsList(currentQuestions.filter(q => q.status === type));
+    }
+}
+</script>
+{% endblock %}
