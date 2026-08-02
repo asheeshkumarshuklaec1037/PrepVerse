@@ -31,15 +31,50 @@
 
   body { background: var(--bg) !important; color: var(--text-1) !important; font-family: var(--f-sans) !important; }
 
+  /* COURSES-PAGE MATCHING STAGGERED FADE-IN ANIMATIONS */
   .dashboard-container {
     max-width: 1320px;
     margin: 0 auto;
     padding: 24px 20px 80px;
-    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .topbar {
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.15s;
+  }
+
+  .bento {
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.3s;
+  }
+
+  .sec-head {
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.45s;
+  }
+
+  .weak-list {
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.55s;
+  }
+
+  .analytics-grid {
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.65s;
+  }
+
+  .util-grid {
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.75s;
+  }
+
+  .practice-grid {
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.85s;
   }
 
   @keyframes pageFadeIn {
-    from { opacity: 0; transform: translateY(15px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
@@ -441,8 +476,8 @@
 
 <div class="dashboard-container relative z-10">
 
-    <!-- Profile Info Card Section (High Transparency Glass Card showing background photo) -->
-    <div class="profile-info-static-card p-6 mb-8" style="background: rgba(18, 19, 23, 0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); transform: none !important; transition: none !important;">
+    <!-- Profile Info Card Section (Crystal High-Transparency Glass Card showing background photo clearly) -->
+    <div class="profile-info-static-card p-6 mb-8" style="background: rgba(18, 19, 23, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); transform: none !important; transition: none !important;">
         <div class="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
             <!-- Vertically Centered Profile Avatar -->
             <div class="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-[#0B1020] overflow-hidden bg-gradient-to-tr from-[#8b5cf6] to-[#3b82f6] shadow-xl flex-shrink-0 relative z-10 my-auto">
@@ -467,12 +502,9 @@
         </div>
     </div>
 
-
-
-  <!-- ============ HERO BENTO ============ -->
+  <!-- ============ BENTO HERO ============ -->
   <div class="bento">
-
-    <div class="surface continue lift">
+    <div class="surface continue lift reveal reveal-delay-2">
       <div class="continue-glow">
         <div class="path-crumb">
           <span>Courses</span><span class="sep">/</span><span>DBMS</span><span class="sep">/</span><span>Normalization</span><span class="sep">/</span><span class="cur">practice-set-3</span>
@@ -510,7 +542,7 @@
       </div>
     </div>
 
-    <div class="surface terminal lift">
+    <div class="surface terminal lift reveal reveal-delay-3">
       <div class="term-head">
         <span class="term-dot" style="background:var(--danger)"></span>
         <span class="term-dot" style="background:var(--warning)"></span>
@@ -538,13 +570,13 @@
   </div>
 
   <!-- ============ FOCUS ZONE ============ -->
-  <div class="sec-head">
+  <div class="sec-head reveal">
     <div><h3>Focus zone</h3><div class="sec-sub">Topics where you're losing the most marks — ranked by impact</div></div>
     <a href="{% url 'courses' %}" class="sec-link">View full breakdown <i class="fa-solid fa-arrow-right"></i></a>
   </div>
   <div class="weak-list">
     {% for topic in focus_topics %}
-    <div class="surface lift weak-row">
+    <div class="surface lift weak-row reveal reveal-delay-{{ forloop.counter }}">
       <span class="weak-rank">{{ topic.rank }}</span>
       <div class="weak-info"><h4>{{ topic.sub }}</h4><p>{{ topic.title }} · {{ topic.attempted }} questions attempted</p></div>
       <span class="weak-acc">{{ topic.acc }}</span>
@@ -555,7 +587,7 @@
 
   <!-- ============ ANALYTICS ============ -->
   <div class="analytics-grid">
-    <div class="surface chart-card lift">
+    <div class="surface chart-card lift reveal reveal-delay-1">
       <div class="sec-head" style="margin:0 0 4px;">
         <div>
           <h3 style="font-size:.94rem;">Mock test performance</h3>
@@ -592,7 +624,7 @@
       </div>
     </div>
 
-    <div class="surface heat-card lift">
+    <div class="surface heat-card lift reveal reveal-delay-2">
       <div class="sec-head" style="margin:0 0 4px;">
         <div><h3 style="font-size:.94rem;">Consistency</h3><div class="sec-sub">98 days of activity</div></div>
       </div>
@@ -709,14 +741,14 @@
 
   <!-- ============ UTILITY RAIL ============ -->
   <div class="util-grid">
-    <div class="surface util-card lift">
+    <div class="surface util-card lift reveal reveal-delay-1">
       <h4><span class="util-ic" style="background:var(--accent-soft);color:var(--accent-2)"><i class="fa-regular fa-calendar"></i></span>Upcoming</h4>
       {% for event in upcoming_events %}
       <div class="sched-item"><div class="sched-date"><div class="d">{{ event.day }}</div><div class="m">{{ event.month }}</div></div><div class="sched-info"><p>{{ event.title }}</p><span>{{ event.info }}</span></div></div>
       {% endfor %}
     </div>
 
-    <div class="surface util-card lift">
+    <div class="surface util-card lift reveal reveal-delay-2">
       <h4><span class="util-ic" style="background:var(--success-soft);color:var(--success)"><i class="fa-solid fa-layer-group"></i></span>Topic mastery</h4>
       <div id="masteryList">
         <div style="margin-bottom:12px;">
@@ -754,7 +786,7 @@
       </div>
     </div>
 
-    <div class="surface util-card lift" onclick="location.href='{% url 'leaderboard' %}'" style="cursor:pointer;">
+    <div class="surface util-card lift reveal reveal-delay-3" onclick="location.href='{% url 'leaderboard' %}'" style="cursor:pointer;">
       <h4><span class="util-ic" style="background:var(--warning-soft);color:var(--warning)"><i class="fa-solid fa-ranking-star"></i></span>Leaderboard</h4>
       <div class="lb-row"><span class="lb-rank gold">1</span><div class="lb-avatar"></div><span class="lb-name">Ananya S.</span><span class="lb-xp">4,820 XP</span></div>
       <div class="lb-row"><span class="lb-rank">2</span><div class="lb-avatar"></div><span class="lb-name">Kabir M.</span><span class="lb-xp">4,510 XP</span></div>
@@ -764,10 +796,10 @@
   </div>
 
   <!-- ============ PRACTICE LAUNCHER ============ -->
-  <div class="sec-head">
+  <div class="sec-head reveal">
     <div><h3>Practice by subject</h3><div class="sec-sub">Jump straight into any subject's topic list</div></div>
   </div>
-  <div class="practice-grid" id="practiceGrid"></div>
+  <div class="practice-grid reveal reveal-delay-1" id="practiceGrid"></div>
 
 
 
@@ -1904,6 +1936,23 @@
         // Initial setup run
         if (typeof updateQuests === "function") updateQuests();
         if (typeof updateAchievementsUI === "function") updateAchievementsUI();
+
+        // Scroll Reveal Intersection Observer (PrepVerse Standard)
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+        });
     });
 </script>
 <script src="{% static 'js/dashboard.js' %}"></script>
