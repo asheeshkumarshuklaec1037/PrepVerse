@@ -106,12 +106,17 @@
         display: grid;
         grid-template-columns: 1fr 320px;
         gap: 30px;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
+        opacity: 1;
+        transform: none;
     }
-    @keyframes pageFadeIn {
-        to { opacity: 1; transform: translateY(0); }
+
+    /* Disable card hover animations and purple glow specifically for Course Detail Page */
+    .glass-card:hover,
+    .stat-card:hover {
+        transform: none !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35) !important;
+        background: rgba(18, 19, 23, 0.75) !important;
     }
 
     /* Glass Card */
@@ -129,6 +134,25 @@
 
     .description { font-size: 1rem; line-height: 1.6; opacity: 0.7; margin-bottom: 30px; }
 
+    .amazon-book-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 14px 16px;
+        text-decoration: none;
+        color: #fff;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .amazon-book-item:hover {
+        background: rgba(59, 130, 246, 0.08);
+        border-color: rgba(96, 165, 250, 0.4);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+    }
+
     /* Curriculum Grid */
     .curriculum { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .topic-link {
@@ -141,18 +165,18 @@
         text-decoration: none;
         color: #fff;
         border: 1px solid rgba(255,255,255,0.05);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .topic-link:hover {
-        background: rgba(42, 245, 152, 0.05);
-        border-color: rgba(42, 245, 152, 0.3);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        background: rgba(42, 245, 152, 0.08);
+        border-color: rgba(42, 245, 152, 0.4);
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 12px 30px rgba(42, 245, 152, 0.2);
     }
     .topic-info h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 3px; }
     .topic-info p { font-size: 0.8rem; opacity: 0.5; }
-    .topic-link i { font-size: 1rem; opacity: 0.3; transition: 0.3s; }
-    .topic-link:hover i { opacity: 1; transform: translateX(3px); color: #2af598; }
+    .topic-link i { font-size: 1rem; opacity: 0.3; transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease; }
+    .topic-link:hover i { opacity: 1; transform: translateX(6px); color: #2af598; }
 
     /* Sidebar Stats */
     .sidebar { display: flex; flex-direction: column; gap: 15px; }
@@ -210,12 +234,10 @@
         align-items: flex-end;
         padding: 25px;
         border: 1px solid rgba(255,255,255,0.1);
-        transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: 0.3s;
     }
     .course-tile:hover {
-        transform: translateY(-10px) scale(1.02);
         border-color: rgba(42, 245, 152, 0.4);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(42, 245, 152, 0.1);
     }
     .course-tile img {
         position: absolute;
@@ -261,7 +283,7 @@
             <div class="section-title">Course Overview</div>
             <p class="description">{{ course.detailed_description }}</p>
 
-            <div class="section-title">Explore Topics</div>
+            <div class="section-title" style="margin-top: 30px;">Explore Topics</div>
             <div class="curriculum">
                 {% for topic in course.topics %}
                 <a href="{% url 'topic_detail' course.slug topic.slug %}" class="topic-link">
@@ -270,6 +292,24 @@
                         <p>{{ topic.subtopics|length }} Modules • Access All Content</p>
                     </div>
                     <i class="fas fa-arrow-right"></i>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Separate Standalone Card for Recommended Prep Reference Books -->
+        <div class="glass-card" style="margin-top: 25px;">
+            <div class="section-title">
+                <i class="fas fa-book" style="color: #60a5fa; font-size: 1.1rem;"></i> Recommended Prep Reference Books
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                {% for book in recommended_books %}
+                <a href="{{ book.link }}" target="_blank" class="amazon-book-item">
+                    <span style="font-size: 1.5rem; display: inline-block;">📖</span>
+                    <div style="flex-grow: 1;">
+                        <span style="font-size: 0.9rem; font-weight: 600; display: block; margin-bottom: 4px;">{{ book.title }} by {{ book.author }}</span>
+                        <span style="font-size: 0.78rem; color: #fbbf24; font-weight: 700;">{{ book.price }} on Amazon ↗</span>
+                    </div>
                 </a>
                 {% endfor %}
             </div>
@@ -300,28 +340,9 @@
                 </div>
             </div>
         </div>
-        
-        </div>
 
-        <!-- Recommended Prep Books list in sidebar -->
-        <div class="stat-card" style="display: flex; flex-direction: column; gap: 15px;">
-            <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 5px; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-book" style="color: #60a5fa;"></i> Prep Reference Books
-            </h4>
-            
-            {% for book in recommended_books %}
-            <a href="{{ book.link }}" target="_blank" class="amazon-book-item">
-                <span style="font-size: 1.2rem;">📖</span>
-                <div style="flex-grow: 1;">
-                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">{{ book.title }} by {{ book.author }}</span>
-                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">{{ book.price }} on Amazon ↗</span>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-        
         <div class="stat-card" style="padding: 20px; text-align: center;">
-            <p style="font-size: 0.8rem; opacity: 0.5;">No registration required. Just click a topic and start learning!</p>
+            <p style="font-size: 0.82rem; opacity: 0.65; margin: 0; line-height: 1.5;">No registration required. Just click a topic and start learning!</p>
         </div>
     </div>
 </div>
