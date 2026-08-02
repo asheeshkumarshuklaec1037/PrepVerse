@@ -434,7 +434,7 @@
         <p>{{ topic.title }}</p>
         <h2>{{ module_name }}</h2>
     </div>
-    <a href="{% url 'topic_detail' course.id topic.id %}" class="exit-btn"><i class="fas fa-times"></i> Exit Practice</a>
+    <a href="{% url 'topic_detail' course.slug topic.slug %}" class="exit-btn"><i class="fas fa-times"></i> Exit Practice</a>
 </header>
 
 <div class="container">
@@ -472,8 +472,8 @@
                 correct_label: '{{ q.correct_label|escapejs }}',
                 explanation: '{{ q.explanation|escapejs }}',
                 module: '{{ module_name|escapejs }}',
-                course_id: '{{ course.id }}',
-                topic_id: '{{ topic.id }}'
+                course_id: '{{ course.slug }}',
+                topic_id: '{{ topic.slug }}'
             })" title="Bookmark Question"><i class="far fa-bookmark"></i></div>
             <div class="action-icon" title="Share"><i class="fas fa-share-nodes"></i></div>
         </div>

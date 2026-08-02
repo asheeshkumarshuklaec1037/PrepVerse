@@ -584,22 +584,6 @@
         h1 { font-size: 2.2rem; }
         .as-side-slider .swiper-slide { width: 180px !important; }
     }
-
-    /* EternaCloud Style Pills */
-    .pill-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.85);
-        text-transform: uppercase;
-    }
-
     /* Testimonial Continuous Right-to-Left Marquee Slider Styles */
     @keyframes marqueeMoveLeft {
         0% { transform: translateX(0); }
@@ -621,7 +605,7 @@
         gap: 28px;
         width: max-content;
         padding: 10px 0;
-        animation: marqueeMoveLeft 30s linear infinite;
+        animation: marqueeMoveLeft 35s linear infinite;
         will-change: transform;
     }
 
@@ -693,7 +677,20 @@
         font-size: 0.76rem;
         color: rgba(245, 245, 247, 0.5);
     }
+
+    /* EternaCloud Style Pills */
     .pill-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        text-transform: uppercase;
         letter-spacing: 0.5px;
         transition: all 0.3s;
         backdrop-filter: blur(5px);
@@ -813,9 +810,30 @@
         gap: 30px;
     }
     .action-card {
+        background: rgba(12, 12, 28, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        padding: 35px;
+        backdrop-filter: blur(25px);
         display: flex;
         flex-direction: column;
         gap: 15px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .action-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.1), inset 0 0 20px rgba(59, 130, 246, 0.02);
+        border-color: rgba(59, 130, 246, 0.4);
+    }
+    .action-card:nth-child(2n):hover {
+        box-shadow: 0 15px 35px rgba(168, 85, 247, 0.1), inset 0 0 20px rgba(168, 85, 247, 0.02);
+        border-color: rgba(168, 85, 247, 0.4);
+    }
+    .action-card:nth-child(3n):hover {
+        box-shadow: 0 15px 35px rgba(236, 72, 153, 0.1), inset 0 0 20px rgba(236, 72, 153, 0.02);
+        border-color: rgba(236, 72, 153, 0.4);
     }
     .action-card .icon {
         width: 50px;
@@ -1084,51 +1102,6 @@
         line-height: 1.6;
     }
 
-    /* Scroll Reveal & Focus Glow Animation Styles */
-    .reveal-on-scroll {
-        opacity: 0;
-        transform: translateY(35px);
-        transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
-                    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal-on-scroll.is-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* Dashboard-Matching Hover Glow for Home Cards (Only on Mouse Hover) */
-    .quiz-card,
-    .access-step,
-    .action-card,
-    .compare-col,
-    .blog-card,
-    .stat {
-        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-                    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-
-    .quiz-card:hover,
-    .access-step:hover,
-    .action-card:hover,
-    .compare-col:hover,
-    .blog-card:hover {
-        transform: translateY(-4px) !important;
-        border-color: #8b7cf0 !important;
-        box-shadow: 0 12px 32px rgba(139, 124, 240, 0.25), 0 0 20px rgba(108, 92, 231, 0.35) !important;
-    }
-
-    /* Staggered delay helpers for grid items */
-    .reveal-delay-1 { transition-delay: 0.08s; }
-    .reveal-delay-2 { transition-delay: 0.15s; }
-    .reveal-delay-3 { transition-delay: 0.22s; }
-    .reveal-delay-4 { transition-delay: 0.3s; }
-    .reveal-delay-5 { transition-delay: 0.38s; }
-    .reveal-delay-6 { transition-delay: 0.45s; }
-
-
     @media (max-width: 992px) {
         .hero-grid { grid-template-columns: 1fr; gap: 40px; }
         .hero h1 { font-size: 2.4rem; }
@@ -1177,7 +1150,7 @@
                 <div class="text-content">
                     <h2 style="font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 15px;">{{ course.title }}</h2>
                     <p>{{ course.description }}</p>
-                    <a href="{% url 'course_detail' forloop.counter0 %}" class="card-action-btn btn-neon" style="width: auto; display: inline-flex; padding: 12px 24px;">Explore Course</a>
+                    <a href="{% url 'course_detail' course.slug %}" class="card-action-btn btn-neon" style="width: auto; display: inline-flex; padding: 12px 24px;">Explore Course</a>
                 </div>
             </div>
             {% endfor %}
@@ -1200,9 +1173,9 @@
     </div>
 </div>
 
-<section class="hero reveal-on-scroll">
+<section class="hero">
   <div class="wrap hero-grid">
-    <div class="reveal-on-scroll reveal-delay-1">
+    <div>
       <div class="eyebrow">No account needed to explore</div>
       <h1>Practice like it's<br>exam day. <span>Every day.</span></h1>
       <p class="sub">Browse every course, daily challenge and practice question with zero sign-up. We'll only ask you to log in the moment you attempt a mock test — that's when we save your score, analysis and leaderboard rank.</p>
@@ -1217,7 +1190,7 @@
       </div>
     </div>
 
-    <div class="quiz-card reveal-on-scroll reveal-delay-2">
+    <div class="quiz-card">
       <div class="quiz-head" style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
         <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
           <i class="fas fa-bolt" style="color: #f59e0b;"></i> Daily Challenge Quiz
@@ -1244,19 +1217,19 @@
   </div>
 </section>
 
-<section class="access-band reveal-on-scroll">
+<section class="access-band">
   <div class="access-grid">
-    <div class="access-step reveal-on-scroll reveal-delay-1">
+    <div class="access-step">
       <span class="access-num">01</span>
       <h4>Browse everything, no account</h4>
       <p>Courses, daily challenge, practice arena and the blog are open the moment you land — nothing is gated.</p>
     </div>
-    <div class="access-step reveal-on-scroll reveal-delay-2">
+    <div class="access-step">
       <span class="access-num">02</span>
       <h4>Attempt a mock test</h4>
       <p>The first three are free, so you can see exactly how a mock test works. A quick login saves your attempt.</p>
     </div>
-    <div class="access-step reveal-on-scroll reveal-delay-3">
+    <div class="access-step">
       <span class="access-num">03</span>
       <h4>Unlock your analysis &amp; rank</h4>
       <p>Right after submitting, your sectional breakdown, percentile and leaderboard position appear — tied to your account.</p>
@@ -1264,93 +1237,15 @@
   </div>
 </section>
 
-<!-- WHAT'S WAITING AFTER YOU LOG IN SECTION -->
-<section class="readiness-command-section reveal-on-scroll" style="padding: 90px 4% 80px; text-align: center; position: relative; background: radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.06) 0%, rgba(139, 92, 246, 0.04) 45%, transparent 70%);">
-  <div style="max-width: 900px; margin: 0 auto 50px;">
-    <div style="font-family: var(--mono); font-size: 0.76rem; font-weight: 700; color: #8b7cf0; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 8px;">
-      <span style="width: 6px; height: 6px; border-radius: 50%; background: #8b7cf0; display: inline-block;"></span>
-      WHAT'S WAITING AFTER YOU LOG IN
-    </div>
-    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2.6rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em; margin: 0 0 18px; line-height: 1.2;">
-      Your own readiness command center
-    </h2>
-    <p style="font-size: 1.05rem; color: rgba(245, 245, 247, 0.65); max-width: 680px; margin: 0 auto; line-height: 1.6;">
-      Every attempt feeds a live dashboard — a readiness score, weak-topic tracker and mock test trend, built around the exam you're actually prepping for.
-    </p>
-  </div>
-
-  <!-- Bento Preview Display Card -->
-  <div class="reveal-on-scroll reveal-delay-2" style="max-width: 1060px; margin: 0 auto; position: relative; border-radius: 28px; background: rgba(18, 19, 23, 0.85); border: 1px solid rgba(255, 255, 255, 0.08); padding: 32px; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6); backdrop-filter: blur(20px); overflow: hidden;">
-    <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; opacity: 0.85; filter: blur(0.2px); pointer-events: none; text-align: left;">
-      
-      <!-- Left Card: Continue Where You Left Off -->
-      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 20px; padding: 24px;">
-        <div style="font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: #8b7cf0; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-          <span style="width: 5px; height: 5px; border-radius: 50%; background: #8b7cf0;"></span>
-          CONTINUE WHERE YOU LEFT OFF
-        </div>
-        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: #ffffff; margin: 0 0 4px;">
-          Database Management Systems
-        </h3>
-        <p style="font-size: 0.82rem; color: rgba(255, 255, 255, 0.45); margin: 0 0 20px;">
-          Normalization · Practice Set 3
-        </p>
-        <div style="height: 5px; background: rgba(255, 255, 255, 0.08); border-radius: 99px; overflow: hidden; margin-bottom: 10px;">
-          <div style="width: 68%; height: 100%; background: linear-gradient(90deg, #6c5ce7, #8b7cf0); border-radius: 99px;"></div>
-        </div>
-        <span style="font-family: var(--mono); font-size: 0.72rem; color: rgba(255, 255, 255, 0.35);">17 / 25 questions</span>
-      </div>
-
-      <!-- Right Card: Readiness Check -->
-      <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 20px; padding: 24px;">
-        <div style="font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: #8b7cf0; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-          <span style="width: 5px; height: 5px; border-radius: 50%; background: #8b7cf0;"></span>
-          READINESS --CHECK
-        </div>
-        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; font-weight: 800; color: #ffffff; line-height: 1; margin-bottom: 16px;">
-          74%
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem;">
-            <span style="color: rgba(255,255,255,0.5);">DSA</span>
-            <div style="width: 65%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden;">
-              <div style="width: 82%; height: 100%; background: #00b894;"></div>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem;">
-            <span style="color: rgba(255,255,255,0.5);">OS</span>
-            <div style="width: 65%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden;">
-              <div style="width: 71%; height: 100%; background: #fdcb6e;"></div>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem;">
-            <span style="color: rgba(255,255,255,0.5);">Networks</span>
-            <div style="width: 65%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden;">
-              <div style="width: 54%; height: 100%; background: #ff7675;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Center Floating CTA Overlay Button -->
-    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(10, 10, 13, 0.4) 0%, rgba(10, 10, 13, 0.7) 100%); backdrop-filter: blur(2px);">
-      <a href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: #ffffff; color: #0a0a0d; border-radius: 12px; font-weight: 700; font-size: 0.92rem; text-decoration: none; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3); transition: all 0.25s ease;">
-        Unlock your dashboard <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
-      </a>
-    </div>
-  </div>
-</section>
-
-<section class="section reveal-on-scroll" id="actions">
-  <div class="section-head reveal-on-scroll reveal-delay-1">
+<section class="section" id="actions">
+  <div class="section-head">
     <span class="section-tag">On PrepVerse</span>
     <h2>Everything you can do here — no guesswork</h2>
     <p>Five of these need nothing but a browser. Only mock tests ask for a login — and that's just so your score, analysis and leaderboard rank are actually yours.</p>
   </div>
   <div class="action-grid">
 
-    <div class="action-card reveal-on-scroll reveal-delay-1">
+    <div class="action-card">
       <div class="icon">🔥</div>
       <h3>Daily Challenge</h3>
       <p>Two fresh questions every day across quant, logic and English. Keeps your streak alive and your fundamentals sharp in under 10 minutes.</p>
@@ -1358,7 +1253,7 @@
       <a href="{% url 'daily_challenges' %}" class="go">Solve today's set →</a>
     </div>
 
-    <div class="action-card reveal-on-scroll reveal-delay-2">
+    <div class="action-card">
       <div class="icon">📚</div>
       <h3>Structured Courses</h3>
       <p>Topic-by-topic modules — Aptitude, Logical Reasoning, English, Quant — each with concept notes and practice sets you can revisit anytime.</p>
@@ -1366,7 +1261,7 @@
       <a href="{% url 'courses' %}" class="go">Browse courses →</a>
     </div>
 
-    <div class="action-card reveal-on-scroll reveal-delay-3">
+    <div class="action-card">
       <div class="icon">🎯</div>
       <h3>Practice Arena</h3>
       <p>Unlimited topic-wise practice with instant explanations. Filter by difficulty and track exactly which sub-topics are pulling your score down.</p>
@@ -1374,7 +1269,7 @@
       <a href="{% url 'courses' %}" class="go">Start practicing →</a>
     </div>
 
-    <div class="action-card reveal-on-scroll reveal-delay-4">
+    <div class="action-card">
       <div class="icon">📝</div>
       <h3>Mock Tests</h3>
       <p>Full-length, timed tests that mirror real exam pressure — with sectional breakdown, percentile rank and topic-wise weak-spot report. First 3 tests are free.</p>
@@ -1382,7 +1277,7 @@
       <a href="{% url 'mock_test' %}" class="go">Try a free test →</a>
     </div>
 
-    <div class="action-card reveal-on-scroll reveal-delay-5">
+    <div class="action-card">
       <div class="icon">🏆</div>
       <h3>Leaderboard</h3>
       <p>See where you stand against other candidates preparing for the same exams — by XP, accuracy and current streak, updated live.</p>
@@ -1390,7 +1285,7 @@
       <a href="{% url 'leaderboard' %}" class="go">See how to unlock →</a>
     </div>
 
-    <div class="action-card reveal-on-scroll reveal-delay-6">
+    <div class="action-card">
       <div class="icon">✍️</div>
       <h3>Prep Blog</h3>
       <p>Shortcut techniques, time-management strategies and topic breakdowns written by mentors — the stuff that doesn't fit in a question bank.</p>
@@ -1401,15 +1296,15 @@
   </div>
 </section>
 
-<section class="compare-band reveal-on-scroll" id="compare">
+<section class="compare-band" id="compare">
   <div class="section">
-    <div class="section-head reveal-on-scroll reveal-delay-1">
+    <div class="section-head">
       <span class="section-tag">Transparent, always</span>
       <h2>What needs a login, what doesn't</h2>
       <p>Only one thing on PrepVerse ever asks you to sign in: attempting a mock test. Everything else stays open.</p>
     </div>
     <div class="compare-grid">
-      <div class="compare-col reveal-on-scroll reveal-delay-1">
+      <div class="compare-col">
         <span class="col-kicker">Step 1</span>
         <h3>Just Browsing</h3>
         <p class="price">₹0 · no account</p>
@@ -1420,7 +1315,7 @@
         </ul>
       </div>
       
-      <div class="compare-col recommended reveal-on-scroll reveal-delay-2">
+      <div class="compare-col recommended">
         <span class="col-kicker">Step 2</span>
         <h3>Taking a Test</h3>
         <p class="price">₹0 · requires login</p>
@@ -1431,7 +1326,7 @@
         </ul>
       </div>
 
-      <div class="compare-col premium reveal-on-scroll reveal-delay-3">
+      <div class="compare-col premium">
         <span class="col-kicker">Step 3</span>
         <h3>Unlocking Stats</h3>
         <p class="price">₹999 / year · premium</p>
@@ -1446,21 +1341,21 @@
 </section>
 
 <!-- Stats Section -->
-<section class="section stats-band reveal-on-scroll">
+<section class="section stats-band">
   <div class="stats-grid">
-    <div class="stat reveal-on-scroll reveal-delay-1">
+    <div class="stat">
       <b class="stat-count" data-count="12400">0</b>
       <span>Practice Questions</span>
     </div>
-    <div class="stat reveal-on-scroll reveal-delay-2">
+    <div class="stat">
       <b class="stat-count" data-count="3">0</b>
       <span>Free Mock Tests</span>
     </div>
-    <div class="stat reveal-on-scroll reveal-delay-3">
+    <div class="stat">
       <b class="stat-count" data-count="512">0</b>
       <span>Daily Active Solvers</span>
     </div>
-    <div class="stat reveal-on-scroll reveal-delay-4">
+    <div class="stat">
       <b class="stat-count" data-count="15">0</b>
       <span>Placement Partners</span>
     </div>
@@ -1477,7 +1372,6 @@
   
   <div class="testimonial-marquee-wrapper">
     <div class="testimonial-marquee-track">
-      <!-- First Copy of Testimonial Cards -->
       <div class="testimonial-card">
         <div class="testi-stars">
           <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
@@ -1534,7 +1428,7 @@
         </div>
       </div>
 
-      <!-- Second Duplicate Copy for Infinite Smooth Loop -->
+      <!-- Duplicate Copy for Infinite Loop -->
       <div class="testimonial-card">
         <div class="testi-stars">
           <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
@@ -1595,15 +1489,15 @@
 </section>
 
 <!-- Blog Section -->
-<section class="section reveal-on-scroll" id="blog">
-  <div class="section-head reveal-on-scroll reveal-delay-1">
+<section class="section" id="blog">
+  <div class="section-head">
     <span class="section-tag">Prep Blog</span>
     <h2>Latest Insights &amp; Shortcut Strategies</h2>
     <p>Handcrafted shortcuts, placement test reports, and exam analysis written directly by mentors.</p>
   </div>
   
   <div class="blog-grid">
-    <div class="blog-card reveal-on-scroll reveal-delay-1">
+    <div class="blog-card">
       <div class="thumb">
         <span class="badge">Shortcuts</span>
       </div>
@@ -1614,7 +1508,7 @@
       </div>
     </div>
     
-    <div class="blog-card reveal-on-scroll reveal-delay-2">
+    <div class="blog-card">
       <div class="thumb" style="background: linear-gradient(135deg, #a855f7, #ec4899);">
         <span class="badge">Logical Reasoning</span>
       </div>
@@ -1625,7 +1519,7 @@
       </div>
     </div>
     
-    <div class="blog-card reveal-on-scroll reveal-delay-3">
+    <div class="blog-card">
       <div class="thumb" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
         <span class="badge">Placement Guide</span>
       </div>
@@ -1639,8 +1533,8 @@
 </section>
 
 <!-- Final CTA Section -->
-<section class="section reveal-on-scroll">
-  <div class="final-cta reveal-on-scroll reveal-delay-1">
+<section class="section">
+  <div class="final-cta">
     <h2>Ready to Level Up Your Placement Prep?</h2>
     <p>Launch your first free mock test now. Track sectional percentiles, mapping analytics, and identify structural weak points immediately.</p>
     <a href="{% url 'mock_test' %}" class="btn" style="background: #fff; color: #000; font-weight: 700; border-radius: 50px; padding: 15px 35px; box-shadow: 0 10px 25px rgba(255,255,255,0.15); margin-top: 10px; text-transform: uppercase;">Get Started For Free →</a>
@@ -1653,23 +1547,6 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Scroll Reveal Intersection Observer
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.15,
-            rootMargin: '0px 0px -50px 0px'
-        });
-
-        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
-            revealObserver.observe(el);
-        });
-
         // Main Slider
         var $slider = $('#mainSlider'),
             currentSlide = 0,
@@ -1696,6 +1573,7 @@
             on: {
                 init: function() { 
                     setTimeout(() => $slider.addClass('loaded'), 500); 
+                    // Update slideNumber if it was wrong before (though it should be correct now)
                     slideNumber = this.slides.length - this.loopedSlides * 2;
                 },
                 slideChange: function() {

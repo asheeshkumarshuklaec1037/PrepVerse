@@ -214,22 +214,31 @@
 
 {% block content %}
 <section class="hero">
-    <h1>Explore Our Programs</h1>
-    <p>Comprehensive, industry-aligned courses designed to master problem solving, logic, and communication for campus placements.</p>
+    <h1>{% if active_section %}{{ active_section.title }}{% else %}Explore Our Programs{% endif %}</h1>
+    <p>{% if active_section %}{{ active_section.description }}{% else %}Comprehensive, industry-aligned courses designed to master problem solving, logic, and communication for campus placements.{% endif %}</p>
 </section>
 
-<div class="filters">
-    <div class="filter-btn active">All Courses</div>
-    <div class="filter-btn">Aptitude</div>
-    <div class="filter-btn">Reasoning</div>
-    <div class="filter-btn">Verbal</div>
-    <div class="filter-btn">Technical</div>
+{% if sections|length > 1 %}
+<div class="filters" id="sectionFilters">
+    <a href="{% url 'courses' %}" class="filter-btn {% if not active_section %}active{% endif %}">All Sections</a>
+    {% for s in sections %}
+    <a href="{% url 'courses_by_section' s.slug %}" class="filter-btn {% if active_section.slug == s.slug %}active{% endif %}">{{ s.title }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="filters" id="subjectFilters">
+    <div class="filter-btn active" data-subject="all">All Courses</div>
+    <div class="filter-btn" data-subject="Aptitude">Aptitude</div>
+    <div class="filter-btn" data-subject="Reasoning">Reasoning</div>
+    <div class="filter-btn" data-subject="Verbal">Verbal</div>
+    <div class="filter-btn" data-subject="Technical">Technical</div>
 </div>
 
 <div class="courses-container">
-    <div class="courses-grid">
+    <div class="courses-grid" id="coursesGrid">
         {% for course in courses %}
-        <a href="{% url 'course_detail' course.id %}" class="course-card">
+        <a href="{% url 'course_detail' course.slug %}" class="course-card" data-subject="{{ course.subject }}">
             <div class="card-img-wrapper">
                 <img src="{{ course.bg_image }}" alt="{{ course.title }}">
                 <div class="card-img-overlay"></div>
@@ -256,4 +265,24 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Subject filter — client-side, since it's a small fixed set of courses
+  // rendered server-side already. Section filter (above) is server-side via
+  // the courses_by_section URL, since that's the axis that should be
+  // shareable/bookmarkable and SEO-indexable.
+  document.querySelectorAll('#subjectFilters .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#subjectFilters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const subject = btn.dataset.subject;
+      document.querySelectorAll('#coursesGrid .course-card').forEach(card => {
+        const match = subject === 'all' || card.dataset.subject === subject;
+        card.style.display = match ? '' : 'none';
+      });
+    });
+  });
+</script>
 {% endblock %}

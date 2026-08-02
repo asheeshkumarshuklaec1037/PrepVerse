@@ -553,7 +553,7 @@
             // Back Link to Module Detail Page
             let studyLink = '#';
             if (q.course_id && q.topic_id && q.module) {
-                studyLink = `/course/${q.course_id}/topic/${q.topic_id}/module/${encodeURIComponent(q.module)}/`;
+                studyLink = `/courses/${q.course_id}/${q.topic_id}/${encodeURIComponent(q.module)}/`;
             } else {
                 studyLink = '{% url "courses" %}';
             }

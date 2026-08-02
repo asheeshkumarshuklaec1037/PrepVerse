@@ -264,7 +264,7 @@
             <div class="section-title">Explore Topics</div>
             <div class="curriculum">
                 {% for topic in course.topics %}
-                <a href="{% url 'topic_detail' course.id topic.id %}" class="topic-link">
+                <a href="{% url 'topic_detail' course.slug topic.slug %}" class="topic-link">
                     <div class="topic-info">
                         <h3>{{ topic.title }}</h3>
                         <p>{{ topic.subtopics|length }} Modules • Access All Content</p>
@@ -309,55 +309,15 @@
                 <i class="fas fa-book" style="color: #60a5fa;"></i> Prep Reference Books
             </h4>
             
-            {% if course.id == 0 or course.id == 3 %}
-            <!-- Quantitative Aptitude Books -->
-            <a href="https://www.amazon.in/s?k=quantitative+aptitude+rs+aggarwal&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
+            {% for book in recommended_books %}
+            <a href="{{ book.link }}" target="_blank" class="amazon-book-item">
                 <span style="font-size: 1.2rem;">📖</span>
                 <div style="flex-grow: 1;">
-                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">Quant Aptitude by RS Aggarwal</span>
-                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹550 on Amazon ↗</span>
+                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">{{ book.title }} by {{ book.author }}</span>
+                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">{{ book.price }} on Amazon ↗</span>
                 </div>
             </a>
-            <a href="https://www.amazon.in/s?k=fast+track+objective+arithmetic+rajesh+verma&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
-                <span style="font-size: 1.2rem;">📖</span>
-                <div style="flex-grow: 1;">
-                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">Fast Track Objective Arithmetic</span>
-                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹310 on Amazon ↗</span>
-                </div>
-            </a>
-            {% elif course.id == 1 %}
-            <!-- Logical Reasoning Books -->
-            <a href="https://www.amazon.in/s?k=verbal+and+non+verbal+reasoning+rs+aggarwal&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
-                <span style="font-size: 1.2rem;">📖</span>
-                <div style="flex-grow: 1;">
-                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">Reasoning by RS Aggarwal</span>
-                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹620 on Amazon ↗</span>
-                </div>
-            </a>
-            <a href="https://www.amazon.in/s?k=logical+reasoning+arun+sharma&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
-                <span style="font-size: 1.2rem;">📖</span>
-                <div style="flex-grow: 1;">
-                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">Logical Reasoning by Arun Sharma</span>
-                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹590 on Amazon ↗</span>
-                </div>
-            </a>
-            {% elif course.id == 2 %}
-            <!-- English Books -->
-            <a href="https://www.amazon.in/s?k=word+power+made+easy&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
-                <span style="font-size: 1.2rem;">📖</span>
-                <div style="flex-grow: 1;">
-                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">Word Power Made Easy</span>
-                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹150 on Amazon ↗</span>
-                </div>
-            </a>
-            <a href="https://www.amazon.in/s?k=wren+and+martin&tag=prepverse0d-21" target="_blank" class="amazon-book-item">
-                <span style="font-size: 1.2rem;">📖</span>
-                <div style="flex-grow: 1;">
-                    <span style="font-size: 0.82rem; font-weight: 600; display: block;">English Grammar by Wren &amp; Martin</span>
-                    <span style="font-size: 0.72rem; color: #fbbf24; font-weight: 700;">₹380 on Amazon ↗</span>
-                </div>
-            </a>
-            {% endif %}
+            {% endfor %}
         </div>
         
         <div class="stat-card" style="padding: 20px; text-align: center;">
@@ -370,8 +330,8 @@
     <div class="section-title">Continue Learning</div>
     <div class="more-courses-grid">
         {% for c in courses %}
-            {% if c.id != course.id %}
-            <a href="{% url 'course_detail' c.id %}" class="course-tile">
+            {% if c.slug != course.slug %}
+            <a href="{% url 'course_detail' c.slug %}" class="course-tile">
                 <img src="{{ c.bg_image }}" alt="{{ c.title }}" loading="lazy">
                 <h4>{{ c.title }}</h4>
             </a>
