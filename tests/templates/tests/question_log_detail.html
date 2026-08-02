@@ -10,7 +10,7 @@
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
         
         <!-- Header & Breadcrumbs -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+        <div class="log-header-section">
             <div>
                 <a href="{% url 'mock_history' %}" style="color: #38bdf8; text-decoration: none; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px;">
                     <i class="fa-solid fa-arrow-left"></i> Back to Test Performance History
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Filter Controls Bar -->
-        <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 16px;">
+        <div class="log-filter-section">
             <span style="font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-right: 10px;">Filter Questions:</span>
             <button class="q-filter-btn active" onclick="filterQuestions('all', this)" style="padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: #fff; font-weight: 700; font-size: 0.8rem; cursor: pointer;">All Questions (<span id="countAll">0</span>)</button>
             <button class="q-filter-btn" onclick="filterQuestions('correct', this)" style="padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(42, 245, 152, 0.25); background: rgba(42, 245, 152, 0.08); color: #2af598; font-weight: 700; font-size: 0.8rem; cursor: pointer;">Correct Only (<span id="countCorrect">0</span>)</button>
@@ -47,6 +47,35 @@
 </main>
 
 <style>
+/* Keyframe Fade & Slide Up Animation (Identical to courses.html) */
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.log-header-section {
+    display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; flex-wrap: wrap; gap: 15px;
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
+}
+
+.log-filter-section {
+    display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 16px;
+    opacity: 0;
+    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
+    transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.log-filter-section:hover {
+    border-color: rgba(56, 189, 248, 0.3) !important;
+    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15) !important;
+}
+
+#fullQuestionsList {
+    display: flex; flex-direction: column; gap: 24px;
+    opacity: 0;
+    animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.6s;
+}
+
 .full-q-card {
     background: rgba(15, 23, 42, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -54,6 +83,12 @@
     padding: 24px;
     backdrop-filter: blur(15px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.full-q-card:hover {
+    transform: translateY(-8px) !important;
+    border-color: rgba(56, 189, 248, 0.4) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(56, 189, 248, 0.2) !important;
 }
 .full-q-header {
     display: flex;
