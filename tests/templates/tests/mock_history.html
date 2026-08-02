@@ -1,284 +1,339 @@
-{% extends 'base.html' %}
 {% load static %}
-
-{% block title %}Test Performance & Analytics | PrepVerse{% endblock %}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Performance — PrepVerse</title>
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/mock_history.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/_navbar.css' %}">
+<link rel="stylesheet" href="{% static 'css/components/_sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/mock_tests.css' %}">
+<style>
+  :root{
+    --bg:#08080b; --surface-1:rgba(24,25,33,.52); --surface-2:rgba(255,255,255,.045); --surface-3:rgba(255,255,255,.07);
+    --border:rgba(255,255,255,.10); --border-hi:rgba(255,255,255,.22);
+    --text-1:#f5f5f7; --text-2:rgba(245,245,247,.62); --text-3:rgba(245,245,247,.36);
+    --accent:#6c5ce7; --accent-2:#8b7cf0; --accent-soft:rgba(108,92,231,.16); --accent-border:rgba(108,92,231,.35);
+    --success:#34d399; --success-soft:rgba(52,211,153,.14);
+    --warning:#f5a623; --warning-soft:rgba(245,166,35,.14);
+    --danger:#f5495c; --danger-soft:rgba(245,73,92,.14);
+    --info:#4ea8ff;
+    --f-display:'Space Grotesk',sans-serif; --f-body:'Inter',sans-serif; --f-mono:'JetBrains Mono',monospace;
+    --r-sm:10px; --r-md:14px; --r-lg:20px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased;}
+  body{background:var(--bg);color:var(--text-1);font-family:var(--f-body);min-height:100vh;position:relative;overflow-x:hidden;padding-bottom:70px;}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+  a{color:inherit;text-decoration:none;} button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit;}
+  :focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:6px;}
+
+  .orb-field{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;}
+  .orb-1{width:520px;height:520px;top:-160px;right:-100px;background:radial-gradient(circle,#6c5ce7,transparent 70%);animation:drift1 26s ease-in-out infinite;}
+  .orb-2{width:420px;height:420px;top:500px;left:-140px;background:radial-gradient(circle,#4ea8ff,transparent 70%);opacity:.28;animation:drift2 32s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0);}50%{transform:translate(-40px,50px);}}
+  @keyframes drift2{0%,100%{transform:translate(0,0);}50%{transform:translate(50px,-30px);}}
+  @media (prefers-reduced-motion: reduce){ .orb{animation:none;} }
+
+  .surface{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);
+    backdrop-filter:blur(22px) saturate(150%); -webkit-backdrop-filter:blur(22px) saturate(150%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px -14px rgba(0,0,0,.5);}
+  .lift{transition:transform .18s ease, border-color .18s ease;}
+  .lift:hover{transform:translateY(-2px);border-color:var(--border-hi);}
+
+  .reveal{opacity:0;transform:translateY(20px);animation:revealUp .6s cubic-bezier(.16,.84,.44,1) forwards;}
+  @keyframes revealUp{to{opacity:1;transform:translateY(0);}}
+  @media (prefers-reduced-motion: reduce){ .reveal{opacity:1;transform:none;animation:none;} }
+
+  .wrap{max-width:1320px;margin:0 auto;padding:32px 24px 0;position:relative;z-index:1;}
+  .eyebrow{font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
+
+  /* ---------- Header ---------- */
+  .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px;}
+  .page-head h1{font-family:var(--f-display);font-size:1.7rem;font-weight:600;letter-spacing:-.01em;margin-top:4px;}
+  .page-head p{color:var(--text-3);font-size:.83rem;margin-top:5px;max-width:480px;line-height:1.55;}
+  .schedule-link{font-size:.78rem;font-weight:700;color:var(--accent-2);display:flex;align-items:center;gap:7px;
+    border:1px solid var(--accent-border);background:var(--accent-soft);padding:9px 16px;border-radius:10px;white-space:nowrap;margin-top:6px;}
+  .schedule-link:hover{background:var(--accent);color:#fff;}
+
+  /* ---------- Scope filter — always-visible, always-labeled ---------- */
+  .scope-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+  .scope-label{font-family:var(--f-mono);font-size:.68rem;color:var(--text-3);margin-right:2px;}
+  .scope-tab{font-family:var(--f-mono);font-size:.72rem;font-weight:600;padding:8px 15px;border-radius:999px;
+    background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);backdrop-filter:blur(14px);transition:.15s;}
+  .scope-tab:hover{border-color:var(--border-hi);color:var(--text-1);}
+  .scope-tab.active{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-2);}
+  .scope-current{font-size:.72rem;color:var(--text-3);margin-left:4px;}
+  .scope-current b{color:var(--text-1);font-family:var(--f-mono);}
+
+  /* ---------- Overview bento ---------- */
+  .bento{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px;margin-bottom:24px;}
+  @media (max-width:960px){ .bento{grid-template-columns:1fr;} }
+  .metrics-card, .trend-card{padding:24px;}
+  .card-title{font-family:var(--f-display);font-size:.95rem;font-weight:600;display:flex;align-items:center;gap:9px;margin-bottom:18px;}
+  .card-title i{color:var(--accent-2);}
+
+  .radial-row{display:flex;gap:28px;justify-content:center;margin-bottom:22px;}
+  .radial{position:relative;width:104px;height:104px;}
+  .radial svg{transform:rotate(-90deg);width:104px;height:104px;}
+  .radial circle{fill:none;stroke-width:8;}
+  .radial .bg{stroke:rgba(255,255,255,.07);}
+  .radial .fg{stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.16,.84,.44,1);}
+  .radial-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .radial-txt .num{font-family:var(--f-display);font-weight:700;font-size:1.3rem;}
+  .radial-txt .lbl{font-family:var(--f-mono);font-size:.6rem;color:var(--text-3);margin-top:2px;text-align:center;}
+
+  .metric-row{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);font-size:.78rem;}
+  .metric-row:first-of-type{border-top:none;}
+  .metric-row span{color:var(--text-3);}
+  .metric-row b{font-family:var(--f-mono);color:var(--text-1);}
+
+  .trend-legend{display:flex;gap:16px;font-size:.68rem;color:var(--text-3);font-weight:500;margin-top:10px;}
+  .trend-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend-dot{width:7px;height:7px;border-radius:50%;}
+
+  /* ---------- Section head ---------- */
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin:6px 0 14px;gap:12px;flex-wrap:wrap;}
+  .sec-head h2{font-family:var(--f-display);font-size:1.05rem;font-weight:600;}
+  .sec-head .sec-sub{color:var(--text-3);font-size:.75rem;margin-top:3px;}
+
+  /* ---------- Attempted tests — single selection surface ---------- */
+  .attempts-track{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;margin-bottom:28px;scrollbar-width:thin;}
+  .attempt-card{flex:0 0 230px;padding:18px;cursor:pointer;position:relative;}
+  .attempt-card.selected{border-color:var(--accent-border);box-shadow:0 0 0 1px var(--accent-border);}
+  .attempt-card .mode-tag{font-family:var(--f-mono);font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:6px;
+    background:var(--surface-2);color:var(--text-3);display:inline-block;margin-bottom:10px;}
+  .attempt-card h4{font-size:.85rem;font-weight:600;margin-bottom:4px;}
+  .attempt-card .date{font-size:.68rem;color:var(--text-3);margin-bottom:12px;}
+  .attempt-card .score-line{display:flex;align-items:baseline;justify-content:space-between;}
+  .attempt-card .score{font-family:var(--f-display);font-weight:700;font-size:1.2rem;}
+  .attempt-card .pct{font-family:var(--f-mono);font-size:.7rem;color:var(--success);}
+  .attempt-card.selected::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:14px;right:14px;
+    width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:.6rem;display:flex;align-items:center;justify-content:center;}
+  .attempt-count{font-family:var(--f-mono);font-size:.64rem;color:var(--text-3);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);
+    display:flex;align-items:center;gap:5px;}
+  .attempt-count i{font-size:.6rem;}
+
+  /* ---------- Attempt sub-selector — which retake are we viewing ---------- */
+  .attempt-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+  .attempt-pill{font-family:var(--f-mono);font-size:.7rem;font-weight:600;padding:8px 14px;border-radius:9px;
+    background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);display:flex;align-items:center;gap:7px;}
+  .attempt-pill:hover{border-color:var(--border-hi);color:var(--text-1);}
+  .attempt-pill.active{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-2);}
+  .attempt-pill .best-badge{font-size:.58rem;font-weight:700;color:var(--warning);background:var(--warning-soft);padding:2px 6px;border-radius:5px;}
+
+  /* ---------- Analysis panel ---------- */
+  .analysis-panel{padding:26px;margin-bottom:26px;}
+  .analysis-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+  .analysis-head h3{font-family:var(--f-display);font-size:1.15rem;font-weight:600;}
+  .analysis-head p{font-size:.76rem;color:var(--text-3);margin-top:4px;}
+  .retake-btn{font-family:var(--f-mono);font-size:.72rem;font-weight:700;background:var(--text-1);color:#08080b;padding:9px 16px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;}
+  .retake-btn:hover{background:var(--accent-2);color:#fff;}
+
+  .analysis-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px;}
+  @media (max-width:760px){ .analysis-metrics{grid-template-columns:repeat(2,1fr);} }
+  .a-metric{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;}
+  .a-metric .lbl{font-size:.66rem;color:var(--text-3);font-family:var(--f-mono);margin-bottom:6px;}
+  .a-metric .val{font-family:var(--f-display);font-weight:700;font-size:1.1rem;}
+
+  .analysis-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:22px;}
+  @media (max-width:860px){ .analysis-grid{grid-template-columns:1fr;} }
+
+  .breakdown-donut{display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .donut{position:relative;width:150px;height:150px;}
+  .donut svg{transform:rotate(-90deg);width:150px;height:150px;}
+  .donut circle{fill:none;stroke-width:16;}
+  .donut-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .donut-txt .num{font-family:var(--f-display);font-weight:700;font-size:1.5rem;}
+  .donut-legend{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;}
+  .donut-legend span{font-size:.72rem;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+
+  .insight-row{display:flex;gap:14px;margin-bottom:16px;}
+  @media (max-width:500px){ .insight-row{flex-direction:column;} }
+  .insight-box{flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;}
+  .insight-box .lbl{font-size:.66rem;font-family:var(--f-mono);margin-bottom:6px;}
+  .insight-box.strong .lbl{color:var(--success);}
+  .insight-box.weak .lbl{color:var(--warning);}
+  .insight-box .topic{font-size:.88rem;font-weight:600;}
+
+  .q-log{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px;}
+  .q-item{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;}
+  .q-num{font-family:var(--f-mono);font-size:.68rem;color:var(--text-3);width:26px;}
+  .q-text{flex:1;font-size:.78rem;color:var(--text-2);}
+  .q-status{font-family:var(--f-mono);font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;}
+  .q-status.correct{color:var(--success);background:var(--success-soft);}
+  .q-status.wrong{color:var(--danger);background:var(--danger-soft);}
+  .q-status.skip{color:var(--text-3);background:var(--surface-3);}
+
+  /* ---------- Sponsored — clearly separated, not competing with diagnostics ---------- */
+  .sponsor-strip{display:flex;align-items:center;gap:14px;background:var(--surface-2);border:1px dashed var(--border);
+    border-radius:var(--r-md);padding:12px 16px;margin-top:18px;}
+  .sponsor-tag{font-family:var(--f-mono);font-size:.58rem;font-weight:700;color:var(--text-3);background:var(--surface-3);
+    padding:3px 7px;border-radius:5px;letter-spacing:.05em;flex-shrink:0;}
+  .sponsor-strip img{width:36px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0;}
+  .sponsor-strip .info{flex:1;min-width:0;}
+  .sponsor-strip .info b{font-size:.76rem;display:block;}
+  .sponsor-strip .info span{font-size:.66rem;color:var(--text-3);}
+  .sponsor-strip a{font-size:.7rem;font-weight:700;color:var(--accent-2);white-space:nowrap;}
+</style>
 {% endblock %}
+</head>
+<body {% if user.is_authenticated %}class="has-sidebar"{% endif %}>
 
-{% block content %}
-<!-- Parallax Grid Background Layer -->
-<div id="bgPatternLayer"></div>
+{% include 'partials/sidebar.html' %}
+{% include 'partials/navbar.html' %}
 
-<!-- Ambient Blurred Glowing Orbs -->
-<div class="glow-orb orb-1"></div>
-<div class="glow-orb orb-2"></div>
-<div class="glow-orb orb-3"></div>
+<main id="main-content" tabindex="-1">
+<div class="orb-field" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
 
-<!-- Background particles canvas -->
-<canvas id="particlesCanvas"></canvas>
+<div class="wrap">
 
-<div class="hero">
-    <h1>Test Performance</h1>
-    <p>Select a test mode category below to review your completed attempts, inspect diagnostic question sheets, and analyze graphical trend metrics.</p>
-</div>
-
-<!-- Mode tabs segment switcher -->
-<div style="max-width: 1400px; margin: 0 auto; padding: 0 4% 10px;">
-    <div class="mode-tabs-wrapper">
-        <button class="mode-tab-btn active-blitz" id="tab-blitz" onclick="filterByMode('Module Blitz')">
-            <i class="fas fa-puzzle-piece"></i>
-            <span>Module Blitz</span>
-        </button>
-        <button class="mode-tab-btn" id="tab-master" onclick="filterByMode('Topic Master')">
-            <i class="fas fa-layer-group"></i>
-            <span>Topic Master</span>
-        </button>
-        <button class="mode-tab-btn" id="tab-marathon" onclick="filterByMode('Subject Marathon')">
-            <i class="fas fa-graduation-cap"></i>
-            <span>Subject Marathon</span>
-        </button>
+  <!-- ============ HEADER ============ -->
+  <div class="page-head reveal">
+    <div>
+      <div class="eyebrow">Your history, in one place</div>
+      <h1>Test Performance</h1>
+      <p>Every attempt you've made, how it's trending, and exactly where to focus next.</p>
     </div>
-</div>
+    <a href="{% url 'all_tests' %}" class="schedule-link"><i class="fa-solid fa-layer-group"></i> Explore All Tests Library</a>
+  </div>
 
-<div class="history-container" style="display: flex; flex-direction: column; gap: 40px;">
-    
-    <!-- Row 1: Graphs (Overall Metrics & Score Progression Trend) -->
-    <div class="metrics-progression-row" style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; width: 100%;">
-        
-        <!-- Summary Stats Card (Overall Metrics) -->
-        <div class="glass-card parallax-tilt-card">
-            <h3 class="section-title">
-                <i class="fas fa-chart-pie" id="statsTitleIcon" style="color: #7091E6;"></i>
-                <span>Overall Metrics</span>
-            </h3>
-            
-            <div class="stat-radial-container" style="margin-top: 20px;">
-                <div class="radial-widget">
-                    <svg>
-                        <circle class="bg-circle" cx="40" cy="40" r="35"/>
-                        <circle class="fill-circle" id="accuracyCircle" cx="40" cy="40" r="35" stroke="#7091E6"/>
-                    </svg>
-                    <div class="percentage-text" id="accuracyText">0%</div>
-                    <div class="label">Avg Accuracy</div>
-                </div>
-                <div class="radial-widget">
-                    <svg>
-                        <circle class="bg-circle" cx="40" cy="40" r="35"/>
-                        <circle class="fill-circle" id="percentileCircle" cx="40" cy="40" r="35" stroke="#7091E6"/>
-                    </svg>
-                    <div class="percentage-text" id="percentileText">0%</div>
-                    <div class="label">Avg Percentile</div>
-                </div>
-            </div>
 
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 25px;">
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
-                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Total Tests Taken</span>
-                    <strong style="font-size: 0.85rem; color: #ffffff;" id="metricTotalTests">0</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
-                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Best Mock Score</span>
-                    <strong style="font-size: 0.85rem; color: #7091E6;" id="metricBestScore">0/40</strong>
-                </div>
-            </div>
+  <!-- ============ SCOPE FILTER — always labeled, defaults to everything ============ -->
+  <div class="scope-bar reveal">
+    <span class="scope-label">Showing:</span>
+    <button class="scope-tab active" data-mode="all">All Tests</button>
+    <button class="scope-tab" data-mode="Module Blitz">Module Blitz</button>
+    <button class="scope-tab" data-mode="Topic Master">Topic Master</button>
+    <button class="scope-tab" data-mode="Subject Marathon">Subject Marathon</button>
+    <span class="scope-current">— <b id="scopeCount">9</b> attempts in this view</span>
+  </div>
+
+  <!-- ============ OVERVIEW BENTO ============ -->
+  <div class="bento">
+    <div class="surface metrics-card lift reveal">
+      <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Overall Metrics <span style="font-size:.68rem;color:var(--text-3);font-weight:500;margin-left:auto;" id="metricsScopeLabel">All Tests</span></div>
+      <div class="radial-row">
+        <div class="radial">
+          <svg><circle class="bg" cx="52" cy="52" r="44"/><circle class="fg" id="accCircle" cx="52" cy="52" r="44" stroke="var(--accent-2)"/></svg>
+          <div class="radial-txt"><span class="num" id="accNum">0%</span><span class="lbl">Avg Accuracy</span></div>
         </div>
-
-        <!-- Score Progression Graphical Representation -->
-        <div class="glass-card parallax-tilt-card">
-            <h3 class="section-title">
-                <i class="fas fa-chart-line" id="graphTitleIcon" style="color: #7091E6;"></i>
-                <span>Score Progression Trend</span>
-            </h3>
-            
-            <div class="chart-container" id="chartContainer" style="margin-top: 15px;">
-                <div class="chart-tooltip" id="chartTooltip"></div>
-                <svg id="trendSvg" style="width: 100%; height: 100%; overflow: visible;">
-                    <!-- SVG Chart items drawn dynamically via script -->
-                </svg>
-            </div>
-            
-            <div style="font-size: 0.72rem; color: rgba(255,255,255,0.4); text-align: center; margin-top: 15px; line-height: 1.45;">
-                Graph shows Score (0 - 40 Marks) achieved in past attempts. Keep scores above <strong>30</strong> to maintain 90+ percentile target!
-            </div>
+        <div class="radial">
+          <svg><circle class="bg" cx="52" cy="52" r="44"/><circle class="fg" id="pctCircle" cx="52" cy="52" r="44" stroke="var(--success)"/></svg>
+          <div class="radial-txt"><span class="num" id="pctNum">0%</span><span class="lbl">Avg Percentile</span></div>
         </div>
+      </div>
+      <div class="metric-row"><span>Total tests taken</span><b id="totalTests">0</b></div>
+      <div class="metric-row"><span>Best mock score</span><b id="bestScore">0/40</b></div>
     </div>
 
-    <!-- Row 2: Previously Attempted Exams Carousel -->
-    <div class="glass-card attempted-tests-card" style="width: 100%; overflow: visible; padding: 35px 40px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-            <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0;">Attempted Tests</h2>
-            <span style="font-size: 0.88rem; color: #3b82f6; font-weight: 700; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); padding: 8px 16px; border-radius: 12px; display: flex; align-items: center; gap: 6px;">Total Attempted Tests: <strong style="color: #ffffff;" id="totalAttemptedCount">0</strong></span>
-        </div>
-        
-        <div class="carousel-container">
-            <button class="carousel-btn prev-btn" onclick="slideCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
-            <div class="carousel-viewport">
-                <div class="carousel-track" id="attemptsCardsTrack">
-                    <!-- Cards will be populated dynamically -->
-                </div>
-            </div>
-            <button class="carousel-btn next-btn" onclick="slideCarousel(1)"><i class="fas fa-chevron-right"></i></button>
-        </div>
+    <div class="surface trend-card lift reveal">
+      <div class="card-title"><i class="fa-solid fa-chart-line"></i> Score Progression</div>
+      <svg viewBox="0 0 560 170" style="width:100%;height:auto;">
+        <line x1="0" y1="30" x2="560" y2="30" stroke="rgba(255,255,255,.05)"/>
+        <line x1="0" y1="80" x2="560" y2="80" stroke="rgba(255,255,255,.05)"/>
+        <line x1="0" y1="130" x2="560" y2="130" stroke="rgba(255,255,255,.05)"/>
+        <defs><linearGradient id="tf" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8b7cf0" stop-opacity=".28"/><stop offset="100%" stop-color="#8b7cf0" stop-opacity="0"/>
+        </linearGradient></defs>
+        <polygon id="trendFillPoly" points="" fill="url(#tf)"/>
+        <polyline id="trendLine" fill="none" stroke="var(--accent-2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="trend-legend"><span><i class="legend-dot" style="background:var(--accent-2)"></i>Accuracy per attempt, most recent → right</span></div>
+    </div>
+  </div>
+
+  <!-- ============ ATTEMPTED TESTS — the one place you pick an attempt ============ -->
+  <div class="sec-head reveal">
+    <div><h2>Attempted Tests</h2><div class="sec-sub">Tap any test to load its full analysis below</div></div>
+  </div>
+  <div class="attempts-track reveal" id="attemptsTrack"></div>
+
+  <!-- ============ ANALYSIS PANEL ============ -->
+  <div class="surface analysis-panel reveal" id="analysisPanel">
+    <div class="analysis-head">
+      <div>
+        <h3 id="analysisTitle">—</h3>
+        <p id="analysisSub">Select a test above to see its breakdown.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button class="paper-schedule-btn" onclick="openScheduleModal()" style="padding: 9px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-1); font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px;" title="Schedule Test"><i class="far fa-calendar-plus" style="font-size: 0.9rem; color: var(--accent-2);"></i> Schedule</button>
+        <button class="retake-btn" id="retakeBtn"><i class="fa-solid fa-rotate-right"></i> Retake this test</button>
+      </div>
     </div>
 
-    <!-- Row 3: Test Analysis slide down panel -->
-    <div class="glass-card" id="testAnalysisSection" style="width: 100%; display: none; margin-top: 30px; padding: 35px 40px; transform: translateY(20px); opacity: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.08);">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 20px; margin-bottom: 25px;">
-            <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0; text-align: left;">Test Analysis</h2>
-                <p id="analysis-test-title" style="font-size: 0.88rem; color: rgba(255,255,255,0.6); margin: 5px 0 0; text-align: left;">Review detailed analytics and question-wise logs for each attempt.</p>
-            </div>
-            <button onclick="closeAnalysisSection()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: #ffffff; cursor: pointer; transition: 0.2s;"><i class="fas fa-times"></i></button>
-        </div>
 
-        <!-- Attempts switcher dropdown -->
-        <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 30px;">
-            <span style="font-size: 0.9rem; color: rgba(255,255,255,0.7); font-weight: 600;">Select Attempt:</span>
-            <select id="analysis-attempt-select" onchange="onAnalysisAttemptChange()" style="background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #ffffff; padding: 8px 16px; outline: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: 600;">
-                <!-- Dynamically populated -->
-            </select>
-        </div>
+    <div class="attempt-pills" id="attemptPills"></div>
 
-        <!-- Metrics widgets row -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 35px;">
-            <div class="glass-card" style="padding: 20px; display: flex; align-items: center; gap: 15px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);">
-                <i class="fas fa-trophy" style="font-size: 1.8rem; color: #f59e0b;"></i>
-                <div style="text-align: left;">
-                    <span style="font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; font-weight: 700; display: block;">Score</span>
-                    <strong id="analysis-val-score" style="font-size: 1.4rem; color: #ffffff;">0 / 40</strong>
-                </div>
-            </div>
-            <div class="glass-card" style="padding: 20px; display: flex; align-items: center; gap: 15px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);">
-                <i class="fas fa-bullseye" style="font-size: 1.8rem; color: #10b981;"></i>
-                <div style="text-align: left;">
-                    <span style="font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; font-weight: 700; display: block;">Accuracy</span>
-                    <strong id="analysis-val-accuracy" style="font-size: 1.4rem; color: #ffffff;">0%</strong>
-                </div>
-            </div>
-            <div class="glass-card" style="padding: 20px; display: flex; align-items: center; gap: 15px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);">
-                <i class="fas fa-clock" style="font-size: 1.8rem; color: #3b82f6;"></i>
-                <div style="text-align: left;">
-                    <span style="font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; font-weight: 700; display: block;">Time Taken</span>
-                    <strong id="analysis-val-duration" style="font-size: 1.4rem; color: #ffffff;">00:00</strong>
-                </div>
-            </div>
-            <div class="glass-card" style="padding: 20px; display: flex; align-items: center; gap: 15px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);">
-                <i class="fas fa-bolt" style="font-size: 1.8rem; color: #8b5cf6;"></i>
-                <div style="text-align: left;">
-                    <span style="font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; font-weight: 700; display: block;">Percentile</span>
-                    <strong id="analysis-val-percentile" style="font-size: 1.4rem; color: #ffffff;">0%</strong>
-                </div>
-            </div>
-        </div>
-
-        <!-- Two-column content breakdown (Mobile Reordered: 1. Attempt Breakdown, 2. Focus Insights, 3. Question Sheets Analysis) -->
-        <div class="analysis-content-grid">
-            <!-- Section 1: Attempt Breakdown Doughnut Chart -->
-            <div class="analysis-col-breakdown glass-card" style="padding: 25px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); text-align: center;">
-                <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-top: 0; margin-bottom: 20px; text-align: left;">
-                    <i class="fas fa-chart-pie" style="color: #8b5cf6; margin-right: 8px;"></i> Attempt Breakdown
-                </h3>
-                <div style="height: 220px; display: flex; align-items: center; justify-content: center; position: relative;">
-                    <svg width="180" height="180" style="transform: rotate(-90deg); overflow: visible;">
-                        <circle cx="90" cy="90" r="70" stroke="rgba(255,255,255,0.04)" stroke-width="18" fill="transparent"/>
-                        <circle id="doughnut-correct" cx="90" cy="90" r="70" stroke="#10b981" stroke-width="18" fill="transparent" stroke-dasharray="440" stroke-dashoffset="440" style="transition: stroke-dashoffset 0.6s ease;"/>
-                        <circle id="doughnut-wrong" cx="90" cy="90" r="70" stroke="#ef4444" stroke-width="18" fill="transparent" stroke-dasharray="440" stroke-dashoffset="440" style="transition: stroke-dashoffset 0.6s ease;"/>
-                    </svg>
-                    <div style="position: absolute; text-align: center;">
-                        <strong id="doughnut-center-txt" style="font-size: 1.6rem; color: #ffffff; display: block; font-family: 'Outfit';">0%</strong>
-                        <span style="font-size: 0.72rem; color: rgba(255,255,255,0.5); text-transform: uppercase; font-weight: 700;">Overall Accuracy</span>
-                    </div>
-                </div>
-                <div style="display: flex; justify-content: space-around; margin-top: 20px; text-align: center;">
-                    <div>
-                        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; margin-right: 6px;"></span>
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Correct</span>
-                        <strong id="analysis-cnt-correct" style="display: block; color: #ffffff; font-size: 1.1rem; margin-top: 4px;">0</strong>
-                    </div>
-                    <div>
-                        <span style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; display: inline-block; margin-right: 6px;"></span>
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Wrong</span>
-                        <strong id="analysis-cnt-wrong" style="display: block; color: #ffffff; font-size: 1.1rem; margin-top: 4px;">0</strong>
-                    </div>
-                    <div>
-                        <span style="width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.25); display: inline-block; margin-right: 6px;"></span>
-                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">Skipped</span>
-                        <strong id="analysis-cnt-unanswered" style="display: block; color: #ffffff; font-size: 1.1rem; margin-top: 4px;">0</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 2: Focus Insights & Prep Book -->
-            <div class="analysis-col-insights" style="display: flex; flex-direction: column; gap: 20px;">
-                <div class="glass-card" style="padding: 25px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); text-align: left;">
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-top: 0; margin-bottom: 20px;">
-                        <i class="fas fa-lightbulb" style="color: #f59e0b; margin-right: 8px;"></i> Focus Insights
-                    </h3>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px;">
-                            <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Strong Area</span>
-                            <strong style="font-size: 0.85rem; color: #10b981;" id="analysis-val-strong">Number Systems</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding-bottom: 4px;">
-                            <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Scope of Focus</span>
-                            <strong style="font-size: 0.85rem; color: #f59e0b;" id="analysis-val-weak">Inequalities</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recommended Book Affiliate Block -->
-                <div class="glass-card" style="padding: 25px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); text-align: left;">
-                    <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-book" style="color: #60a5fa;"></i> Recommended Prep Book
-                    </h3>
-                    <p style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); line-height: 1.5; margin-bottom: 15px;">
-                        Strengthen your weak areas with targeted questions from the best preparation books.
-                    </p>
-                    <a id="recommended-book-link" href="https://www.amazon.in" target="_blank" class="rec-book-link">
-                        <span style="font-size: 1.5rem;">📖</span>
-                        <div>
-                            <strong id="recommended-book-title" style="display: block; font-size: 0.88rem; color: #ffffff; margin-bottom: 2px;">Quantitative Aptitude for CAT</strong>
-                            <span style="font-size: 0.72rem; color: #60a5fa;">View on Amazon &rarr;</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Section 3: Detailed Question Sheets Logs (Full Width on Mobile below Insights) -->
-            <div class="analysis-col-questions">
-                <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-list-check" style="color: #3b82f6;"></i> Question Sheets Analysis
-                </h3>
-                <div id="analysis-debug-info" style="display: none; color: #10b981; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.82rem; line-height: 1.4; margin-bottom: 20px; white-space: pre-wrap; word-break: break-all; border: 1px dashed rgba(255,255,255,0.1); text-align: left;"></div>
-                <div id="analysis-questions-container" style="display: flex; flex-direction: column; gap: 15px; text-align: left;">
-                    <!-- Dynamically populated question items -->
-                </div>
-            </div>
-        </div>
+    <div class="analysis-metrics">
+      <div class="a-metric"><div class="lbl">SCORE</div><div class="val" id="mScore">—</div></div>
+      <div class="a-metric"><div class="lbl">ACCURACY</div><div class="val" id="mAcc">—</div></div>
+      <div class="a-metric"><div class="lbl">DURATION</div><div class="val" id="mDur">—</div></div>
+      <div class="a-metric"><div class="lbl">PERCENTILE</div><div class="val" id="mPct">—</div></div>
     </div>
+
+    <div class="analysis-grid">
+      <div>
+        <div class="breakdown-donut">
+          <div class="donut">
+            <svg>
+              <circle cx="75" cy="75" r="62" stroke="rgba(255,255,255,.07)"/>
+              <circle cx="75" cy="75" r="62" stroke="var(--success)" id="dCorrect" stroke-dasharray="389" stroke-dashoffset="389"/>
+              <circle cx="75" cy="75" r="62" stroke="var(--danger)" id="dWrong" stroke-dasharray="389" stroke-dashoffset="389"/>
+            </svg>
+            <div class="donut-txt"><span class="num" id="dCenter">0%</span><span style="font-family:var(--f-mono);font-size:.6rem;color:var(--text-3);">correct</span></div>
+          </div>
+          <div class="donut-legend">
+            <span><i class="legend-dot" style="background:var(--success)"></i>Correct: <b id="cntCorrect" style="margin-left:3px;">0</b></span>
+            <span><i class="legend-dot" style="background:var(--danger)"></i>Wrong: <b id="cntWrong" style="margin-left:3px;">0</b></span>
+            <span><i class="legend-dot" style="background:var(--text-3)"></i>Skipped: <b id="cntSkip" style="margin-left:3px;">0</b></span>
+          </div>
+        </div>
+
+        <div class="insight-row" style="margin-top:20px;">
+          <div class="insight-box strong"><div class="lbl">STRONGEST TOPIC</div><div class="topic" id="strongTopic">—</div></div>
+          <div class="insight-box weak"><div class="lbl">WEAKEST TOPIC</div><div class="topic" id="weakTopic">—</div></div>
+        </div>
+
+        <div class="sponsor-strip">
+          <span class="sponsor-tag">SPONSORED</span>
+          <img src="https://images-na.ssl-images-amazon.com/images/I/71p92ULfQ+L.jpg" alt="">
+          <div class="info"><b>Quantitative Aptitude for CAT</b><span>Recommended for your weak topic</span></div>
+          <a href="https://www.amazon.in" target="_blank">View →</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="card-title" style="margin-bottom:12px;"><i class="fa-solid fa-list-check"></i> Question-wise log</div>
+        <div class="q-log" id="qLog"></div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
-<!-- Retake Confirm Modal -->
-<div class="modal-overlay" id="retakeModal" onclick="closeRetakeModal()">
-    <div class="modal-split-wrapper" onclick="event.stopPropagation()">
-        
-        <!-- Left Column: Guidelines & Practice Disclaimer -->
+<!-- Retake Test Confirmation Modal overlay -->
+<div class="modal-overlay" id="retakeModal">
+    <div class="modal-split-wrapper">
         <div class="modal-left-info">
-            <h3>Test <span class="highlight-green">Arena Rules &</span> <span class="highlight-blue">Guidelines</span></h3>
+            <h3>Test <span class="highlight-green">Arena Rules &</span><br><span class="highlight-blue">Guidelines</span></h3>
             
             <div class="rule-item">
-                <i class="fas fa-history"></i>
+                <i class="fas fa-history" style="color: #2af598;"></i>
                 <div class="rule-item-text">
                     <h4>Strict Simulated Timer</h4>
                     <p>The timer runs continuously once you begin. The test will auto-submit when the duration ends.</p>
                 </div>
             </div>
-            
+
             <div class="rule-item">
-                <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-shield-alt" style="color: #2af598;"></i>
                 <div class="rule-item-text">
                     <h4>Anti-Cheat Monitoring</h4>
                     <p>Tab switching or leaving the screen will warn you. Exceeding warnings will force auto-submit.</p>
@@ -286,1355 +341,784 @@
             </div>
 
             <div class="rule-item">
-                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-chart-line" style="color: #2af598;"></i>
                 <div class="rule-item-text">
                     <h4>Instant Score Analytics</h4>
                     <p>You will get a comprehensive performance report card and analytics breakdown immediately upon completion.</p>
                 </div>
             </div>
-            
+
             <div class="rule-item">
-                <i class="fas fa-ban"></i>
+                <i class="fas fa-ban" style="color: #2af598;"></i>
                 <div class="rule-item-text">
                     <h4>Input Restrictions</h4>
                     <p>Do not refresh the page or use browser back/forward buttons during the active session.</p>
                 </div>
             </div>
-            
+
             <div class="practice-standing-box">
                 <div class="practice-standing-title">
-                    <i class="fas fa-exclamation-circle"></i> Practice Run Standing
+                    <i class="fas fa-exclamation-circle" style="color: #fbcd0b;"></i> Practice Run Standing
                 </div>
                 <p class="practice-standing-desc">This is a practice retake session. Please note that only your 1st attempt score counts towards the global leaderboard rank. Retaking tests will not affect your ranking profile.</p>
             </div>
         </div>
-        
-        <!-- Right Column: Mock Test Ready card details -->
+
         <div class="modal-confirm-card">
-            <div class="modal-close-trigger" onclick="closeRetakeModal()"><i class="fas fa-times"></i></div>
+            <div class="modal-close-trigger" onclick="closeRetakeModal()">
+                <i class="fas fa-times"></i>
+            </div>
             
             <div class="modal-card-header">
-                <i class="fas fa-file-invoice"></i>
+                <i class="fas fa-sticky-note" style="color: #fbcd0b;"></i>
                 <h3>Mock Test Ready</h3>
                 <p>Double check test parameters before launching session.</p>
             </div>
-            
-            <!-- Parameters list -->
+
             <div class="modal-details">
                 <div class="detail-row">
                     <span class="detail-label">Test Mode</span>
-                    <span class="detail-value" id="retake-val-mode">Module Blitz</span>
+                    <span class="detail-value" id="modalRetakeMode">Module Blitz</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Subject</span>
-                    <span class="detail-value" id="retake-val-subject">Aptitude Mastery</span>
+                    <span class="detail-value" id="modalRetakeSubject">Aptitude Mastery</span>
                 </div>
-                <div class="detail-row" id="retake-row-topic">
+                <div class="detail-row">
                     <span class="detail-label">Topic</span>
-                    <span class="detail-value" id="retake-val-topic">Quantitative Aptitude</span>
+                    <span class="detail-value" id="modalRetakeTopic">Quantitative Aptitude</span>
                 </div>
-                <div class="detail-row" id="retake-row-module">
+                <div class="detail-row">
                     <span class="detail-label">Module</span>
-                    <span class="detail-value" id="retake-val-module">Number Systems</span>
+                    <span class="detail-value" id="modalRetakeModule">Number Systems</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Mock Paper</span>
-                    <span class="detail-value" id="retake-val-test">Mock Test 01</span>
+                    <span class="detail-value" id="modalRetakeName">Mock Test 01</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Total Questions</span>
-                    <span class="detail-value" id="retake-val-questions">10 MCQs</span>
+                    <span class="detail-value" id="modalRetakeQuestions">10 MCQs</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Duration</span>
-                    <span class="detail-value" id="retake-val-duration">15 Mins</span>
+                    <span class="detail-value" id="modalRetakeDuration">15 Mins</span>
                 </div>
             </div>
 
             <div class="modal-actions">
                 <button class="modal-btn modal-btn-cancel" onclick="closeRetakeModal()">Go Back</button>
-                <button class="modal-btn modal-btn-confirm" onclick="launchRetakeActual()">Begin Test</button>
+                <button class="modal-btn modal-btn-confirm" id="modalConfirmStartBtn">Begin Test</button>
             </div>
-        </div>
-        
-    </div>
-</div>
-
-<!-- Modal Overlay for Scheduling Mock Test -->
-<div class="modal-overlay" id="scheduleModal" onclick="closeScheduleModal()">
-    <div class="modal-confirm-card" style="max-width: 500px; width: 95%; padding: 35px; color: #ffffff; background: rgba(30, 41, 59, 0.65); border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 28px; position: relative;" onclick="event.stopPropagation()">
-        <div class="modal-close-trigger" onclick="closeScheduleModal()"><i class="fas fa-times" style="color: rgba(255,255,255,0.6);"></i></div>
-        
-        <div class="modal-card-header" style="margin-bottom: 25px;">
-            <i class="fas fa-calendar-plus" style="color: #3b82f6; font-size: 2.2rem; margin-bottom: 10px; display: inline-block;"></i>
-            <h3 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; margin: 0; text-align: left;">Schedule Mock Test</h3>
-            <p style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.6); margin-top: 5px; text-align: left;">Select a date and time to reserve your mock test seat.</p>
-        </div>
-
-        <!-- Meta Summary Box -->
-        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 15px 20px; margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
-            <div>
-                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block;">Mock Paper</span>
-                <span id="sch-paper-val" style="font-size: 0.88rem; font-weight: 700; color: #ffffff;">-</span>
-            </div>
-            <div>
-                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block;">Test Mode</span>
-                <span id="sch-mode-val" style="font-size: 0.88rem; font-weight: 700; color: #ffffff;">-</span>
-            </div>
-            <div style="grid-column: span 2; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; margin-top: 4px;">
-                <span style="font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: rgba(255,255,255,0.5); display: block;">Subject</span>
-                <span id="sch-subject-val" style="font-size: 0.88rem; font-weight: 700; color: #ffffff;">-</span>
-            </div>
-        </div>
-
-        <!-- Custom Date Picker Field -->
-        <div class="custom-picker-container" id="date-picker-wrapper" style="position: relative; margin-bottom: 20px; text-align: left;">
-            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; display: block;">Select Date</span>
-            <div class="custom-time-input-row" onclick="togglePicker('date', event)" style="cursor: pointer; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px; background: rgba(255, 255, 255, 0.05);">
-                <i class="far fa-calendar-alt" style="color: rgba(255, 255, 255, 0.6);"></i>
-                <input type="text" id="sch-date-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #ffffff;" placeholder="Select Date">
-            </div>
-            
-            <!-- Custom Date Calendar Dropdown -->
-            <div class="picker-dropdown" id="date-dropdown" style="bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0; display: none; position: absolute; z-index: 1000; width: 100%; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); padding: 15px;" onclick="event.stopPropagation()">
-                <div class="cal-drop-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <button type="button" onclick="changeMonth(-1, event)" style="background: none; border: none; cursor: pointer; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-chevron-left"></i></button>
-                    <span id="cal-month-title" style="font-weight: 700; color: #ffffff;">January 2026</span>
-                    <button type="button" onclick="changeMonth(1, event)" style="background: none; border: none; cursor: pointer; color: rgba(255, 255, 255, 0.6);"><i class="fas fa-chevron-right"></i></button>
-                </div>
-                <div class="cal-drop-grid" id="cal-days-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; font-size: 0.8rem;">
-                </div>
-            </div>
-        </div>
-
-        <!-- Custom Time Picker Field -->
-        <div class="custom-picker-container" id="time-picker-wrapper" style="position: relative; margin-bottom: 30px; text-align: left;">
-            <span class="select-label" style="font-size: 0.75rem; font-weight: bold; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); margin-bottom: 8px; display: block;">Select Time</span>
-            <div class="custom-time-input-row" onclick="togglePicker('time', event)" style="cursor: pointer; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px; background: rgba(255, 255, 255, 0.05);">
-                <i class="far fa-clock" style="color: rgba(255, 255, 255, 0.6);"></i>
-                <input type="text" id="sch-time-display" readonly style="border: none; background: transparent; pointer-events: none; width: 100%; outline: none; font-weight: 700; color: #ffffff;" placeholder="Select Time">
-            </div>
-            
-            <!-- Custom Time Picker Dropdown -->
-            <div class="picker-dropdown" id="time-dropdown" style="padding: 15px; bottom: 100%; top: auto; margin-bottom: 8px; margin-top: 0; display: none; position: absolute; z-index: 1000; width: 100%; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);" onclick="event.stopPropagation()">
-                <!-- Fixed Display Columns in Header -->
-                <div class="time-drop-header" style="background: rgba(255,255,255,0.05); color: #ffffff;">
-                    <div class="time-header-column" id="time-h-lbl" style="background: #1e293b; color: #ffffff; border: 1px solid rgba(255,255,255,0.1);">09</div>
-                    <div class="time-header-column" style="background:none; border:none; flex:0.2;">:</div>
-                    <div class="time-header-column" id="time-m-lbl" style="background: #1e293b; color: #ffffff; border: 1px solid rgba(255,255,255,0.1);">00</div>
-                    <div class="time-header-column" style="background:none; border:none; flex:0.2;"></div>
-                    <div class="time-header-column" id="time-ap-lbl" style="background: #1e293b; color: #ffffff; border: 1px solid rgba(255,255,255,0.1);">AM</div>
-                </div>
-                
-                <!-- Scrolling Columns -->
-                <div class="time-columns-container" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1);">
-                    <!-- Hour Column -->
-                    <div class="time-scroll-column" id="sch-hour-scroll" style="border-right: 1px solid rgba(255,255,255,0.08);"></div>
-                    <!-- Minute Column -->
-                    <div class="time-scroll-column" id="sch-minute-scroll" style="border-right: 1px solid rgba(255,255,255,0.08);"></div>
-                    <!-- AM/PM Column -->
-                    <div class="time-scroll-column" id="sch-ampm-scroll">
-                        <div class="time-val-item selected" onclick="selectTimeComponent('ampm', 'AM', this)" style="color: rgba(255,255,255,0.6);">AM</div>
-                        <div class="time-val-item" onclick="selectTimeComponent('ampm', 'PM', this)" style="color: rgba(255,255,255,0.6);">PM</div>
-                    </div>
-                </div>
-                
-                <button type="button" class="modal-btn modal-btn-confirm" onclick="confirmTimeSelection(event)" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem; border-radius: 10px; background: #3b82f6; color: #ffffff; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase;">Done</button>
-            </div>
-        </div>
-
-        <div class="modal-action-row" style="display: flex; gap: 15px;">
-            <button class="modal-btn modal-btn-cancel" onclick="closeScheduleModal()" style="border-radius: 12px; padding: 12px; flex: 1; font-weight: 700; text-transform: uppercase; cursor: pointer; background: rgba(255,255,255,0.05); color: #ffffff; border: 1px solid rgba(255,255,255,0.15);">Cancel</button>
-            <button class="modal-btn modal-btn-confirm" onclick="confirmScheduleFromPopup()" style="background: #3b82f6; color: #ffffff; border-radius: 12px; padding: 12px; flex: 1; font-weight: 700; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);">Confirm Schedule</button>
         </div>
     </div>
 </div>
 
-{{ history|json_script:"history-data-json" }}
-{% endblock %}
+<!-- Schedule Modal overlay (Reused partial) -->
+{% include 'partials/schedule_modal.html' %}
 
-{% block extra_js %}
+
+
+<!-- Sticky Note Toast -->
+<div class="sticky-note-toast" id="stickyToast">
+    <i class="fas fa-thumbtack sticky-note-pin"></i>
+    <i class="fas fa-check-circle" style="font-size: 1.2rem; color: #120a21;"></i>
+    <span id="stickyToastText">Test scheduled successfully!</span>
+</div>
+</main>
+
+<style>
+/* Modal Confirmation Guidelines */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(4, 6, 14, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    padding: 40px 0;
+}
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.modal-split-wrapper {
+    max-width: 1020px;
+    width: 92%;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+@media (max-width: 992px) {
+    .modal-overlay {
+        padding: 25px 15px !important;
+        align-items: flex-start !important;
+    }
+    .modal-split-wrapper {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+.modal-left-info {
+    color: #ffffff;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+}
+.modal-overlay.active .modal-left-info {
+    opacity: 1;
+    transform: translateX(0);
+}
+.modal-left-info h3 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 28px;
+    line-height: 1.25;
+    font-family: var(--f-display);
+    color: #ffffff;
+}
+.modal-left-info h3 span.highlight-green { color: #2af598; }
+.modal-left-info h3 span.highlight-blue { color: #4ea8ff; }
+.rule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.rule-item i {
+    font-size: 1.3rem;
+    margin-top: 3px;
+}
+.rule-item-text h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #ffffff;
+}
+.rule-item-text p {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.45;
+    margin: 0;
+}
+
+.practice-standing-box {
+    margin-top: 28px;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: rgba(251, 205, 11, 0.05);
+    border: 1px solid rgba(251, 205, 11, 0.3);
+    color: #fbcd0b;
+}
+.practice-standing-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    margin-bottom: 6px;
+}
+.practice-standing-desc {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin: 0;
+    color: rgba(251, 205, 11, 0.88);
+}
+
+.modal-confirm-card {
+    background: #0f1627 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 24px;
+    padding: 36px 32px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    color: #ffffff !important;
+}
+.modal-overlay.active .modal-confirm-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+.modal-close-trigger {
+    position: absolute;
+    top: 24px; right: 24px;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.modal-close-trigger:hover { color: #ffffff; }
+
+.modal-card-header {
+    margin-bottom: 24px;
+    text-align: left;
+}
+.modal-card-header i {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    display: inline-block;
+}
+.modal-card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+}
+.modal-card-header p {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 5px;
+}
+
+.modal-details {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 16px 22px;
+    margin-bottom: 28px;
+}
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.85rem;
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label { color: rgba(255, 255, 255, 0.55); font-weight: 500; }
+.detail-value { font-weight: 700; color: #ffffff; text-align: right; }
+
+.modal-actions {
+    display: flex;
+    gap: 14px;
+}
+.modal-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    border: none;
+}
+.modal-btn-cancel {
+    background: #252e42;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.modal-btn-cancel:hover { background: #313d57; }
+.modal-btn-confirm {
+    background: #2af598;
+    color: #08080b;
+    box-shadow: 0 8px 24px rgba(42, 245, 152, 0.3);
+}
+.modal-btn-confirm:hover {
+    background: #34d399;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(42, 245, 152, 0.4);
+}
+
+.sticky-note-toast {
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    z-index: 9999;
+    background: linear-gradient(135deg, #ffe57f 0%, #ffc107 100%);
+    color: #120a21;
+    padding: 14px 22px 14px 18px;
+    border-radius: 4px 18px 18px 18px;
+    box-shadow: 0 15px 35px rgba(255, 193, 7, 0.35), 0 8px 20px rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    pointer-events: none;
+    transform: translateX(150%) rotate(12deg) scale(0.8);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-left: 5px solid #ff9800;
+}
+.sticky-note-toast.show-sticky {
+    transform: translateX(0) rotate(-2deg) scale(1);
+    opacity: 1;
+}
+.sticky-note-pin {
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    color: #e53935;
+    font-size: 1.1rem;
+    filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4));
+    transform: rotate(-15deg);
+}
+</style>
+
+
+<script src="{% static 'js/base.js' %}"></script>
 <script>
-    // Pre-populated data passed from django context
-    const dbHistory = JSON.parse(document.getElementById('history-data-json').textContent);
+const historyData = [
+  {id:1, testKey:'number-systems-blitz', attemptNumber:1, mode:'Module Blitz', title:'Number Systems — Blitz', date:'10 Jul 2026', score:20, total:40, accuracy:50, percentile:52, duration:'15:20',
+    correct:20, wrong:16, skip:4, strong:'Basic Divisibility', weak:'HCF/LCM',
+    questions:[
+      {q:'HCF of 24 and 36', status:'wrong'},
+      {q:'Find the next prime after 47', status:'correct'},
+      {q:'LCM of 12, 18 and 30', status:'wrong'},
+    ]},
+  {id:2, testKey:'number-systems-blitz', attemptNumber:2, mode:'Module Blitz', title:'Number Systems — Blitz', date:'19 Jul 2026', score:27, total:40, accuracy:67, percentile:71, duration:'13:50',
+    correct:27, wrong:10, skip:3, strong:'Number Systems', weak:'HCF/LCM',
+    questions:[
+      {q:'HCF of 24 and 36', status:'correct'},
+      {q:'Find the next prime after 47', status:'correct'},
+      {q:'LCM of 12, 18 and 30', status:'wrong'},
+    ]},
+  {id:3, testKey:'number-systems-blitz', attemptNumber:3, mode:'Module Blitz', title:'Number Systems — Blitz', date:'28 Jul 2026', score:34, total:40, accuracy:85, percentile:91, duration:'12:40',
+    correct:34, wrong:4, skip:2, strong:'Number Systems', weak:'Inequalities',
+    questions:[
+      {q:'If x + 1/x = 3, find x² + 1/x²', status:'correct'},
+      {q:'Solve: 2x - 5 > 3 and x < 10', status:'wrong'},
+      {q:'HCF of 24 and 36', status:'correct'},
+      {q:'Simplify: (a+b)² - (a-b)²', status:'skip'},
+      {q:'Find the next prime after 47', status:'correct'},
+    ]},
+  {id:4, testKey:'time-work-master', attemptNumber:1, mode:'Topic Master', title:'Time & Work — Master', date:'25 Jul 2026', score:28, total:40, accuracy:70, percentile:76, duration:'22:10',
+    correct:28, wrong:9, skip:3, strong:'Ratios', weak:'Pipes & Cisterns',
+    questions:[
+      {q:'A can do a job in 6 days, B in 8. Together?', status:'correct'},
+      {q:'Pipe fills tank in 4 hrs, leak empties in 12', status:'wrong'},
+      {q:'Work efficiency ratio problem', status:'correct'},
+    ]},
+  {id:5, testKey:'full-aptitude-marathon', attemptNumber:1, mode:'Subject Marathon', title:'Full Aptitude — Marathon', date:'20 Jul 2026', score:61, total:80, accuracy:76, percentile:83, duration:'58:30',
+    correct:61, wrong:14, skip:5, strong:'Percentages', weak:'Probability',
+    questions:[
+      {q:'A bag has 4 red, 5 blue balls. P(both red)?', status:'wrong'},
+      {q:'Compound interest for 2 years at 10%', status:'correct'},
+      {q:'Permutation of 5 letters taken 3 at a time', status:'correct'},
+    ]},
+  {id:6, testKey:'inequalities-blitz', attemptNumber:1, mode:'Module Blitz', title:'Inequalities — Blitz', date:'15 Jul 2026', score:22, total:40, accuracy:55, percentile:58, duration:'14:05',
+    correct:22, wrong:15, skip:3, strong:'Basic Algebra', weak:'Quadratic Inequalities',
+    questions:[
+      {q:'Solve: x² - 5x + 6 < 0', status:'wrong'},
+      {q:'Solve: |x - 3| ≤ 5', status:'correct'},
+    ]},
+];
 
-    let allAttempts = [];
-    let filteredAttempts = [];
-    let currentMode = 'Module Blitz'; // Default mode selected on page load
+const scopeLabels = {all:'All Tests', 'Module Blitz':'Module Blitz', 'Topic Master':'Topic Master', 'Subject Marathon':'Subject Marathon'};
+let currentScope = 'all';
+let selectedTestKey = null;
+let selectedAttemptId = null;
 
-    // Load attempts from localStorage and merge with dbAttempts
-    function loadAttempts() {
-        let localHistory = [];
-        try {
-            localHistory = JSON.parse(localStorage.getItem('prepverse-mock-history') || '[]');
-        } catch (e) {
-            console.error("Error parsing prepverse-mock-history", e);
-        }
+function filtered(){
+  return currentScope === 'all' ? historyData : historyData.filter(h => h.mode === currentScope);
+}
 
-        // Merge localHistory (dynamic attempts) with preloaded database attempts (to showcase historical data)
-        allAttempts = [...localHistory, ...dbHistory];
-        
-        // Remove duplicates if any (by id)
-        const uniqueAttempts = [];
-        const seen = new Set();
-        allAttempts.forEach(item => {
-            if (!seen.has(item.id)) {
-                seen.add(item.id);
-                uniqueAttempts.push(item);
-            }
-        });
-        allAttempts = uniqueAttempts;
+function groupByTest(data){
+  const map = new Map();
+  data.forEach(h => {
+    if(!map.has(h.testKey)) map.set(h.testKey, []);
+    map.get(h.testKey).push(h);
+  });
+  return [...map.values()].map(attempts => {
+    attempts.sort((a,b) => a.attemptNumber - b.attemptNumber);
+    const best = attempts.reduce((m,a) => a.score > m.score ? a : m, attempts[0]);
+    const latest = attempts[attempts.length-1];
+    return {testKey: latest.testKey, title: latest.title, mode: latest.mode, attempts, best, latest};
+  });
+}
 
-        // Sort attempts by date descending (newest first)
-        allAttempts.sort((a, b) => new Date(b.date) - new Date(a.date));
-    }
+function renderScope(){
+  const data = filtered();
+  document.getElementById('scopeCount').textContent = data.length;
+  document.getElementById('metricsScopeLabel').textContent = scopeLabels[currentScope];
 
-    // Initialize UI Components
-    document.addEventListener("DOMContentLoaded", () => {
-        loadAttempts();
-        filterByMode('Module Blitz'); // Apply default filter
+  const avgAcc = Math.round(data.reduce((s,h)=>s+h.accuracy,0)/data.length) || 0;
+  const avgPct = Math.round(data.reduce((s,h)=>s+h.percentile,0)/data.length) || 0;
+  const best = data.reduce((m,h)=> h.score>m.score ? h : m, data[0] || {score:0,total:40});
 
-        // 1. Moving Glow Blobs via Cursor Vectors
-        document.addEventListener("mousemove", (e) => {
-            const mx = (e.clientX / window.innerWidth - 0.5).toFixed(3);
-            const my = (e.clientY / window.innerHeight - 0.5).toFixed(3);
-            document.documentElement.style.setProperty("--mx", mx);
-            document.documentElement.style.setProperty("--my", my);
-        });
+  document.getElementById('accNum').textContent = avgAcc+'%';
+  document.getElementById('pctNum').textContent = avgPct+'%';
+  document.getElementById('totalTests').textContent = data.length;
+  document.getElementById('bestScore').textContent = (best.score||0)+'/'+(best.total||40);
 
-        // 2. Parallax card tilt effect
-        const cards = document.querySelectorAll(".parallax-tilt-card");
-        cards.forEach(card => {
-            card.addEventListener("mousemove", (e) => {
-                const box = card.getBoundingClientRect();
-                const x = e.clientX - box.left - (box.width / 2);
-                const y = e.clientY - box.top - (box.height / 2);
-                
-                // Scale factor for gentle tilts
-                const factorX = (x / (box.width / 2)).toFixed(3);
-                const factorY = (y / (box.height / 2)).toFixed(3);
-                
-                card.style.transform = `perspective(1000px) rotateY(${factorX * 4}deg) rotateX(${-factorY * 4}deg) translateY(-2px)`;
-            });
-            
-            card.style.transition = "transform 0.1s ease-out, box-shadow 0.2s ease";
-            
-            card.addEventListener("mouseleave", () => {
-                card.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(0)";
-            });
-        });
+  const C = 2*Math.PI*44;
+  document.getElementById('accCircle').style.strokeDasharray = C;
+  document.getElementById('accCircle').style.strokeDashoffset = C - (avgAcc/100)*C;
+  document.getElementById('pctCircle').style.strokeDasharray = C;
+  document.getElementById('pctCircle').style.strokeDashoffset = C - (avgPct/100)*C;
 
-        // 3. Intersection Observer for Scroll Reveal animations
-        const revealObserverOptions = {
-            root: null,
-            rootMargin: "0px",
-            threshold: 0.08
-        };
-        
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach((entry, idx) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add("revealed");
-                    }, idx * 70); // Staggered reveal effect
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, revealObserverOptions);
-        
-        const revealTargets = document.querySelectorAll(".history-container .glass-card, .hero");
-        revealTargets.forEach(target => {
-            revealObserver.observe(target);
-        });
+  const pts = [...data].sort((a,b) => a.id - b.id);
+  const n = pts.length || 1;
+  const stepX = 540/Math.max(n-1,1);
+  const line = pts.map((h,i)=> `${10+i*stepX},${150 - (h.accuracy/100)*130}`).join(' ');
+  document.getElementById('trendLine').setAttribute('points', line);
+  document.getElementById('trendFillPoly').setAttribute('points', line + ` 550,160 10,160`);
+
+  renderTestCards(groupByTest(data));
+}
+
+function renderTestCards(groups){
+  const track = document.getElementById('attemptsTrack');
+  track.innerHTML = '';
+  groups.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'surface attempt-card lift reveal' + (g.testKey === selectedTestKey ? ' selected' : '');
+    card.innerHTML = `
+      <span class="mode-tag">${g.mode}</span>
+      <h4>${g.title}</h4>
+      <div class="date">Latest: ${g.latest.date} · ${g.latest.duration}</div>
+      <div class="score-line"><span class="score">${g.best.score}/${g.best.total}</span><span class="pct">${g.best.percentile}th pct</span></div>
+      ${g.attempts.length > 1 ? `<div class="attempt-count"><i class="fa-solid fa-rotate-right"></i> ${g.attempts.length} attempts · best shown</div>` : ''}`;
+    card.addEventListener('click', () => selectTest(g.testKey, g.latest.id));
+    track.appendChild(card);
+  });
+  if(!groups.find(g=>g.testKey===selectedTestKey) && groups.length){
+    selectTest(groups[0].testKey, groups[0].latest.id);
+  } else if(selectedAttemptId){
+    renderAnalysis(historyData.find(h => h.id === selectedAttemptId));
+  }
+}
+
+function selectTest(testKey, attemptId){
+  selectedTestKey = testKey;
+  selectedAttemptId = attemptId;
+  renderTestCards(groupByTest(filtered()));
+  renderAttemptPills(testKey);
+  renderAnalysis(historyData.find(h => h.id === attemptId));
+}
+
+function renderAttemptPills(testKey){
+  const attempts = historyData.filter(h => h.testKey === testKey).sort((a,b)=>a.attemptNumber-b.attemptNumber);
+  const wrap = document.getElementById('attemptPills');
+  if(attempts.length <= 1){ wrap.innerHTML = ''; return; }
+  const bestId = attempts.reduce((m,a)=> a.score>m.score ? a : m, attempts[0]).id;
+  wrap.innerHTML = attempts.map(a => `
+    <button class="attempt-pill ${a.id===selectedAttemptId?'active':''}" data-id="${a.id}">
+      Attempt ${a.attemptNumber} · ${a.score}/${a.total}
+      ${a.id===bestId ? '<span class="best-badge">BEST</span>' : ''}
+    </button>`).join('');
+  wrap.querySelectorAll('.attempt-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedAttemptId = Number(btn.dataset.id);
+      renderAttemptPills(testKey);
+      renderAnalysis(historyData.find(h => h.id === selectedAttemptId));
     });
+  });
+}
 
-    window.slideCarousel = function(direction) {
-        const track = document.getElementById("attemptsCardsTrack");
-        if (!track) return;
-        const cardsCount = track.children.length;
-        if (cardsCount === 0) return;
-        
-        // Dynamic card width & gap calculation
-        const firstCard = track.children[0];
-        const isMobile = window.innerWidth <= 640;
-        const gap = isMobile ? 0 : 25;
-        const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : 330;
-        const viewportWidth = track.parentElement.clientWidth;
-        const visibleCards = isMobile ? 1 : Math.max(1, Math.floor((viewportWidth + gap) / (cardWidth + gap)));
-        const maxIndex = Math.max(0, cardsCount - visibleCards);
-        
-        carouselIndex += direction;
-        
-        // Infinite loop wrapping behavior
-        if (carouselIndex > maxIndex) {
-            carouselIndex = 0;
-        } else if (carouselIndex < 0) {
-            carouselIndex = maxIndex;
-        }
-        
-        const shiftAmount = carouselIndex * (cardWidth + gap);
-        track.style.transform = `translateX(-${shiftAmount}px)`;
-    }
+function renderAnalysis(h){
+  if(!h) return;
+  document.getElementById('analysisTitle').textContent = h.title;
+  document.getElementById('analysisSub').textContent = `${h.mode} · Attempt ${h.attemptNumber} · ${h.date}`;
+  document.getElementById('mScore').textContent = h.score+'/'+h.total;
+  document.getElementById('mAcc').textContent = h.accuracy+'%';
+  document.getElementById('mDur').textContent = h.duration;
+  document.getElementById('mPct').textContent = h.percentile+'th';
 
-    // Filter attempts by mode on tab selection
-    window.filterByMode = function(modeName) {
-        currentMode = modeName;
-        filteredAttempts = allAttempts.filter(item => item.mode === modeName);
+  const total = h.correct+h.wrong+h.skip;
+  const C = 2*Math.PI*62;
+  const correctOffset = C - (h.correct/total)*C;
+  const wrongOffset = C - (h.wrong/total)*C;
+  document.getElementById('dCorrect').style.strokeDasharray = C;
+  document.getElementById('dCorrect').style.strokeDashoffset = correctOffset;
+  document.getElementById('dWrong').style.strokeDasharray = C;
+  document.getElementById('dWrong').style.strokeDashoffset = wrongOffset;
+  document.getElementById('dWrong').style.transform = `rotate(${(h.correct/total)*360}deg)`;
+  document.getElementById('dWrong').style.transformOrigin = '75px 75px';
+  document.getElementById('dCenter').textContent = Math.round((h.correct/total)*100)+'%';
+  document.getElementById('cntCorrect').textContent = h.correct;
+  document.getElementById('cntWrong').textContent = h.wrong;
+  document.getElementById('cntSkip').textContent = h.skip;
+  document.getElementById('strongTopic').textContent = h.strong;
+  document.getElementById('weakTopic').textContent = h.weak;
 
-        // Update active tab styles
-        updateTabStyles(modeName);
+  const qlog = document.getElementById('qLog');
+  qlog.innerHTML = h.questions.map((q,i) => `
+    <div class="q-item">
+      <span class="q-num">Q${i+1}</span>
+      <span class="q-text">${q.q}</span>
+      <span class="q-status ${q.status}">${q.status === 'correct' ? 'Correct' : q.status === 'wrong' ? 'Wrong' : 'Skipped'}</span>
+    </div>`).join('');
+}
 
-        // Render Attempts List, Overall Metrics & Progression Graph
-        renderAttemptsList();
-        renderOverallMetrics();
-        renderScoreTrend();
-    }
+document.querySelectorAll('.scope-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.scope-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentScope = tab.dataset.mode;
+    renderScope();
+  });
+});
 
-    // Update styling for tab buttons dynamically
-    function updateTabStyles(modeName) {
-        const tabBlitz = document.getElementById("tab-blitz");
-        const tabMaster = document.getElementById("tab-master");
-        const tabMarathon = document.getElementById("tab-marathon");
+// Modal Handlers & Scheduling
+function openScheduleModal() {
+  const h = historyData.find(x => x.id === selectedAttemptId) || historyData[0];
+  if(h) {
+    const paperEl = document.getElementById('sch-paper-val');
+    if (paperEl) paperEl.textContent = h.title;
+    const modeEl = document.getElementById('sch-mode-val');
+    if (modeEl) modeEl.textContent = h.mode;
+    const subEl = document.getElementById('sch-subject-val');
+    if (subEl) subEl.textContent = h.strong || 'Aptitude Mastery';
+  }
+  document.getElementById('scheduleModal').classList.add('active');
+}
+function closeScheduleModal() {
+  document.getElementById('scheduleModal').classList.remove('active');
+}
 
-        // Clear all active styling classes
-        tabBlitz.className = "mode-tab-btn";
-        tabMaster.className = "mode-tab-btn";
-        tabMarathon.className = "mode-tab-btn";
+function openRetakeModal(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const h = historyData.find(x => x.id === selectedAttemptId) || historyData[0];
+  if(!h) return;
+  const titleEl = document.getElementById('modalRetakeTitle');
+  if (titleEl) {
+    titleEl.innerHTML = `Ready to <span class="highlight-blue">Retake ${h.title}</span>?`;
+  }
+  const modeEl = document.getElementById('modalRetakeMode');
+  if (modeEl) modeEl.textContent = h.mode;
+  const nameEl = document.getElementById('modalRetakeName');
+  if (nameEl) nameEl.textContent = h.title;
+  
+  const modal = document.getElementById('retakeModal');
+  if (modal) modal.classList.add('active');
+}
+function closeRetakeModal() {
+  const modal = document.getElementById('retakeModal');
+  if (modal) modal.classList.remove('active');
+}
 
-        // Assign correct coloring themes based on active modes
-        let activeColor = "#7091E6";
-        if (modeName === 'Module Blitz') {
-            tabBlitz.classList.add("active-blitz");
-            activeColor = "#7091E6";
-        } else if (modeName === 'Topic Master') {
-            tabMaster.classList.add("active-master");
-            activeColor = "#3D52A0";
-        } else if (modeName === 'Subject Marathon') {
-            tabMarathon.classList.add("active-marathon");
-            activeColor = "#8697C4";
-        }
+window.openRetakeModal = openRetakeModal;
+window.closeRetakeModal = closeRetakeModal;
 
-        // Apply theme color highlights to titles and icons
-        document.getElementById("statsTitleIcon").style.color = activeColor;
-        document.getElementById("graphTitleIcon").style.color = activeColor;
-        
-        const accuracyCircle = document.getElementById("accuracyCircle");
-        const percentileCircle = document.getElementById("percentileCircle");
-        if (accuracyCircle) accuracyCircle.style.stroke = activeColor;
-        if (percentileCircle) percentileCircle.style.stroke = activeColor;
-    }
+const retakeBtnEl = document.getElementById('retakeBtn');
+if (retakeBtnEl) {
+  retakeBtnEl.onclick = openRetakeModal;
+}
 
-    // Render attempts card list inside carousel track
-    function renderAttemptsList() {
-        const track = document.getElementById("attemptsCardsTrack");
-        if (!track) return;
-        
-        // Update total attempted count text
-        const countEl = document.getElementById("totalAttemptedCount");
-        if (countEl) countEl.innerText = filteredAttempts.length;
+const confirmStartBtn = document.getElementById('modalConfirmStartBtn');
+if (confirmStartBtn) {
+  confirmStartBtn.onclick = function() {
+    const h = historyData.find(x => x.id === selectedAttemptId) || historyData[0];
+    if(h) window.location.href = "{% url 'start_test_session' %}?mode=" + encodeURIComponent(h.mode) + "&test=" + encodeURIComponent(h.title);
+  };
+}
 
-        // Group attempts by test_name
-        const groups = {};
-        filteredAttempts.forEach(item => {
-            if (!groups[item.test_name]) {
-                groups[item.test_name] = [];
-            }
-            groups[item.test_name].push(item);
-        });
-        
-        const groupKeys = Object.keys(groups);
-        if (groupKeys.length === 0) {
-            track.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.4); padding: 30px; width: 100%;">No mock tests attempted under this category yet. Start tests inside the Mock Tests section!</div>`;
-            carouselIndex = 0;
-            track.style.transform = 'translateX(0)';
-            return;
-        }
+// Custom Date and Time Picker Logic
+let calCurrentDate = new Date();
+let selectedDateVal = "";
+let selectedTimeVal = "";
 
-        track.innerHTML = groupKeys.map(testName => {
-            const list = groups[testName];
-            // Sort attempts chronological (oldest to newest)
-            list.sort((a, b) => new Date(a.date) - new Date(b.date));
-            const latestAttempt = list[list.length - 1];
-
-            // Badge mapping
-            let badgeClass = "badge-good";
-            let badgeText = "Good";
-            if (latestAttempt.accuracy < 60) {
-                badgeClass = "badge-needs-improvement";
-                badgeText = "Needs Improvement";
-            } else if (latestAttempt.accuracy >= 80) {
-                badgeClass = "badge-better";
-                badgeText = "Better";
-            }
-
-            // Timeline slides HTML
-            let slidesHtml = "";
-            list.forEach((attempt, idx) => {
-                const labelText = idx === 0 ? "1st Attempt" : idx === 1 ? "2nd Attempt" : `${idx + 1}th Attempt`;
-                const formattedTime = new Date(attempt.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                
-                slidesHtml += `
-                    <div class="inner-slide" style="min-width: 100%; flex-shrink: 0; box-sizing: border-box;">
-                        <div class="timeline-item" style="position: relative; padding-left: 15px; border-left: 2px solid rgba(255, 255, 255, 0.08); margin-left: 5px; margin-bottom: 0;">
-                            
-                            <div class="attempt-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                <h5 style="margin: 0; font-size: 0.8rem; color: #ffffff; font-weight: 700;">${labelText}</h5>
-                                ${list.length > 1 ? `
-                                <div class="inner-carousel-controls" style="display: flex; gap: 6px; align-items: center;">
-                                    <button type="button" onclick="slideInnerTrack(this, -1, ${idx}, ${list.length})" class="inner-carousel-btn" style="background: rgba(255,255,255,0.05); border: none; border-radius: 4px; color: #ffffff; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; cursor: pointer; transition: 0.2s;"><i class="fas fa-chevron-left"></i></button>
-                                    <span style="font-size: 0.68rem; color: rgba(255,255,255,0.4); font-weight: 700; min-width: 25px; text-align: center;">${idx+1}/${list.length}</span>
-                                    <button type="button" onclick="slideInnerTrack(this, 1, ${idx}, ${list.length})" class="inner-carousel-btn" style="background: rgba(255,255,255,0.05); border: none; border-radius: 4px; color: #ffffff; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; cursor: pointer; transition: 0.2s;"><i class="fas fa-chevron-right"></i></button>
-                                </div>
-                                ` : ''}
-                            </div>
-                            
-                            <div class="meta" style="font-size: 0.68rem; color: rgba(255,255,255,0.5); margin-bottom: 8px;">${formatDate(attempt.date)}, ${formattedTime}<br>Time Taken: ${attempt.duration}</div>
-                            <div class="progress-bar-row">
-                                <div class="progress-labels" style="display: flex; justify-content: space-between; font-size: 0.68rem; font-weight: 700; margin-bottom: 4px;">
-                                    <span style="color: #10b981;">${attempt.accuracy}% Correct</span>
-                                    <span style="color: #ef4444;">${100 - attempt.accuracy}% Incorrect</span>
-                                </div>
-                                <div class="progress-bar-track" style="display: flex; height: 6px; border-radius: 3px; overflow: hidden; background: rgba(255,255,255,0.03);">
-                                    <div class="prog-correct" style="width: ${attempt.accuracy}%; background: #10b981;"></div>
-                                    <div class="prog-incorrect" style="width: ${100 - attempt.accuracy}%; background: #ef4444;"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Map questions and duration stats based on mode
-            let questionsCount = "10";
-            let durationVal = "15 Mins";
-            if (latestAttempt.mode === "Topic Master") {
-                questionsCount = "25";
-                durationVal = "30 Mins";
-            } else if (latestAttempt.mode === "Subject Marathon") {
-                questionsCount = "50";
-                durationVal = "60 Mins";
-            }
-
-            return `
-                <div class="attempt-card">
-                    <div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <span class="card-badge ${badgeClass}">${badgeText}</span>
-                            <span class="attempt-count-pill">Attempts: ${list.length}</span>
-                        </div>
-                        <h3>${testName}</h3>
-                        
-                        <div class="inner-slider-wrapper" style="overflow: hidden; position: relative; width: 100%; margin-bottom: 20px;">
-                            <div class="inner-slider-track" style="display: flex; transition: transform 0.3s ease; width: 100%;">
-                                ${slidesHtml}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="card-stats-list">
-                            <div class="stat-row-item">
-                                <span><i class="fas fa-th-large" style="color: rgba(255,255,255,0.4);"></i> Section</span>
-                                <strong>04</strong>
-                            </div>
-                            <div class="stat-row-item">
-                                <span><i class="far fa-question-circle" style="color: rgba(255,255,255,0.4);"></i> Questions</span>
-                                <strong>${questionsCount}</strong>
-                            </div>
-                            <div class="stat-row-item">
-                                <span><i class="far fa-clock" style="color: rgba(255,255,255,0.4);"></i> Duration</span>
-                                <strong>${durationVal}</strong>
-                            </div>
-                        </div>
-                        
-                        <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 12px;">
-                            <button class="retake-btn" onclick="confirmRetake('${latestAttempt.mode}', '${latestAttempt.subject}', '${testName.replace(/'/g, "\\'")}')" style="flex: 1; margin-bottom: 0;">Re-take Test</button>
-                            <button class="paper-schedule-btn" onclick="openScheduleFromHistory('${latestAttempt.mode}', '${latestAttempt.subject}', '${testName.replace(/'/g, "\\'")}')" style="padding: 12px 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: #ffffff; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;" title="Schedule Test"><i class="far fa-calendar-plus" style="font-size: 1.1rem;"></i></button>
-                        </div>
-                        <button class="details-link" onclick="openAnalysisSection('${testName.replace(/'/g, "\\'")}')" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); background: rgba(59, 130, 246, 0.06); color: #3b82f6; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; transition: 0.2s; text-align: center; margin-bottom: 0;">Test Analysis</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        // Reset track position
-        carouselIndex = 0;
-        track.style.transform = 'translateX(0)';
-    }
-
-    window.slideInnerTrack = function(button, direction, currentIndex, totalElements) {
-        event.stopPropagation();
-        const slide = button.closest('.inner-slide');
-        const track = slide.closest('.inner-slider-track');
-        if (!track) return;
-        
-        let targetIndex = currentIndex + direction;
-        if (targetIndex < 0) targetIndex = totalElements - 1;
-        if (targetIndex >= totalElements) targetIndex = 0;
-        
-        track.style.transform = `translateX(-${targetIndex * 100}%)`;
-    }
-
-    // Render overall progress metrics radial graphs based on active category selection
-    function renderOverallMetrics() {
-        if (filteredAttempts.length === 0) {
-            document.getElementById("accuracyText").textContent = "0%";
-            document.getElementById("percentileText").textContent = "0%";
-            document.getElementById("metricTotalTests").textContent = "0";
-            document.getElementById("metricBestScore").textContent = "0/40";
-            document.getElementById("accuracyCircle").style.strokeDashoffset = 220;
-            document.getElementById("percentileCircle").style.strokeDashoffset = 220;
-            return;
-        }
-
-        let totalAccuracy = 0;
-        let totalPercentile = 0;
-        let highestScore = -99; // support negative marking margins
-
-        filteredAttempts.forEach(item => {
-            totalAccuracy += item.accuracy;
-            totalPercentile += item.percentile;
-            if (item.score > highestScore) highestScore = item.score;
-        });
-
-        const avgAccuracy = Math.round(totalAccuracy / filteredAttempts.length);
-        const avgPercentile = Math.round(totalPercentile / filteredAttempts.length);
-
-        // Update elements
-        document.getElementById("accuracyText").textContent = avgAccuracy + "%";
-        document.getElementById("percentileText").textContent = avgPercentile + "%";
-        document.getElementById("metricTotalTests").textContent = filteredAttempts.length;
-        document.getElementById("metricBestScore").textContent = `${highestScore} / 40`;
-
-        // Radial progress calculations (stroke-dashoffset = 220 - (220 * percentage / 100))
-        const accOffset = Math.max(0, 220 - (220 * avgAccuracy / 100));
-        const percOffset = Math.max(0, 220 - (220 * avgPercentile / 100));
-
-        setTimeout(() => {
-            document.getElementById("accuracyCircle").style.strokeDashoffset = accOffset;
-            document.getElementById("percentileCircle").style.strokeDashoffset = percOffset;
-        }, 150);
-    }
-
-    // Graphical Representation: Draw dynamic SVG score progression trend chart matching specific tab
-    function renderScoreTrend() {
-        const svg = document.getElementById("trendSvg");
-        const container = document.getElementById("chartContainer");
-        const tooltip = document.getElementById("chartTooltip");
-        if (!svg || !container) return;
-
-        // Clean prior path drawings
-        svg.innerHTML = '';
-
-        if (filteredAttempts.length === 0) {
-            svg.innerHTML = `<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="12">No attempts to draw progression trend</text>`;
-            return;
-        }
-
-        // Draw last 5 tests in chronological order (oldest first)
-        const trendData = [...filteredAttempts].slice(0, 5).reverse();
-        
-        const width = container.clientWidth;
-        const height = container.clientHeight;
-        const padding = 25;
-
-        // Color configurations based on current mode
-        let themeColor = "#7091E6";
-        if (currentMode === 'Module Blitz') themeColor = "#7091E6";
-        else if (currentMode === 'Topic Master') themeColor = "#3D52A0";
-        else if (currentMode === 'Subject Marathon') themeColor = "#8697C4";
-
-        // Calculate coordinates
-        const xStep = trendData.length > 1 ? (width - 2 * padding) / (trendData.length - 1) : width - 2 * padding;
-        const coordinates = trendData.map((item, idx) => {
-            const x = padding + (idx * xStep);
-            const normalisedScore = Math.max(0, item.score);
-            const y = height - padding - (normalisedScore / 40) * (height - 2 * padding);
-            return { x, y, score: item.score, name: item.test_name, date: formatDate(item.date) };
-        });
-
-        // 1. Draw grid background lines
-        const gridYLines = [0, 10, 20, 30, 40];
-        gridYLines.forEach(scoreVal => {
-            const yVal = height - padding - (scoreVal / 40) * (height - 2 * padding);
-            
-            // Grid Line
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", padding);
-            line.setAttribute("y1", yVal);
-            line.setAttribute("x2", width - padding);
-            line.setAttribute("y2", yVal);
-            line.setAttribute("stroke", "rgba(255,255,255,0.03)");
-            line.setAttribute("stroke-width", "1");
-            svg.appendChild(line);
-
-            // Score tag labels
-            const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            label.setAttribute("x", padding - 8);
-            label.setAttribute("y", yVal + 3);
-            label.setAttribute("fill", "rgba(255,255,255,0.3)");
-            label.setAttribute("font-size", "7.5");
-            label.setAttribute("text-anchor", "end");
-            label.textContent = scoreVal;
-            svg.appendChild(label);
-        });
-
-        if (coordinates.length === 1) {
-            // Draw a single pulsing dot if only 1 test exists
-            const pt = coordinates[0];
-            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            circle.setAttribute("cx", pt.x);
-            circle.setAttribute("cy", pt.y);
-            circle.setAttribute("r", "6");
-            circle.setAttribute("fill", themeColor);
-            circle.setAttribute("stroke", "#050505");
-            circle.setAttribute("stroke-width", "2");
-            svg.appendChild(circle);
-            return;
-        }
-
-        // 2. Draw Gradient fill under the trend line
-        const gradientId = "chart-grad-" + Date.now();
-        const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-        const linGrad = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-        linGrad.setAttribute("id", gradientId);
-        linGrad.setAttribute("x1", "0%");
-        linGrad.setAttribute("y1", "0%");
-        linGrad.setAttribute("x2", "0%");
-        linGrad.setAttribute("y2", "100%");
-
-        const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-        stop1.setAttribute("offset", "0%");
-        stop1.setAttribute("stop-color", themeColor);
-        stop1.setAttribute("stop-opacity", "0.2");
-        const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-        stop2.setAttribute("offset", "100%");
-        stop2.setAttribute("stop-color", themeColor);
-        stop2.setAttribute("stop-opacity", "0");
-
-        linGrad.appendChild(stop1);
-        linGrad.appendChild(stop2);
-        defs.appendChild(linGrad);
-        svg.appendChild(defs);
-
-        // Build Area path description (fill area under the curve)
-        let areaPathDesc = `M ${coordinates[0].x} ${height - padding}`;
-        coordinates.forEach(pt => {
-            areaPathDesc += ` L ${pt.x} ${pt.y}`;
-        });
-        areaPathDesc += ` L ${coordinates[coordinates.length - 1].x} ${height - padding} Z`;
-
-        const areaPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        areaPath.setAttribute("d", areaPathDesc);
-        areaPath.setAttribute("fill", `url(#${gradientId})`);
-        svg.appendChild(areaPath);
-
-        // 3. Draw Trend Line path
-        let linePathDesc = `M ${coordinates[0].x} ${coordinates[0].y}`;
-        for (let i = 1; i < coordinates.length; i++) {
-            linePathDesc += ` L ${coordinates[i].x} ${coordinates[i].y}`;
-        }
-
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", linePathDesc);
-        path.setAttribute("fill", "none");
-        path.setAttribute("stroke", themeColor);
-        path.setAttribute("stroke-width", "2.5");
-        path.setAttribute("stroke-linecap", "round");
-        svg.appendChild(path);
-
-        // 4. Draw interactive dot coordinates
-        coordinates.forEach((pt, idx) => {
-            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            circle.setAttribute("cx", pt.x);
-            circle.setAttribute("cy", pt.y);
-            circle.setAttribute("r", "5");
-            circle.setAttribute("fill", idx === coordinates.length - 1 ? themeColor : "#ffffff");
-            circle.setAttribute("stroke", themeColor);
-            circle.setAttribute("stroke-width", "2");
-            circle.style.cursor = "pointer";
-            circle.style.transition = "r 0.2s";
-
-            // Interactive Tooltips
-            circle.addEventListener("mouseover", (e) => {
-                circle.setAttribute("r", "7");
-                tooltip.style.opacity = "1";
-                tooltip.innerHTML = `<strong>${pt.name}</strong><br>Score: ${pt.score}/40<br>Date: ${pt.date}`;
-                
-                // Position tooltip
-                tooltip.style.left = `${pt.x - 50}px`;
-                tooltip.style.top = `${pt.y - 65}px`;
-            });
-
-            circle.addEventListener("mouseout", () => {
-                circle.setAttribute("r", "5");
-                tooltip.style.opacity = "0";
-            });
-
-            svg.appendChild(circle);
-        });
-    }
-
-    // Helper functions
-    function formatDate(dateStr) {
-        if (!dateStr) return "-";
-        const date = new Date(dateStr);
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-
-    // Initialize Premium Background Dust & Glowing Orbs
-    document.addEventListener("DOMContentLoaded", () => {
-        // 1. Particle Background Dust Effects
-        const canvas = document.getElementById("particlesCanvas");
-        if (canvas) {
-            const ctx = canvas.getContext("2d");
-            let particles = [];
-            
-            const resizeCanvas = () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            };
-            window.addEventListener("resize", resizeCanvas);
-            resizeCanvas();
-
-            class Particle {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.size = 0.5 + Math.random() * 1.5;
-                    this.speedX = -0.15 + Math.random() * 0.3;
-                    this.speedY = -0.15 + Math.random() * 0.3;
-                    this.alpha = 0.1 + Math.random() * 0.5;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                        this.reset();
-                    }
-                }
-                draw() {
-                    ctx.save();
-                    ctx.globalAlpha = this.alpha;
-                    ctx.fillStyle = "#ffffff";
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-            }
-
-            for (let i = 0; i < 75; i++) {
-                particles.push(new Particle());
-            }
-
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                requestAnimationFrame(animateParticles);
-            }
-            animateParticles();
-        }
-
-        // 2. Parallax Grid background movement & mouse move glows
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const pattern = document.getElementById('bgPatternLayer');
-            if (pattern) {
-                pattern.style.transform = `translate3d(0, ${scrolled * 0.12}px, 0)`;
-            }
-        });
-
-        // Glow orbs mouse parallax
-        const orbs = document.querySelectorAll('.glow-orb');
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth - 0.5;
-            const mouseY = e.clientY / window.innerHeight - 0.5;
-            orbs.forEach((orb, index) => {
-                const speed = (index + 1) * 15;
-                orb.style.transform = `translate3d(${mouseX * speed}px, ${mouseY * speed}px, 0)`;
-            });
-        });
-    });
-
-    let retakeConfig = {};
-
-    window.confirmRetake = function(mode, subject, testName) {
-        retakeConfig = {
-            mode: mode,
-            subject: subject,
-            testName: testName
-        };
-
-        // Populate questions and duration based on mode
-        let questions = "10 MCQs";
-        let duration = "15 Mins";
-        let topicName = "Quantitative Aptitude";
-        let moduleName = "Number Systems";
-
-        if (mode === "Topic Master") {
-            questions = "25 MCQs";
-            duration = "30 Mins";
-            topicName = "Algebra & Geometry";
-            moduleName = "All Topic Modules";
-        } else if (mode === "Subject Marathon") {
-            questions = "50 MCQs";
-            duration = "60 Mins";
-            topicName = "Full Subject Curriculum";
-            moduleName = "All Subject Modules";
-        }
-
-        document.getElementById("retake-val-mode").innerText = mode || "Module Blitz";
-        document.getElementById("retake-val-subject").innerText = subject || "Aptitude Mastery";
-        document.getElementById("retake-val-topic").innerText = topicName;
-        document.getElementById("retake-val-module").innerText = moduleName;
-        document.getElementById("retake-val-test").innerText = testName || "Mock Test 01";
-        document.getElementById("retake-val-questions").innerText = questions;
-        document.getElementById("retake-val-duration").innerText = duration;
-
-        document.getElementById("retakeModal").classList.add("active");
-    }
-
-    window.closeRetakeModal = function() {
-        document.getElementById("retakeModal").classList.remove("active");
-    }
-
-    window.launchRetakeActual = function() {
-        closeRetakeModal();
-        const mode = encodeURIComponent(retakeConfig.mode);
-        const subject = encodeURIComponent(retakeConfig.subject);
-        const test = encodeURIComponent(retakeConfig.testName);
-        
-        window.location.href = `{% url 'start_test_session' %}?mode=${mode}&subject=${subject}&topic=All Topics included&module=All Modules included&test=${test}`;
-    }
-
-    // Schedule modal operations from attempts list
-    let selectedDateVal = ""; // Store date string e.g. "2026-01-23"
-    let selectedTimeVal = "09:00 AM";
-    let calCurrentDate = new Date(2026, 0, 1); // January 2026 default
-
-    // Toggle dropdown pickers
-    window.togglePicker = function(type, event) {
-        if (event) event.stopPropagation();
-        
-        const dateDrop = document.getElementById("date-dropdown");
-        const timeDrop = document.getElementById("time-dropdown");
-        
-        if (type === 'date') {
-            timeDrop.style.display = "none";
-            if (dateDrop.style.display === "none" || dateDrop.style.display === "") {
-                dateDrop.style.display = "block";
-            } else {
-                dateDrop.style.display = "none";
-            }
-        } else if (type === 'time') {
-            dateDrop.style.display = "none";
-            if (timeDrop.style.display === "none" || timeDrop.style.display === "") {
-                timeDrop.style.display = "block";
-                setupTimePickerScrolls();
-            } else {
-                timeDrop.style.display = "none";
-            }
-        }
-    }
-
-    // Hide dropdowns when clicking outside
-    document.addEventListener("click", function() {
-        const dateDrop = document.getElementById("date-dropdown");
-        const timeDrop = document.getElementById("time-dropdown");
-        if (dateDrop) dateDrop.style.display = "none";
-        if (timeDrop) timeDrop.style.display = "none";
-    });
-
-    // Calendar month navigation
-    window.changeMonth = function(direction, event) {
-        if (event) event.stopPropagation();
-        calCurrentDate.setMonth(calCurrentDate.getMonth() + direction);
+function togglePicker(type, event) {
+  if (event) event.stopPropagation();
+  const dateDrop = document.getElementById("date-dropdown");
+  const timeDrop = document.getElementById("time-dropdown");
+  
+  if (type === 'date') {
+    if (timeDrop) timeDrop.classList.remove("active");
+    if (dateDrop) {
+      dateDrop.classList.toggle("active");
+      if (dateDrop.classList.contains("active")) {
         renderCalendarDropdown();
+      }
     }
-
-    window.renderCalendarDropdown = function() {
-        const monthTitle = document.getElementById("cal-month-title");
-        const daysGrid = document.getElementById("cal-days-grid");
-        
-        const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        
-        const year = calCurrentDate.getFullYear();
-        const month = calCurrentDate.getMonth();
-        
-        monthTitle.innerText = `${monthsList[month]} ${year}`;
-        daysGrid.innerHTML = "";
-        
-        // Days labels
-        const dayLabels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-        dayLabels.forEach(d => {
-            const span = document.createElement("span");
-            span.style.fontWeight = "bold";
-            span.style.color = "#94a3b8";
-            span.style.padding = "5px 0";
-            span.innerText = d;
-            daysGrid.appendChild(span);
-        });
-        
-        // Calculate offset and total days
-        let firstDayIndex = new Date(year, month, 1).getDay();
-        firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1; // Mon=0 to Sun=6
-        
-        const totalDays = new Date(year, month + 1, 0).getDate();
-        
-        // Blank spaces for offset
-        for (let i = 0; i < firstDayIndex; i++) {
-            const span = document.createElement("span");
-            span.style.cursor = "default";
-            daysGrid.appendChild(span);
-        }
-        
-        // Date numbers
-        for (let day = 1; day <= totalDays; day++) {
-            const span = document.createElement("span");
-            span.style.padding = "8px 0";
-            span.style.borderRadius = "8px";
-            span.style.cursor = "pointer";
-            span.style.color = "rgba(255, 255, 255, 0.85)";
-            span.style.fontWeight = "600";
-            span.style.transition = "all 0.2s ease";
-            span.innerText = day;
-            
-            const monthNum = String(month + 1).padStart(2, '0');
-            const dateStr = `${year}-${monthNum}-${String(day).padStart(2, '0')}`;
-            
-            if (dateStr === selectedDateVal) {
-                span.style.background = "linear-gradient(135deg, #3b82f6, #1d4ed8)";
-                span.style.color = "#ffffff";
-                span.style.boxShadow = "0 4px 10px rgba(59, 130, 246, 0.4)";
-            } else {
-                span.onmouseover = function() { this.style.background = "rgba(255, 255, 255, 0.08)"; this.style.transform = "scale(1.08)"; };
-                span.onmouseout = function() { if (dateStr !== selectedDateVal) { this.style.background = "none"; this.style.transform = "none"; } };
-            }
-            
-            span.onclick = function(e) {
-                e.stopPropagation();
-                selectedDateVal = dateStr;
-                
-                const shortMonth = monthsList[month].substring(0, 3);
-                document.getElementById("sch-date-display").value = `${shortMonth} ${day}, ${year}`;
-                
-                document.getElementById("date-dropdown").style.display = "none";
-                renderCalendarDropdown();
-            };
-            
-            daysGrid.appendChild(span);
-        }
+  } else if (type === 'time') {
+    if (dateDrop) dateDrop.classList.remove("active");
+    if (timeDrop) {
+      timeDrop.classList.toggle("active");
+      if (timeDrop.classList.contains("active")) {
+        setupTimePickerScrolls();
+      }
     }
+  }
+}
 
-    // Time picker scroll column items populator
-    let timeSelectedH = "09";
-    let timeSelectedM = "00";
-    let timeSelectedAP = "AM";
+document.addEventListener("click", function(e) {
+  const dateWrapper = document.getElementById("date-picker-wrapper");
+  const timeWrapper = document.getElementById("time-picker-wrapper");
+  const dateDrop = document.getElementById("date-dropdown");
+  const timeDrop = document.getElementById("time-dropdown");
+  
+  if (dateWrapper && !dateWrapper.contains(e.target) && dateDrop) {
+    dateDrop.classList.remove("active");
+  }
+  if (timeWrapper && !timeWrapper.contains(e.target) && timeDrop) {
+    timeDrop.classList.remove("active");
+  }
+});
 
-    window.setupTimePickerScrolls = function() {
-        const hourScroll = document.getElementById("sch-hour-scroll");
-        const minuteScroll = document.getElementById("sch-minute-scroll");
-        
-        if (hourScroll.querySelectorAll(".time-val-item").length === 0) {
-            hourScroll.innerHTML = ""; // Clear any comments or dummy text
-            for (let h = 1; h <= 12; h++) {
-                const val = String(h).padStart(2, '0');
-                const div = document.createElement("div");
-                div.className = "time-val-item" + (val === timeSelectedH ? " selected" : "");
-                div.innerText = val;
-                div.onclick = function() {
-                    selectTimeComponent('hour', val, this);
-                };
-                hourScroll.appendChild(div);
-            }
-        }
-        
-        if (minuteScroll.querySelectorAll(".time-val-item").length === 0) {
-            minuteScroll.innerHTML = ""; // Clear any comments or dummy text
-            for (let m = 0; m < 60; m += 5) {
-                const val = String(m).padStart(2, '0');
-                const div = document.createElement("div");
-                div.className = "time-val-item" + (val === timeSelectedM ? " selected" : "");
-                div.innerText = val;
-                div.onclick = function() {
-                    selectTimeComponent('minute', val, this);
-                };
-                minuteScroll.appendChild(div);
-            }
-        }
+function changeMonth(direction, event) {
+  if (event) event.stopPropagation();
+  calCurrentDate.setMonth(calCurrentDate.getMonth() + direction);
+  renderCalendarDropdown();
+}
+
+function renderCalendarDropdown() {
+  const monthTitle = document.getElementById("cal-month-title");
+  const daysGrid = document.getElementById("cal-days-grid");
+  if (!monthTitle || !daysGrid) return;
+  
+  const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const year = calCurrentDate.getFullYear();
+  const month = calCurrentDate.getMonth();
+  
+  monthTitle.innerText = `${monthsList[month]} ${year}`;
+  daysGrid.innerHTML = "";
+  
+  const dayLabels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  dayLabels.forEach(d => {
+    const span = document.createElement("span");
+    span.className = "header-day";
+    span.innerText = d;
+    daysGrid.appendChild(span);
+  });
+  
+  let firstDayIndex = new Date(year, month, 1).getDay();
+  firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+  const totalDays = new Date(year, month + 1, 0).getDate();
+  
+  for (let i = 0; i < firstDayIndex; i++) {
+    const span = document.createElement("span");
+    span.style.cursor = "default";
+    daysGrid.appendChild(span);
+  }
+  
+  for (let day = 1; day <= totalDays; day++) {
+    const span = document.createElement("span");
+    span.className = "day-num";
+    span.innerText = day;
+    const monthNum = String(month + 1).padStart(2, '0');
+    const dateStr = `${year}-${monthNum}-${String(day).padStart(2, '0')}`;
+    
+    if (dateStr === selectedDateVal) {
+      span.className = "day-num active";
     }
+    
+    span.onclick = function(e) {
+      e.stopPropagation();
+      selectedDateVal = dateStr;
+      const shortMonth = monthsList[month].substring(0, 3);
+      document.getElementById("sch-date-display").value = `${shortMonth} ${day}, ${year}`;
+      document.querySelectorAll(".day-num").forEach(s => s.classList.remove("active"));
+      this.classList.add("active");
+      document.getElementById("date-dropdown").classList.remove("active");
+    };
+    daysGrid.appendChild(span);
+  }
+}
 
-    window.selectTimeComponent = function(type, val, element) {
-        if (type === 'hour') {
-            timeSelectedH = val;
-            document.getElementById("time-h-lbl").innerText = val;
-            document.querySelectorAll("#sch-hour-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
-        } else if (type === 'minute') {
-            timeSelectedM = val;
-            document.getElementById("time-m-lbl").innerText = val;
-            document.querySelectorAll("#sch-minute-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
-        } else if (type === 'ampm') {
-            timeSelectedAP = val;
-            document.getElementById("time-ap-lbl").innerText = val;
-            document.querySelectorAll("#sch-ampm-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
-        }
-        element.classList.add("selected");
+let timeSelectedH = "09";
+let timeSelectedM = "00";
+let timeSelectedAP = "AM";
+
+function setupTimePickerScrolls() {
+  const hourScroll = document.getElementById("sch-hour-scroll");
+  const minuteScroll = document.getElementById("sch-minute-scroll");
+  if (!hourScroll || !minuteScroll) return;
+  
+  if (hourScroll.innerHTML.trim() === "") {
+    for (let h = 1; h <= 12; h++) {
+      const val = String(h).padStart(2, '0');
+      const div = document.createElement("div");
+      div.className = "time-val-item" + (val === timeSelectedH ? " selected" : "");
+      div.innerText = val;
+      div.onclick = function(e) {
+        if(e) e.stopPropagation();
+        selectTimeComponent('hour', val, this);
+      };
+      hourScroll.appendChild(div);
     }
-
-    window.confirmTimeSelection = function(e) {
-        if (e) e.stopPropagation();
-        selectedTimeVal = `${timeSelectedH}:${timeSelectedM} ${timeSelectedAP}`;
-        document.getElementById("sch-time-display").value = selectedTimeVal;
-        document.getElementById("time-dropdown").style.display = "none";
+  }
+  
+  if (minuteScroll.innerHTML.trim() === "") {
+    for (let m = 0; m < 60; m += 5) {
+      const val = String(m).padStart(2, '0');
+      const div = document.createElement("div");
+      div.className = "time-val-item" + (val === timeSelectedM ? " selected" : "");
+      div.innerText = val;
+      div.onclick = function(e) {
+        if(e) e.stopPropagation();
+        selectTimeComponent('minute', val, this);
+      };
+      minuteScroll.appendChild(div);
     }
+  }
+}
 
-    window.openScheduleFromHistory = function(mode, subject, testName) {
-        document.getElementById("sch-paper-val").innerText = testName;
-        document.getElementById("sch-mode-val").innerText = mode;
-        document.getElementById("sch-subject-val").innerText = subject;
-        
-        // Clear fields
-        selectedDateVal = "";
-        document.getElementById("sch-date-display").value = "";
-        document.getElementById("sch-time-display").value = "09:00 AM";
-        
-        timeSelectedH = "09";
-        timeSelectedM = "00";
-        timeSelectedAP = "AM";
-        document.getElementById("time-h-lbl").innerText = "09";
-        document.getElementById("time-m-lbl").innerText = "00";
-        document.getElementById("time-ap-lbl").innerText = "AM";
-        
-        // Initialize calendar to current date
-        calCurrentDate = new Date();
-        renderCalendarDropdown();
-        
-        document.getElementById("scheduleModal").classList.add("active");
-    }
+function selectTimeComponent(type, val, element) {
+  if (type === 'hour') {
+    timeSelectedH = val;
+    const hLbl = document.getElementById("time-h-lbl");
+    if(hLbl) hLbl.innerText = val;
+    document.querySelectorAll("#sch-hour-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+  } else if (type === 'minute') {
+    timeSelectedM = val;
+    const mLbl = document.getElementById("time-m-lbl");
+    if(mLbl) mLbl.innerText = val;
+    document.querySelectorAll("#sch-minute-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+  } else if (type === 'ampm') {
+    timeSelectedAP = val;
+    const apLbl = document.getElementById("time-ap-lbl");
+    if(apLbl) apLbl.innerText = val;
+    document.querySelectorAll("#sch-ampm-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+  }
+  if(element) element.classList.add("selected");
+}
 
-    window.closeScheduleModal = function() {
-        document.getElementById("scheduleModal").classList.remove("active");
-        const dateDrop = document.getElementById("date-dropdown");
-        const timeDrop = document.getElementById("time-dropdown");
-        if (dateDrop) dateDrop.style.display = "none";
-        if (timeDrop) timeDrop.style.display = "none";
-    }
+function confirmTimeSelection(e) {
+  if (e) e.stopPropagation();
+  selectedTimeVal = `${timeSelectedH}:${timeSelectedM} ${timeSelectedAP}`;
+  document.getElementById("sch-time-display").value = selectedTimeVal;
+  document.getElementById("time-dropdown").classList.remove("active");
+}
 
-    window.confirmScheduleFromPopup = function() {
-        if (!selectedDateVal) {
-            alert("Please select a date to schedule this test.");
-            return;
-        }
-        
-        const dateObj = new Date(selectedDateVal);
-        const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const monthName = monthsList[dateObj.getMonth()];
-        const dayNum = dateObj.getDate();
-        
-        closeScheduleModal();
-        
-        // Use custom toast notification
-        showToast(`Success! Scheduled ${document.getElementById("sch-mode-val").innerText} (${document.getElementById("sch-subject-val").innerText}) for ${monthName} ${dayNum} at ${selectedTimeVal}`);
-    }
+window.togglePicker = togglePicker;
+window.changeMonth = changeMonth;
+window.selectTimeComponent = selectTimeComponent;
+window.confirmTimeSelection = confirmTimeSelection;
 
-    function showToast(message) {
-        if (!document.getElementById('toastNotification')) {
-            const toastHtml = `
-                <div id="toastNotification" class="sticky-note-toast">
-                    <i class="fas fa-thumbtack sticky-note-pin"></i>
-                    <i class="fas fa-calendar-check text-[#120a21] text-base" id="toastIcon"></i>
-                    <span id="toastMessage" class="tracking-wide"></span>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', toastHtml);
-        }
-        
-        const toast = document.getElementById('toastNotification');
-        const toastMsg = document.getElementById('toastMessage');
-        toastMsg.innerText = message;
-        
-        toast.classList.add('show-sticky');
-        
-        setTimeout(() => {
-            toast.classList.remove('show-sticky');
-        }, 4000);
-    }
+function saveSchedule() {
+  const date = document.getElementById('sch-date-display').value;
+  const time = document.getElementById('sch-time-display').value;
+  if (!date || !time) {
+    alert("Please select both a date and a time.");
+    return;
+  }
+  closeScheduleModal();
+  const toast = document.getElementById('stickyToast');
+  document.getElementById('stickyToastText').textContent = `Test scheduled for ${date} at ${time}!`;
+  toast.classList.add('show-sticky');
+  setTimeout(() => {
+    toast.classList.remove('show-sticky');
+  }, 4000);
+}
 
-    let activeAnalysisTest = "";
-    let activeAnalysisAttempts = [];
+renderScope();
 
-    window.openAnalysisSection = function(testName) {
-        activeAnalysisTest = testName;
-        // Find all attempts for this test
-        activeAnalysisAttempts = allAttempts.filter(item => item.test_name === testName);
-        
-        if (activeAnalysisAttempts.length === 0) return;
-        
-        // Populate test title
-        document.getElementById("analysis-test-title").innerText = `Detailed attempt-wise metrics & option logs for: ${testName}`;
-        
-        // Populate attempt selector dropdown
-        const select = document.getElementById("analysis-attempt-select");
-        select.innerHTML = "";
-        
-        activeAnalysisAttempts.sort((a, b) => new Date(a.date) - new Date(b.date));
-        
-        activeAnalysisAttempts.forEach((attempt, index) => {
-            const option = document.createElement("option");
-            option.value = attempt.id;
-            option.innerText = `Attempt ${index + 1} (${formatDate(attempt.date)}) - Score: ${attempt.score}/40`;
-            select.appendChild(option);
-        });
-        
-        // Trigger render for the first attempt (latest)
-        select.value = activeAnalysisAttempts[activeAnalysisAttempts.length - 1].id;
-        onAnalysisAttemptChange();
-        
-        // Slide open the container
-        const section = document.getElementById("testAnalysisSection");
-        section.style.display = "block";
-        
-        // Trigger layout scroll and opacity transition
-        setTimeout(() => {
-            section.style.transform = "translateY(0)";
-            section.style.opacity = "1";
-            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 50);
-    }
 
-    window.closeAnalysisSection = function() {
-        const section = document.getElementById("testAnalysisSection");
-        section.style.transform = "translateY(20px)";
-        section.style.opacity = "0";
-        setTimeout(() => {
-            section.style.display = "none";
-        }, 500);
-    }
-
-    window.onAnalysisAttemptChange = function() {
-        const select = document.getElementById("analysis-attempt-select");
-        const attemptId = select.value;
-        const attempt = activeAnalysisAttempts.find(item => String(item.id) === String(attemptId));
-        
-        const debugInfo = document.getElementById("analysis-debug-info");
-        if (debugInfo) {
-            debugInfo.innerText = "Debug Log:\n" + 
-                "- Selected Attempt ID: " + attemptId + "\n" +
-                "- Found Attempt: " + (attempt ? "YES" : "NO") + "\n" +
-                "- Subject: " + (attempt ? attempt.subject : "N/A") + "\n" +
-                "- Questions Type: " + (attempt ? typeof attempt.questions : "N/A") + "\n" +
-                "- Questions Length: " + (attempt && attempt.questions ? attempt.questions.length : "N/A") + "\n" +
-                "- Raw JSON: " + JSON.stringify(attempt);
-        }
-        
-        if (!attempt) return;
-        
-        // Populate stats
-        document.getElementById("analysis-val-score").innerText = `${attempt.score} / ${attempt.max_score || 40}`;
-        document.getElementById("analysis-val-accuracy").innerText = `${attempt.accuracy}%`;
-        document.getElementById("analysis-val-duration").innerText = attempt.duration;
-        document.getElementById("analysis-val-percentile").innerText = `${attempt.percentile}%`;
-        document.getElementById("analysis-val-strong").innerText = attempt.strong_topic || "All Topics";
-        document.getElementById("analysis-val-weak").innerText = attempt.weak_topic || "None";
-        
-        // Dynamic Book Recommendation
-        const bookTitle = document.getElementById("recommended-book-title");
-        const bookLink = document.getElementById("recommended-book-link");
-        if (bookTitle && bookLink) {
-            const subj = attempt.subject || "";
-            if (subj.includes("Quant") || subj.includes("Aptitude")) {
-                bookTitle.innerText = "Quantitative Aptitude by R.S. Aggarwal";
-                bookLink.href = "https://www.amazon.in/s?k=quantitative+aptitude+rs+aggarwal&tag=prepverse0d-21";
-            } else if (subj.includes("Logic") || subj.includes("Reasoning")) {
-                bookTitle.innerText = "A Modern Approach to Verbal & Non-Verbal Reasoning by R.S. Aggarwal";
-                bookLink.href = "https://www.amazon.in/s?k=verbal+and+non+verbal+reasoning+rs+aggarwal&tag=prepverse0d-21";
-            } else if (subj.includes("English") || subj.includes("Verbal")) {
-                bookTitle.innerText = "Word Power Made Easy by Norman Lewis";
-                bookLink.href = "https://www.amazon.in/s?k=word+power+made+easy&tag=prepverse0d-21";
-            } else {
-                bookTitle.innerText = "High School English Grammar & Composition by Wren & Martin";
-                bookLink.href = "https://www.amazon.in/s?k=wren+and+martin&tag=prepverse0d-21";
-            }
-        }
-        
-        // Doughnut Chart update
-        const accuracy = attempt.accuracy;
-        const centerTxt = document.getElementById("doughnut-center-txt");
-        centerTxt.innerText = `${accuracy}%`;
-        
-        const correctCircle = document.getElementById("doughnut-correct");
-        const wrongCircle = document.getElementById("doughnut-wrong");
-        
-        // perimeter = 2 * Math.PI * 70 = 439.8
-        const correctOffset = 440 - (440 * accuracy / 100);
-        correctCircle.style.strokeDashoffset = correctOffset;
-        
-        const wrongPercent = 100 - accuracy;
-        const wrongOffset = 440 - (440 * wrongPercent / 100);
-        wrongCircle.style.strokeDashoffset = wrongOffset;
-        
-        // Show counts
-        document.getElementById("analysis-cnt-correct").innerText = attempt.correct || Math.round(accuracy * 10 / 100);
-        document.getElementById("analysis-cnt-wrong").innerText = attempt.wrong || Math.round((100 - accuracy) * 10 / 100);
-        document.getElementById("analysis-cnt-unanswered").innerText = attempt.unanswered || 0;
-        
-        // Populate Question logs
-        const questionsContainer = document.getElementById("analysis-questions-container");
-        questionsContainer.innerHTML = "";
-        
-        let questionsToRender = attempt.questions;
-        if (!questionsToRender || questionsToRender.length === 0) {
-            // Generate fallback mock questions matching the test subject
-            const isQuant = (attempt.subject || "").includes("Quant") || (attempt.test_name || "").includes("Quant") || (attempt.subject || "").includes("Aptitude");
-            const isLogic = (attempt.subject || "").includes("Logical") || (attempt.test_name || "").includes("Logical");
-            
-            if (isQuant) {
-                questionsToRender = [
-                    {
-                        text: "Find the greatest number that will divide 43, 91 and 183 so as to leave the same remainder in each case.",
-                        options: ["4", "7", "9", "13"],
-                        correct_index: 0,
-                        user_index: 0,
-                        explanation: "The HCF of (91-43), (183-91), and (183-43), i.e., HCF of 48, 92, and 140 is 4."
-                    },
-                    {
-                        text: "A sum of money at simple interest amounts to Rs. 815 in 3 years and to Rs. 854 in 4 years. What is the sum?",
-                        options: ["Rs. 650", "Rs. 690", "Rs. 698", "Rs. 700"],
-                        correct_index: 2,
-                        user_index: 2,
-                        explanation: "Interest for 1 year = 854 - 815 = 39. Interest for 3 years = 39 * 3 = 117. Sum = 815 - 117 = 698."
-                    },
-                    {
-                        text: "Three partners A, B, C start a business. Twice A's capital is equal to thrice B's capital and B's capital is four times C's capital. Find the share of B in a total profit of Rs. 1,48,500.",
-                        options: ["Rs. 48,000", "Rs. 54,000", "Rs. 60,000", "Rs. 66,000"],
-                        correct_index: 1,
-                        user_index: 2,
-                        explanation: "Ratio of capitals A:B:C is 6:4:1. Share of B = (4/11) * 1,48,500 = 54,000."
-                    }
-                ];
-            } else if (isLogic) {
-                questionsToRender = [
-                    {
-                        text: "Pointing to a photograph, a man said, 'I have no brother or sister but that man's father is my father's son.' Whose photograph was it?",
-                        options: ["His own", "His son's", "His father's", "His nephew's"],
-                        correct_index: 1,
-                        user_index: 1,
-                        explanation: "Since the narrator has no brother or sister, 'my father's son' is himself. So 'that man's father' is himself, which means the photo is of his son."
-                    },
-                    {
-                        text: "Look at this series: 21, 9, 21, 11, 21, 13, 21, ... What number should come next?",
-                        options: ["14", "15", "21", "23"],
-                        correct_index: 1,
-                        user_index: 1,
-                        explanation: "The series alternates 21 with odd numbers starting at 9: 9, 11, 13. The next odd number is 15."
-                    },
-                    {
-                        text: "SCD, TEF, UGH, ____, WKL. What should fit in the blank?",
-                        options: ["CMN", "UJI", "VIJ", "IJT"],
-                        correct_index: 2,
-                        user_index: 0,
-                        explanation: "The first letters follow alphabetical order: S, T, U, V, W. The second and third letters increase by one: CD, EF, GH, IJ, KL. So, VIJ."
-                    }
-                ];
-            } else {
-                questionsToRender = [
-                    {
-                        text: "Choose the word which is most nearly the SAME in meaning to: 'ADVERSITY'.",
-                        options: ["Chance", "Capacity", "Misfortune", "Joy"],
-                        correct_index: 2,
-                        user_index: 2,
-                        explanation: "Adversity means a state of misfortune or disaster."
-                    },
-                    {
-                        text: "Choose the word which is most nearly the OPPOSITE in meaning to: 'ENTHUSIASTIC'.",
-                        options: ["Apathetic", "Eager", "Zealous", "Warm"],
-                        correct_index: 0,
-                        user_index: 2,
-                        explanation: "Enthusiastic means full of eager interest; its opposite is apathetic."
-                    }
-                ];
-            }
-        }
-        
-        if (questionsToRender && questionsToRender.length > 0) {
-            questionsToRender.forEach((q, qidx) => {
-                try {
-                    if (!q) return;
-                    
-                    // Safe fallbacks for question properties
-                    const qText = q.text || "Question Text Unavailable";
-                    const qOptions = Array.isArray(q.options) ? q.options : ["Option A", "Option B", "Option C", "Option D"];
-                    
-                    // Handle user index and correct index safely
-                    let userIdx = -1;
-                    if (q.user_index !== undefined && q.user_index !== null) {
-                        userIdx = parseInt(q.user_index);
-                    }
-                    
-                    let correctIdx = 0;
-                    if (q.correct_index !== undefined && q.correct_index !== null) {
-                        correctIdx = parseInt(q.correct_index);
-                    }
-                    
-                    const isCorrect = userIdx === correctIdx;
-                    
-                    // Set status colors and labels
-                    const statusColor = isCorrect ? "#10b981" : (userIdx === -1 ? "#94a3b8" : "#ef4444");
-                    const statusIcon = isCorrect ? "fa-circle-check" : (userIdx === -1 ? "fa-circle-question" : "fa-circle-xmark");
-                    const statusLabel = isCorrect ? "Correct" : (userIdx === -1 ? "Skipped" : "Incorrect");
-                    
-                    const alphabets = ["A", "B", "C", "D"];
-                    const userSelectedText = userIdx === -1 ? "Skipped / Unanswered" : `${alphabets[userIdx] || '?'}) ${qOptions[userIdx] || 'N/A'}`;
-                    const correctText = `${alphabets[correctIdx] || 'A'}) ${qOptions[correctIdx] || 'N/A'}`;
-                    const explanationText = q.explanation || "This is a detailed explanation of the solution based on core concepts of the topic.";
-                    
-                    questionsContainer.innerHTML += `
-                        <div class="glass-card revealed" style="padding: 20px; border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.015); margin-bottom: 15px; opacity: 1 !important; transform: none !important;">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 12px;">
-                                <span style="font-size: 0.85rem; font-weight: bold; color: rgba(255,255,255,0.4);">Question ${qidx + 1}</span>
-                                <span style="display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 700; color: ${statusColor};">
-                                    <i class="fa-solid ${statusIcon}"></i> ${statusLabel}
-                                </span>
-                            </div>
-                            <p style="font-size: 0.92rem; color: #ffffff; line-height: 1.45; font-weight: 600; margin: 0 0 15px 0; text-align: left;">${qText}</p>
-                            
-                            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; margin-bottom: 12px; text-align: left;">
-                                <div style="display: flex; gap: 10px; background: ${isCorrect ? 'rgba(16,185,129,0.06)' : 'rgba(239,68,68,0.06)'}; border: 1px solid ${isCorrect ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'}; border-radius: 8px; padding: 8px 12px;">
-                                    <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Your Choice:</span>
-                                    <strong style="color: ${statusColor};">${userSelectedText}</strong>
-                                </div>
-                                ${!isCorrect ? `
-                                <div style="display: flex; gap: 10px; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15); border-radius: 8px; padding: 8px 12px;">
-                                    <span style="color: rgba(255,255,255,0.5); font-weight: 600;">Correct Answer:</span>
-                                    <strong style="color: #10b981;">${correctText}</strong>
-                                </div>
-                                ` : ''}
-                            </div>
-                            
-                            <div style="font-size: 0.78rem; color: rgba(255,255,255,0.5); border-top: 1px solid rgba(255,255,255,0.03); padding-top: 10px; line-height: 1.4; text-align: left;">
-                                <strong style="color: rgba(255,255,255,0.8); display: block; margin-bottom: 4px;">Explanation:</strong>
-                                ${explanationText}
-                            </div>
-                        </div>
-                    `;
-                } catch (loopErr) {
-                    console.error("Error rendering question at index " + qidx, loopErr);
-                    const debugInfo = document.getElementById("analysis-debug-info");
-                    if (debugInfo) {
-                        debugInfo.innerText += "\n\nLOOP ERROR Rendering Q" + (qidx + 1) + ": " + loopErr.message + "\nStack: " + loopErr.stack;
-                    }
-                }
-            });
-        } else {
-            questionsContainer.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.4); padding: 20px;">No question logs found for this attempt record.</div>`;
-        }
-    }
+// staggered reveal for initial page elements
+let revealIndex = 0;
+document.querySelectorAll('.wrap > .reveal, .bento .reveal').forEach(el => {
+  el.style.animationDelay = (revealIndex++ * 70) + 'ms';
+});
 </script>
-{% endblock %}
+</body>
+</html>
+

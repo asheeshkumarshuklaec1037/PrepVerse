@@ -76,6 +76,88 @@ def mock_tests_view(request):
     })
 
 
+def all_tests_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+        
+    subjects_data = [
+        {
+            'name': 'Aptitude Mastery',
+            'topics': [
+                {'name': 'Quantitative Aptitude', 'modules': ['Number Systems', 'Percentages', 'Profit & Loss', 'Time & Work']},
+                {'name': 'Logical Reasoning', 'modules': ['Blood Relations', 'Syllogisms', 'Seating Arrangement', 'Data Sufficiency']},
+                {'name': 'Data Interpretation', 'modules': ['Pie Charts', 'Bar Graphs', 'Line Graphs', 'Caselets']}
+            ]
+        },
+        {
+            'name': 'Logical Reasoning',
+            'topics': [
+                {'name': 'Verbal Reasoning', 'modules': ['Analogy', 'Classification', 'Series Completion', 'Coding-Decoding']},
+                {'name': 'Analytical Reasoning', 'modules': ['Statements & Assumptions', 'Arguments', 'Conclusions', 'Course of Action']},
+                {'name': 'Non-Verbal Reasoning', 'modules': ['Mirror Images', 'Paper Folding', 'Cube & Dice', 'Pattern Completion']}
+            ]
+        },
+        {
+            'name': 'English Proficiency',
+            'topics': [
+                {'name': 'Grammar Essentials', 'modules': ['Parts of Speech', 'Tenses', 'Active & Passive Voice', 'Direct & Indirect Speech']},
+                {'name': 'Vocabulary Building', 'modules': ['Synonyms & Antonyms', 'Idioms & Phrases', 'One-word Substitutions', 'Spelling Rules']},
+                {'name': 'Reading Comprehension', 'modules': ['Main Idea Identification', 'Inference Making', 'Vocabulary in Context', 'Tone & Style']}
+            ]
+        },
+        {
+            'name': 'Quantitative Aptitude',
+            'topics': [
+                {'name': 'Arithmetic', 'modules': ['Ratio & Proportion', 'Average', 'Partnership', 'Mixtures & Alligations']},
+                {'name': 'Algebra', 'modules': ['Linear Equations', 'Quadratic Equations', 'Inequalities', 'Logarithms']},
+                {'name': 'Modern Math', 'modules': ['Permutations & Combinations', 'Probability', 'Set Theory', 'Geometry']}
+            ]
+        }
+    ]
+
+    all_tests_catalog = [
+        # --- Module Blitz Tests ---
+        { 'id': 't1', 'name': 'Number Systems — Blitz 01', 'mode': 'Module Blitz', 'subject': 'Aptitude Mastery', 'topic': 'Quantitative Aptitude', 'module': 'Number Systems', 'difficulty': 'Easy', 'dClass': 'diff-easy', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+100 XP' },
+        { 'id': 't2', 'name': 'Number Systems — Blitz 02', 'mode': 'Module Blitz', 'subject': 'Aptitude Mastery', 'topic': 'Quantitative Aptitude', 'module': 'Number Systems', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+250 XP' },
+        { 'id': 't3', 'name': 'Percentages — Speed Run', 'mode': 'Module Blitz', 'subject': 'Aptitude Mastery', 'topic': 'Quantitative Aptitude', 'module': 'Percentages', 'difficulty': 'Easy', 'dClass': 'diff-easy', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+100 XP' },
+        { 'id': 't4', 'name': 'Time & Work — Sprint', 'mode': 'Module Blitz', 'subject': 'Aptitude Mastery', 'topic': 'Quantitative Aptitude', 'module': 'Time & Work', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+500 XP' },
+        { 'id': 't5', 'name': 'Blood Relations — Puzzle Blitz', 'mode': 'Module Blitz', 'subject': 'Logical Reasoning', 'topic': 'Analytical Reasoning', 'module': 'Blood Relations', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+250 XP' },
+        { 'id': 't6', 'name': 'Syllogisms — Logic Blitz', 'mode': 'Module Blitz', 'subject': 'Logical Reasoning', 'topic': 'Verbal Reasoning', 'module': 'Syllogisms', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+500 XP' },
+        { 'id': 't7', 'name': 'Pie Charts — DI Blitz', 'mode': 'Module Blitz', 'subject': 'Aptitude Mastery', 'topic': 'Data Interpretation', 'module': 'Pie Charts', 'difficulty': 'Easy', 'dClass': 'diff-easy', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+100 XP' },
+        { 'id': 't8_b', 'name': 'Profit & Loss — Formula Blitz', 'mode': 'Module Blitz', 'subject': 'Aptitude Mastery', 'topic': 'Quantitative Aptitude', 'module': 'Profit & Loss', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+200 XP' },
+        { 'id': 't9_b', 'name': 'Seating Arrangement — Line Drill', 'mode': 'Module Blitz', 'subject': 'Aptitude Mastery', 'topic': 'Logical Reasoning', 'module': 'Seating Arrangement', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+450 XP' },
+        { 'id': 't10_b', 'name': 'Synonyms & Antonyms — Vocabulary Drill', 'mode': 'Module Blitz', 'subject': 'English Proficiency', 'topic': 'Vocabulary Building', 'module': 'Synonyms & Antonyms', 'difficulty': 'Easy', 'dClass': 'diff-easy', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+150 XP' },
+        { 'id': 't11_b', 'name': 'Permutations & Combinations — Drill', 'mode': 'Module Blitz', 'subject': 'Quantitative Aptitude', 'topic': 'Modern Math', 'module': 'Permutations & Combinations', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+500 XP' },
+        { 'id': 't12_b', 'name': 'Coding-Decoding — Logic Sprint', 'mode': 'Module Blitz', 'subject': 'Logical Reasoning', 'topic': 'Verbal Reasoning', 'module': 'Coding-Decoding', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '10 MCQs', 'duration': '15 Mins', 'xp': '+250 XP' },
+
+        # --- Topic Master Tests ---
+        { 'id': 't8', 'name': 'Quantitative Aptitude — Master 01', 'mode': 'Topic Master', 'subject': 'Aptitude Mastery', 'topic': 'Quantitative Aptitude', 'module': 'All Modules', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+350 XP' },
+        { 'id': 't9', 'name': 'Logical Reasoning — Master 01', 'mode': 'Topic Master', 'subject': 'Logical Reasoning', 'topic': 'Analytical Reasoning', 'module': 'All Modules', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+500 XP' },
+        { 'id': 't10', 'name': 'Grammar Essentials — Topic Test', 'mode': 'Topic Master', 'subject': 'English Proficiency', 'topic': 'Grammar Essentials', 'module': 'All Modules', 'difficulty': 'Easy', 'dClass': 'diff-easy', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+200 XP' },
+        { 'id': 't11', 'name': 'Arithmetic Composite — Master', 'mode': 'Topic Master', 'subject': 'Quantitative Aptitude', 'topic': 'Arithmetic', 'module': 'All Modules', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+300 XP' },
+        { 'id': 't12', 'name': 'Algebra & Logarithms — Master', 'mode': 'Topic Master', 'subject': 'Quantitative Aptitude', 'topic': 'Algebra', 'module': 'All Modules', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+550 XP' },
+        { 'id': 't13_m', 'name': 'Data Interpretation — Charts Master', 'mode': 'Topic Master', 'subject': 'Aptitude Mastery', 'topic': 'Data Interpretation', 'module': 'All Modules', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+600 XP' },
+        { 'id': 't14_m', 'name': 'Reading Comprehension — Passage Master', 'mode': 'Topic Master', 'subject': 'English Proficiency', 'topic': 'Reading Comprehension', 'module': 'All Modules', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+400 XP' },
+        { 'id': 't15_m', 'name': 'Non-Verbal Reasoning — Visual Master', 'mode': 'Topic Master', 'subject': 'Logical Reasoning', 'topic': 'Non-Verbal Reasoning', 'module': 'All Modules', 'difficulty': 'Easy', 'dClass': 'diff-easy', 'qCount': '25 MCQs', 'duration': '30 Mins', 'xp': '+250 XP' },
+
+        # --- Subject Marathon Tests ---
+        { 'id': 't13', 'name': 'Full Aptitude — Grand Marathon 01', 'mode': 'Subject Marathon', 'subject': 'Aptitude Mastery', 'topic': 'All Topics', 'module': 'All Modules', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '50 MCQs', 'duration': '60 Mins', 'xp': '+1000 XP' },
+        { 'id': 't14', 'name': 'Logical Reasoning — Full Marathon', 'mode': 'Subject Marathon', 'subject': 'Logical Reasoning', 'topic': 'All Topics', 'module': 'All Modules', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '50 MCQs', 'duration': '60 Mins', 'xp': '+800 XP' },
+        { 'id': 't15', 'name': 'Verbal Ability — Subject Marathon', 'mode': 'Subject Marathon', 'subject': 'English Proficiency', 'topic': 'All Topics', 'module': 'All Modules', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '50 MCQs', 'duration': '60 Mins', 'xp': '+750 XP' },
+        { 'id': 't16', 'name': 'Quantitative Aptitude — Complete Marathon', 'mode': 'Subject Marathon', 'subject': 'Quantitative Aptitude', 'topic': 'All Topics', 'module': 'All Modules', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '50 MCQs', 'duration': '60 Mins', 'xp': '+1200 XP' },
+        { 'id': 't17_s', 'name': 'Placement Readiness — All-In-One Marathon', 'mode': 'Subject Marathon', 'subject': 'Aptitude Mastery', 'topic': 'All Topics', 'module': 'All Modules', 'difficulty': 'Hard', 'dClass': 'diff-hard', 'qCount': '60 MCQs', 'duration': '90 Mins', 'xp': '+1500 XP' },
+        { 'id': 't18_s', 'name': 'CS & Logical Fundamentals — Marathon', 'mode': 'Subject Marathon', 'subject': 'Logical Reasoning', 'topic': 'All Topics', 'module': 'All Modules', 'difficulty': 'Medium', 'dClass': 'diff-medium', 'qCount': '50 MCQs', 'duration': '60 Mins', 'xp': '+850 XP' }
+    ]
+
+    return render(request, 'tests/all_tests.html', {
+        'subjects': subjects_data,
+        'all_tests_json': json.dumps(all_tests_catalog),
+        'all_tests': all_tests_catalog
+    })
+
+
+
+
 def start_test_session_view(request):
     mode = request.GET.get('mode', 'Module Blitz')
     subject = request.GET.get('subject', 'Aptitude Mastery')
