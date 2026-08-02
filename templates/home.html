@@ -600,14 +600,38 @@
         text-transform: uppercase;
     }
 
-    /* Testimonial Section Styles */
-    .testimonial-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 28px;
-        margin-top: 40px;
+    /* Testimonial Continuous Right-to-Left Marquee Slider Styles */
+    @keyframes marqueeMoveLeft {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
     }
+
+    .testimonial-marquee-wrapper {
+        width: 100%;
+        overflow: hidden;
+        margin-top: 40px;
+        position: relative;
+        padding: 20px 0;
+        mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+
+    .testimonial-marquee-track {
+        display: flex;
+        gap: 28px;
+        width: max-content;
+        padding: 10px 0;
+        animation: marqueeMoveLeft 30s linear infinite;
+        will-change: transform;
+    }
+
+    .testimonial-marquee-wrapper:hover .testimonial-marquee-track {
+        animation-play-state: paused;
+    }
+
     .testimonial-card {
+        width: 360px;
+        flex-shrink: 0;
         background: rgba(24, 25, 33, 0.52);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
@@ -1451,45 +1475,119 @@
     <p>See how PrepVerse helped students crack competitive company aptitude tests & campus placement drives.</p>
   </div>
   
-  <div class="testimonial-grid">
-    <div class="testimonial-card reveal-on-scroll reveal-delay-1">
-      <div class="testi-stars">
-        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-      </div>
-      <p class="testi-text">"PrepVerse's module blitz drills were a game-changer for my TCS NQT prep. The simulated timer and weak-spot diagnostics helped me double my Speed & Accuracy in Quant!"</p>
-      <div class="testi-user">
-        <div class="user-avatar-circle" style="background: linear-gradient(135deg, #6c5ce7, #8b7cf0);">RS</div>
-        <div class="user-info">
-          <h4>Rohan Sharma</h4>
-          <span>Placed at TCS Digital · B.Tech CSE</span>
+  <div class="testimonial-marquee-wrapper">
+    <div class="testimonial-marquee-track">
+      <!-- First Copy of Testimonial Cards -->
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"PrepVerse's module blitz drills were a game-changer for my TCS NQT prep. The simulated timer and weak-spot diagnostics helped me double my Speed & Accuracy in Quant!"</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #6c5ce7, #8b7cf0);">RS</div>
+          <div class="user-info">
+            <h4>Rohan Sharma</h4>
+            <span>Placed at TCS Digital · B.Tech CSE</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="testimonial-card reveal-on-scroll reveal-delay-2">
-      <div class="testi-stars">
-        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-      </div>
-      <p class="testi-text">"The question explanations are insanely detailed! Whenever I got stuck on seating arrangement puzzles, the step-by-step logic broke down the complexity easily."</p>
-      <div class="testi-user">
-        <div class="user-avatar-circle" style="background: linear-gradient(135deg, #2af598, #009efd); color: #000;">AP</div>
-        <div class="user-info">
-          <h4>Ananya Patel</h4>
-          <span>Placed at Accenture · ECE</span>
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"The question explanations are insanely detailed! Whenever I got stuck on seating arrangement puzzles, the step-by-step logic broke down the complexity easily."</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #2af598, #009efd); color: #000;">AP</div>
+          <div class="user-info">
+            <h4>Ananya Patel</h4>
+            <span>Placed at Accenture · ECE</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="testimonial-card reveal-on-scroll reveal-delay-3">
-      <div class="testi-stars">
-        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"The live leaderboard kept me super motivated every day. Seeing my global rank climb up after each full-length mock gave me immense confidence before my real campus drive."</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #f5a623, #ff4e50);">VK</div>
+          <div class="user-info">
+            <h4>Vikram Kumar</h4>
+            <span>Placed at Cognizant GenC Next · IT</span>
+          </div>
+        </div>
       </div>
-      <p class="testi-text">"The live leaderboard kept me super motivated every day. Seeing my global rank climb up after each full-length mock gave me immense confidence before my real campus drive."</p>
-      <div class="testi-user">
-        <div class="user-avatar-circle" style="background: linear-gradient(135deg, #f5a623, #ff4e50);">VK</div>
-        <div class="user-info">
-          <h4>Vikram Kumar</h4>
-          <span>Placed at Cognizant GenC Next · IT</span>
+
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"Practicing Topic Master tests before Wipro and Infosys exams made a night and day difference. I cracked both aptitude rounds smoothly!"</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #ec4899, #a855f7);">SG</div>
+          <div class="user-info">
+            <h4>Sneha Gupta</h4>
+            <span>Placed at Wipro Turbo · MCA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second Duplicate Copy for Infinite Smooth Loop -->
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"PrepVerse's module blitz drills were a game-changer for my TCS NQT prep. The simulated timer and weak-spot diagnostics helped me double my Speed & Accuracy in Quant!"</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #6c5ce7, #8b7cf0);">RS</div>
+          <div class="user-info">
+            <h4>Rohan Sharma</h4>
+            <span>Placed at TCS Digital · B.Tech CSE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"The question explanations are insanely detailed! Whenever I got stuck on seating arrangement puzzles, the step-by-step logic broke down the complexity easily."</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #2af598, #009efd); color: #000;">AP</div>
+          <div class="user-info">
+            <h4>Ananya Patel</h4>
+            <span>Placed at Accenture · ECE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"The live leaderboard kept me super motivated every day. Seeing my global rank climb up after each full-length mock gave me immense confidence before my real campus drive."</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #f5a623, #ff4e50);">VK</div>
+          <div class="user-info">
+            <h4>Vikram Kumar</h4>
+            <span>Placed at Cognizant GenC Next · IT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testi-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <p class="testi-text">"Practicing Topic Master tests before Wipro and Infosys exams made a night and day difference. I cracked both aptitude rounds smoothly!"</p>
+        <div class="testi-user">
+          <div class="user-avatar-circle" style="background: linear-gradient(135deg, #ec4899, #a855f7);">SG</div>
+          <div class="user-info">
+            <h4>Sneha Gupta</h4>
+            <span>Placed at Wipro Turbo · MCA</span>
+          </div>
         </div>
       </div>
     </div>
