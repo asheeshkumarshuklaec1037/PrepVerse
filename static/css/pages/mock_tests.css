@@ -827,37 +827,50 @@ body {
 .m-lbl { color: rgba(255, 255, 255, 0.6); font-weight: 500; }
 .m-val { color: #ffffff; font-weight: 700; text-align: right; }
 
-.modal-action-row {
-    display: flex;
-    gap: 15px;
+.modal-action-row,
+.modal-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 15px !important;
+    width: 100% !important;
+    margin-top: 15px !important;
 }
 .modal-btn {
-    flex: 1;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.88rem;
-    cursor: pointer;
-    transition: 0.2s;
-    border: none;
+    flex: 1 !important;
+    padding: 14px 20px !important;
+    border-radius: 14px !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border: none !important;
+    text-align: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
+.modal-btn-cancel,
 .modal-btn-back {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
 }
+.modal-btn-cancel:hover,
 .modal-btn-back:hover {
-    background: rgba(255, 255, 255, 0.18);
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
+.modal-btn-confirm,
 .modal-btn-start {
-    background: #2af598;
-    color: #000000;
+    background: #2af598 !important;
+    color: #000000 !important;
 }
+.modal-btn-confirm:hover,
 .modal-btn-start:hover {
-    background: #ffffff;
-    box-shadow: 0 5px 20px rgba(42, 245, 152, 0.4);
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: 0 8px 25px rgba(42, 245, 152, 0.4) !important;
 }
 
 /* Custom Date and Time Picker Styles (Sleek Dark Theme) */
