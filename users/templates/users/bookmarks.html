@@ -390,14 +390,7 @@
 <canvas id="particlesCanvas"></canvas>
 
 <div class="bookmarks-container">
-    <div class="page-header">
-        <h1 class="page-title">
-            <i class="fas fa-bookmark text-[#fbcd0b]"></i>
-            <span>Bookmarked Practice Questions</span>
-            <span class="text-xs bg-[#fbcd0b]/10 border border-[#fbcd0b]/20 px-2.5 py-1 rounded-full text-[#fbcd0b] font-extrabold uppercase tracking-wider" id="bookmarksCount">0</span>
-        </h1>
-        <p class="page-subtitle">Review, re-try, and manage the questions you've saved during your practice sessions.</p>
-    </div>
+    {% include 'partials/section_header.html' with title="Bookmarked Practice Questions" subtitle="Review, re-try, and manage the questions you've saved during your practice sessions." icon="fas fa-bookmark" icon_color="#fbcd0b" %}
 
     <!-- Questions list -->
     <div id="bookmarksList">

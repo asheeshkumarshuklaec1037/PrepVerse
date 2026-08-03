@@ -183,13 +183,7 @@
 <div class="glow-orb orb-2"></div>
 
 <div class="notifications-container">
-    <div class="page-header">
-        <div class="header-text">
-            <h1>Notifications Hub</h1>
-            <p>Stay updated with your mock results, roadmap updates and scheduled tasks.</p>
-        </div>
-        <button class="clear-btn" onclick="markAllAsRead()"><i class="fas fa-check-double"></i> Mark all read</button>
-    </div>
+    {% include 'partials/section_header.html' with title="Notifications Hub" subtitle="Stay updated with your mock results, roadmap updates and scheduled tasks." icon="fa-solid fa-bell" icon_color="var(--accent-purple)" cta_url="javascript:markAllAsRead()" cta_text="Mark all read" cta_class="clear-btn" %}
 
     <div class="notifications-list" id="notifList">
         {% for notif in notifications %}
