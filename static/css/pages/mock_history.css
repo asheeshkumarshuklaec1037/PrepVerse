@@ -18,7 +18,7 @@
 body {
     background-color: var(--bg-dark) !important;
     color: var(--text-primary) !important;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
     overflow-x: hidden;
 }
 
@@ -102,7 +102,7 @@ body {
     animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
 }
 .hero h1 {
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
     font-size: 3.5rem;
     font-weight: 800;
     text-transform: uppercase;
@@ -147,7 +147,7 @@ body {
 }
 
 .section-title {
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
     font-weight: 800;
     font-size: 1.3rem;
     color: #ffffff;
@@ -172,7 +172,7 @@ body {
     background: none;
     border: 1px solid transparent;
     padding: 12px 18px;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
     color: var(--text-secondary);
     font-weight: 700;
     font-size: 0.88rem;
@@ -298,7 +298,7 @@ body {
     font-size: 1.3rem;
     font-weight: 800;
     color: #ffffff;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
 }
 .metric-box .label {
     font-size: 0.68rem;
@@ -427,7 +427,7 @@ body {
     font-size: 0.95rem;
     font-weight: 800;
     color: #ffffff;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
 }
 .radial-widget .label {
     font-size: 0.65rem;
@@ -593,7 +593,7 @@ body {
     color: #ffffff;
     margin: 0 0 18px 0;
     line-height: 1.35;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
 }
 
 .attempt-timeline {
@@ -751,7 +751,7 @@ body {
     font-weight: 800;
     margin-bottom: 25px;
     line-height: 1.2;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
     color: #ffffff;
 }
 .modal-left-info h3 span.highlight-green {
@@ -1015,7 +1015,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
     font-weight: 800;
     font-size: 0.85rem;
     pointer-events: none;

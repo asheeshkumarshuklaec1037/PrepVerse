@@ -107,7 +107,7 @@
         margin-bottom: 45px;
     }
     .hero-banner h1 {
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-size: 3.2rem;
         font-weight: 800;
         text-transform: uppercase;
@@ -220,7 +220,7 @@
         position: absolute;
         bottom: -8px; left: 50%;
         transform: translateX(-50%);
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-weight: 900;
         font-size: 0.8rem;
         padding: 3px 12px;
@@ -232,7 +232,7 @@
     .rank-3 .podium-rank-badge { background: #b45309; color: #fff; box-shadow: 0 0 15px rgba(180, 83, 9, 0.5); }
 
     .podium-name {
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-weight: 800;
         font-size: 1.15rem;
         color: #fff;
@@ -240,7 +240,7 @@
         text-align: center;
     }
     .podium-xp {
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-weight: 800;
         font-size: 1.3rem;
         margin-top: 4px;
@@ -283,7 +283,7 @@
         background: none;
         border: none;
         padding: 9px 18px;
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-weight: 700;
         font-size: 0.82rem;
         color: var(--text-secondary);
@@ -364,7 +364,7 @@
 
     .col-rank {
         width: 60px;
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-weight: 900;
         font-size: 1.1rem;
         display: flex;
@@ -395,7 +395,7 @@
         border: 1px solid rgba(255,255,255,0.1);
     }
     .user-name-title {
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-weight: 700;
         font-size: 0.95rem;
         color: #fff;
@@ -419,7 +419,7 @@
     .col-xp {
         width: 110px;
         text-align: right;
-        font-family: 'Outfit', sans-serif;
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
         font-weight: 800;
         font-size: 1.1rem;
         color: #c084fc;
@@ -682,7 +682,7 @@
                 <span id="modalRankBadge" style="position: absolute; bottom: -4px; right: -4px; background: linear-gradient(135deg, #fbcd0b, #d97706); color: #000; font-weight: 900; font-size: 0.7rem; padding: 2px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.4);">#1</span>
             </div>
             <div style="min-width: 0; flex-grow: 1;">
-                <h2 id="modalName" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 6px 0; background: linear-gradient(90deg, #ffffff, #e2e8f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Candidate Name</h2>
+                <h2 id="modalName" style="font-family: 'Space Grotesk', var(--font-display, 'Space Grotesk', sans-serif); font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 6px 0; background: linear-gradient(90deg, #ffffff, #e2e8f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Candidate Name</h2>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                     <span id="modalTierBadge" class="tier-badge" style="background: rgba(192, 132, 252, 0.15); border: 1px solid rgba(192, 132, 252, 0.4); color: #c084fc; font-weight: 800; padding: 4px 12px; border-radius: 10px; font-size: 0.7rem;">GRANDMASTER</span>
                     <span style="font-size: 0.78rem; color: rgba(255,255,255,0.6); font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
@@ -700,7 +700,7 @@
                     <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Score</span>
                     <i class="fas fa-gem" style="color: #c084fc; font-size: 0.85rem;"></i>
                 </div>
-                <div id="modalXP" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #c084fc;">2,450 XP</div>
+                <div id="modalXP" style="font-family: 'Space Grotesk', var(--font-display, 'Space Grotesk', sans-serif); font-size: 1.35rem; font-weight: 800; color: #c084fc;">2,450 XP</div>
             </div>
 
             <!-- Accuracy Card -->
@@ -709,7 +709,7 @@
                     <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Accuracy</span>
                     <i class="fas fa-crosshair" style="color: #2af598; font-size: 0.85rem;"></i>
                 </div>
-                <div id="modalAccuracy" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #2af598;">94%</div>
+                <div id="modalAccuracy" style="font-family: 'Space Grotesk', var(--font-display, 'Space Grotesk', sans-serif); font-size: 1.35rem; font-weight: 800; color: #2af598;">94%</div>
             </div>
 
             <!-- Solved Questions Card -->
@@ -718,7 +718,7 @@
                     <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Questions</span>
                     <i class="fas fa-check-circle" style="color: #38bdf8; font-size: 0.85rem;"></i>
                 </div>
-                <div id="modalSolved" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 1.35rem; font-weight: 800; color: #ffffff;">380 Solved</div>
+                <div id="modalSolved" style="font-family: 'Space Grotesk', var(--font-display, 'Space Grotesk', sans-serif); font-size: 1.35rem; font-weight: 800; color: #ffffff;">380 Solved</div>
             </div>
 
             <!-- Primary Mastery Card -->
@@ -727,7 +727,7 @@
                     <span style="font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Top Subject</span>
                     <i class="fas fa-brain" style="color: #fbcd0b; font-size: 0.85rem;"></i>
                 </div>
-                <div id="modalTopic" style="font-family: 'Space Grotesk', 'Outfit', sans-serif; font-size: 0.92rem; font-weight: 800; color: #fbcd0b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 4px;">Quant Aptitude</div>
+                <div id="modalTopic" style="font-family: 'Space Grotesk', var(--font-display, 'Space Grotesk', sans-serif); font-size: 0.92rem; font-weight: 800; color: #fbcd0b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 4px;">Quant Aptitude</div>
             </div>
         </div>
 

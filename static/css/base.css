@@ -14,7 +14,9 @@
     --border-glass-hover: rgba(255, 255, 255, 0.15);
     --card-bg: rgba(13, 11, 29, 0.45);
     --sidebar-width: 260px;
-    --font-main: 'Poppins', sans-serif;
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
 }
 
 * { 

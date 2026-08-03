@@ -1105,7 +1105,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
     font-weight: 800;
     font-size: 0.85rem;
     pointer-events: none;
@@ -1144,7 +1144,7 @@ body {
     display: flex;
     flex-direction: column;
     color: #ffffff;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
 }
 .quick-nav-sidebar.active {
     right: 0;

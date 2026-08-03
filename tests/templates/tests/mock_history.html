@@ -1,17 +1,9 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test Performance — PrepVerse</title>
+
+{% block title %}Test Performance — PrepVerse{% endblock %}
+
 {% block extra_css %}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-<link rel="stylesheet" href="{% static 'css/components/_navbar.css' %}">
-<link rel="stylesheet" href="{% static 'css/components/_sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'css/pages/mock_tests.css' %}">
 <style>
   :root{
@@ -206,13 +198,8 @@
   .sponsor-strip a{font-size:.7rem;font-weight:700;color:var(--accent-2);white-space:nowrap;}
 </style>
 {% endblock %}
-</head>
-<body {% if user.is_authenticated %}class="has-sidebar"{% endif %}>
 
-{% include 'partials/sidebar.html' %}
-{% include 'partials/navbar.html' %}
-
-<main id="main-content" tabindex="-1">
+{% block content %}
 <div class="orb-field" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
 
 <div class="wrap">
@@ -1437,6 +1424,20 @@ function saveSchedule() {
     alert("Please select both a date and a time.");
     return;
   }
+renderScope();
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// schedule modal toast feedback
+function saveScheduleFromHistory() {
+  const date = document.getElementById('histSchedDate').value;
+  const time = document.getElementById('histSchedTime').value;
+  if(!date || !time) {
+    alert('Please pick both date and time.');
+    return;
+  }
   closeScheduleModal();
   const toast = document.getElementById('stickyToast');
   document.getElementById('stickyToastText').textContent = `Test scheduled for ${date} at ${time}!`;
@@ -1446,15 +1447,10 @@ function saveSchedule() {
   }, 4000);
 }
 
-renderScope();
-
-
 // staggered reveal for initial page elements
 let revealIndex = 0;
 document.querySelectorAll('.wrap > .reveal, .bento .reveal').forEach(el => {
   el.style.animationDelay = (revealIndex++ * 70) + 'ms';
 });
 </script>
-</body>
-</html>
-
+{% endblock %}

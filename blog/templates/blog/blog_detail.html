@@ -6,12 +6,12 @@
 {% block extra_css %}
 <style>
   :root{
-    --ink:#ffffff;
-    --cream:rgba(255,255,255,0.03);
-    --sand:rgba(255,255,255,0.05);
-    --clay:#2af598; /* PrepVerse green */
-    --moss:rgba(15,23,42,0.7);
-    --line: rgba(255,255,255,0.1);
+    --ink: var(--text-primary, #ffffff);
+    --cream: rgba(255, 255, 255, 0.03);
+    --sand: rgba(255, 255, 255, 0.05);
+    --clay: var(--accent-green, #2af598);
+    --moss: rgba(15, 23, 42, 0.7);
+    --line: var(--border-glass, rgba(255, 255, 255, 0.1));
     --shadow: 0 20px 50px rgba(0,0,0,0.4);
   }
   
