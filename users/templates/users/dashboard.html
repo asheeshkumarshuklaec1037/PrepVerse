@@ -487,7 +487,15 @@
 <div class="dashboard-container relative z-10">
 
     <!-- Profile Info Card Section (Crystal High-Transparency Glass Card showing background photo clearly) -->
-    <div class="profile-info-static-card p-6 mb-8" style="background: rgba(18, 19, 23, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); transform: none !important; transition: none !important;">
+    <div class="profile-info-static-card p-6 mb-8 relative" style="background: rgba(18, 19, 23, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); transform: none !important; transition: none !important;">
+        
+        <!-- Info Guide Icon -->
+        <div class="absolute top-4 right-4 z-30">
+            <button onclick="openSystemManualModal()" title="View System Guide & XP Manual" class="w-9 h-9 rounded-full bg-white/10 hover:bg-cyan-500/20 border border-white/20 hover:border-cyan-400/50 text-cyan-400 flex items-center justify-center transition-all duration-300 shadow-lg cursor-pointer hover:scale-110">
+                <i class="fa-solid fa-circle-info text-base"></i>
+            </button>
+        </div>
+
         <div class="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
             <!-- Vertically Centered Profile Avatar -->
             <div class="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-[#0B1020] overflow-hidden bg-gradient-to-tr from-[#8b5cf6] to-[#3b82f6] shadow-xl flex-shrink-0 relative z-10 my-auto">
@@ -634,116 +642,57 @@
       </div>
     </div>
 
-    <div class="surface heat-card lift reveal reveal-delay-2">
-      <div class="sec-head" style="margin:0 0 4px;">
-        <div><h3 style="font-size:.94rem;">Consistency</h3><div class="sec-sub">98 days of activity</div></div>
+    <div class="surface heat-card lift reveal reveal-delay-2" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div class="sec-head" style="margin:0 0 12px; flex-wrap: wrap; gap: 8px; align-items: center;">
+        <div>
+          <h3 style="font-size:.95rem; font-weight: 700; color: var(--text-1); display: flex; align-items: center; gap: 6px;">
+            <i class="fa-regular fa-calendar-check" style="color: var(--accent-2);"></i> Consistency
+          </h3>
+          <div class="sec-sub" id="consistencySubtitle" style="font-family: var(--f-mono); font-size: 0.72rem; color: var(--text-3);">Loading activity...</div>
+        </div>
+        
+        <!-- Month & Year Selector Filters -->
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <select id="consistencyMonthSelect" style="background: var(--surface-2); border: 1px solid var(--border); color: var(--text-1); font-size: 0.75rem; padding: 4px 8px; border-radius: var(--r-sm); font-weight: 600; cursor: pointer; outline: none;">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+          </select>
+          
+          <select id="consistencyYearSelect" style="background: var(--surface-2); border: 1px solid var(--border); color: var(--text-1); font-size: 0.75rem; padding: 4px 8px; border-radius: var(--r-sm); font-weight: 600; cursor: pointer; outline: none;">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
       </div>
-      <div class="heat-grid" id="heatGrid">
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
+
+      <!-- Calendar Days Header (Mon-Sun) -->
+      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-family: var(--f-mono); font-size: 0.65rem; color: var(--text-3); font-weight: 700; margin-bottom: 6px;">
+        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
       </div>
-      <div class="heat-legend">
+
+      <!-- Calendar Days Grid Container -->
+      <div id="calendarHeatGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 12px;">
+        <!-- Dynamically Rendered Calendar Cells -->
+      </div>
+
+      <!-- Heat Legend -->
+      <div class="heat-legend" style="display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: .68rem; color: var(--text-3); font-weight: 600;">
         <span>Less</span>
-        <span class="heat-cell" style="background:var(--surface-3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.3)"></span>
-        <span class="heat-cell" style="background:rgba(108,92,231,.6)"></span>
-        <span class="heat-cell" style="background:var(--accent)"></span>
+        <span class="heat-cell" style="width:10px; height:10px; border-radius:3px; background:var(--surface-3); display:inline-block;"></span>
+        <span class="heat-cell" style="width:10px; height:10px; border-radius:3px; background:rgba(108,92,231,.35); display:inline-block;"></span>
+        <span class="heat-cell" style="width:10px; height:10px; border-radius:3px; background:rgba(108,92,231,.65); display:inline-block;"></span>
+        <span class="heat-cell" style="width:10px; height:10px; border-radius:3px; background:var(--accent); display:inline-block;"></span>
         <span>More</span>
       </div>
     </div>
@@ -796,12 +745,43 @@
       </div>
     </div>
 
-    <div class="surface util-card lift reveal reveal-delay-3" onclick="location.href='{% url 'leaderboard' %}'" style="cursor:pointer;">
-      <h4><span class="util-ic" style="background:var(--warning-soft);color:var(--warning)"><i class="fa-solid fa-ranking-star"></i></span>Leaderboard</h4>
-      <div class="lb-row"><span class="lb-rank gold">1</span><div class="lb-avatar"></div><span class="lb-name">Ananya S.</span><span class="lb-xp">4,820 XP</span></div>
-      <div class="lb-row"><span class="lb-rank">2</span><div class="lb-avatar"></div><span class="lb-name">Kabir M.</span><span class="lb-xp">4,510 XP</span></div>
-      <div class="lb-row"><span class="lb-rank">3</span><div class="lb-avatar"></div><span class="lb-name">Divya R.</span><span class="lb-xp">4,290 XP</span></div>
-      <div class="lb-row lb-you"><span class="lb-rank">#{{ stats.global_rank }}</span><div class="lb-avatar" style="background:var(--accent-soft);border-color:var(--accent-border);"></div><span class="lb-name">You</span><span class="lb-xp">2,150 XP</span></div>
+    <div class="surface util-card lift reveal reveal-delay-3" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="margin-bottom: 12px;"><span class="util-ic" style="background:var(--warning-soft);color:var(--warning)"><i class="fa-solid fa-trophy"></i></span>Rank & Level Standing</h4>
+        
+        <!-- User Level & Rank Display Badges -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px; text-align: center;">
+            <span style="font-size: 0.68rem; color: var(--text-3); text-transform: uppercase; font-family: var(--f-mono); font-weight: 700; display: block; margin-bottom: 2px;">Current Rank</span>
+            <span style="font-family: var(--f-display); font-size: 1.25rem; font-weight: 800; color: #fbbf24; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <i class="fa-solid fa-hashtag" style="font-size: 0.85rem; color: var(--text-3);"></i>{{ stats.global_rank }}
+            </span>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--r-md); padding: 10px; text-align: center;">
+            <span style="font-size: 0.68rem; color: var(--text-3); text-transform: uppercase; font-family: var(--f-mono); font-weight: 700; display: block; margin-bottom: 2px;">User Level</span>
+            <span style="font-family: var(--f-display); font-size: 1.25rem; font-weight: 800; color: #c084fc; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <i class="fa-solid fa-bolt" style="font-size: 0.85rem; color: #c084fc;"></i>Lvl 4
+            </span>
+          </div>
+        </div>
+
+        <!-- How to Improve Rank & Level Guide -->
+        <div style="background: rgba(108, 92, 231, 0.08); border: 1px solid rgba(108, 92, 231, 0.25); border-radius: var(--r-md); padding: 10px 12px; margin-bottom: 16px;">
+          <div style="font-size: 0.72rem; font-weight: 700; color: var(--accent-2); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+            <i class="fa-solid fa-chart-line"></i> How to Rank Up:
+          </div>
+          <ul style="margin: 0; padding-left: 16px; font-size: 0.7rem; color: var(--text-2); line-height: 1.45;">
+            <li>Solve <strong>5 daily practice questions</strong> (+50 XP)</li>
+            <li>Maintain a <strong>3-day streak</strong> (+100 XP Bonus)</li>
+            <li>Score <strong>>80% in Mock Tests</strong> to jump ranks</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Action Button to View Full Leaderboard Page -->
+      <a href="{% url 'leaderboard' %}" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; border-radius: var(--r-md); background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2)); border: 1px solid rgba(245, 158, 11, 0.4); color: #fbbf24; font-weight: 700; font-size: 0.82rem; text-decoration: none; transition: all 0.25s ease; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);" onmouseover="this.style.background='linear-gradient(135deg, rgba(245, 158, 11, 0.35), rgba(234, 88, 12, 0.35))'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(234, 88, 12, 0.2))'; this.style.transform='translateY(0)';">
+        <i class="fa-solid fa-trophy"></i> View Full Leaderboard <i class="fa-solid fa-arrow-right" style="font-size: 0.75rem;"></i>
+      </a>
     </div>
   </div>
 
@@ -814,6 +794,141 @@
 
 
 </div>
+
+<!-- Full-Screen Test Arena Style Clean Content-Spread System Manual Overlay Modal -->
+<div id="systemManualModal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-md p-4 md:p-10 transition-all duration-300 opacity-0">
+    <div class="relative w-full max-w-4xl bg-[#0b0c14]/45 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-[0_25px_80px_rgba(0,0,0,0.6),0_0_50px_rgba(108,92,231,0.15)] text-left transform scale-95 transition-all duration-300" id="systemManualModalCard">
+        
+        <!-- Header with Title & Close Button -->
+        <div class="flex items-center justify-between pb-6 mb-6 border-b border-white/10">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-black text-white font-['Space_Grotesk'] leading-tight tracking-tight">
+                    PrepVerse <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-cyan-400 to-emerald-400">Growth Rules & System Manual</span>
+                </h2>
+                <p class="text-xs md:text-sm text-gray-400 font-medium mt-1 leading-relaxed">
+                    Understand how XP calculation, candidate level progression tiers, and monthly consistency work to boost your placement readiness.
+                </p>
+            </div>
+            <button onclick="closeSystemManualModal()" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ml-4">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Full Width Seamless Scrollable Content List -->
+        <div class="space-y-6 max-h-[65vh] overflow-y-auto pr-3 scrollbar-thin">
+            
+            <!-- Section 1: XP Metrics -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-extrabold text-white text-base md:text-lg flex items-center gap-2.5 font-['Space_Grotesk']">
+                        <div class="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                        1. How to Earn XP Points
+                    </h3>
+                    <span class="text-xs font-mono text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">+500 XP / Level Upgrade</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                    <div class="flex items-center gap-3 p-3 text-xs text-gray-300">
+                        <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-400 font-bold font-mono text-xs shadow-sm">+10 XP</span>
+                        <span>Per correct practice question answer</span>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 text-xs text-gray-300">
+                        <span class="px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-400 font-bold font-mono text-xs shadow-sm">+100 XP</span>
+                        <span>Completing a full topic practice set</span>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 text-xs text-gray-300">
+                        <span class="px-2.5 py-1 rounded-md bg-cyan-500/20 text-cyan-400 font-bold font-mono text-xs shadow-sm">+250 XP</span>
+                        <span>Scoring >80% accuracy in a Mock Test</span>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 text-xs text-gray-300">
+                        <span class="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-400 font-bold font-mono text-xs shadow-sm">+50 XP</span>
+                        <span>Maintaining daily continuous login streak</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white/5"></div>
+
+            <!-- Section 2: Candidate Level Tiers -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-extrabold text-white text-base md:text-lg flex items-center gap-2.5 font-['Space_Grotesk']">
+                        <div class="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-sm">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        2. Candidate Level Hierarchy Tiers
+                    </h3>
+                    <span class="text-xs text-purple-300 font-mono font-bold">4 Progression Tiers</span>
+                </div>
+                <p class="text-xs text-gray-400">Your level automatically unlocks higher candidate tiers every 500 XP earned:</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono text-center pt-1">
+                    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
+                        <div class="text-purple-400 font-extrabold text-base mb-1">Lvl 1 - 3</div>
+                        <div class="text-xs text-gray-300 font-sans font-semibold">Novice Aspirant</div>
+                        <div class="text-[11px] text-emerald-400 font-bold mt-2">0 - 1500 XP</div>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
+                        <div class="text-cyan-400 font-extrabold text-base mb-1">Lvl 4 - 6</div>
+                        <div class="text-xs text-gray-300 font-sans font-semibold">Pro Candidate</div>
+                        <div class="text-[11px] text-emerald-400 font-bold mt-2">1500 - 3000 XP</div>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
+                        <div class="text-amber-400 font-extrabold text-base mb-1">Lvl 7 - 9</div>
+                        <div class="text-xs text-gray-300 font-sans font-semibold">Elite Scholar</div>
+                        <div class="text-[11px] text-emerald-400 font-bold mt-2">3000 - 4500 XP</div>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
+                        <div class="text-emerald-400 font-extrabold text-base mb-1">Lvl 10+</div>
+                        <div class="text-xs text-gray-300 font-sans font-semibold">Placement Master</div>
+                        <div class="text-[11px] text-emerald-400 font-bold mt-2">4500+ XP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white/5"></div>
+
+            <!-- Section 3: Consistency Calculation -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-extrabold text-white text-base md:text-lg flex items-center gap-2.5 font-['Space_Grotesk']">
+                        <div class="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-sm">
+                            <i class="fa-regular fa-calendar-check"></i>
+                        </div>
+                        3. Consistency Calendar Calculation
+                    </h3>
+                    <span class="text-xs text-cyan-300 font-mono font-bold">Month & Year Filter</span>
+                </div>
+                <div class="space-y-2 text-xs md:text-sm text-gray-300 leading-relaxed pt-1">
+                    <p>• <strong>Active Day Calculation:</strong> Solving $\ge 1$ question activates purple color cell for that specific calendar date.</p>
+                    <p>• <strong>Glow Intensity Colors:</strong> Cell shade darkens based on questions volume solved on that day (Light = 1-5 Qs, Dark Purple = 15+ Qs).</p>
+                    <p>• <strong>Monthly Active Days Score:</strong> Total active days in the month calculate your overall preparation consistency score.</p>
+                </div>
+            </div>
+
+            <div class="border-t border-white/5"></div>
+
+            <!-- Section 4: Pro Tip -->
+            <div class="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-start gap-3.5">
+                <i class="fa-solid fa-lightbulb text-amber-400 text-lg mt-0.5"></i>
+                <div class="text-xs md:text-sm text-purple-200 leading-relaxed">
+                    <strong class="text-white block mb-0.5">Important Placement Tip:</strong>
+                    Target your <strong>Focus Zone (Weak Topics)</strong> first. Raising accuracy in weak areas unlocks 2x faster rank jumps on the global placement leaderboard!
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Action Buttons -->
+        <div class="mt-8 pt-5 border-t border-white/10 flex items-center justify-end">
+            <button onclick="closeSystemManualModal()" class="px-7 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold text-xs transition-all cursor-pointer hover:scale-105">
+                Close
+            </button>
+        </div>
+
+    </div>
+</div>
 {% endblock %}
 
 
@@ -824,6 +939,37 @@
 
 <script>
     // Global functions
+    // Global System Manual Modal Handlers
+    window.openSystemManualModal = function() {
+        const modal = document.getElementById("systemManualModal");
+        const card = document.getElementById("systemManualModalCard");
+        if (modal && card) {
+            modal.classList.remove("hidden");
+            modal.style.display = "flex";
+            setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                modal.classList.add("opacity-100");
+                card.classList.remove("scale-95");
+                card.classList.add("scale-100");
+            }, 10);
+        }
+    };
+
+    window.closeSystemManualModal = function() {
+        const modal = document.getElementById("systemManualModal");
+        const card = document.getElementById("systemManualModalCard");
+        if (modal && card) {
+            modal.classList.remove("opacity-100");
+            modal.classList.add("opacity-0");
+            card.classList.remove("scale-100");
+            card.classList.add("scale-95");
+            setTimeout(() => {
+                modal.classList.add("hidden");
+                modal.style.display = "none";
+            }, 300);
+        }
+    };
+
     window.dismissLevelUp = function() {
         const overlay = document.getElementById("levelUpOverlay");
         if (overlay) {
@@ -1963,6 +2109,193 @@
         document.querySelectorAll('.reveal').forEach(el => {
             revealObserver.observe(el);
         });
+
+        // ==========================================
+        // DYNAMIC MONTH & YEAR CALENDAR CONSISTENCY
+        // ==========================================
+        const monthSelect = document.getElementById('consistencyMonthSelect');
+        const yearSelect = document.getElementById('consistencyYearSelect');
+        const calendarGrid = document.getElementById('calendarHeatGrid');
+        const consistencySubtitle = document.getElementById('consistencySubtitle');
+
+        // Set default filter to Current Month & Year
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
+        const currentDate = today.getDate();
+
+        if (monthSelect && yearSelect && calendarGrid) {
+            monthSelect.value = currentMonth;
+            yearSelect.value = currentYear;
+
+            function generateConsistentActivity(year, month) {
+                // Generate deterministic activity level for each day based on date
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const activityMap = {};
+                for (let d = 1; d <= daysInMonth; d++) {
+                    // Hash simulation for activity intensity (0 = none, 1 = low, 2 = mid, 3 = high)
+                    const val = (d * 7 + month * 13 + year) % 10;
+                    if (val < 2) activityMap[d] = 0;
+                    else if (val < 5) activityMap[d] = 1;
+                    else if (val < 8) activityMap[d] = 2;
+                    else activityMap[d] = 3;
+                }
+                return { daysInMonth, activityMap };
+            }
+
+            function renderCalendar() {
+                const year = parseInt(yearSelect.value, 10);
+                const month = parseInt(monthSelect.value, 10);
+
+                // Get first day of month (0 = Sun, 1 = Mon, ... 6 = Sat) -> Convert to Mon=0, Sun=6
+                const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
+                const { daysInMonth, activityMap } = generateConsistentActivity(year, month);
+
+                calendarGrid.innerHTML = '';
+                let activeDaysCount = 0;
+
+                // Render blank offset cells for starting day alignment
+                for (let i = 0; i < firstDayIndex; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.style.aspectRatio = '1';
+                    calendarGrid.appendChild(emptyCell);
+                }
+
+                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                // Render day cells
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const cell = document.createElement('div');
+                    const level = activityMap[day];
+
+                    cell.className = 'heat-cell-cal';
+                    cell.style.aspectRatio = '1';
+                    cell.style.borderRadius = '6px';
+                    cell.style.display = 'flex';
+                    cell.style.alignItems = 'center';
+                    cell.style.justifyContent = 'center';
+                    cell.style.fontSize = '0.68rem';
+                    cell.style.fontWeight = '700';
+                    cell.style.fontFamily = 'var(--f-mono)';
+                    cell.style.cursor = 'pointer';
+                    cell.style.transition = 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)';
+                    cell.style.position = 'relative';
+                    cell.innerText = day;
+
+                    // Apply color intensity
+                    if (level === 0) {
+                        cell.style.background = 'var(--surface-3)';
+                        cell.style.color = 'var(--text-3)';
+                        cell.style.border = '1px solid rgba(255, 255, 255, 0.04)';
+                    } else {
+                        activeDaysCount++;
+                        if (level === 1) {
+                            cell.style.background = 'rgba(108, 92, 231, 0.3)';
+                            cell.style.color = '#ffffff';
+                            cell.style.border = '1px solid rgba(108, 92, 231, 0.4)';
+                        } else if (level === 2) {
+                            cell.style.background = 'rgba(108, 92, 231, 0.65)';
+                            cell.style.color = '#ffffff';
+                            cell.style.border = '1px solid rgba(139, 124, 240, 0.6)';
+                        } else {
+                            cell.style.background = 'var(--accent)';
+                            cell.style.color = '#ffffff';
+                            cell.style.border = '1px solid #8b7cf0';
+                            cell.style.boxShadow = '0 0 10px rgba(108, 92, 231, 0.4)';
+                        }
+                    }
+
+                    // Highlight today if matching current month/year
+                    if (year === currentYear && month === currentMonth && day === currentDate) {
+                        cell.style.outline = '2px solid #2af598';
+                        cell.style.outlineOffset = '1px';
+                    }
+
+                    // Detailed activity details for popup tooltip
+                    const topicPool = [
+                        "Time, Speed & Distance", "DBMS Normalization", "Data Interpretation",
+                        "Syllogism & Seating", "Reading Comprehension", "Binary Trees & Graphs",
+                        "Probability & Permutation", "TCS Mock Test 04", "Operating System Paging"
+                    ];
+                    const selectedTopic = topicPool[(day + month * 3) % topicPool.length];
+                    const questionsCount = level === 0 ? 0 : level * 5 + (day % 4) + 2;
+                    const accuracyVal = level === 0 ? 0 : 70 + (day % 25);
+
+                    // Create Floating Glass Popover Tooltip
+                    const popover = document.createElement('div');
+                    popover.className = 'consistency-popover';
+                    popover.style.position = 'absolute';
+                    popover.style.bottom = '125%';
+                    popover.style.left = '50%';
+                    popover.style.transform = 'translateX(-50%) translateY(6px)';
+                    popover.style.background = 'rgba(18, 19, 27, 0.95)';
+                    popover.style.backdropFilter = 'blur(16px)';
+                    popover.style.webkitBackdropFilter = 'blur(16px)';
+                    popover.style.border = '1px solid rgba(139, 124, 240, 0.35)';
+                    popover.style.borderRadius = '12px';
+                    popover.style.padding = '10px 12px';
+                    popover.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(108,92,231,0.25)';
+                    popover.style.whiteSpace = 'nowrap';
+                    popover.style.pointerEvents = 'none';
+                    popover.style.opacity = '0';
+                    popover.style.visibility = 'hidden';
+                    popover.style.transition = 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+                    popover.style.zIndex = '999';
+
+                    if (level === 0) {
+                        popover.innerHTML = `
+                            <div style="font-family:var(--f-sans); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:2px;">${monthNames[month]} ${day}, ${year}</div>
+                            <div style="font-size:0.7rem; color:var(--text-3); display:flex; align-items:center; gap:4px;">
+                                <i class="fa-regular fa-circle-xmark" style="color:var(--danger);"></i> No practice activity
+                            </div>
+                        `;
+                    } else {
+                        popover.innerHTML = `
+                            <div style="font-family:var(--f-sans); font-size:0.75rem; font-weight:700; color:#fff; margin-bottom:4px; display:flex; justify-content:space-between; gap:12px;">
+                                <span>${monthNames[month]} ${day}, ${year}</span>
+                                <span style="color:#2af598; font-family:var(--f-mono); font-weight:800;">${accuracyVal}% Acc</span>
+                            </div>
+                            <div style="font-size:0.7rem; color:var(--text-2); display:flex; align-items:center; gap:5px; margin-bottom:3px;">
+                                <i class="fa-solid fa-fire text-[#fbbf24]"></i> <strong>${questionsCount} Questions Solved</strong>
+                            </div>
+                            <div style="font-size:0.68rem; color:var(--accent-2); background:rgba(108,92,231,0.15); padding:2px 6px; border-radius:6px; border:1px solid rgba(108,92,231,0.3); display:inline-block;">
+                                <i class="fa-solid fa-book-open"></i> ${selectedTopic}
+                            </div>
+                        `;
+                    }
+
+                    cell.appendChild(popover);
+
+                    cell.addEventListener('mouseenter', () => {
+                        cell.style.transform = 'scale(1.18)';
+                        cell.style.zIndex = '50';
+                        popover.style.opacity = '1';
+                        popover.style.visibility = 'visible';
+                        popover.style.transform = 'translateX(-50%) translateY(0px)';
+                    });
+                    cell.addEventListener('mouseleave', () => {
+                        cell.style.transform = 'scale(1)';
+                        cell.style.zIndex = '1';
+                        popover.style.opacity = '0';
+                        popover.style.visibility = 'hidden';
+                        popover.style.transform = 'translateX(-50%) translateY(6px)';
+                    });
+
+                    calendarGrid.appendChild(cell);
+                }
+
+                // Update subtitle banner stats
+                if (consistencySubtitle) {
+                    consistencySubtitle.innerText = `${activeDaysCount} active days in ${monthNames[month]} ${year}`;
+                }
+            }
+
+            monthSelect.addEventListener('change', renderCalendar);
+            yearSelect.addEventListener('change', renderCalendar);
+
+            // Initial Render
+            renderCalendar();
+        }
     });
 </script>
 <script src="{% static 'js/dashboard.js' %}"></script>
