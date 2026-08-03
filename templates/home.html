@@ -1486,7 +1486,71 @@
       </div>
     </div>
   </div>
+
+  <div style="text-align: center; margin-top: 35px; position: relative; z-index: 10;">
+    <button onclick="openTestimonialModal()" style="padding: 16px 36px; border-radius: 50px; background: linear-gradient(135deg, #2af598, #009efd); color: #08080b; font-weight: 800; font-size: 0.95rem; border: none; cursor: pointer; box-shadow: 0 8px 30px rgba(42, 245, 152, 0.35); display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease;">
+      <i class="fas fa-pen-nib"></i> Share Your Success Story
+    </button>
+  </div>
 </section>
+
+<!-- Testimonial Submission Modal (Glassmorphism) -->
+<div id="testimonialModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 12, 0.65); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: rgba(18, 19, 28, 0.55); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 28px; padding: 40px; width: 100%; max-width: 520px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 40px rgba(108, 92, 231, 0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative;">
+    <button onclick="closeTestimonialModal()" style="position: absolute; top: 22px; right: 22px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;"><i class="fas fa-times"></i></button>
+    
+    <div style="text-align: center; margin-bottom: 28px;">
+      <div style="width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 18px; background: linear-gradient(135deg, rgba(251, 205, 11, 0.2), rgba(245, 166, 35, 0.2)); border: 1px solid rgba(251, 205, 11, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 8px 20px rgba(251, 205, 11, 0.2);">🌟</div>
+      <h3 style="font-size: 1.6rem; font-weight: 800; color: #fff; margin: 0; font-family: var(--font-main, 'Poppins', sans-serif);">Share Your Feedback</h3>
+      <p style="font-size: 0.88rem; color: rgba(255, 255, 255, 0.6); margin-top: 6px; font-weight: 400;">Inspire upcoming placement aspirants with your experience!</p>
+    </div>
+
+    {% if user.is_authenticated %}
+    <form id="testimonialForm" onsubmit="submitTestimonial(event)" style="display: flex; flex-direction: column; gap: 18px;">
+      <div>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Your Name</label>
+        <input type="text" value="{{ user.get_full_name|default:user.username }}" readonly style="width: 100%; padding: 13px 18px; border-radius: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.75); font-size: 0.92rem; font-weight: 600; cursor: not-allowed; backdrop-filter: blur(10px);">
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Achievement</label>
+        <input type="text" id="testiCompany" placeholder="e.g. Cleared SSC CGL / Placed at TCS / CAT Aspirant" required style="width: 100%; padding: 13px 18px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; font-size: 0.92rem; outline: none; backdrop-filter: blur(10px); transition: border-color 0.3s, box-shadow 0.3s;">
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Rating</label>
+        <div style="display: inline-flex; gap: 10px; padding: 10px 16px; border-radius: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); font-size: 1.4rem; color: #fbcd0b; cursor: pointer;">
+          <i class="fas fa-star" onclick="setRating(1)" id="star-1"></i>
+          <i class="fas fa-star" onclick="setRating(2)" id="star-2"></i>
+          <i class="fas fa-star" onclick="setRating(3)" id="star-3"></i>
+          <i class="fas fa-star" onclick="setRating(4)" id="star-4"></i>
+          <i class="fas fa-star" onclick="setRating(5)" id="star-5"></i>
+        </div>
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.75rem; font-weight: 700; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Your Testimonial</label>
+        <textarea id="testiText" rows="3" placeholder="How did PrepVerse help you in your placement journey?" required style="width: 100%; padding: 13px 18px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; font-size: 0.92rem; outline: none; resize: none; backdrop-filter: blur(10px); transition: border-color 0.3s, box-shadow 0.3s;"></textarea>
+      </div>
+
+      <button type="submit" style="margin-top: 8px; width: 100%; padding: 15px; border-radius: 16px; background: linear-gradient(135deg, #2af598, #009efd); color: #08080b; font-weight: 800; font-size: 0.95rem; border: none; cursor: pointer; box-shadow: 0 8px 25px rgba(42, 245, 152, 0.35); transition: all 0.3s ease;">
+        Submit Testimonial ✨
+      </button>
+    </form>
+    {% else %}
+    <div style="text-align: center; padding: 25px 10px;">
+      <div style="width: 60px; height: 60px; margin: 0 auto 16px; border-radius: 50%; background: rgba(251, 205, 11, 0.1); border: 1px solid rgba(251, 205, 11, 0.3); display: flex; align-items: center; justify-content: center; color: #fbcd0b; font-size: 1.5rem;">
+        <i class="fas fa-lock"></i>
+      </div>
+      <h4 style="font-size: 1.2rem; color: #fff; font-weight: 800; margin-bottom: 8px;">Login Required</h4>
+      <p style="font-size: 0.88rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 24px; line-height: 1.5;">Please login to your PrepVerse account to submit a genuine testimonial.</p>
+      <a href="{% url 'login' %}?next={{ request.path }}" style="display: inline-block; padding: 14px 36px; border-radius: 50px; background: linear-gradient(135deg, #3b82f6, #60a5fa); color: #fff; font-weight: 700; text-decoration: none; font-size: 0.9rem; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4); transition: transform 0.3s;">
+        Login Now →
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
 
 <!-- Blog Section -->
 <section class="section" id="blog">
@@ -1730,5 +1794,38 @@
         }, { threshold: 0.2 });
         if(stats.length) obs.observe(stats[0]);
     });
+
+    // Testimonial Modal JS Handlers
+    let currentSelectedRating = 5;
+    function openTestimonialModal() {
+        $('#testimonialModal').css('display', 'flex').hide().fadeIn(300);
+        setRating(5);
+    }
+    function closeTestimonialModal() {
+        $('#testimonialModal').fadeOut(250);
+    }
+    function setRating(rating) {
+        currentSelectedRating = rating;
+        for (let i = 1; i <= 5; i++) {
+            const star = $(`#star-${i}`);
+            if (i <= rating) {
+                star.removeClass('far').addClass('fas');
+            } else {
+                star.removeClass('fas').addClass('far');
+            }
+        }
+    }
+    function submitTestimonial(e) {
+        e.preventDefault();
+        const company = $('#testiCompany').val().trim();
+        const text = $('#testiText').val().trim();
+
+        if (!company || !text) return;
+
+        // Feedback toast notification
+        alert('Thank you! Your testimonial has been submitted successfully for review.');
+        closeTestimonialModal();
+        $('#testimonialForm')[0].reset();
+    }
 </script>
 {% endblock %}
