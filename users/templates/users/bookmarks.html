@@ -45,12 +45,10 @@
     .glow-orb {
         position: fixed;
         border-radius: 50%;
-        filter: blur(140px);
-        opacity: 0.14;
+        filter: blur(60px);
+        opacity: 0.12;
         z-index: -2;
         pointer-events: none;
-        will-change: transform;
-        transition: transform 0.2s ease-out;
     }
     .orb-1 {
         width: 600px; height: 600px;
@@ -417,82 +415,20 @@
         renderBookmarks();
 
         // 1. Particle Background Dust Effects
-        const canvas = document.getElementById("particlesCanvas");
-        if (canvas) {
-            const ctx = canvas.getContext("2d");
-            let particles = [];
-            
-            const resizeCanvas = () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            };
-            window.addEventListener("resize", resizeCanvas);
-            resizeCanvas();
-
-            class Particle {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.size = 0.5 + Math.random() * 1.5;
-                    this.speedX = -0.15 + Math.random() * 0.3;
-                    this.speedY = -0.15 + Math.random() * 0.3;
-                    this.alpha = 0.1 + Math.random() * 0.5;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                        this.reset();
-                    }
-                }
-                draw() {
-                    ctx.save();
-                    ctx.globalAlpha = this.alpha;
-                    ctx.fillStyle = "#ffffff";
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-            }
-
-            for (let i = 0; i < 75; i++) {
-                particles.push(new Particle());
-            }
-
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                requestAnimationFrame(animateParticles);
-            }
-            animateParticles();
-        }
-
-        // 2. Parallax Grid background movement & mouse move glows
+        // Optimized smooth scroll parallax for background pattern
+        let ticking = false;
         window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const pattern = document.getElementById('bgPatternLayer');
-            if (pattern) {
-                pattern.style.transform = `translate3d(0, ${scrolled * 0.12}px, 0)`;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const pattern = document.getElementById('bgPatternLayer');
+                    if (pattern) {
+                        pattern.style.transform = `translate3d(0, ${window.pageYOffset * 0.08}px, 0)`;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
-        });
-
-        // Glow orbs mouse parallax
-        const orbs = document.querySelectorAll('.glow-orb');
-        document.addEventListener('mousemove', (e) => {
-            const mouseX = e.clientX / window.innerWidth - 0.5;
-            const mouseY = e.clientY / window.innerHeight - 0.5;
-            orbs.forEach((orb, index) => {
-                const speed = (index + 1) * 15;
-                orb.style.transform = `translate3d(${mouseX * speed}px, ${mouseY * speed}px, 0)`;
-            });
-        });
+        }, { passive: true });
     });
 
     function getBookmarks() {
@@ -508,7 +444,9 @@
         const countBadge = document.getElementById('bookmarksCount');
         const bookmarks = getBookmarks();
         
-        countBadge.innerText = bookmarks.length;
+        if (countBadge) {
+            countBadge.innerText = bookmarks.length;
+        }
         
         if (bookmarks.length === 0) {
             container.innerHTML = `
