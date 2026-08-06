@@ -5,9 +5,8 @@
 
 {% block extra_css %}
 <style>
-    body { background: #050505; overflow: hidden; height: 100vh; font-family: 'Poppins', sans-serif; }
+    body { background: var(--bg-dark, #050505); overflow: hidden; height: 100vh; font-family: var(--font-main); }
     main { padding-top: 0 !important; }
-    .navbar { display: none !important; }
 
     /* Original Animated Background */
     .animated-bg {
@@ -318,9 +317,9 @@
             <div class="social-login">
                 <p>Or sign up with</p>
                 <div class="social-icons">
-                    <a href="#" class="s-btn"><i class="fab fa-google"></i></a>
-                    <a href="#" class="s-btn"><i class="fab fa-github"></i></a>
-                    <a href="#" class="s-btn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="s-btn" aria-label="Sign up with Google"><i class="fab fa-google"></i></a>
+                    <a href="#" class="s-btn" aria-label="Sign up with GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" class="s-btn" aria-label="Sign up with LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
 

@@ -1,0 +1,38 @@
+/* Project-Wide Centralized Pagination System */
+.prepverse-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.pagination-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: var(--radius-sm, 8px);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.pagination-item:hover,
+.pagination-item.active {
+    background: var(--accent-green, #2af598);
+    color: #000000;
+    border-color: var(--accent-green, #2af598);
+    box-shadow: 0 4px 15px rgba(42, 245, 152, 0.3);
+}
+
+.pagination-item.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}

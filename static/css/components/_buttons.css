@@ -5,8 +5,16 @@
 .btn-action,
 .retake-btn,
 .modal-btn,
-.login-btn {
-    width: 100%;
+.login-btn,
+.btn-explore,
+.btn-go,
+.btn-save,
+.btn-search-submit,
+.btn-spark-center,
+.btn-submit-comment,
+.arena-btn,
+.buy-btn,
+.blurred-login-btn {
     padding: 14px 20px;
     border-radius: 14px;
     font-weight: 700;
@@ -31,7 +39,16 @@
 .btn-action:hover,
 .retake-btn:hover,
 .modal-btn:hover,
-.login-btn:hover {
+.login-btn:hover,
+.btn-explore:hover,
+.btn-go:hover,
+.btn-save:hover,
+.btn-search-submit:hover,
+.btn-spark-center:hover,
+.btn-submit-comment:hover,
+.arena-btn:hover,
+.buy-btn:hover,
+.blurred-login-btn:hover {
     transform: translateY(-4px) scale(1.02) !important;
 }
 

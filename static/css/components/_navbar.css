@@ -1,4 +1,3 @@
-/* Modern Glass Navbar Styles */
 .navbar {
     position: fixed;
     top: 0;
@@ -18,6 +17,18 @@
     z-index: 2000;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    animation: navbarSlideDown 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes navbarSlideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .navbar.scrolled {
