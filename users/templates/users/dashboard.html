@@ -28,21 +28,49 @@
 
   body { background: var(--bg) !important; color: var(--text-1) !important; font-family: var(--f-sans) !important; }
 
-  /* COURSES-PAGE MATCHING STAGGERED FADE-IN ANIMATIONS */
+  /* COURSE-DETAIL MATCHING EXACT SMOOTH IMAGE REVEAL ANIMATION */
   .profile-hero-section {
-    opacity: 0;
-    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.05s;
+    position: relative;
+    width: 100%;
+    height: 300px;
+    margin-top: -80px;
+    overflow: hidden;
+    background: #0a0a0d;
+  }
+
+  .profile-cover-hero-img {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 1;
+    z-index: 1;
+    animation: dashboardImageFade 1.2s cubic-bezier(0.4, 0, 0.2, 1) ease-out, subtleZoom 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes dashboardImageFade {
+    0% { opacity: 0; transform: scale(1.25); filter: brightness(0.2); }
+    100% { opacity: 1; transform: scale(1.05); filter: brightness(0.85); }
+  }
+
+  @keyframes subtleZoom {
+    0% { transform: scale(1.05); filter: brightness(0.85); }
+    100% { transform: scale(1.12); filter: brightness(0.85); }
   }
 
   .profile-info-static-card {
     opacity: 0;
-    animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.15s;
+    animation: cardRiseFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+  }
+
+  @keyframes cardRiseFade {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .dashboard-container {
     max-width: 1320px;
     margin: 0 auto;
-    padding: 24px 20px 80px;
+    padding: 0 20px 80px;
   }
 
   .topbar {
@@ -442,14 +470,7 @@
   }
 </style>
 
-<!-- Include AOS (Animate on Scroll) CSS -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-{% endblock %}
-
-{% block content %}
-<!-- Include Tailwind CSS locally inside this template -->
+<!-- Include Tailwind CSS CDN inside head to prevent FOUC header glitch -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
     tailwind.config = {
@@ -466,25 +487,32 @@
         }
     }
 </script>
+<!-- Include AOS (Animate on Scroll) CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
 
 
 
 
 <!-- Full-Width Profile Cover Hero Section Banner -->
-<section class="profile-hero-section" style="position: relative; width: 100%; height: 285px; margin-top: -80px; overflow: hidden; margin-bottom: -90px;">
-    <img id="profileCoverPhoto" src="{% static 'images/evening_hero.jpg' %}" alt="Profile Cover" class="profile-cover-img profile-cover-hero-img" style="display: block; width: 100%; height: 100%; object-fit: cover;" fetchpriority="high" loading="eager">
-    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,13,0.1) 0%, rgba(10,10,13,0.3) 40%, rgba(10,10,13,0.85) 80%, #0a0a0d 100%); z-index: 3;"></div>
+<section class="profile-hero-section">
+    <img id="profileCoverPhoto" src="{% static 'images/evening_hero.jpg' %}" alt="Profile Cover" class="profile-cover-img profile-cover-hero-img" fetchpriority="high" loading="eager">
+    <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10,10,13,0.1) 0%, rgba(10,10,13,0.4) 50%, rgba(10,10,13,0.95) 85%, #0a0a0d 100%); z-index: 2; pointer-events: none;"></div>
     
     <!-- Floating Category Badge -->
-    <span class="absolute top-24 left-[5%] bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white flex items-center gap-1.5 z-10 shadow-lg">
+    <span class="absolute top-6 left-[5%] bg-black/60 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white flex items-center gap-1.5 z-10 shadow-lg">
         <i class="fas fa-shield-halved text-[#38bdf8]"></i> PrepVerse Premium Candidate
     </span>
 </section>
 
-<div class="dashboard-container relative z-10">
+<div class="dashboard-container relative z-10" style="margin-top: -100px;">
 
     <!-- Profile Info Card Section (Crystal High-Transparency Glass Card showing background photo clearly) -->
-    <div class="profile-info-static-card p-6 mb-8 relative" style="background: rgba(18, 19, 23, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15); transform: none !important; transition: none !important;">
+    <div class="profile-info-static-card p-6 mb-8 relative" style="background: rgba(18, 19, 23, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);">
         
         <!-- Info Guide Icon -->
         <div class="absolute top-4 right-4 z-30">
