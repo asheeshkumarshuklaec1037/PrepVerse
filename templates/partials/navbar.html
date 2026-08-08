@@ -1,8 +1,9 @@
 {% load static %}
 <nav class="navbar" id="navbar">
     <div style="display: flex; align-items: center; gap: 12px;">
-        <div class="sidebar-hover-trigger {% if not user.is_authenticated %}mobile-only-trigger{% endif %}" id="sidebarHoverTrigger" role="button" aria-label="Toggle Navigation Sidebar" tabindex="0">
+        <div class="sidebar-hover-trigger {% if not user.is_authenticated %}mobile-only-trigger{% endif %}" id="sidebarHoverTrigger" role="button" aria-label="Open Navigation Menu" tabindex="0" title="Menu">
             <i class="fas fa-bars"></i>
+            <span class="mobile-trigger-text">Menu</span>
         </div>
         
         <a href="{% url 'home' %}" class="logo" aria-label="PrepVerse Home">

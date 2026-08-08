@@ -35,28 +35,42 @@
 .sidebar-hover-trigger {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
+    gap: 6px;
+    padding: 0 10px;
+    width: auto;
     min-width: 44px;
+    height: 44px;
     min-height: 44px;
-    border-radius: 12px;
+    border-radius: var(--radius-sm, 8px);
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-glass);
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.2rem;
+    color: var(--text-1, #ffffff);
+    font-size: 1.1rem;
     z-index: 2100;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
 }
 
+.mobile-trigger-text {
+    display: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 992px) {
+    .mobile-trigger-text {
+        display: inline-block;
+    }
+}
+
 .sidebar-hover-trigger:hover {
-    background: rgba(42, 245, 152, 0.1);
-    border-color: rgba(42, 245, 152, 0.4);
-    color: var(--accent-green);
-    box-shadow: 0 0 15px rgba(42, 245, 152, 0.3);
-    transform: scale(1.05);
+    background: var(--accent-soft, rgba(108, 92, 231, 0.15));
+    border-color: var(--accent-border, rgba(108, 92, 231, 0.4));
+    color: var(--accent-2, #8b7cf0);
+    box-shadow: 0 0 15px var(--accent-glow);
+    transform: scale(1.03);
 }
 
 .sidebar-hover-trigger.mobile-only-trigger {

@@ -42,8 +42,8 @@
         z-index: 2;
         animation: pulse 10s infinite alternate;
     }
-    .nebula-1 { top: -10%; left: -10%; background: #2af598; }
-    .nebula-2 { bottom: -10%; right: -10%; background: #009efd; animation-delay: -5s; }
+    .nebula-1 { top: -10%; left: -10%; background: var(--accent); }
+    .nebula-2 { bottom: -10%; right: -10%; background: var(--accent-2); animation-delay: -5s; }
     @keyframes pulse {
         from { transform: scale(1) translate(0, 0); opacity: 0.1; }
         to { transform: scale(1.2) translate(50px, 50px); opacity: 0.2; }
@@ -52,7 +52,7 @@
     .back-home {
         position: absolute;
         top: 30px; left: 40px;
-        color: rgba(255,255,255,0.5);
+        color: var(--text-2);
         text-decoration: none;
         font-size: 0.85rem;
         font-weight: 600;
@@ -61,7 +61,7 @@
         transition: 0.3s;
         z-index: 20;
     }
-    .back-home:hover { color: #fff; transform: translateX(-5px); }
+    .back-home:hover { color: var(--text-1); transform: translateX(-5px); }
 
     /* Asymmetrical Layout */
     .auth-wrapper {
@@ -87,23 +87,23 @@
     .brand-header {
         font-size: 1.8rem;
         font-weight: 800;
-        color: #fff;
+        color: var(--text-1);
         display: flex; align-items: center; gap: 12px;
         margin-bottom: 30px;
         text-decoration: none;
     }
-    .brand-header i { color: #2af598; font-size: 1.5rem; }
+    .brand-header i { color: var(--accent-legacy-green, #2af598); font-size: 1.5rem; }
 
     .info-section h1 {
         font-size: 3.5rem;
         font-weight: 800;
         line-height: 1.1;
         margin-bottom: 20px;
-        color: #fff;
+        color: var(--text-1);
         letter-spacing: -1px;
     }
     .info-section h1 span {
-        background: linear-gradient(90deg, #fff, #2af598);
+        background: linear-gradient(90deg, var(--text-1), var(--accent-2));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }

@@ -1,13 +1,4 @@
 /* Static Stylesheet for Blog Index Page */
-:root {
-  --ink: var(--text-primary, #ffffff);
-  --cream: rgba(255, 255, 255, 0.03);
-  --sand: rgba(255, 255, 255, 0.05);
-  --clay: var(--accent-green, #2af598);
-  --moss: rgba(15, 23, 42, 0.7); 
-  --line: var(--border-glass, rgba(255, 255, 255, 0.1));
-  --shadow: 0 20px 50px rgba(0,0,0,0.4);
-}
 
 body {
   background: var(--bg-dark, #030307) !important;
@@ -251,7 +242,7 @@ svg { max-width: 100%; }
 }
 
 /* Comprehensive Responsive Breakpoints for Mobile & Tablet */
-@media (max-width: 1024px) {
+@media (max-width: 992px) {
   .grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .hero-dots { right: 20px; }
   .hero-title { font-size: clamp(36px, 7vw, 70px); letter-spacing: 8px; }
@@ -272,7 +263,7 @@ svg { max-width: 100%; }
   .hero-dots { display: none; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .hero-title { font-size: 28px; letter-spacing: 2px; }
   .card-title { font-size: 15px; height: auto; }
 }

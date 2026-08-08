@@ -1,25 +1,4 @@
-:root {
-    --bg:#0a0a0d; --surface-1:#121317; --surface-2:#17181f; --surface-3:#1d1f28;
-    --border:rgba(255,255,255,.08); --border-hi:rgba(255,255,255,.16);
-    --text-1:#f5f5f7; --text-2:rgba(245,245,247,.62); --text-3:rgba(245,245,247,.36);
-
-    --accent:#6c5ce7; --accent-2:#8b7cf0; --accent-glow:rgba(108,92,231,.35);
-    --accent-soft:rgba(108,92,231,.12); --accent-border:rgba(108,92,231,.3);
-
-    --success:#00b894; --success-soft:rgba(0,184,148,.12);
-    --warning:#fdcb6e; --warning-soft:rgba(253,203,110,.12);
-    --danger:#ff7675;  --danger-soft:rgba(255,118,117,.12);
-    --info:#0984e3;    --info-soft:rgba(9,132,227,.12);
-
-    --f-display:'Space Grotesk', system-ui, sans-serif;
-    --f-sans:'Inter', system-ui, sans-serif;
-    --f-mono:'JetBrains Mono', monospace;
-
-    --r-lg:16px; --r-md:12px; --r-sm:8px;
-    --ease:cubic-bezier(.16,1,.3,1);
-  }
-
-  body { background: var(--bg) !important; color: var(--text-1) !important; font-family: var(--f-sans) !important; }
+body { background: var(--bg) !important; color: var(--text-1) !important; font-family: var(--f-sans) !important; }
 
   /* COURSES-PAGE MATCHING STAGGERED FADE-IN ANIMATIONS */
   .dashboard-container {
@@ -158,7 +137,7 @@
     gap: 16px;
     margin-bottom: 24px;
   }
-  @media (max-width: 960px) { .bento { grid-template-columns: 1fr; } }
+  @media (max-width: 992px) { .bento { grid-template-columns: 1fr; } }
 
   .continue {
     position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
@@ -298,7 +277,7 @@
 
   /* ANALYTICS GRID */
   .analytics-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-top: 14px; }
-  @media (max-width: 880px) { .analytics-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 992px) { .analytics-grid { grid-template-columns: 1fr; } }
 
   .chart-card, .heat-card { padding: 20px 22px; }
   .trend-legend { display: flex; gap: 16px; font-size: .72rem; color: var(--text-3); margin-top: 10px; }
@@ -321,7 +300,7 @@
 
   /* UTILITY RAIL */
   .util-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
-  @media (max-width: 960px) { .util-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 992px) { .util-grid { grid-template-columns: 1fr; } }
   .util-card { padding: 20px; }
   .util-card h4 {
     font-family: var(--f-display); font-size: .92rem; font-weight: 700; color: var(--text-1);

@@ -80,13 +80,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 5. Load custom profile avatar from localStorage if set
-    const customAvatar = localStorage.getItem("prepverse-custom-avatar");
-    if (customAvatar) {
-        document.querySelectorAll("img").forEach(img => {
-            if (img.src.includes("candidate_profile_avatar.jpg")) {
-                img.src = customAvatar;
-            }
+    // 6. Global IntersectionObserver Scroll Reveal Primitive
+    const revealEls = document.querySelectorAll('.reveal');
+    if (revealEls.length > 0) {
+        const io = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    entry.target.classList.add('in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -40px 0px'
         });
+
+        revealEls.forEach(el => io.observe(el));
     }
 });

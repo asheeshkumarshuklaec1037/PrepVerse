@@ -1,20 +1,5 @@
 /* Mock History Page Stylesheet */
 
-:root {
-    --bg-dark: #070412;
-    --card-bg: rgba(13, 11, 29, 0.45);
-    --accent-blue: #38bdf8;
-    --accent-purple: #c084fc;
-    --accent-cyan: #2af598;
-    --accent-rose: #fb7185;
-    --accent-gold: #fbcd0b;
-    --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.7);
-    --text-tertiary: rgba(255, 255, 255, 0.4);
-    --border-glass: rgba(255, 255, 255, 0.06);
-    --border-glass-hover: rgba(255, 255, 255, 0.15);
-}
-
 body {
     background-color: var(--bg-dark) !important;
     color: var(--text-primary) !important;
@@ -133,7 +118,7 @@ body {
     animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 992px) {
     .history-container {
         grid-template-columns: 1fr;
     }
@@ -282,7 +267,7 @@ body {
     gap: 15px;
     margin-bottom: 25px;
 }
-@media (max-width: 580px) {
+@media (max-width: 576px) {
     .metric-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -1146,7 +1131,7 @@ body {
     gap: 12px;
     margin-bottom: 18px;
 }
-@media (max-width: 640px) {
+@media (max-width: 576px) {
     .q-options-grid {
         grid-template-columns: 1fr;
     }
@@ -1205,7 +1190,7 @@ body {
     gap: 12px;
     margin-bottom: 18px;
 }
-@media (max-width: 640px) {
+@media (max-width: 576px) {
     .q-stats-bar {
         flex-direction: column;
     }

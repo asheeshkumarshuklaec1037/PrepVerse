@@ -1,4 +1,7 @@
 /* Project-Wide Centralized Button System (Enforced Site-Wide) */
+
+/* Base Button Primitive */
+.btn,
 .card-action-btn, 
 .btn-primary, 
 .btn-secondary,
@@ -15,24 +18,27 @@
 .arena-btn,
 .buy-btn,
 .blurred-login-btn {
-    padding: 14px 20px;
-    border-radius: 14px;
+    padding: 12px 20px;
+    border-radius: var(--radius-md, 14px);
     font-weight: 700;
     font-size: 0.9rem;
     text-align: center;
-    border: none;
+    border: 1px solid transparent;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all var(--dur-normal, 300ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     text-decoration: none;
     font-family: var(--font-main);
+    background: var(--accent);
+    color: #ffffff;
 }
 
 /* Single Unified Hover Physics for ALL Buttons Across Site */
+.btn:hover,
 .card-action-btn:hover, 
 .btn-primary:hover, 
 .btn-secondary:hover,
@@ -49,57 +55,120 @@
 .arena-btn:hover,
 .buy-btn:hover,
 .blurred-login-btn:hover {
-    transform: translateY(-4px) scale(1.02) !important;
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 25px var(--accent-glow, rgba(108, 92, 231, 0.35));
 }
 
-/* Button Color Palette Variants */
-.btn-green, .btn-neon, .modal-btn-confirm {
-    background: #2af598 !important;
-    color: #000000 !important;
+/* Primary Variant (Indigo Dev-Tool Theme) */
+.btn--primary,
+.btn-primary {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
 }
-.btn-green:hover, .btn-neon:hover, .modal-btn-confirm:hover {
-    background: #ffffff !important;
-    color: #000000 !important;
-    box-shadow: 0 8px 25px rgba(42, 245, 152, 0.4) !important;
+.btn--primary:hover,
+.btn-primary:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+    color: #ffffff;
+    box-shadow: 0 8px 25px var(--accent-glow);
 }
 
+/* Secondary / Ghost Variant */
+.btn--secondary,
+.btn--ghost,
+.btn-secondary,
+.btn-glass, 
+.modal-btn-cancel {
+    background: var(--surface-2, rgba(255, 255, 255, 0.08));
+    color: var(--text-1, #ffffff);
+    border: 1px solid var(--border-hi, rgba(255, 255, 255, 0.15));
+}
+.btn--secondary:hover,
+.btn--ghost:hover,
+.btn-secondary:hover,
+.btn-glass:hover, 
+.modal-btn-cancel:hover {
+    background: var(--surface-3, rgba(255, 255, 255, 0.18));
+    border-color: var(--border-hi);
+    color: #ffffff;
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.12);
+}
+
+/* Success / Green Color Variant */
+.btn--success,
+.btn-green, 
+.btn-neon, 
+.modal-btn-confirm {
+    background: var(--success, #00b894);
+    color: #ffffff;
+    border-color: var(--success);
+}
+.btn--success:hover,
+.btn-green:hover, 
+.btn-neon:hover, 
+.modal-btn-confirm:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+}
+
+/* Danger Variant */
+.btn--danger,
+.btn-danger {
+    background: var(--danger, #ff7675);
+    color: #ffffff;
+    border-color: var(--danger);
+}
+.btn--danger:hover,
+.btn-danger:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(255, 118, 117, 0.4);
+}
+
+/* Warning / Orange Color Variant */
+.btn--warning,
 .btn-orange {
-    background: #f59e0b !important;
-    color: #ffffff !important;
+    background: var(--warning, #fdcb6e);
+    color: #000000;
+    border-color: var(--warning);
 }
+.btn--warning:hover,
 .btn-orange:hover {
-    background: #ffffff !important;
-    color: #000000 !important;
-    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4) !important;
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(253, 203, 110, 0.4);
 }
 
+/* Info / Blue Color Variant */
+.btn--info,
 .btn-blue {
-    background: #3b82f6 !important;
-    color: #ffffff !important;
+    background: var(--info, #0984e3);
+    color: #ffffff;
+    border-color: var(--info);
 }
+.btn--info:hover,
 .btn-blue:hover {
-    background: #ffffff !important;
-    color: #000000 !important;
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(9, 132, 227, 0.4);
 }
 
+/* Purple Color Variant */
 .btn-purple {
-    background: #a855f7 !important;
-    color: #ffffff !important;
+    background: var(--accent-purple, #c084fc);
+    color: #ffffff;
+    border-color: var(--accent-purple);
 }
 .btn-purple:hover {
-    background: #ffffff !important;
-    color: #000000 !important;
-    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4) !important;
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 8px 25px rgba(192, 132, 252, 0.4);
 }
 
-.btn-glass, .modal-btn-cancel {
-    background: rgba(255, 255, 255, 0.08) !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-}
-.btn-glass:hover, .modal-btn-cancel:hover {
-    background: rgba(255, 255, 255, 0.18) !important;
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15) !important;
-}
