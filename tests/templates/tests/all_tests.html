@@ -644,8 +644,15 @@ function openSchedulePopup(testId) {
     if (!t) return;
 
     document.getElementById("sch-paper-val").innerText = t.name;
-    document.getElementById("sch-mode-val").innerText = t.mode;
+    document.getElementById("sch-mode-val").innerText = (t.mode && t.mode.includes('Blitz')) ? "Practice Test" : "Mock Test";
     document.getElementById("sch-subject-val").innerText = t.subject;
+
+    const catName = (t.mode && t.mode.includes('Blitz')) ? "Practice Test" : "Mock Test";
+    if (document.getElementById("sch-left-type")) document.getElementById("sch-left-type").innerText = catName;
+    if (document.getElementById("sch-header-title")) document.getElementById("sch-header-title").innerText = "Schedule " + catName;
+    if (document.getElementById("sch-header-desc")) document.getElementById("sch-header-desc").innerText = "Select a date and time to reserve your " + catName.toLowerCase() + " seat.";
+    if (document.getElementById("sch-item-label")) document.getElementById("sch-item-label").innerText = catName === "Mock Test" ? "Mock Paper" : "Test Name";
+    if (document.getElementById("sch-mode-label")) document.getElementById("sch-mode-label").innerText = "Category";
 
     const today = new Date();
     const year = today.getFullYear();

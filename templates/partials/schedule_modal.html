@@ -1,9 +1,9 @@
-<!-- Modal Overlay for Scheduling Mock Test (Matching Dark Glassmorphism Aesthetics) -->
+<!-- Modal Overlay for Scheduling Events, Mock Tests, and Study Sessions -->
 <div class="modal-overlay" id="scheduleModal">
     <div class="modal-split-wrapper">
         <!-- Left: Rules & Information -->
         <div class="modal-left-info">
-            <h3>Schedule <span class="highlight-green">Mock Test</span><br><span class="highlight-blue">& Reminders</span></h3>
+            <h3>Schedule <span class="highlight-green" id="sch-left-type">Prep Session</span><br><span class="highlight-blue">& Reminders</span></h3>
             
             <div class="rule-item">
                 <i class="fas fa-calendar-check" style="color: #2af598;"></i>
@@ -25,15 +25,15 @@
                 <i class="fas fa-clock" style="color: #2af598;"></i>
                 <div class="rule-item-text">
                     <h4>Flexible Reservation</h4>
-                    <p>You can adjust or re-schedule your booked test slot anytime from your dashboard.</p>
+                    <p>You can adjust or re-schedule your booked slot anytime from your dashboard.</p>
                 </div>
             </div>
 
             <div class="practice-standing-box">
                 <div class="practice-standing-title">
-                    <i class="fas fa-exclamation-circle" style="color: #fbcd0b;"></i> Scheduled Test Standing
+                    <i class="fas fa-exclamation-circle" style="color: #fbcd0b;"></i> Scheduled Session Standing
                 </div>
-                <p class="practice-standing-desc">Scheduling reserves your slot and sends reminders. When the scheduled time arrives, launch the test directly from your notification panel.</p>
+                <p class="practice-standing-desc">Scheduling reserves your slot and sends reminders. When the scheduled time arrives, launch the session directly from your notification panel.</p>
             </div>
         </div>
 
@@ -44,18 +44,18 @@
             
             <div class="modal-card-header">
                 <i class="fas fa-calendar-plus" style="color: #fbcd0b;"></i>
-                <h3>Schedule Mock Test</h3>
-                <p>Select a date and time to reserve your mock test seat.</p>
+                <h3 id="sch-header-title">Schedule Prep Session</h3>
+                <p id="sch-header-desc">Select a date and time to reserve your slot.</p>
             </div>
 
             <!-- Meta Details Box -->
             <div class="modal-details-list">
                 <div class="modal-detail-row">
-                    <span class="m-lbl">Mock Paper</span>
-                    <span class="m-val" id="sch-paper-val">Mock Test 01</span>
+                    <span class="m-lbl" id="sch-item-label">Resource / Test Name</span>
+                    <span class="m-val" id="sch-paper-val">Prep Module</span>
                 </div>
                 <div class="modal-detail-row">
-                    <span class="m-lbl">Test Mode</span>
+                    <span class="m-lbl" id="sch-mode-label">Category</span>
                     <span class="m-val" id="sch-mode-val">Module Blitz</span>
                 </div>
                 <div class="modal-detail-row">
@@ -113,13 +113,61 @@
                         </div>
                     </div>
                     
-                    <button type="button" class="modal-btn modal-btn-confirm" onclick="confirmTimeSelection(event)" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem; border-radius: 10px;">Done</button>
+                    <button type="button" class="sch-btn-confirm" onclick="confirmTimeSelection(event)" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 0.85rem; border-radius: 10px; border: none;">Done</button>
                 </div>
             </div>
 
-            <div class="modal-action-row" style="display: flex; gap: 15px; width: 100%;">
-                <button class="modal-btn modal-btn-cancel" onclick="closeScheduleModal()" style="flex: 1; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 0.9rem; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #ffffff; cursor: pointer; transition: all 0.3s ease;">Cancel</button>
-                <button class="modal-btn modal-btn-confirm" onclick="saveSchedule()" style="flex: 1; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 0.9rem; background: #2af598; border: none; color: #000000; cursor: pointer; transition: all 0.3s ease;">Confirm Schedule</button>
+            <!-- Schedule Action Buttons (Isolated dedicated classes to prevent style leaks) -->
+            <style>
+                .sch-btn-cancel {
+                    flex: 1 !important;
+                    padding: 14px 20px !important;
+                    border-radius: 14px !important;
+                    font-weight: 700 !important;
+                    font-size: 0.88rem !important;
+                    font-family: inherit !important;
+                    background: rgba(255, 255, 255, 0.08) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                    color: #ffffff !important;
+                    cursor: pointer !important;
+                    transition: all 0.25s ease !important;
+                    text-transform: none !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                }
+                .sch-btn-cancel:hover {
+                    background: rgba(255, 255, 255, 0.18) !important;
+                    border-color: rgba(255, 255, 255, 0.3) !important;
+                }
+                .sch-btn-confirm {
+                    flex: 1 !important;
+                    padding: 14px 20px !important;
+                    border-radius: 14px !important;
+                    font-weight: 800 !important;
+                    font-size: 0.88rem !important;
+                    font-family: inherit !important;
+                    background: #2af598 !important;
+                    border: none !important;
+                    color: #000000 !important;
+                    cursor: pointer !important;
+                    transition: all 0.25s ease !important;
+                    box-shadow: 0 8px 20px rgba(42, 245, 152, 0.3) !important;
+                    text-transform: none !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                }
+                .sch-btn-confirm:hover {
+                    background: #22d380 !important;
+                    transform: translateY(-2px) !important;
+                    box-shadow: 0 12px 25px rgba(42, 245, 152, 0.45) !important;
+                }
+            </style>
+
+            <div class="modal-action-row" style="display: flex; gap: 15px; width: 100%; margin-top: 15px;">
+                <button type="button" class="sch-btn-cancel" onclick="closeScheduleModal()">Cancel</button>
+                <button type="button" class="sch-btn-confirm" onclick="saveSchedule()">Confirm Schedule</button>
             </div>
         </div>
     </div>

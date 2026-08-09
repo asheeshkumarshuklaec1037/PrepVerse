@@ -1071,9 +1071,15 @@
         };
 
         // Populate Schedule Modal metadata
-        document.getElementById("sch-mode-val").innerText = selectedConfig.mode;
+        document.getElementById("sch-mode-val").innerText = "Mock Test";
         document.getElementById("sch-paper-val").innerText = selectedConfig.paper;
         document.getElementById("sch-subject-val").innerText = selectedConfig.subject;
+
+        if (document.getElementById("sch-left-type")) document.getElementById("sch-left-type").innerText = "Mock Test";
+        if (document.getElementById("sch-header-title")) document.getElementById("sch-header-title").innerText = "Schedule Mock Test";
+        if (document.getElementById("sch-header-desc")) document.getElementById("sch-header-desc").innerText = "Select a date and time to reserve your mock test seat.";
+        if (document.getElementById("sch-item-label")) document.getElementById("sch-item-label").innerText = "Mock Paper";
+        if (document.getElementById("sch-mode-label")) document.getElementById("sch-mode-label").innerText = "Category";
 
         // Reset inputs to defaults
         const today = new Date();

@@ -4,480 +4,637 @@
 {% block title %}{{ topic.title }} | {{ course.title }} | PrepVerse{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/mock_tests.css' %}">
 <style>
-    /* Hero Section */
-    .hero {
-        position: relative;
-        width: 100%;
-        height: 60vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        margin-top: -120px;
-        background: #050505;
+    :root {
+        --bg: #030307;
+        --surface-1: rgba(20, 20, 30, 0.7);
+        --surface-2: rgba(255, 255, 255, 0.045);
+        --surface-3: rgba(255, 255, 255, 0.07);
+        --border: rgba(255, 255, 255, 0.08);
+        --border-hi: rgba(255, 255, 255, 0.22);
+        --text-1: #f5f5f7;
+        --text-2: rgba(245, 245, 247, 0.65);
+        --text-3: rgba(245, 245, 247, 0.4);
+        --accent: #6c5ce7;
+        --accent-2: #8b7cf0;
+        --accent-soft: rgba(108, 92, 231, 0.18);
+        --accent-border: rgba(108, 92, 231, 0.35);
+        --success: #34d399;
+        --success-soft: rgba(52, 211, 153, 0.14);
+        --warning: #f5a623;
+        --warning-soft: rgba(245, 166, 35, 0.14);
+        --danger: #f5495c;
+        --danger-soft: rgba(245, 73, 92, 0.14);
+        --f-mono: 'JetBrains Mono', monospace;
     }
-    .hero::after {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        /* Soft vignette effect to blend edges smoothly */
-        background: radial-gradient(ellipse at center, transparent 50%, rgba(5,5,5,0.7) 100%),
-                    linear-gradient(to bottom, rgba(5,5,5,0.9) 0%, transparent 10%, transparent 90%, rgba(5,5,5,0.9) 100%);
-        box-shadow: inset 0 0 40px 10px rgba(5,5,5,0.5);
-        z-index: 5;
-        pointer-events: none;
+
+    body {
+        background: var(--bg) !important;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 0),
+            radial-gradient(rgba(139, 92, 246, 0.04) 1px, transparent 0);
+        background-size: 32px 32px;
+        background-position: 0 0, 16px 16px;
+        color: #ffffff !important;
+        overflow-x: hidden;
     }
-    .hero-bg {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        object-fit: cover;
-        opacity: 0;
-        animation: imageReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, subtleZoom 20s ease-in-out infinite alternate 1.2s;
-    }
-    @keyframes imageReveal {
-        from { opacity: 0; transform: scale(1.25); filter: brightness(0); }
-        to { opacity: 1; transform: scale(1.1); filter: brightness(0.4); }
-    }
-    @keyframes subtleZoom {
-        from { transform: scale(1.1); filter: brightness(0.4); }
-        to { transform: scale(1.15); filter: brightness(0.4); }
-    }
-    .hero-content {
-        position: relative;
-        z-index: 10;
-        text-align: center;
-        max-width: 800px;
-        padding: 20px 20px 0; /* Added top padding to push content below navbar */
+
+    /* Scroll Reveal Animation (Identical to Mock Test Arena) */
+    .reveal-on-scroll {
         opacity: 0;
         transform: translateY(30px);
-        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
     }
-    .hero h1 { font-size: 3rem; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; letter-spacing: -1px; }
-    .hero p { font-size: 1.1rem; opacity: 0.8; font-weight: 300; }
+    .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-    /* Back Button */
-    .back-btn {
-        position: absolute;
-        top: 130px; left: 5%;
-        z-index: 100;
-        color: #fff;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 600;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        transition: 0.3s;
-        opacity: 0;
-        transform: translateX(10px);
-        animation: backBtnFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
-    }
-    @keyframes backBtnFadeIn {
-        to { opacity: 0.6; transform: translateX(0); }
-    }
-    .back-btn:hover { transform: translateX(-5px); opacity: 1 !important; }
+    /* Staggered delay helpers */
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.15s; }
+    .reveal-delay-3 { transition-delay: 0.22s; }
+    .reveal-delay-4 { transition-delay: 0.3s; }
 
     @keyframes pageFadeIn {
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Main Content Loading Animation */
-    .container {
-        max-width: 1200px;
-        margin: -90px auto 100px; /* Increased negative margin to pull card higher up */
+    .topic-wrap {
+        max-width: 1340px;
+        margin: 0 auto;
+        padding: 30px 24px 80px;
         position: relative;
-        z-index: 20;
-        padding: 0 20px;
-        opacity: 0;
-        animation: pageFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
+        z-index: 1;
     }
 
-    /* Disable outer card hover physics & purple glow */
-    .glass-card:hover {
-        transform: none !important;
-        border-color: rgba(255, 255, 255, 0.08) !important;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
-        background: rgba(18, 19, 23, 0.75) !important;
+    .back-nav {
+        margin-bottom: 20px;
     }
-
-    /* Glass Card */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 24px;
-        padding: 30px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    }
-
-    .section-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
-    .section-title:after { content: ""; height: 1px; flex-grow: 1; background: linear-gradient(90deg, #2af598, transparent); opacity: 0.4; }
-
-    /* Subtopics List */
-    .subtopics-list {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .subtopic-item {
-        display: flex;
-        flex-direction: column;
+    .back-nav-btn {
+        display: inline-flex;
+        align-items: center;
         gap: 10px;
+        color: var(--text-2);
+        font-family: var(--f-mono);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 50px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .back-nav-btn:hover {
+        color: #fff;
+        background: rgba(139, 124, 240, 0.15);
+        border-color: var(--accent-border);
+        transform: translateX(-4px);
     }
 
-    .subtopic-card {
-        background: rgba(255,255,255,0.02);
+    .topic-top-banner {
+        background: var(--surface-1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 35px 45px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        will-change: transform, border-color, box-shadow;
+    }
+    .topic-top-banner:hover {
+        transform: translateY(-4px) !important;
+        border-color: #8b7cf0 !important;
+        box-shadow: 0 12px 32px rgba(139, 124, 240, 0.25), 0 0 20px rgba(108, 92, 231, 0.35) !important;
+    }
+    .banner-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(108, 92, 231, 0.15);
+        border: 1px solid rgba(108, 92, 231, 0.3);
+        color: var(--accent-2);
+        border-radius: 50px;
+        font-family: var(--f-mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+    .topic-top-banner h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin: 4px 0 8px;
+        letter-spacing: -0.5px;
+    }
+    .topic-top-banner p {
+        font-size: 0.95rem;
+        color: var(--text-2);
+        max-width: 650px;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .topic-search-bar {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
         border-radius: 16px;
-        padding: 15px 20px;
+        padding: 16px 24px;
+        margin-bottom: 30px;
         display: flex;
         align-items: center;
-        gap: 15px;
-        border: 1px solid rgba(255,255,255,0.05);
-        transition: 0.3s;
-        cursor: pointer;
-        width: 100%;
-        text-align: left;
+        gap: 16px;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .subtopic-card:hover {
-        background: rgba(255,255,255,0.05);
-        border-color: rgba(42, 245, 152, 0.3);
+    .topic-search-bar:hover, .topic-search-bar:focus-within {
+        border-color: #8b7cf0;
+        box-shadow: 0 8px 24px rgba(139, 124, 240, 0.2);
     }
-    .subtopic-card.active {
-        background: rgba(42, 245, 152, 0.05);
-        border-color: #2af598;
+    .topic-search-bar i {
+        color: var(--text-3);
+        font-size: 1.1rem;
     }
-
-    .icon-box {
-        width: 40px; height: 40px;
-        background: rgba(42, 245, 152, 0.1);
-        color: #2af598;
-        border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1rem;
-    }
-    .subtopic-info h4 { font-size: 1rem; font-weight: 600; color: #fff; }
-    .subtopic-info p { font-size: 0.8rem; opacity: 0.5; margin-top: 2px; color: #fff; }
-
-    .play-btn {
-        margin-left: auto;
-        width: 32px; height: 32px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.05);
-        display: flex; align-items: center; justify-content: center;
-        font-size: 0.8rem;
-        transition: 0.3s;
+    .topic-search-bar input {
+        background: none;
+        border: none;
+        outline: none;
         color: #fff;
+        font-size: 0.92rem;
+        width: 100%;
+        font-family: inherit;
     }
-    .subtopic-card:hover .play-btn { background: #2af598; color: #000; }
-    .subtopic-card.active .play-btn { transform: rotate(90deg); background: #2af598; color: #000; }
 
-    /* Sets Container (Accordion Style) */
-    .sets-wrapper {
+    .modules-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 50px;
+    }
+
+    .module-item {
+        background: #12131c;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 0;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: pageFadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        will-change: opacity, transform;
+    }
+    .module-item:nth-child(1) { animation-delay: 0.15s; }
+    .module-item:nth-child(2) { animation-delay: 0.25s; }
+    .module-item:nth-child(3) { animation-delay: 0.35s; }
+    .module-item:nth-child(4) { animation-delay: 0.45s; }
+    .module-item:nth-child(5) { animation-delay: 0.55s; }
+    .module-item:nth-child(6) { animation-delay: 0.65s; }
+    
+    .module-item:hover {
+        border-color: rgba(139, 124, 240, 0.4);
+    }
+    .module-item.open {
+        border-color: var(--accent-2);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(108, 92, 231, 0.2);
+    }
+
+    .module-header-btn {
+        width: 100%;
+        background: none;
+        border: none;
+        padding: 22px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        cursor: pointer;
+        color: #fff;
+        text-align: left;
+        transition: background 0.2s ease;
+    }
+    .module-header-btn:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+    .module-header-left {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+    .module-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: rgba(108, 92, 231, 0.15);
+        border: 1px solid var(--accent-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: var(--accent-2);
+        transition: transform 0.25s ease, background 0.25s ease;
+    }
+    .module-item.open .module-icon-box {
+        background: linear-gradient(135deg, #6c5ce7 0%, #8b7cf0 100%);
+        color: #fff;
+        transform: scale(1.04);
+    }
+    .module-title-group h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 4px;
+    }
+    .module-title-group p {
+        font-size: 0.78rem;
+        color: var(--text-2);
+        margin: 0;
+        font-family: var(--f-mono);
+    }
+
+    .module-header-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .module-badge-tag {
+        font-family: var(--f-mono);
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 50px;
+        background: var(--surface-3);
+        color: var(--accent-2);
+        border: 1px solid var(--border-hi);
+    }
+    .chevron-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        color: var(--text-2);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+    }
+    .module-item.open .chevron-icon {
+        transform: rotate(180deg);
+        background: var(--accent-soft);
+        color: var(--accent-2);
+        border-color: var(--accent-border);
+    }
+
+    /* Hardware Accelerated Fast Accordion Content Wrapper */
+    .module-content-wrapper {
         display: grid;
         grid-template-rows: 0fr;
-        transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .sets-wrapper.open {
+    .module-item.open .module-content-wrapper {
         grid-template-rows: 1fr;
     }
-    .sets-container {
+    .module-content-inner {
         overflow: hidden;
+        padding: 0 28px;
+        opacity: 0;
+        transition: opacity 0.25s ease 0.05s;
     }
-    
-    /* Study Materials (Inside Accordion) */
-    .materials-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 15px;
-        padding: 15px 0 25px 55px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        margin-bottom: 15px;
+    .module-item.open .module-content-inner {
+        padding: 10px 28px 30px;
+        opacity: 1;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
-    .material-card {
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        padding: 15px;
+
+    .tab-pills-row {
         display: flex;
-        align-items: center;
-        gap: 15px;
-        text-decoration: none;
-        color: #fff;
-        transition: 0.3s;
+        gap: 12px;
+        margin: 20px 0 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding-bottom: 16px;
     }
-    .material-card:hover {
-        background: rgba(42, 245, 152, 0.05);
-        border-color: rgba(42, 245, 152, 0.2);
-        transform: translateY(-3px);
-    }
-    .m-icon {
-        width: 40px; height: 40px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem; color: #009efd;
-    }
-    .material-card:hover .m-icon { background: #009efd; color: #fff; }
-    
-    .m-info h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; }
-    .m-info p { font-size: 0.7rem; opacity: 0.5; display: flex; gap: 10px; }
-    .m-download { margin-left: auto; color: rgba(255,255,255,0.3); transition: 0.3s; font-size: 0.9rem; }
-    .material-card:hover .m-download { color: #fff; transform: translateY(2px); }
-
-    .inner-section-title {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+    .tab-pill {
+        font-family: var(--f-mono);
+        font-size: 0.78rem;
         font-weight: 700;
-        color: rgba(255,255,255,0.4);
-        padding-left: 55px;
-        margin-top: 20px;
-        margin-bottom: -5px;
+        padding: 10px 22px;
+        border-radius: 50px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--text-2);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    /* Practice Sets Grid */
-    .sets-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        padding: 15px 0 25px 55px;
-    }
-
-    .set-link {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 20px;
-        padding: 18px 22px;
+    .tab-pill:hover {
+        border-color: var(--border-hi);
         color: #fff;
-        text-decoration: none;
+        transform: translateY(-2px);
+    }
+    .tab-pill.active {
+        background: linear-gradient(135deg, rgba(108, 92, 231, 0.25) 0%, rgba(139, 124, 240, 0.15) 100%);
+        border-color: var(--accent-border);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
+    }
+    .tab-pill.active i {
+        color: var(--accent-2);
+    }
+
+    /* Tab Switch Keyframe Fade & Slide */
+    @keyframes tabSmoothSwitch {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .tab-pane {
+        display: none;
+    }
+    .tab-pane.active {
+        display: block;
+        animation: tabSmoothSwitch 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+        gap: 20px;
+    }
+
+    /* Paper Cards (Identical Physics to Mock Test Arena) */
+    .paper-card {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 22px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        justify-content: space-between;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
-        overflow: hidden;
+        will-change: opacity, transform;
     }
-    .set-link:hover {
-        background: rgba(42, 245, 152, 0.08);
-        border-color: rgba(42, 245, 152, 0.4);
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    .paper-card:hover {
+        transform: translateY(-5px);
+        border-color: #8b7cf0;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(108, 92, 231, 0.3);
     }
-    
-    .set-top { width: 100%; margin-bottom: 2px; }
-    .set-title { font-size: 1rem; font-weight: 700; color: #fff; }
-    
-    .set-meta { display: flex; gap: 10px; align-items: center; margin-top: 5px; }
-    .meta-item { font-size: 0.75rem; opacity: 0.6; display: flex; align-items: center; gap: 6px; }
-    
-    .level-badge {
-        font-size: 0.65rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        padding: 3px 10px;
+
+    .card-top-tags {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+    }
+    .tag-mode {
+        font-family: var(--f-mono);
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 4px 9px;
         border-radius: 6px;
+        background: var(--surface-3);
+        color: var(--accent-2);
+        text-transform: uppercase;
         letter-spacing: 0.5px;
-        display: inline-block;
     }
-    .level-easy { background: rgba(42, 245, 152, 0.1); color: #2af598; border: 1px solid rgba(42, 245, 152, 0.2); }
-    .level-medium { background: rgba(252, 203, 144, 0.1); color: #fccb90; border: 1px solid rgba(252, 203, 144, 0.2); }
-    .level-hard { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.2); }
+    .tag-diff {
+        font-family: var(--f-mono);
+        font-size: 0.62rem;
+        font-weight: 800;
+        padding: 4px 9px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .diff-easy { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+    .diff-medium { background: rgba(245, 166, 35, 0.15); color: #f5a623; border: 1px solid rgba(245, 166, 35, 0.3); }
+    .diff-hard { background: rgba(245, 73, 92, 0.15); color: #f5495c; border: 1px solid rgba(245, 73, 92, 0.3); }
 
-    .set-link:after {
-        content: "\f054";
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
-        position: absolute;
-        right: -20px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.8rem;
-        opacity: 0;
-        transition: 0.3s;
+    .card-title-text {
+        font-size: 1.08rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 4px;
+        line-height: 1.3;
     }
-    .set-link:hover:after { right: 20px; opacity: 0.5; }
-    
-    /* Mock Tests specific colors on hover */
-    .mock-easy:hover {
-        background: rgba(42, 245, 152, 0.05) !important;
-        border-color: rgba(42, 245, 152, 0.3) !important;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(42, 245, 152, 0.1);
-    }
-    .mock-medium:hover {
-        background: rgba(252, 203, 144, 0.05) !important;
-        border-color: rgba(252, 203, 144, 0.3) !important;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(252, 203, 144, 0.1);
-    }
-    .mock-hard:hover {
-        background: rgba(255, 71, 87, 0.05) !important;
-        border-color: rgba(255, 71, 87, 0.3) !important;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(255, 71, 87, 0.1);
+    .card-subtitle-text {
+        font-size: 0.76rem;
+        color: var(--text-3);
+        margin-bottom: 16px;
     }
 
-
-
-    @media (max-width: 992px) {
-        .sets-grid { grid-template-columns: repeat(2, 1fr); }
+    .card-info-table {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        margin-bottom: 20px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+    }
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--text-2);
+    }
+    .info-row span {
+        color: var(--text-3);
+    }
+    .info-row b {
+        font-family: var(--f-mono);
+        color: #ffffff;
+    }
+    .info-row b.reward-xp {
+        color: #34d399;
     }
 
-    @media (max-width: 600px) {
-        .sets-grid { grid-template-columns: 1fr; padding-left: 0; }
-        .subtopic-card { padding: 12px 15px; }
+    .card-actions-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
     }
-</style>
-{% endblock %}
+    .btn-select-test {
+        flex: 1;
+        padding: 12px;
+        border-radius: 12px;
+        font-family: var(--f-mono);
+        font-size: 0.78rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #6c5ce7 0%, #8b7cf0 100%);
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+    }
+    .btn-select-test:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(139, 124, 240, 0.45);
+        background: linear-gradient(135deg, #7c6df7 0%, #9b8cf0 100%);
+    }
+    .btn-icon-square {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--accent-2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-icon-square:hover {
+        background: var(--accent-soft);
+        border-color: var(--accent-border);
+        color: #fff;
+    }
 
-{% block content %}
-<a href="{% url 'course_detail' course.slug %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Course</a>
+    .material-item-card {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .material-item-card:hover {
+        transform: translateY(-4px);
+        border-color: #8b7cf0;
+        box-shadow: 0 12px 28px rgba(139, 124, 240, 0.2);
+    }
+    .mat-icon-box {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: rgba(108, 92, 231, 0.15);
+        border: 1px solid var(--accent-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: var(--accent-2);
+        flex-shrink: 0;
+    }
+    .mat-info {
+        flex: 1;
+    }
+    .mat-info h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 4px;
+    }
+    .mat-info p {
+        font-size: 0.75rem;
+        color: var(--text-3);
+        margin: 0;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+    .mat-btn {
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-family: var(--f-mono);
+        font-size: 0.72rem;
+        font-weight: 700;
+        background: var(--surface-3);
+        border: 1px solid var(--border-hi);
+        color: var(--accent-2);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mat-btn:hover {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+    }
 
-<section class="hero">
-    <img src="{{ course.bg_image }}" class="hero-bg">
-    <div class="hero-content">
-        <div class="topic-badge" style="display: inline-block; padding: 4px 12px; background: rgba(0, 158, 253, 0.1); color: #009efd; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; border: 1px solid rgba(0, 158, 253, 0.2);">{{ course.title }}</div>
-        <h1>{{ topic.title }}</h1>
-        <p>Master the concepts of {{ topic.title }} with comprehensive modules and practice sets.</p>
-    </div>
-</section>
+    .other-topics-section {
+        margin-top: 60px;
+    }
+    .section-heading-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+    .section-heading-row h2 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #fff;
+    }
+    .other-topics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    .topic-tile-card {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 24px;
+        text-decoration: none;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 140px;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        will-change: transform, border-color, box-shadow;
+    }
+    .topic-tile-card:hover {
+        transform: translateY(-6px) !important;
+        border-color: #8b7cf0 !important;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), 0 0 25px rgba(108, 92, 231, 0.3) !important;
+    }
+    .topic-tile-card h4 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-top: 4px;
+    }
 
-<div class="container">
-    <div class="glass-card">
-        <div class="section-title">Modules in this Topic</div>
-        
-        <div class="subtopics-list">
-            {% for sub in topic.subtopics %}
-            <div class="subtopic-item">
-                <button class="subtopic-card" onclick="toggleSets(this)">
-                    <div class="icon-box">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
-                    <div class="subtopic-info">
-                        <h4>{{ sub }}</h4>
-                        <p>4 Practice Sets</p>
-                    </div>
-                    <div class="play-btn">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </button>
-                <div class="sets-wrapper">
-                    <div class="sets-container">
-                        <!-- Study Materials (Inside Accordion) -->
-                        <div class="inner-section-title">Study Materials</div>
-                        <div class="materials-grid">
-                            <a href="#" class="material-card" onclick="openViewer('{{ sub }} Notes', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 'pdf'); return false;">
-                                <div class="m-icon"><i class="fas fa-file-pdf"></i></div>
-                                <div class="m-info">
-                                    <h4>{{ sub }} Notes</h4>
-                                    <p><span><i class="fas fa-file-alt"></i> PDF</span> <span><i class="fas fa-eye"></i> View</span></p>
-                                </div>
-                                <div class="m-download"><i class="fas fa-external-link-alt"></i></div>
-                            </a>
-                            <a href="#" class="material-card" onclick="openViewer('Formula Sheet', 'https://calibre-ebook.com/downloads/demos/demo.docx', 'doc'); return false;">
-                                <div class="m-icon" style="color: #fccb90;"><i class="fas fa-file-word"></i></div>
-                                <div class="m-info">
-                                    <h4>Formula Sheet</h4>
-                                    <p><span><i class="fas fa-file-alt"></i> DOCX</span> <span><i class="fas fa-eye"></i> View</span></p>
-                                </div>
-                                <div class="m-download"><i class="fas fa-external-link-alt"></i></div>
-                            </a>
-                        </div>
-                        
-                        <div class="inner-section-title" style="margin-top: 5px;">Practice Sets</div>
-                        <div class="sets-grid">
-                            <a href="{% url 'module_detail' course.slug topic.slug sub %}?set=1" class="set-link">
-                                <div class="set-top">
-                                    <span class="set-title">Practice Set 01</span>
-                                </div>
-                                <div class="set-meta">
-                                    <span class="level-badge level-easy">Easy</span>
-                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 10 Questions</span>
-                                </div>
-                            </a>
-                            <a href="{% url 'module_detail' course.slug topic.slug sub %}?set=2" class="set-link">
-                                <div class="set-top">
-                                    <span class="set-title">Practice Set 02</span>
-                                </div>
-                                <div class="set-meta">
-                                    <span class="level-badge level-medium">Medium</span>
-                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 15 Questions</span>
-                                </div>
-                            </a>
-                            <a href="{% url 'module_detail' course.slug topic.slug sub %}?set=3" class="set-link">
-                                <div class="set-top">
-                                    <span class="set-title">Practice Set 03</span>
-                                </div>
-                                <div class="set-meta">
-                                    <span class="level-badge level-medium">Medium</span>
-                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 15 Questions</span>
-                                </div>
-                            </a>
-                            <a href="{% url 'module_detail' course.slug topic.slug sub %}?set=4" class="set-link">
-                                <div class="set-top">
-                                    <span class="set-title">Practice Set 04</span>
-                                </div>
-                                <div class="set-meta">
-                                    <span class="level-badge level-hard">Hard</span>
-                                    <span class="meta-item"><i class="fas fa-clipboard-question"></i> 20 Questions</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+    @media (max-width: 768px) {
+        .topic-top-banner { padding: 25px 20px; flex-direction: column; align-items: flex-start; gap: 20px; }
+        .module-header-btn { padding: 18px 20px; }
+        .module-content-inner { padding: 0 18px; }
+        .module-item.open .module-content-inner { padding: 10px 18px 24px; }
+        .cards-grid { grid-template-columns: 1fr; }
+    }
 
-        <div style="margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.02); border-radius: 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.1);">
-            <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-bottom: 15px; opacity: 0.3;"></i>
-            <p style="opacity: 0.6; font-size: 0.9rem;">Selecting a set will open the practice interface for that specific question bank.</p>
-        </div>
-    </div>
-</div>
-
-<section class="more-topics" style="max-width: 1200px; margin: 0 auto 100px; padding: 0 20px;">
-    <div class="section-title">Explore Other Topics</div>
-    <div class="more-topics-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
-        {% for t in course.topics %}
-            {% if t.slug != topic.slug %}
-            <a href="{% url 'topic_detail' course.slug t.slug %}" class="topic-tile" style="position: relative; height: 160px; border-radius: 24px; overflow: hidden; text-decoration: none; color: #fff; display: flex; align-items: flex-end; padding: 25px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: inset 0 0 20px rgba(255,255,255,0.02); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(42, 245, 152, 0.05) 0%, rgba(0, 158, 253, 0.05) 100%); z-index: 1;"></div>
-                <div style="position: relative; z-index: 2;">
-                    <span style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; letter-spacing: 1px; font-weight: 700;">Topic</span>
-                    <h4 style="font-size: 1.1rem; font-weight: 700; margin-top: 5px;">{{ t.title }}</h4>
-                </div>
-                <i class="fas fa-chevron-right" style="position: absolute; right: 25px; bottom: 25px; opacity: 0.3; z-index: 2;"></i>
-            </a>
-            {% endif %}
-        {% endfor %}
-    </div>
-</section>
-
-<!-- Universal Document Viewer Modal -->
-<div class="viewer-modal" id="viewerModal">
-    <div class="viewer-overlay" onclick="closeViewer()"></div>
-    <div class="viewer-content">
-        <div class="viewer-header">
-            <div class="v-title">
-                <i class="fas fa-file-alt" id="vIcon"></i>
-                <span id="vTitle">Document Viewer</span>
-            </div>
-            <div class="v-actions">
-                <a href="#" id="vDownload" download class="v-btn"><i class="fas fa-download"></i> Download</a>
-                <button class="v-btn close" onclick="closeViewer()"><i class="fas fa-times"></i></button>
-            </div>
-        </div>
-        <div class="viewer-body" id="viewerBody">
-            <!-- Content will be injected here via JS -->
-            <div class="loader"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>
-        </div>
-    </div>
-</div>
-
-<style>
-    /* Viewer Modal Styles */
+    /* Universal Document Viewer Modal */
     .viewer-modal {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
@@ -487,17 +644,20 @@
         justify-content: center;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
     }
     .viewer-modal.active {
         opacity: 1;
         visibility: visible;
+        pointer-events: auto;
     }
     .viewer-overlay {
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     .viewer-content {
         position: relative;
@@ -510,9 +670,10 @@
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        transform: translateY(50px) scale(0.95);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        transform: translateY(40px) scale(0.96);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        z-index: 10;
     }
     .viewer-modal.active .viewer-content {
         transform: translateY(0) scale(1);
@@ -521,39 +682,39 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 25px;
-        background: rgba(0, 0, 0, 0.5);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 16px 25px;
+        background: rgba(0, 0, 0, 0.6);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .v-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 1.1rem; }
-    .v-title i { color: #2af598; }
-    .v-actions { display: flex; gap: 15px; }
+    .v-title { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.05rem; color: #fff; }
+    .v-title i { color: var(--accent-2); }
+    .v-actions { display: flex; gap: 12px; }
     .v-btn {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
         color: #fff;
-        padding: 8px 15px;
-        border-radius: 8px;
+        padding: 8px 16px;
+        border-radius: 10px;
         cursor: pointer;
         text-decoration: none;
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: 0.8rem;
+        font-family: var(--f-mono);
+        font-weight: 700;
         display: flex; align-items: center; gap: 8px;
         transition: 0.3s;
     }
-    .v-btn:hover { background: rgba(255,255,255,0.1); }
-    .v-btn.close:hover { background: #ff4757; border-color: #ff4757; color: #fff; }
+    .v-btn:hover { background: var(--accent); border-color: var(--accent); }
+    .v-btn.close:hover { background: #ff4757; border-color: #ff4757; }
     
     .viewer-body {
         flex-grow: 1;
         position: relative;
-        background: #111; /* Default dark background */
+        background: #0d0d12;
         display: flex;
         align-items: center;
         justify-content: center;
     }
-    .viewer-body.doc-mode { background: #fff; } /* White background only for docs */
-    
+    .viewer-body.doc-mode { background: #fff; }
     .viewer-body iframe, .viewer-body embed, .viewer-body video {
         width: 100%;
         height: 100%;
@@ -570,66 +731,28 @@
         position: absolute;
         z-index: 1;
     }
-    .viewer-body.doc-mode .loader { color: #000; }
-</style>
 
-<style>
-    .topic-tile:hover {
-        transform: translateY(-10px) scale(1.02);
-        border-color: rgba(42, 245, 152, 0.4);
-        background: rgba(42, 245, 152, 0.05);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(42, 245, 152, 0.1);
-    }
-    .topic-tile:hover i { opacity: 1; color: #2af598; transform: translateX(5px); }
-
-    /* Test Confirmation Modal styling (split screen) */
+    /* Test Confirmation Modal (Asymmetrical Split Screen Modal) */
     .modal {
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        z-index: 3000;
+        z-index: 9999;
         display: flex;
         align-items: center;
         justify-content: center;
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .modal.active {
         opacity: 1;
         pointer-events: auto;
         visibility: visible;
     }
-    .modal-card {
-        background: rgba(15, 15, 15, 0.95);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 30px;
-        max-width: 500px;
-        width: 90%;
-        padding: 40px;
-        box-shadow: 0 30px 100px rgba(0,0,0,0.8);
-        position: relative;
-        transform: translateY(30px);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .modal.active .modal-card {
-        transform: translateY(0);
-    }
-    .close-modal {
-        position: absolute;
-        top: 25px; right: 25px;
-        font-size: 1.2rem;
-        color: rgba(255,255,255,0.4);
-        cursor: pointer;
-        transition: 0.3s;
-        z-index: 10;
-    }
-    .close-modal:hover { color: #fff; }
-
-    /* Split Modal Custom Styling */
     .modal-grid-wrapper {
         position: relative;
         z-index: 10;
@@ -639,66 +762,40 @@
         display: grid;
         grid-template-columns: 1.2fr 450px;
         align-items: center;
-        gap: 60px;
+        gap: 50px;
         padding: 0 20px;
     }
-    
-    .modal-grid-wrapper .modal-card {
-        max-width: 450px;
-        width: 100%;
-        padding: 40px;
-        background: rgba(15, 15, 15, 0.6);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-        transform: translateY(30px);
-        opacity: 0;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-    }
-    .modal.active .modal-grid-wrapper .modal-card {
-        transform: translateY(0);
-        opacity: 1;
-    }
-
     .modal-left-instructions {
         opacity: 0;
         transform: translateX(-30px);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
         padding: 20px 0;
     }
     .modal.active .modal-left-instructions {
         opacity: 1;
         transform: translateX(0);
     }
-    
     .instruction-header {
-        margin-bottom: 30px;
+        margin-bottom: 25px;
     }
     .instruction-header i {
-        font-size: 2.2rem;
-        color: #2af598;
-        margin-bottom: 15px;
+        font-size: 2rem;
+        color: var(--accent-2);
+        margin-bottom: 12px;
         display: block;
     }
     .instruction-header h3 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         font-weight: 800;
         color: #fff;
         margin: 0;
-        letter-spacing: -1px;
+        letter-spacing: -0.5px;
         line-height: 1.2;
     }
-    .instruction-header h3 span {
-        background: linear-gradient(90deg, #fff, #2af598);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
     .instructions-list {
         display: flex;
         flex-direction: column;
-        gap: 25px;
+        gap: 20px;
     }
     .instruction-item {
         display: flex;
@@ -706,77 +803,97 @@
         gap: 15px;
     }
     .instruction-item i {
-        font-size: 1.3rem;
-        color: #2af598;
+        font-size: 1.2rem;
+        color: var(--accent-2);
         margin-top: 3px;
         width: 24px;
         text-align: center;
     }
     .instruction-item h4 {
-        font-size: 1.05rem;
+        font-size: 1rem;
         font-weight: 700;
         color: #fff;
-        margin-bottom: 5px;
-        margin-top: 0;
+        margin-bottom: 4px;
     }
     .instruction-item p {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.82rem;
+        color: var(--text-2);
         line-height: 1.5;
         margin: 0;
     }
+    .modal-card {
+        background: rgba(18, 19, 28, 0.85);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--border-hi);
+        border-radius: 28px;
+        max-width: 450px;
+        width: 100%;
+        padding: 35px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        position: relative;
+        transform: translateY(30px) scale(0.96);
+        opacity: 0;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    }
+    .modal.active .modal-card {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    .close-modal {
+        position: absolute;
+        top: 22px; right: 22px;
+        font-size: 1.1rem;
+        color: var(--text-3);
+        cursor: pointer;
+        transition: 0.3s;
+        z-index: 10;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .close-modal:hover { color: #fff; background: rgba(255,255,255,0.12); }
     
-    .modal-right-details {
+    .modal-details {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-    }
-
-    @media (max-width: 992px) {
-        .modal-grid-wrapper {
-            grid-template-columns: 1fr;
-            max-width: 500px;
-            justify-content: center;
-            gap: 0;
-        }
-        .modal-left-instructions {
-            display: none;
-        }
-        .modal-grid-wrapper .modal-card {
-            max-width: 100%;
-        }
-    }
-
-    .modal-details {
-        background: rgba(255,255,255,0.02);
-        border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 20px;
-        padding: 20px 25px;
-        margin-bottom: 30px;
+        gap: 12px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 20px;
     }
     .detail-row {
         display: flex;
         justify-content: space-between;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        font-size: 0.95rem;
+        align-items: center;
+        font-size: 0.82rem;
     }
-    .detail-row:last-child {
-        border-bottom: none;
+    .detail-label {
+        color: var(--text-3);
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        font-family: var(--f-mono);
     }
-    .detail-label { opacity: 0.5; font-weight: 500; }
-    .detail-value { font-weight: 700; color: #fff; text-align: right; max-width: 60%; }
- 
+    .detail-value {
+        color: #fff;
+        font-weight: 700;
+    }
     .modal-actions {
         display: flex;
-        gap: 15px;
+        gap: 12px;
+        margin-top: 25px;
     }
     .modal-btn {
         flex: 1;
-        padding: 15px;
+        padding: 14px;
         border-radius: 12px;
         font-weight: 700;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
+        font-family: var(--f-mono);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         cursor: pointer;
@@ -785,216 +902,1168 @@
         border: none;
     }
     .modal-btn-cancel {
-        background: rgba(255,255,255,0.05);
+        background: var(--surface-2);
         color: #fff;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid var(--border);
     }
     .modal-btn-cancel:hover { background: rgba(255,255,255,0.1); }
-    
     .modal-btn-confirm {
-        background: #2af598;
-        color: #000;
-        box-shadow: 0 10px 20px rgba(42, 245, 152, 0.2);
+        background: linear-gradient(135deg, #6c5ce7 0%, #8b7cf0 100%);
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
     }
     .modal-btn-confirm:hover {
         transform: translateY(-2px);
-        box-shadow: 0 15px 30px rgba(42, 245, 152, 0.3);
+        box-shadow: 0 15px 30px rgba(139, 124, 240, 0.45);
+    }
+
+    @media (max-width: 992px) {
+        .modal-grid-wrapper { grid-template-columns: 1fr; max-width: 500px; }
+        .modal-left-instructions { display: none; }
+    }
+    /* Hero Section */
+    .hero {
+        position: relative;
+        width: 100%;
+        height: 52vh;
+        min-height: 380px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-top: -120px;
+        background: #050505;
+    }
+    .hero::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(ellipse at center, transparent 40%, rgba(3,3,7,0.75) 100%),
+                    linear-gradient(to bottom, rgba(3,3,7,0.85) 0%, transparent 20%, transparent 80%, rgba(3,3,7,1) 100%);
+        z-index: 5;
+        pointer-events: none;
+    }
+    .hero-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        animation: imageReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, subtleZoom 20s ease-in-out infinite alternate 1.2s;
+    }
+    @keyframes imageReveal {
+        from { opacity: 0; transform: scale(1.25); filter: brightness(0); }
+        to { opacity: 1; transform: scale(1.1); filter: brightness(0.35); }
+    }
+    @keyframes subtleZoom {
+        from { transform: scale(1.1); filter: brightness(0.35); }
+        to { transform: scale(1.15); filter: brightness(0.35); }
+    }
+    .hero-content {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        max-width: 850px;
+        padding: 40px 20px 0;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: pageFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s;
+    }
+    .hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        letter-spacing: -1px;
+        color: #ffffff;
+    }
+    .hero p {
+        font-size: 1.05rem;
+        opacity: 0.8;
+        font-weight: 300;
+        color: #f5f5f7;
+        line-height: 1.6;
+    }
+
+    /* Floating Back Button on Hero */
+    .back-btn {
+        position: absolute;
+        top: 130px; left: 5%;
+        z-index: 100;
+        color: #fff;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        font-family: var(--f-mono);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: 0.3s;
+        opacity: 0;
+        transform: translateX(10px);
+        animation: backBtnFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s;
+    }
+    @keyframes backBtnFadeIn {
+        to { opacity: 0.7; transform: translateX(0); }
+    }
+    .back-btn:hover { transform: translateX(-5px); opacity: 1 !important; }
+
+    /* Compact Filter & Search Bar */
+    .filter-bar-container {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        background: #12131c;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 22px;
+        margin-bottom: 35px;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: pageFadeIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.08s;
+        will-change: opacity, transform;
+    }
+    .filter-bar-container:hover, .filter-bar-container:focus-within {
+        border-color: #8b7cf0;
+        box-shadow: 0 8px 24px rgba(139, 124, 240, 0.2);
+    }
+    .search-box-compact {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 9px 14px;
+        flex: 1;
+        min-width: 240px;
+    }
+    .search-box-compact i {
+        color: var(--text-3);
+        font-size: 0.9rem;
+    }
+    .search-box-compact input {
+        background: none;
+        border: none;
+        outline: none;
+        color: #fff;
+        font-size: 0.88rem;
+        width: 100%;
+        font-family: inherit;
+    }
+    .filter-controls-group {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .select-field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .select-field-label {
+        font-family: var(--f-mono);
+        font-size: 0.72rem;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+    }
+    .filter-select {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-hi);
+        border-radius: 10px;
+        color: var(--text-1);
+        padding: 9px 16px;
+        font-family: var(--f-mono);
+        font-size: 0.76rem;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+    .filter-select:hover, .filter-select:focus {
+        border-color: #8b7cf0;
+        background: rgba(139, 124, 240, 0.1);
+    }
+    .filter-select option {
+        background: #0d1322;
+        color: #fff;
+    }
+
+    /* Top Right Sticky Note Schedule Toast Notification (Identical to Bookmark Toast) */
+    .sticky-note-toast {
+        position: fixed;
+        top: 100px;
+        right: 30px;
+        z-index: 99999;
+        background: linear-gradient(135deg, #ffe57f 0%, #ffc107 100%);
+        color: #120a21;
+        padding: 14px 22px 14px 18px;
+        border-radius: 4px 18px 18px 18px;
+        box-shadow: 0 15px 35px rgba(255, 193, 7, 0.35), 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: var(--f-mono, 'Space Grotesk', sans-serif);
+        font-weight: 800;
+        font-size: 0.85rem;
+        pointer-events: none;
+        transform: translateX(150%) rotate(12deg) scale(0.8);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-left: 5px solid #ff9800;
+    }
+    .sticky-note-toast.show-sticky {
+        transform: translateX(0) rotate(-2deg) scale(1);
+        opacity: 1;
+        pointer-events: auto;
+    }
+    .sticky-note-pin {
+        position: absolute;
+        top: -10px;
+        left: 18px;
+        color: #e53935;
+        font-size: 1.1rem;
+        filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4));
+        transform: rotate(-15deg);
     }
 </style>
+{% endblock %}
 
-<!-- Modal Confirmation (Asymmetrical Split Screen Layout) -->
+{% block content %}
+<a href="{% url 'course_detail' course.slug %}" class="back-btn" id="back-to-course-btn">
+    <i class="fas fa-arrow-left"></i> Back to <span id="back-course-name">{{ course.title }}</span>
+</a>
+
+<section class="hero">
+    <img src="{{ course.bg_image }}" class="hero-bg" id="hero-bg-image" alt="{{ course.title }}">
+    <div class="hero-content">
+        <div class="topic-badge" id="hero-course-badge" style="display: inline-block; padding: 4px 14px; background: rgba(139, 124, 240, 0.15); color: #8b7cf0; border-radius: 50px; font-size: 0.72rem; font-weight: 700; font-family: var(--f-mono); text-transform: uppercase; margin-bottom: 12px; border: 1px solid rgba(139, 124, 240, 0.3);">{{ course.title }}</div>
+        <h1 id="hero-topic-title">{{ topic.title }}</h1>
+        <p id="hero-topic-desc">Master the concepts of {{ topic.title }} with comprehensive modules, practice sets, and study materials.</p>
+    </div>
+</section>
+
+<!-- Ambient Background Glow Patches (Matching Mock Test Arena) -->
+<div class="glow-patch glow-patch-left"></div>
+<div class="glow-patch glow-patch-right"></div>
+<div class="glow-patch glow-patch-bottom-left"></div>
+
+<div class="topic-wrap" style="padding-top: 30px; position: relative; z-index: 20;">
+    
+    <!-- Filter & Compact Search Bar -->
+    <div class="filter-bar-container">
+        <div class="search-box-compact">
+            <i class="fas fa-search"></i>
+            <input type="text" id="moduleSearchInput" placeholder="Search modules, practice sets..." oninput="filterModules()">
+        </div>
+
+        <div class="filter-controls-group">
+            <div class="select-field">
+                <span class="select-field-label">Course:</span>
+                <select id="courseSelectFilter" class="filter-select" onchange="onCourseFilterChange(this.value)">
+                    {% for c in all_courses %}
+                    <option value="{{ c.slug }}" {% if c.slug == course.slug %}selected{% endif %}>{{ c.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="select-field">
+                <span class="select-field-label">Topic:</span>
+                <select id="topicSelectFilter" class="filter-select" onchange="onTopicFilterChange(this.value)">
+                    {% for t in course.topics %}
+                    <option value="{{ t.slug }}" {% if t.slug == topic.slug %}selected{% endif %}>{{ t.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modules Accordion List -->
+    <div class="modules-list" id="modulesContainer">
+        {% for sub in topic.subtopics %}
+        <div class="module-item" id="module-item-{{ forloop.counter }}">
+            
+            <!-- Module Header Trigger Button -->
+            <button class="module-header-btn" onclick="toggleModule(this)">
+                <div class="module-header-left">
+                    <div class="module-icon-box">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="module-title-group">
+                        <h3>{{ sub }}</h3>
+                        <p>4 Practice Sets &bull; 2 Study Materials</p>
+                    </div>
+                </div>
+                <div class="module-header-right">
+                    <span class="module-badge-tag">Module {{ forloop.counter }}</span>
+                    <div class="chevron-icon">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </button>
+
+            <!-- Accordion Content Wrapper -->
+            <div class="module-content-wrapper">
+                <div class="module-content-inner">
+                    
+                    <!-- Interactive Tab Pills (Practice Sets & Study Material) -->
+                    <div class="tab-pills-row">
+                        <button class="tab-pill active" onclick="switchTab(this, 'practice-{{ forloop.counter }}')">
+                            <i class="fas fa-clipboard-check"></i> Practice Sets (4)
+                        </button>
+                        <button class="tab-pill" onclick="switchTab(this, 'study-{{ forloop.counter }}')">
+                            <i class="fas fa-book-open"></i> Study Material (2)
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: PRACTICE SETS (Identical look to Mock Test Cards in Screenshot) -->
+                    <div class="tab-pane active" id="practice-{{ forloop.counter }}">
+                        <div class="cards-grid">
+                            
+                            <!-- Card 1: Practice Set 01 (Easy) -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">MODULE BLITZ</span>
+                                        <span class="tag-diff diff-easy">EASY</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Blitz 01</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Module</span>
+                                            <b>{{ sub }}</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Questions</span>
+                                            <b>10 MCQs</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Duration</span>
+                                            <b>15 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+100 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="launchPracticeDirect('{{ course.slug }}', '{{ topic.slug }}', '{{ sub }}')">Practice</button>
+                                    <button class="btn-icon-square" title="Schedule Practice" onclick="openScheduleModal('{{ sub }} — Blitz 01', 'Module Blitz', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Practice Set 02 (Medium) -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">MODULE BLITZ</span>
+                                        <span class="tag-diff diff-medium">MEDIUM</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Blitz 02</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Module</span>
+                                            <b>{{ sub }}</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Questions</span>
+                                            <b>15 MCQs</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Duration</span>
+                                            <b>20 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+150 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="launchPracticeDirect('{{ course.slug }}', '{{ topic.slug }}', '{{ sub }}')">Practice</button>
+                                    <button class="btn-icon-square" title="Schedule Practice" onclick="openScheduleModal('{{ sub }} — Blitz 02', 'Module Blitz', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Practice Set 03 (Hard) -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">MODULE BLITZ</span>
+                                        <span class="tag-diff diff-hard">HARD</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Speed Run</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Module</span>
+                                            <b>{{ sub }}</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Questions</span>
+                                            <b>20 MCQs</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Duration</span>
+                                            <b>25 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+250 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="launchPracticeDirect('{{ course.slug }}', '{{ topic.slug }}', '{{ sub }}')">Practice</button>
+                                    <button class="btn-icon-square" title="Schedule Practice" onclick="openScheduleModal('{{ sub }} — Speed Run', 'Module Blitz', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Card 4: Practice Set 04 (Challenge) -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">MODULE BLITZ</span>
+                                        <span class="tag-diff diff-medium">MEDIUM</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Mastery Set</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Module</span>
+                                            <b>{{ sub }}</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Questions</span>
+                                            <b>15 MCQs</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Duration</span>
+                                            <b>20 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+200 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="launchPracticeDirect('{{ course.slug }}', '{{ topic.slug }}', '{{ sub }}')">Practice</button>
+                                    <button class="btn-icon-square" title="Schedule Practice" onclick="openScheduleModal('{{ sub }} — Mastery Set', 'Module Blitz', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: STUDY MATERIAL (Identical Grid & Card Structure to Practice Tab) -->
+                    <div class="tab-pane" id="study-{{ forloop.counter }}">
+                        <div class="cards-grid">
+                            
+                            <!-- Material 1: Concept Notes PDF -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">STUDY MATERIAL</span>
+                                        <span class="tag-diff diff-easy">PDF DOC</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Complete Concept Notes</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Format</span>
+                                            <b>PDF File</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Pages</span>
+                                            <b>12 Pages</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Read Time</span>
+                                            <b>15 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+50 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="openViewer('{{ sub }} Concept Notes', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 'pdf')"><i class="fas fa-eye"></i> Read Material</button>
+                                    <button class="btn-icon-square" title="Schedule Study Session" onclick="openScheduleModal('{{ sub }} — Concept Notes', 'Study Material', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Material 2: Formula & Shortcut Sheet -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">SHORTCUT CHEATSHEET</span>
+                                        <span class="tag-diff diff-medium">DOCX DOC</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Formula & Shortcut Sheet</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Format</span>
+                                            <b>Word Doc</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Type</span>
+                                            <b>Cheatsheet</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Recap Time</span>
+                                            <b>10 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+50 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="openViewer('Formula & Shortcut Sheet', 'https://calibre-ebook.com/downloads/demos/demo.docx', 'doc')"><i class="fas fa-file-download"></i> Open Doc</button>
+                                    <button class="btn-icon-square" title="Schedule Study Session" onclick="openScheduleModal('{{ sub }} — Formula Sheet', 'Study Material', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Material 3: Mindmap & Rapid Revision -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">MINDMAP REVISION</span>
+                                        <span class="tag-diff diff-easy">PDF DOC</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Mindmap & Key Takeaways</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Format</span>
+                                            <b>Visual PDF</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Type</span>
+                                            <b>Mindmap</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Read Time</span>
+                                            <b>8 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+40 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="openViewer('{{ sub }} Mindmap & Key Takeaways', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 'pdf')"><i class="fas fa-eye"></i> View Mindmap</button>
+                                    <button class="btn-icon-square" title="Schedule Study Session" onclick="openScheduleModal('{{ sub }} — Mindmap', 'Study Material', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Material 4: Solved Examples Workbook -->
+                            <div class="paper-card">
+                                <div>
+                                    <div class="card-top-tags">
+                                        <span class="tag-mode">SOLVED WORKBOOK</span>
+                                        <span class="tag-diff diff-hard">PDF DOC</span>
+                                    </div>
+                                    <h4 class="card-title-text">{{ sub }} &mdash; Solved Examples Workbook</h4>
+                                    <div class="card-subtitle-text">{{ course.title }} &bull; {{ topic.title }}</div>
+                                    
+                                    <div class="card-info-table">
+                                        <div class="info-row">
+                                            <span>Format</span>
+                                            <b>PDF Book</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Pages</span>
+                                            <b>25 Pages</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Study Time</span>
+                                            <b>30 Mins</b>
+                                        </div>
+                                        <div class="info-row">
+                                            <span>Reward</span>
+                                            <b class="reward-xp">+80 XP</b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-actions-group">
+                                    <button class="btn-select-test" onclick="openViewer('{{ sub }} Solved Examples Workbook', 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', 'pdf')"><i class="fas fa-eye"></i> Open Workbook</button>
+                                    <button class="btn-icon-square" title="Schedule Study Session" onclick="openScheduleModal('{{ sub }} — Solved Workbook', 'Study Material', '{{ course.title }}')"><i class="fas fa-calendar-plus"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Explore Other Topics Section -->
+    <div class="other-topics-section reveal-on-scroll reveal-delay-4">
+        <div class="section-heading-row">
+            <h2>Explore Other Topics in {{ course.title }}</h2>
+        </div>
+        <div class="other-topics-grid">
+            {% for t in course.topics %}
+                {% if t.slug != topic.slug %}
+                <a href="{% url 'topic_detail' course.slug t.slug %}" class="topic-tile-card">
+                    <div>
+                        <span style="font-family: var(--f-mono); font-size: 0.68rem; color: var(--text-3); text-transform: uppercase;">TOPIC</span>
+                        <h4>{{ t.title }}</h4>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 0.78rem; color: var(--accent-2); font-weight: 700; font-family: var(--f-mono);">
+                        <span>View Modules</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<!-- Universal Document Viewer Modal -->
+<div class="viewer-modal" id="viewerModal">
+    <div class="viewer-overlay" onclick="closeViewer()"></div>
+    <div class="viewer-content">
+        <div class="viewer-header">
+            <div class="v-title">
+                <i class="fas fa-file-alt" id="vIcon"></i>
+                <span id="vTitle">Document Viewer</span>
+            </div>
+            <div class="v-actions">
+                <a href="#" id="vDownload" download class="v-btn"><i class="fas fa-download"></i> Download</a>
+                <button class="v-btn close" onclick="closeViewer()"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="viewer-body" id="viewerBody">
+            <div class="loader"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Confirmation Modal (Identical Split Screen to Mock Test Arena) -->
 <div class="modal" id="testModal">
     <div class="modal-grid-wrapper">
-        <!-- Left Column: Guidelines & Instructions (Floating, not in card) -->
+        <!-- Left Instructions -->
         <div class="modal-left-instructions">
             <div class="instruction-header">
                 <i class="fas fa-file-signature"></i>
                 <h3>Test Instructions</h3>
             </div>
-            
             <div class="instructions-list">
                 <div class="instruction-item">
                     <i class="fas fa-clock"></i>
                     <div>
                         <h4>Strict Simulated Timer</h4>
-                        <p>The timer runs continuously once you begin. The test will auto-submit when the duration ends.</p>
+                        <p>The timer runs continuously once you begin. The test will auto-submit when duration expires.</p>
                     </div>
                 </div>
                 <div class="instruction-item">
                     <i class="fas fa-shield-alt"></i>
                     <div>
-                        <h4>Anti-Cheat Monitoring</h4>
-                        <p>Tab switching or leaving the screen will warn you. Exceeding warnings will force auto-submit.</p>
+                        <h4>Anti-Cheat Protection</h4>
+                        <p>Tab switching or leaving screen will trigger warnings and auto-submission.</p>
                     </div>
                 </div>
                 <div class="instruction-item">
-                    <i class="fas fa-check-double"></i>
+                    <i class="fas fa-chart-line"></i>
                     <div>
-                        <h4>Instant Score Analytics</h4>
-                        <p>You will get a comprehensive performance report card and analytics breakdown immediately upon completion.</p>
-                    </div>
-                </div>
-                <div class="instruction-item">
-                    <i class="fas fa-keyboard"></i>
-                    <div>
-                        <h4>Input Restrictions</h4>
-                        <p>Do not refresh the page or use browser back/forward buttons during the active session.</p>
+                        <h4>Instant Analytics</h4>
+                        <p>Get instant score performance report card and step-by-step solutions.</p>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Right Column: Mock Test Ready details (Inside a modal-card) -->
+        <!-- Right Details Card -->
         <div class="modal-card">
             <div class="close-modal" onclick="closeTestModal()"><i class="fas fa-times"></i></div>
-            
             <div class="modal-right-details">
-                <div class="modal-header" style="margin-bottom: 25px; text-align: left;">
-                    <i class="fas fa-bolt" style="font-size: 2.2rem; color: #2af598; margin-bottom: 12px; display: inline-block;"></i>
-                    <h3 style="font-size: 1.6rem; font-weight: 800; color: #fff; text-align: left;">Mock Test Ready</h3>
-                    <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px; text-align: left;">Verify your parameters to activate the test session.</p>
+                <div class="modal-header" style="margin-bottom: 22px; text-align: left;">
+                    <i class="fas fa-bolt" style="font-size: 2rem; color: #8b7cf0; margin-bottom: 10px; display: inline-block;"></i>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: #fff;">Mock Test Ready</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-2); margin-top: 4px;">Confirm test parameters to launch active session.</p>
                 </div>
-                
                 <div class="modal-details" style="margin-bottom: 25px;">
-                    <div class="detail-row">
-                        <span class="detail-label">Test Mode</span>
-                        <span class="detail-value" id="val-mode">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Subject</span>
-                        <span class="detail-value" id="val-subject">-</span>
-                    </div>
-                    <div id="row-topic" class="detail-row">
-                        <span class="detail-label">Topic</span>
-                        <span class="detail-value" id="val-topic">-</span>
-                    </div>
-                    <div id="row-module" class="detail-row">
-                        <span class="detail-label">Module</span>
-                        <span class="detail-value" id="val-module">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Mock Test</span>
-                        <span class="detail-value" id="val-test">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Questions</span>
-                        <span class="detail-value" id="val-questions">-</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Duration</span>
-                        <span class="detail-value" id="val-duration">-</span>
-                    </div>
+                    <div class="detail-row"><span class="detail-label">Subject</span><span class="detail-value" id="val-subject">-</span></div>
+                    <div class="detail-row"><span class="detail-label">Topic</span><span class="detail-value" id="val-topic">-</span></div>
+                    <div class="detail-row"><span class="detail-label">Module</span><span class="detail-value" id="val-module">-</span></div>
+                    <div class="detail-row"><span class="detail-label">Test Name</span><span class="detail-value" id="val-test">-</span></div>
+                    <div class="detail-row"><span class="detail-label">Difficulty</span><span class="detail-value" id="val-diff">-</span></div>
                 </div>
-                
                 <div class="modal-actions">
-                    <button class="modal-btn modal-btn-cancel" onclick="closeTestModal()">Go Back</button>
-                    <button class="modal-btn modal-btn-confirm" onclick="startTestActual()">Begin Test</button>
+                    <button class="modal-btn modal-btn-cancel" onclick="closeTestModal()">Cancel</button>
+                    <button class="modal-btn modal-btn-confirm" onclick="startTestActual()">Begin Test Now</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- Global Schedule Modal Partial Overlay -->
+{% include 'partials/schedule_modal.html' %}
+
+<!-- Top Right Sticky Note Schedule Toast Notification -->
+<div id="prepToast" class="sticky-note-toast">
+    <i class="fas fa-thumbtack sticky-note-pin"></i>
+    <i class="fas fa-calendar-check" style="color: #120a21; font-size: 1rem;"></i>
+    <span id="toastMsg" class="tracking-wide">Test scheduled successfully!</span>
+    <div class="toast-progress-bar"></div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    function toggleSets(btn) {
-        const item = btn.parentElement;
-        const wrapper = item.querySelector('.sets-wrapper');
-        const isActive = btn.classList.contains('active');
-        
-        // Close all other open sets
-        document.querySelectorAll('.subtopic-card.active').forEach(c => {
-            if (c !== btn) {
-                c.classList.remove('active');
-                c.parentElement.querySelector('.sets-wrapper').classList.remove('open');
-            }
-        });
+    const allCoursesData = {{ all_courses_json|safe }};
 
-        if (isActive) {
-            btn.classList.remove('active');
-            wrapper.classList.remove('open');
+    document.addEventListener("DOMContentLoaded", () => {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+            revealObserver.observe(el);
+        });
+    });
+
+    // Schedule Modal Operations (Global Consistent Behavior)
+    let selectedDateVal = ""; 
+    let selectedTimeVal = "09:00 AM";
+    let calCurrentDate = new Date();
+
+    function openScheduleModal(paperName, modeName, subjectName) {
+        let categoryName = "Practice Test";
+        const isStudy = modeName && (modeName.includes('Study') || modeName.includes('Material') || modeName.includes('Notes') || modeName.includes('Doc') || modeName.includes('PDF'));
+        const isMock = modeName && (modeName.includes('Mock') || modeName.includes('Marathon') || modeName.includes('Full') || modeName.includes('Arena'));
+
+        if (isStudy) {
+            categoryName = "Study Material";
+        } else if (isMock) {
+            categoryName = "Mock Test";
         } else {
-            btn.classList.add('active');
-            wrapper.classList.add('open');
+            categoryName = "Practice Test";
+        }
+
+        if (document.getElementById("sch-paper-val")) document.getElementById("sch-paper-val").innerText = paperName || "Prep Session";
+        if (document.getElementById("sch-mode-val")) document.getElementById("sch-mode-val").innerText = categoryName;
+        if (document.getElementById("sch-subject-val")) document.getElementById("sch-subject-val").innerText = subjectName || "Aptitude Mastery";
+
+        const leftTypeEl = document.getElementById("sch-left-type");
+        const headerTitleEl = document.getElementById("sch-header-title");
+        const headerDescEl = document.getElementById("sch-header-desc");
+        const itemLabelEl = document.getElementById("sch-item-label");
+        const modeLabelEl = document.getElementById("sch-mode-label");
+
+        if (modeLabelEl) modeLabelEl.innerText = "Category";
+
+        if (categoryName === "Study Material") {
+            if (leftTypeEl) leftTypeEl.innerText = "Study Material";
+            if (headerTitleEl) headerTitleEl.innerText = "Schedule Study Session";
+            if (headerDescEl) headerDescEl.innerText = "Select a date and time to reserve your study reading slot.";
+            if (itemLabelEl) itemLabelEl.innerText = "Resource Name";
+        } else if (categoryName === "Mock Test") {
+            if (leftTypeEl) leftTypeEl.innerText = "Mock Test";
+            if (headerTitleEl) headerTitleEl.innerText = "Schedule Mock Test";
+            if (headerDescEl) headerDescEl.innerText = "Select a date and time to reserve your mock test seat.";
+            if (itemLabelEl) itemLabelEl.innerText = "Mock Paper";
+        } else {
+            if (leftTypeEl) leftTypeEl.innerText = "Practice Test";
+            if (headerTitleEl) headerTitleEl.innerText = "Schedule Practice Test";
+            if (headerDescEl) headerDescEl.innerText = "Select a date and time to reserve your practice test seat.";
+            if (itemLabelEl) itemLabelEl.innerText = "Test Name";
+        }
+
+        const today = new Date();
+        const year = today.getFullYear();
+        const monthNum = String(today.getMonth() + 1).padStart(2, '0');
+        const dayNum = today.getDate();
+        selectedDateVal = `${year}-${monthNum}-${String(dayNum).padStart(2, '0')}`;
+        
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        if (document.getElementById("sch-date-display")) {
+            document.getElementById("sch-date-display").value = `${monthNames[today.getMonth()]} ${dayNum}, ${year}`;
+        }
+        
+        calCurrentDate = new Date(year, today.getMonth(), 1);
+        renderCalendarDropdown();
+        
+        timeSelectedH = "09";
+        timeSelectedM = "00";
+        timeSelectedAP = "AM";
+        if (document.getElementById("time-h-lbl")) document.getElementById("time-h-lbl").innerText = "09";
+        if (document.getElementById("time-m-lbl")) document.getElementById("time-m-lbl").innerText = "00";
+        if (document.getElementById("time-ap-lbl")) document.getElementById("time-ap-lbl").innerText = "AM";
+        selectedTimeVal = "09:00 AM";
+        if (document.getElementById("sch-time-display")) {
+            document.getElementById("sch-time-display").value = selectedTimeVal;
+        }
+
+        const hScroll = document.getElementById("sch-hour-scroll");
+        const mScroll = document.getElementById("sch-minute-scroll");
+        if (hScroll) hScroll.innerHTML = "";
+        if (mScroll) mScroll.innerHTML = "";
+
+        const modal = document.getElementById("scheduleModal");
+        if (modal) modal.classList.add("active");
+    }
+
+    function closeScheduleModal() {
+        const modal = document.getElementById("scheduleModal");
+        if (modal) modal.classList.remove("active");
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        if (dateDrop) dateDrop.classList.remove("active");
+        if (timeDrop) timeDrop.classList.remove("active");
+    }
+
+    function saveSchedule() {
+        const date = document.getElementById('sch-date-display').value;
+        const time = document.getElementById('sch-time-display').value;
+        const paper = document.getElementById('sch-paper-val').innerText;
+        if (!date || !time) {
+            alert("Please select both a date and a time.");
+            return;
+        }
+        closeScheduleModal();
+        schedulePracticeToast(`${paper} scheduled for ${date} at ${time}`);
+    }
+
+    function togglePicker(type, event) {
+        if (event) event.stopPropagation();
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        
+        if (type === 'date') {
+            if (timeDrop) timeDrop.classList.remove("active");
+            if (dateDrop) {
+                dateDrop.classList.toggle("active");
+                if (dateDrop.classList.contains("active")) {
+                    renderCalendarDropdown();
+                }
+            }
+        } else if (type === 'time') {
+            if (dateDrop) dateDrop.classList.remove("active");
+            if (timeDrop) {
+                timeDrop.classList.toggle("active");
+                if (timeDrop.classList.contains("active")) {
+                    setupTimePickerScrolls();
+                }
+            }
         }
     }
 
-    // Universal Document Viewer Logic
+    document.addEventListener("click", function(e) {
+        const dateWrapper = document.getElementById("date-picker-wrapper");
+        const timeWrapper = document.getElementById("time-picker-wrapper");
+        const dateDrop = document.getElementById("date-dropdown");
+        const timeDrop = document.getElementById("time-dropdown");
+        
+        if (dateWrapper && !dateWrapper.contains(e.target) && dateDrop) {
+            dateDrop.classList.remove("active");
+        }
+        if (timeWrapper && !timeWrapper.contains(e.target) && timeDrop) {
+            timeDrop.classList.remove("active");
+        }
+    });
+
+    function changeMonth(direction, event) {
+        if (event) event.stopPropagation();
+        calCurrentDate.setMonth(calCurrentDate.getMonth() + direction);
+        renderCalendarDropdown();
+    }
+
+    function renderCalendarDropdown() {
+        const monthTitle = document.getElementById("cal-month-title");
+        const daysGrid = document.getElementById("cal-days-grid");
+        if (!monthTitle || !daysGrid) return;
+        
+        const monthsList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const year = calCurrentDate.getFullYear();
+        const month = calCurrentDate.getMonth();
+        
+        monthTitle.innerText = `${monthsList[month]} ${year}`;
+        daysGrid.innerHTML = "";
+        
+        const dayLabels = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+        dayLabels.forEach(d => {
+            const span = document.createElement("span");
+            span.className = "header-day";
+            span.innerText = d;
+            daysGrid.appendChild(span);
+        });
+        
+        let firstDayIndex = new Date(year, month, 1).getDay();
+        firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        
+        for (let i = 0; i < firstDayIndex; i++) {
+            const span = document.createElement("span");
+            span.style.cursor = "default";
+            daysGrid.appendChild(span);
+        }
+        
+        for (let day = 1; day <= totalDays; day++) {
+            const span = document.createElement("span");
+            span.className = "day-num";
+            span.innerText = day;
+            const monthNum = String(month + 1).padStart(2, '0');
+            const dateStr = `${year}-${monthNum}-${String(day).padStart(2, '0')}`;
+            
+            if (dateStr === selectedDateVal) {
+                span.className = "day-num active";
+            }
+            
+            span.onclick = function(e) {
+                e.stopPropagation();
+                selectedDateVal = dateStr;
+                const shortMonth = monthsList[month].substring(0, 3);
+                document.getElementById("sch-date-display").value = `${shortMonth} ${day}, ${year}`;
+                document.querySelectorAll(".day-num").forEach(s => s.classList.remove("active"));
+                this.classList.add("active");
+                document.getElementById("date-dropdown").classList.remove("active");
+            };
+            daysGrid.appendChild(span);
+        }
+    }
+
+    let timeSelectedH = "09";
+    let timeSelectedM = "00";
+    let timeSelectedAP = "AM";
+
+    function setupTimePickerScrolls() {
+        const hourScroll = document.getElementById("sch-hour-scroll");
+        const minuteScroll = document.getElementById("sch-minute-scroll");
+        if (!hourScroll || !minuteScroll) return;
+        
+        if (hourScroll.innerHTML.trim() === "") {
+            for (let h = 1; h <= 12; h++) {
+                const val = String(h).padStart(2, '0');
+                const div = document.createElement("div");
+                div.className = "time-val-item" + (val === timeSelectedH ? " selected" : "");
+                div.innerText = val;
+                div.onclick = function(e) {
+                    if (e) e.stopPropagation();
+                    selectTimeComponent('hour', val, this);
+                };
+                hourScroll.appendChild(div);
+            }
+        }
+        
+        if (minuteScroll.innerHTML.trim() === "") {
+            for (let m = 0; m < 60; m += 5) {
+                const val = String(m).padStart(2, '0');
+                const div = document.createElement("div");
+                div.className = "time-val-item" + (val === timeSelectedM ? " selected" : "");
+                div.innerText = val;
+                div.onclick = function(e) {
+                    if (e) e.stopPropagation();
+                    selectTimeComponent('minute', val, this);
+                };
+                minuteScroll.appendChild(div);
+            }
+        }
+    }
+
+    function selectTimeComponent(type, val, element) {
+        if (type === 'hour') {
+            timeSelectedH = val;
+            const hLbl = document.getElementById("time-h-lbl");
+            if (hLbl) hLbl.innerText = val;
+            document.querySelectorAll("#sch-hour-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        } else if (type === 'minute') {
+            timeSelectedM = val;
+            const mLbl = document.getElementById("time-m-lbl");
+            if (mLbl) mLbl.innerText = val;
+            document.querySelectorAll("#sch-minute-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        } else if (type === 'ampm') {
+            timeSelectedAP = val;
+            const apLbl = document.getElementById("time-ap-lbl");
+            if (apLbl) apLbl.innerText = val;
+            document.querySelectorAll("#sch-ampm-scroll .time-val-item").forEach(i => i.classList.remove("selected"));
+        }
+        if (element) element.classList.add("selected");
+    }
+
+    function confirmTimeSelection(e) {
+        if (e) e.stopPropagation();
+        selectedTimeVal = `${timeSelectedH}:${timeSelectedM} ${timeSelectedAP}`;
+        document.getElementById("sch-time-display").value = selectedTimeVal;
+        document.getElementById("time-dropdown").classList.remove("active");
+    }
+
+    function launchPracticeDirect(courseSlug, topicSlug, moduleName) {
+        const m = encodeURIComponent(moduleName);
+        window.location.href = `/courses/${courseSlug}/${topicSlug}/${m}/`;
+    }
+
+    function schedulePracticeToast(msg) {
+        if (window.PrepVerseToast) {
+            window.PrepVerseToast.show('prepToast', msg, 4000);
+        } else {
+            const toast = document.getElementById('prepToast');
+            const toastMsg = document.getElementById('toastMsg');
+            if (toast && toastMsg) {
+                toastMsg.textContent = msg;
+                toast.classList.add('show-sticky');
+            }
+        }
+    }
+
+    function onCourseFilterChange(newCourseSlug) {
+        const selectedCourse = allCoursesData.find(c => c.slug === newCourseSlug);
+        if (!selectedCourse || !selectedCourse.topics || selectedCourse.topics.length === 0) return;
+
+        // 1. Update Topic Dropdown options dynamically
+        const topicSelect = document.getElementById('topicSelectFilter');
+        topicSelect.innerHTML = '';
+        selectedCourse.topics.forEach((t, idx) => {
+            const opt = document.createElement('option');
+            opt.value = t.slug;
+            opt.textContent = t.title;
+            if (idx === 0) opt.selected = true; // First topic selected by default
+            topicSelect.appendChild(opt);
+        });
+
+        // 2. Select first topic of the selected course
+        const firstTopicSlug = selectedCourse.topics[0].slug;
+
+        // 3. Update Hero section UI immediately for instant feedback
+        updateHeroUI(selectedCourse, selectedCourse.topics[0]);
+
+        // 4. Navigate to the target topic page
+        window.location.href = `/courses/${newCourseSlug}/${firstTopicSlug}/`;
+    }
+
+    function onTopicFilterChange(newTopicSlug) {
+        const currentCourseVal = document.getElementById('courseSelectFilter').value;
+        const selectedCourse = allCoursesData.find(c => c.slug === currentCourseVal);
+        if (!selectedCourse) return;
+
+        const selectedTopic = selectedCourse.topics.find(t => t.slug === newTopicSlug);
+        if (selectedTopic) {
+            updateHeroUI(selectedCourse, selectedTopic);
+        }
+
+        window.location.href = `/courses/${currentCourseVal}/${newTopicSlug}/`;
+    }
+
+    function updateHeroUI(courseObj, topicObj) {
+        const heroBg = document.getElementById('hero-bg-image');
+        const heroBadge = document.getElementById('hero-course-badge');
+        const heroTitle = document.getElementById('hero-topic-title');
+        const heroDesc = document.getElementById('hero-topic-desc');
+        const backBtnName = document.getElementById('back-course-name');
+        const backBtnLink = document.getElementById('back-to-course-btn');
+
+        if (heroBg && courseObj.bg_image) heroBg.src = courseObj.bg_image;
+        if (heroBadge) heroBadge.textContent = courseObj.title;
+        if (heroTitle) heroTitle.textContent = topicObj.title;
+        if (heroDesc) heroDesc.textContent = `Master the concepts of ${topicObj.title} with comprehensive modules, practice sets, and study materials.`;
+        if (backBtnName) backBtnName.textContent = courseObj.title;
+        if (backBtnLink) backBtnLink.href = `/courses/${courseObj.slug}/`;
+    }
+
+    function toggleModule(btn) {
+        const item = btn.closest('.module-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.module-item.open').forEach(el => {
+            if (el !== item) el.classList.remove('open');
+        });
+        if (isOpen) {
+            item.classList.remove('open');
+        } else {
+            item.classList.add('open');
+        }
+    }
+
+    function switchTab(pillBtn, paneId) {
+        const innerContainer = pillBtn.closest('.module-content-inner');
+        innerContainer.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+        pillBtn.classList.add('active');
+        innerContainer.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        const targetPane = innerContainer.querySelector('#' + paneId);
+        if (targetPane) {
+            targetPane.classList.add('active');
+        }
+    }
+
+    function filterModules() {
+        const query = document.getElementById('moduleSearchInput').value.toLowerCase().trim();
+        const items = document.querySelectorAll('.module-item');
+        items.forEach(item => {
+            const text = item.innerText.toLowerCase();
+            item.style.display = text.includes(query) ? 'block' : 'none';
+        });
+    }
+
     function openViewer(title, url, type) {
         const modal = document.getElementById('viewerModal');
         const vTitle = document.getElementById('vTitle');
         const vIcon = document.getElementById('vIcon');
         const vDownload = document.getElementById('vDownload');
         const vBody = document.getElementById('viewerBody');
-        
-        // Set metadata
         vTitle.textContent = title;
         vDownload.href = url;
         vBody.innerHTML = '<div class="loader"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>';
-        
-        // Reset classes
         vBody.classList.remove('doc-mode');
         vIcon.className = '';
-
         if (type === 'pdf') {
             vIcon.className = 'fas fa-file-pdf';
             vBody.innerHTML += `<embed src="${url}" type="application/pdf" />`;
         } else if (type === 'doc') {
             vIcon.className = 'fas fa-file-word';
             vBody.classList.add('doc-mode');
-            // Using Google Docs Viewer for Office documents
             const gViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
             vBody.innerHTML += `<iframe src="${gViewerUrl}"></iframe>`;
-        } else if (type === 'video') {
-            vIcon.className = 'fas fa-play-circle';
-            vBody.innerHTML += `<video controls autoplay name="media"><source src="${url}" type="video/mp4"></video>`;
         }
-
-        // Show modal
         modal.classList.add('active');
     }
 
     function closeViewer() {
         const modal = document.getElementById('viewerModal');
         const vBody = document.getElementById('viewerBody');
-        
-        // Hide modal
         modal.classList.remove('active');
-        
-        // Clear content to stop video playback or iframe loading
-        setTimeout(() => {
-            vBody.innerHTML = '';
-        }, 400); // Wait for transition to finish
+        setTimeout(() => { vBody.innerHTML = ''; }, 400);
     }
 
-    let currentMockTestConfig = {};
-
-    function confirmMockTest(subject, topic, module, testName, difficulty) {
-        currentMockTestConfig = {
-            mode: "Module Blitz",
-            subject: subject,
-            topic: topic,
-            module: module,
-            test: testName,
-            questions: "10 MCQs",
-            duration: "15 Mins"
-        };
-
-        // Populate Modal values
-        document.getElementById("val-mode").innerText = currentMockTestConfig.mode;
-        document.getElementById("val-subject").innerText = currentMockTestConfig.subject;
-        document.getElementById("val-topic").innerText = currentMockTestConfig.topic;
-        document.getElementById("val-module").innerText = currentMockTestConfig.module;
-        document.getElementById("val-test").innerText = currentMockTestConfig.test;
-        document.getElementById("val-questions").innerText = currentMockTestConfig.questions;
-        document.getElementById("val-duration").innerText = currentMockTestConfig.duration;
-
-        // In Module Blitz, topic and module details are shown
-        document.getElementById("row-topic").style.display = "flex";
-        document.getElementById("row-module").style.display = "flex";
-
-        // Open Modal
+    let currentTestConfig = {};
+    function confirmMockTest(subject, topic, moduleName, testName, diff) {
+        currentTestConfig = { subject: subject, topic: topic, module: moduleName, test: testName, diff: diff };
+        document.getElementById("val-subject").innerText = subject;
+        document.getElementById("val-topic").innerText = topic;
+        document.getElementById("val-module").innerText = moduleName;
+        document.getElementById("val-test").innerText = testName;
+        document.getElementById("val-diff").innerText = diff;
         document.getElementById("testModal").classList.add("active");
     }
 
@@ -1004,14 +2073,12 @@
 
     function startTestActual() {
         closeTestModal();
-        const mode = encodeURIComponent(currentMockTestConfig.mode);
-        const subject = encodeURIComponent(currentMockTestConfig.subject);
-        const topic = encodeURIComponent(currentMockTestConfig.topic);
-        const module = encodeURIComponent(currentMockTestConfig.module);
-        const test = encodeURIComponent(currentMockTestConfig.test);
-        
-        window.location.href = `{% url 'start_test_session' %}?mode=${mode}&subject=${subject}&topic=${topic}&module=${module}&test=${test}`;
+        const mode = encodeURIComponent("Module Blitz");
+        const subject = encodeURIComponent(currentTestConfig.subject);
+        const topic = encodeURIComponent(currentTestConfig.topic);
+        const moduleName = encodeURIComponent(currentTestConfig.module);
+        const test = encodeURIComponent(currentTestConfig.test);
+        window.location.href = `{% url 'start_test_session' %}?mode=${mode}&subject=${subject}&topic=${topic}&module=${moduleName}&test=${test}`;
     }
 </script>
 {% endblock %}
-

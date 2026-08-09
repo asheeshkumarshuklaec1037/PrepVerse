@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from . import data
@@ -66,7 +67,30 @@ def topic_detail(request, course_slug, topic_slug):
     if not topic:
         raise Http404("No such topic")
 
-    return render(request, 'courses/topic_detail.html', {'course': course, 'topic': topic})
+    all_courses = data.get_courses()
+    return render(request, 'courses/topic_detail.html', {
+        'course': course,
+        'topic': topic,
+        'all_courses': all_courses,
+        'all_courses_json': json.dumps(all_courses),
+    })
+
+
+def practice_view(request):
+    all_courses = data.get_courses()
+    if not all_courses:
+        raise Http404("No courses available")
+    course = all_courses[0]
+    topic = course['topics'][0] if course.get('topics') else None
+    if not topic:
+        raise Http404("No topics available")
+
+    return render(request, 'courses/topic_detail.html', {
+        'course': course,
+        'topic': topic,
+        'all_courses': all_courses,
+        'all_courses_json': json.dumps(all_courses),
+    })
 
 
 def module_detail(request, course_slug, topic_slug, module_name):
