@@ -34,6 +34,26 @@
         opacity: 1;
     }
     
+    /* Scroll Reveal & Page Entrance Animations (Matching Blog Page 60fps Physics & Speed) */
+    .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), 
+                    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+    }
+    .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.08s !important; }
+    .reveal-delay-2 { transition-delay: 0.16s !important; }
+    .reveal-delay-3 { transition-delay: 0.24s !important; }
+    .reveal-delay-4 { transition-delay: 0.32s !important; }
+
     @keyframes pageFadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -1219,17 +1239,17 @@
 
 <section class="access-band">
   <div class="access-grid">
-    <div class="access-step">
+    <div class="access-step reveal reveal-delay-1">
       <span class="access-num">01</span>
       <h4>Browse everything, no account</h4>
       <p>Courses, daily challenge, practice arena and the blog are open the moment you land — nothing is gated.</p>
     </div>
-    <div class="access-step">
+    <div class="access-step reveal reveal-delay-2">
       <span class="access-num">02</span>
       <h4>Attempt a mock test</h4>
       <p>The first three are free, so you can see exactly how a mock test works. A quick login saves your attempt.</p>
     </div>
-    <div class="access-step">
+    <div class="access-step reveal reveal-delay-3">
       <span class="access-num">03</span>
       <h4>Unlock your analysis &amp; rank</h4>
       <p>Right after submitting, your sectional breakdown, percentile and leaderboard position appear — tied to your account.</p>
@@ -1238,14 +1258,14 @@
 </section>
 
 <section class="section" id="actions">
-  <div class="section-head">
+  <div class="section-head reveal reveal-delay-1">
     <span class="section-tag">On PrepVerse</span>
     <h2>Everything you can do here — no guesswork</h2>
     <p>Five of these need nothing but a browser. Only mock tests ask for a login — and that's just so your score, analysis and leaderboard rank are actually yours.</p>
   </div>
   <div class="action-grid">
 
-    <div class="action-card">
+    <div class="action-card reveal reveal-delay-1">
       <div class="icon">🔥</div>
       <h3>Daily Challenge</h3>
       <p>Two fresh questions every day across quant, logic and English. Keeps your streak alive and your fundamentals sharp in under 10 minutes.</p>
@@ -1253,7 +1273,7 @@
       <a href="{% url 'daily_challenges' %}" class="go">Solve today's set →</a>
     </div>
 
-    <div class="action-card">
+    <div class="action-card reveal reveal-delay-2">
       <div class="icon">📚</div>
       <h3>Structured Courses</h3>
       <p>Topic-by-topic modules — Aptitude, Logical Reasoning, English, Quant — each with concept notes and practice sets you can revisit anytime.</p>
@@ -1261,7 +1281,7 @@
       <a href="{% url 'courses' %}" class="go">Browse courses →</a>
     </div>
 
-    <div class="action-card">
+    <div class="action-card reveal reveal-delay-3">
       <div class="icon">🎯</div>
       <h3>Practice Arena</h3>
       <p>Unlimited topic-wise practice with instant explanations. Filter by difficulty and track exactly which sub-topics are pulling your score down.</p>
@@ -1269,7 +1289,7 @@
       <a href="{% url 'courses' %}" class="go">Start practicing →</a>
     </div>
 
-    <div class="action-card">
+    <div class="action-card reveal reveal-delay-1">
       <div class="icon">📝</div>
       <h3>Mock Tests</h3>
       <p>Full-length, timed tests that mirror real exam pressure — with sectional breakdown, percentile rank and topic-wise weak-spot report. First 3 tests are free.</p>
@@ -1277,7 +1297,7 @@
       <a href="{% url 'mock_test' %}" class="go">Try a free test →</a>
     </div>
 
-    <div class="action-card">
+    <div class="action-card reveal reveal-delay-2">
       <div class="icon">🏆</div>
       <h3>Leaderboard</h3>
       <p>See where you stand against other candidates preparing for the same exams — by XP, accuracy and current streak, updated live.</p>
@@ -1285,7 +1305,7 @@
       <a href="{% url 'leaderboard' %}" class="go">See how to unlock →</a>
     </div>
 
-    <div class="action-card">
+    <div class="action-card reveal reveal-delay-3">
       <div class="icon">✍️</div>
       <h3>Prep Blog</h3>
       <p>Shortcut techniques, time-management strategies and topic breakdowns written by mentors — the stuff that doesn't fit in a question bank.</p>
@@ -1298,13 +1318,13 @@
 
 <section class="compare-band" id="compare">
   <div class="section">
-    <div class="section-head">
+    <div class="section-head reveal reveal-delay-1">
       <span class="section-tag">Transparent, always</span>
       <h2>What needs a login, what doesn't</h2>
       <p>Only one thing on PrepVerse ever asks you to sign in: attempting a mock test. Everything else stays open.</p>
     </div>
     <div class="compare-grid">
-      <div class="compare-col">
+      <div class="compare-col reveal reveal-delay-1">
         <span class="col-kicker">Step 1</span>
         <h3>Just Browsing</h3>
         <p class="price">₹0 · no account</p>
@@ -1315,7 +1335,7 @@
         </ul>
       </div>
       
-      <div class="compare-col recommended">
+      <div class="compare-col recommended reveal reveal-delay-2">
         <span class="col-kicker">Step 2</span>
         <h3>Taking a Test</h3>
         <p class="price">₹0 · requires login</p>
@@ -1326,7 +1346,7 @@
         </ul>
       </div>
 
-      <div class="compare-col premium">
+      <div class="compare-col premium reveal reveal-delay-3">
         <span class="col-kicker">Step 3</span>
         <h3>Unlocking Stats</h3>
         <p class="price">₹999 / year · premium</p>
@@ -1343,19 +1363,19 @@
 <!-- Stats Section -->
 <section class="section stats-band">
   <div class="stats-grid">
-    <div class="stat">
+    <div class="stat reveal reveal-delay-1">
       <b class="stat-count" data-count="12400">0</b>
       <span>Practice Questions</span>
     </div>
-    <div class="stat">
+    <div class="stat reveal reveal-delay-2">
       <b class="stat-count" data-count="3">0</b>
       <span>Free Mock Tests</span>
     </div>
-    <div class="stat">
+    <div class="stat reveal reveal-delay-3">
       <b class="stat-count" data-count="512">0</b>
       <span>Daily Active Solvers</span>
     </div>
-    <div class="stat">
+    <div class="stat reveal reveal-delay-4">
       <b class="stat-count" data-count="15">0</b>
       <span>Placement Partners</span>
     </div>
@@ -1827,5 +1847,21 @@
         closeTestimonialModal();
         $('#testimonialForm')[0].reset();
     }
+
+    /* ---------------- SCROLL REVEAL (MATCHING BLOG PAGE SPEED & PHYSICS) ---------------- */
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealEls.forEach(el => io.observe(el));
 </script>
 {% endblock %}

@@ -30,6 +30,32 @@
     <link rel="stylesheet" href="{% static 'css/components/_pagination.css' %}">
     
     {% block extra_css %}{% endblock %}
+
+    <!-- Master Global Form Input Focus Reset (Eliminates All Internal Borders, Rings & Inset Shadows Site-Wide) -->
+    <style id="global-input-focus-reset">
+        input, select, textarea,
+        input:focus, select:focus, textarea:focus,
+        input:focus-within, select:focus-within, textarea:focus-within,
+        input:focus-visible, select:focus-visible, textarea:focus-visible,
+        input:active, select:active, textarea:active {
+            outline: none !important;
+            outline-width: 0 !important;
+            outline-style: none !important;
+            outline-color: transparent !important;
+            outline-offset: 0 !important;
+            box-shadow: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+            -webkit-text-fill-color: #ffffff !important;
+            transition: background-color 50000s ease-in-out 0s !important;
+            box-shadow: 0 0 0px 1000px transparent inset !important;
+        }
+    </style>
 </head>
 <body {% if user.is_authenticated %}class="has-sidebar"{% endif %}>
     <!-- Accessibility Skip Link -->
