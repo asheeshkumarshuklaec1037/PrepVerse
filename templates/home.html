@@ -73,19 +73,68 @@
         gap: 50px;
         align-items: center;
     }
+    /* ================= MASTER LIQUID GLASSMORPHISM SYSTEM ================= */
+    .glass-card,
+    .quiz-card,
+    .prep-card,
+    .action-card,
+    .stats-band,
+    .testimonial-card,
+    .device-mockup-frame {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+        backdrop-filter: blur(28px) saturate(190%) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4), 
+                    0 25px 50px rgba(0, 0, 0, 0.5), 
+                    0 0 30px rgba(108, 92, 231, 0.12) !important;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Glass Light Beam Top Specular Highlight */
+    .glass-card::before,
+    .quiz-card::before,
+    .prep-card::before,
+    .action-card::before,
+    .stats-band::before,
+    .testimonial-card::before,
+    .device-mockup-frame::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    /* Hover State: Glass Shimmer Reflection & Neon Ambient Edge Glow */
+    .glass-card:hover,
+    .quiz-card:hover,
+    .prep-card:hover,
+    .action-card:hover,
+    .stats-band:hover,
+    .testimonial-card:hover,
+    .device-mockup-frame:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+        border-color: rgba(139, 124, 240, 0.55) !important;
+        box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.6), 
+                    0 30px 60px rgba(0, 0, 0, 0.65), 
+                    0 0 40px rgba(108, 92, 231, 0.35) !important;
+    }
+
     .device-mockup-frame {
         position: relative;
         border-radius: 24px;
         padding: 12px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(108, 92, 231, 0.15);
         overflow: hidden;
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .device-mockup-frame:hover {
         transform: translateY(-6px) rotate(-0.5deg);
-        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 50px rgba(108, 92, 231, 0.25);
     }
     .device-mockup-frame img {
         width: 100%;
@@ -113,18 +162,20 @@
         gap: 16px;
         padding: 16px 20px;
         border-left: 4px solid #38bdf8;
-        background: rgba(255, 255, 255, 0.02);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
         border-radius: 0 14px 14px 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        border-right: 1px solid rgba(255, 255, 255, 0.04);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        border-right: 1px solid rgba(255, 255, 255, 0.12);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-left-color 0.3s ease, background 0.3s ease;
         cursor: pointer;
     }
     .smarter-prep-item:hover {
         transform: translateX(8px);
         border-left-color: #8b7cf0;
-        background: rgba(139, 124, 240, 0.08);
+        background: rgba(139, 124, 240, 0.15) !important;
     }
     .smarter-prep-item h4 {
         font-family: var(--font-main, 'Inter', sans-serif);
@@ -156,11 +207,8 @@
         gap: 32px;
     }
     .prep-card {
-        background: rgba(18, 19, 28, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 24px;
         padding: 32px;
-        backdrop-filter: blur(20px);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -168,8 +216,6 @@
     }
     .prep-card:hover {
         transform: translateY(-8px);
-        border-color: rgba(139, 124, 240, 0.5);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(108, 92, 231, 0.2);
     }
     .prep-card-img {
         width: 100%;
@@ -318,7 +364,7 @@
         }
     }
 
-    /* ================= HOMEPAGE BLOG SHOWCASE SECTION STYLING ================= */
+    /* ================= HOMEPAGE PREP BLOG SHOWCASE SECTION STYLING ================= */
     .hp-blog-section {
         padding: 90px 5%;
         max-width: 1400px;
@@ -340,6 +386,10 @@
         letter-spacing: -0.02em;
         margin: 8px 0 10px;
     }
+    .hp-blog-head-left h2 em {
+        font-style: italic;
+        color: #38bdf8;
+    }
     .hp-blog-head-left p {
         font-size: 1.02rem;
         color: rgba(255, 255, 255, 0.65);
@@ -355,52 +405,49 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 22px;
-        border-radius: 12px;
-        background: rgba(0, 184, 148, 0.1);
-        border: 1px solid rgba(0, 184, 148, 0.25);
+        padding: 12px 24px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(0, 184, 148, 0.15), rgba(0, 184, 148, 0.05));
+        border: 1px solid rgba(0, 184, 148, 0.3);
+        backdrop-filter: blur(12px);
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .hp-blog-all-btn:hover {
         background: #00b894;
         color: #000;
-        box-shadow: 0 0 25px rgba(0, 184, 148, 0.4);
+        box-shadow: 0 0 30px rgba(0, 184, 148, 0.4);
+        transform: translateY(-2px);
     }
     .hp-blog-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 28px;
+        gap: 32px;
     }
     .hp-blog-card {
-        background: rgba(18, 19, 28, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 24px;
-        overflow: hidden;
-        backdrop-filter: blur(20px);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
-                    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         text-decoration: none;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .hp-blog-card:hover {
         transform: translateY(-8px);
-        border-color: rgba(139, 124, 240, 0.5);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(108, 92, 231, 0.2);
     }
     .hp-blog-thumb {
         position: relative;
-        width: 100%;
-        height: 210px;
+        width: calc(100% - 20px);
+        height: 220px;
         overflow: hidden;
+        border-radius: 18px;
+        margin: 10px 10px 0;
     }
     .hp-blog-thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        border-radius: 18px;
     }
     .hp-blog-card:hover .hp-blog-thumb img {
         transform: scale(1.08);
@@ -410,8 +457,8 @@
         top: 14px;
         left: 14px;
         background: rgba(8, 8, 16, 0.75);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         color: #00b894;
         font-family: var(--font-mono, monospace);
         font-size: 0.72rem;
@@ -422,7 +469,7 @@
         letter-spacing: 0.5px;
     }
     .hp-blog-body {
-        padding: 24px;
+        padding: 24px 22px;
         display: flex;
         flex-direction: column;
         flex: 1;
@@ -434,7 +481,7 @@
         font-weight: 700;
         color: #fff;
         line-height: 1.4;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         transition: color 0.2s ease;
     }
     .hp-blog-card:hover h3 {
@@ -442,9 +489,9 @@
     }
     .hp-blog-card p {
         font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.65);
-        line-height: 1.55;
-        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.68);
+        line-height: 1.6;
+        margin-bottom: 24px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -454,11 +501,28 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-top: 14px;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
         font-family: var(--font-mono, monospace);
         font-size: 0.78rem;
-        color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.55);
+    }
+    .hp-blog-author {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .hp-blog-author .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6c5ce7, #8b7cf0);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .hp-blog-read-link {
         color: #38bdf8;
@@ -466,9 +530,10 @@
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        transition: gap 0.2s ease;
+        transition: gap 0.2s ease, color 0.2s ease;
     }
     .hp-blog-card:hover .hp-blog-read-link {
+        color: #8b7cf0;
         gap: 8px;
     }
 
@@ -570,15 +635,40 @@
         font-weight: 600;
     }
 
-    /* --- OMR quiz card --- */
+    /* Slider specific styles */
+    main { padding-top: 0 !important; overflow: visible !important; } /* Override main padding-top for full viewport hero */
+
+    /* --- OMR quiz card Liquid Glassmorphism --- */
     .quiz-card {
-        background: rgba(12, 12, 28, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 20px;
-        padding: 30px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(25px);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+        backdrop-filter: blur(28px) saturate(190%) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4), 
+                    0 25px 50px rgba(0, 0, 0, 0.5), 
+                    0 0 35px rgba(108, 92, 231, 0.15) !important;
+        border-radius: 24px !important;
+        padding: 32px !important;
         position: relative;
+        overflow: hidden;
+    }
+    .quiz-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+        pointer-events: none;
+        z-index: 2;
+    }
+    .quiz-card:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+        border-color: rgba(139, 124, 240, 0.55) !important;
+        box-shadow: inset 0 1px 2px 0 rgba(255, 255, 255, 0.6), 
+                    0 30px 60px rgba(0, 0, 0, 0.65), 
+                    0 0 40px rgba(108, 92, 231, 0.35) !important;
     }
     .quiz-head {
         display: flex;
@@ -620,40 +710,47 @@
         gap: 12px;
         margin-bottom: 20px;
     }
+    /* Option Pills Liquid Glassmorphism */
     .opt {
         display: flex;
         align-items: center;
         gap: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        padding: 12px 16px;
-        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        border-radius: 14px !important;
+        padding: 14px 18px !important;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+        backdrop-filter: blur(14px) !important;
+        -webkit-backdrop-filter: blur(14px) !important;
+        box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25) !important;
         cursor: pointer;
         font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.8);
-        transition: all 0.2s ease;
+        color: #ffffff !important;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
         text-align: left;
         width: 100%;
         font-family: var(--body);
     }
     .opt:hover:not(:disabled) {
-        border-color: #3b82f6;
-        background: rgba(59, 130, 246, 0.05);
-        color: #fff;
+        border-color: rgba(56, 189, 248, 0.6) !important;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+        color: #fff !important;
+        transform: translateX(4px);
+        box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3) !important;
     }
     .bubble {
-        width: 26px;
-        height: 26px;
-        min-width: 26px;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
         border-radius: 50%;
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
         display: flex;
         align-items: center;
         justify-content: center;
         font-family: var(--mono);
-        font-size: 0.72rem;
+        font-size: 0.75rem;
         font-weight: 700;
-        color: rgba(255, 255, 255, 0.6);
+        color: #ffffff !important;
         transition: all 0.2s;
     }
     .opt.selected .bubble {
@@ -1055,21 +1152,22 @@
     .testimonial-card {
         width: 360px;
         flex-shrink: 0;
-        background: rgba(24, 25, 33, 0.52);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.035) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
         border-radius: 20px;
         padding: 32px 28px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        backdrop-filter: blur(20px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(28px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     .testimonial-card:hover {
         transform: translateY(-8px) !important;
-        border-color: rgba(139, 124, 240, 0.4) !important;
-        box-shadow: 0 20px 40px rgba(139, 124, 240, 0.2), 0 0 25px rgba(108, 92, 231, 0.25) !important;
+        border-color: rgba(139, 124, 240, 0.6) !important;
+        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.5), 0 0 35px rgba(108, 92, 231, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
     }
     .testi-stars {
         display: flex;
@@ -1249,11 +1347,13 @@
         gap: 30px;
     }
     .action-card {
-        background: rgba(12, 12, 28, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.035) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
         border-radius: 24px;
         padding: 35px;
-        backdrop-filter: blur(25px);
+        backdrop-filter: blur(28px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
         display: flex;
         flex-direction: column;
         gap: 15px;
@@ -1263,8 +1363,8 @@
     }
     .action-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 15px 35px rgba(59, 130, 246, 0.1), inset 0 0 20px rgba(59, 130, 246, 0.02);
-        border-color: rgba(59, 130, 246, 0.4);
+        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.5), 0 0 35px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+        border-color: rgba(59, 130, 246, 0.5) !important;
     }
     .action-card:nth-child(2n):hover {
         box-shadow: 0 15px 35px rgba(168, 85, 247, 0.1), inset 0 0 20px rgba(168, 85, 247, 0.02);
@@ -1421,11 +1521,13 @@
 
     /* ---------- STATS ---------- */
     .stats-band {
-        background: rgba(12, 12, 28, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
         border-radius: 30px;
         padding: 50px 40px;
-        backdrop-filter: blur(25px);
+        backdrop-filter: blur(28px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
         margin: 80px auto;
     }
     .stats-grid {
@@ -1565,14 +1667,108 @@
         .stats-grid { grid-template-columns: 1fr; }
         .blog-grid { grid-template-columns: 1fr; }
     }
+
+    /* ================= HIGH-VISIBILITY TECH GRID & VIBRANT GLOW SYSTEM ================= */
+    body {
+        background: #06060a !important;
+        position: relative;
+    }
+
+    /* Fixed Zero-Overflow Ambient Background Wrapper Container */
+    .hp-bg-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden !important;
+    }
+
+    /* Sharper Visible Tech Dot Matrix Grid with Linear Guidelines */
+    .hp-bg-mesh {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background-image: 
+            radial-gradient(rgba(255, 255, 255, 0.14) 1.2px, transparent 1.2px),
+            linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 32px 32px, 64px 64px, 64px 64px;
+        pointer-events: none;
+    }
+
+    /* Vibrant Glowing Color Orbs (Much Brighter & Sharper) */
+    .glow {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -1;
+        will-change: transform;
+        animation: orbFloat 16s ease-in-out infinite alternate;
+    }
+    
+    /* Hero Area - Deep Purple & Electric Violet Node */
+    .glow-1 {
+        top: 0%;
+        left: -5vw;
+        width: 55vw;
+        height: 55vw;
+        background: radial-gradient(circle, rgba(124, 92, 255, 0.45) 0%, rgba(108, 92, 231, 0.2) 45%, transparent 70%);
+        filter: blur(80px);
+    }
+
+    /* Courses & Slider Area - Vibrant Electric Cyan Node */
+    .glow-2 {
+        top: 30%;
+        right: -5vw;
+        width: 50vw;
+        height: 50vw;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.42) 0%, rgba(14, 165, 233, 0.18) 45%, transparent 70%);
+        filter: blur(85px);
+        animation-delay: -5s;
+    }
+
+    /* Mid Feature Sections - Glowing Emerald & Turquoise Node */
+    .glow-3 {
+        top: 60%;
+        left: -5vw;
+        width: 50vw;
+        height: 50vw;
+        background: radial-gradient(circle, rgba(42, 245, 152, 0.38) 0%, rgba(0, 184, 148, 0.16) 45%, transparent 70%);
+        filter: blur(85px);
+        animation-delay: -10s;
+    }
+
+    /* Testimonials & Footer Area - Vibrant Magenta & Indigo Node */
+    .glow-4 {
+        bottom: 0;
+        right: -2vw;
+        width: 55vw;
+        height: 55vw;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, rgba(139, 124, 240, 0.18) 45%, transparent 70%);
+        filter: blur(90px);
+        animation-delay: -3s;
+    }
+
+    @keyframes orbFloat {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(40px, -35px) scale(1.1); }
+        100% { transform: translate(-30px, 35px) scale(0.92); }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Background Glows -->
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
-<div class="glow glow-3"></div>
+<!-- Fixed Ambient Background Container (Strict Zero-Overflow Guarantee) -->
+<div class="hp-bg-wrapper">
+  <div class="hp-bg-mesh"></div>
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="glow glow-3"></div>
+  <div class="glow glow-4"></div>
+</div>
 
 <div class="as-slider" id="mainSlider">
     <div class="as-slider-background">
@@ -1999,47 +2195,73 @@
   </div>
 </div>
 
-<!-- Blog Section -->
-<section class="section" id="blog">
-  <div class="section-head">
-    <span class="section-tag">Prep Blog</span>
-    <h2>Latest Insights &amp; Shortcut Strategies</h2>
-    <p>Handcrafted shortcuts, placement test reports, and exam analysis written directly by mentors.</p>
+<!-- Prep Blog Section (Modern Liquid Glassmorphism) -->
+<section class="hp-blog-section" id="blog">
+  <div class="hp-blog-head reveal reveal-delay-1">
+    <div class="hp-blog-head-left">
+      <span class="section-tag" style="background: rgba(139, 124, 240, 0.12); color: #8b7cf0; border: 1px solid rgba(139, 124, 240, 0.3); padding: 6px 14px; border-radius: 99px; font-family: var(--font-mono, monospace); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-bottom: 12px;">⚡ Prep Blog</span>
+      <h2>Latest Insights &amp; <em style="font-style: normal; background: linear-gradient(90deg, #38bdf8, #8b7cf0); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Shortcut Strategies</em></h2>
+      <p>Handcrafted 10-second calculation shortcuts, placement test reports, and exam analysis written directly by top mentors.</p>
+    </div>
+    <a href="{% url 'blog' %}" class="hp-blog-all-btn">
+      Explore All Articles →
+    </a>
   </div>
   
-  <div class="blog-grid">
-    <div class="blog-card">
-      <div class="thumb">
-        <span class="badge">Shortcuts</span>
+  <div class="hp-blog-grid">
+    <a href="{% url 'blog' %}" class="hp-blog-card glass-card reveal reveal-delay-1">
+      <div class="hp-blog-thumb">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&amp;fit=crop&amp;w=600" alt="10 Quantitative Aptitude Hacks" loading="lazy">
+        <span class="hp-blog-category">Shortcuts</span>
       </div>
-      <div class="body">
-        <h4>10 Quantitative Aptitude Hacks You Must Know</h4>
+      <div class="hp-blog-body">
+        <h3>10 Quantitative Aptitude Hacks You Must Know</h3>
         <p>Master percentage calculations, ratio shortcuts, and equations solving tricks to shave off precious seconds during mock sessions.</p>
-        <span class="meta">5 min read · By Admin</span>
+        <div class="hp-blog-footer">
+          <div class="hp-blog-author">
+            <span class="avatar">AD</span>
+            <span>5 min read · By Admin</span>
+          </div>
+          <span class="hp-blog-read-link">Read Hack →</span>
+        </div>
       </div>
-    </div>
+    </a>
     
-    <div class="blog-card">
-      <div class="thumb" style="background: linear-gradient(135deg, #a855f7, #ec4899);">
-        <span class="badge">Logical Reasoning</span>
+    <a href="{% url 'blog' %}" class="hp-blog-card glass-card reveal reveal-delay-2">
+      <div class="hp-blog-thumb">
+        <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&amp;fit=crop&amp;w=600" alt="Cracking Syllabus Seating Arrangement Puzzles" loading="lazy">
+        <span class="hp-blog-category" style="color: #a855f7; border-color: rgba(168, 85, 247, 0.4);">Logical Reasoning</span>
       </div>
-      <div class="body">
-        <h4>Cracking Syllabus Seating Arrangement Puzzles</h4>
+      <div class="hp-blog-body">
+        <h3>Cracking Syllabus Seating Arrangement Puzzles</h3>
         <p>A step-by-step breakdown of circular and linear arrangements with easy notation methods that prevent silly placement mistakes.</p>
-        <span class="meta">8 min read · By Placement Cell</span>
+        <div class="hp-blog-footer">
+          <div class="hp-blog-author">
+            <span class="avatar" style="background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;">PC</span>
+            <span>8 min read · By Placement Cell</span>
+          </div>
+          <span class="hp-blog-read-link" style="color: #a855f7;">Read Breakdown →</span>
+        </div>
       </div>
-    </div>
+    </a>
     
-    <div class="blog-card">
-      <div class="thumb" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
-        <span class="badge">Placement Guide</span>
+    <a href="{% url 'blog' %}" class="hp-blog-card glass-card reveal reveal-delay-3">
+      <div class="hp-blog-thumb">
+        <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&amp;fit=crop&amp;w=600" alt="What Companies Look For In Aptitude Tests" loading="lazy">
+        <span class="hp-blog-category" style="color: #10b981; border-color: rgba(16, 185, 129, 0.4);">Placement Guide</span>
       </div>
-      <div class="body">
-        <h4>What Companies Look For In Aptitude Tests</h4>
+      <div class="hp-blog-body">
+        <h3>What Companies Look For In Aptitude Tests</h3>
         <p>An inside look at placement assessment criteria from top hiring recruiters, and how percentile scores influence shortlistings.</p>
-        <span class="meta">6 min read · By HR Team</span>
+        <div class="hp-blog-footer">
+          <div class="hp-blog-author">
+            <span class="avatar" style="background:linear-gradient(135deg,#10b981,#3b82f6);color:#fff;">HR</span>
+            <span>6 min read · By HR Team</span>
+          </div>
+          <span class="hp-blog-read-link" style="color: #10b981;">Read Guide →</span>
+        </div>
       </div>
-    </div>
+    </a>
   </div>
 </section>
 
