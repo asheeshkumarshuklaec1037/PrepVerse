@@ -59,6 +59,425 @@
         to { opacity: 1; }
     }
 
+    /* ================= NEW HOME SECTIONS STYLING ================= */
+
+    /* Section 1: Smarter Preparation (Split Feature Showcase) */
+    .smarter-prep-section {
+        padding: 90px 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .smarter-prep-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 50px;
+        align-items: center;
+    }
+    .device-mockup-frame {
+        position: relative;
+        border-radius: 24px;
+        padding: 12px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6), 0 0 40px rgba(108, 92, 231, 0.15);
+        overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .device-mockup-frame:hover {
+        transform: translateY(-6px) rotate(-0.5deg);
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), 0 0 50px rgba(108, 92, 231, 0.25);
+    }
+    .device-mockup-frame img {
+        width: 100%;
+        height: auto;
+        border-radius: 16px;
+        display: block;
+    }
+    .smarter-prep-content h2 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.15;
+        margin-bottom: 30px;
+        letter-spacing: -0.02em;
+    }
+    .smarter-prep-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .smarter-prep-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        border-left: 4px solid #38bdf8;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 0 14px 14px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        border-right: 1px solid rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-left-color 0.3s ease, background 0.3s ease;
+        cursor: pointer;
+    }
+    .smarter-prep-item:hover {
+        transform: translateX(8px);
+        border-left-color: #8b7cf0;
+        background: rgba(139, 124, 240, 0.08);
+    }
+    .smarter-prep-item h4 {
+        font-family: var(--font-main, 'Inter', sans-serif);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        margin: 0;
+    }
+
+    /* Section 2: Master Your Preparation (Dual Cards Grid) */
+    .master-prep-section {
+        padding: 80px 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .master-prep-head {
+        margin-bottom: 40px;
+    }
+    .master-prep-head h2 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.02em;
+    }
+    .master-prep-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+    .prep-card {
+        background: rgba(18, 19, 28, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 32px;
+        backdrop-filter: blur(20px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .prep-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(139, 124, 240, 0.5);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(108, 92, 231, 0.2);
+    }
+    .prep-card-img {
+        width: 100%;
+        height: 240px;
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+    .prep-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .prep-card:hover .prep-card-img img {
+        transform: scale(1.06);
+    }
+    .prep-card h3 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 12px;
+    }
+    .prep-card p {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.68);
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+    .prep-card-link {
+        font-family: var(--font-mono, monospace);
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #38bdf8;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: gap 0.2s ease, color 0.2s ease;
+    }
+    .prep-card:hover .prep-card-link {
+        color: #8b7cf0;
+        gap: 10px;
+    }
+
+    /* Section 3: Master Your Performance (Analytics Deep-Dive) */
+    .master-perf-section {
+        padding: 100px 5%;
+        background: linear-gradient(180deg, rgba(8, 8, 16, 0.9) 0%, rgba(13, 14, 25, 0.95) 100%);
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        margin: 60px 0;
+    }
+    .master-perf-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 50px;
+        align-items: center;
+    }
+    .master-perf-content h2 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.15;
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
+    }
+    .master-perf-content p {
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.72);
+        line-height: 1.7;
+        margin-bottom: 30px;
+    }
+
+    /* Section 4: Challenge & Leaderboard */
+    .challenge-lb-section {
+        padding: 90px 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .challenge-lb-head {
+        margin-bottom: 40px;
+    }
+    .challenge-lb-head h2 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.02em;
+        margin-bottom: 10px;
+    }
+    .challenge-lb-head p {
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.65);
+        max-width: 650px;
+    }
+    .challenge-lb-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+    .challenge-lb-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 36px;
+        backdrop-filter: blur(16px);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .challenge-lb-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(0, 184, 148, 0.4);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(0, 184, 148, 0.15);
+    }
+    .challenge-lb-card h3 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 14px;
+    }
+    .challenge-lb-card p {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.68);
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+
+    @media (max-width: 960px) {
+        .smarter-prep-grid,
+        .master-prep-grid,
+        .master-perf-container,
+        .challenge-lb-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        .smarter-prep-content h2,
+        .master-prep-head h2,
+        .master-perf-content h2,
+        .challenge-lb-head h2 {
+            font-size: 2.2rem;
+        }
+    }
+
+    /* ================= HOMEPAGE BLOG SHOWCASE SECTION STYLING ================= */
+    .hp-blog-section {
+        padding: 90px 5%;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .hp-blog-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 44px;
+    }
+    .hp-blog-head-left h2 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.02em;
+        margin: 8px 0 10px;
+    }
+    .hp-blog-head-left p {
+        font-size: 1.02rem;
+        color: rgba(255, 255, 255, 0.65);
+        max-width: 620px;
+        line-height: 1.6;
+    }
+    .hp-blog-all-btn {
+        font-family: var(--font-mono, monospace);
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #00b894;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 22px;
+        border-radius: 12px;
+        background: rgba(0, 184, 148, 0.1);
+        border: 1px solid rgba(0, 184, 148, 0.25);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hp-blog-all-btn:hover {
+        background: #00b894;
+        color: #000;
+        box-shadow: 0 0 25px rgba(0, 184, 148, 0.4);
+    }
+    .hp-blog-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+    }
+    .hp-blog-card {
+        background: rgba(18, 19, 28, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        overflow: hidden;
+        backdrop-filter: blur(20px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        text-decoration: none;
+    }
+    .hp-blog-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(139, 124, 240, 0.5);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(108, 92, 231, 0.2);
+    }
+    .hp-blog-thumb {
+        position: relative;
+        width: 100%;
+        height: 210px;
+        overflow: hidden;
+    }
+    .hp-blog-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hp-blog-card:hover .hp-blog-thumb img {
+        transform: scale(1.08);
+    }
+    .hp-blog-category {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(8, 8, 16, 0.75);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #00b894;
+        font-family: var(--font-mono, monospace);
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 99px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .hp-blog-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        justify-content: space-between;
+    }
+    .hp-blog-card h3 {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.4;
+        margin-bottom: 10px;
+        transition: color 0.2s ease;
+    }
+    .hp-blog-card:hover h3 {
+        color: #8b7cf0;
+    }
+    .hp-blog-card p {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.55;
+        margin-bottom: 20px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .hp-blog-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-family: var(--font-mono, monospace);
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .hp-blog-read-link {
+        color: #38bdf8;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: gap 0.2s ease;
+    }
+    .hp-blog-card:hover .hp-blog-read-link {
+        gap: 8px;
+    }
+
+    @media (max-width: 960px) {
+        .hp-blog-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
     /* ---------- HERO & QUIZ CARD ---------- */
     .hero {
         max-width: 1400px;
@@ -1237,22 +1656,58 @@
   </div>
 </section>
 
-<section class="access-band">
-  <div class="access-grid">
-    <div class="access-step reveal reveal-delay-1">
-      <span class="access-num">01</span>
-      <h4>Browse everything, no account</h4>
-      <p>Courses, daily challenge, practice arena and the blog are open the moment you land — nothing is gated.</p>
+<!-- Section 1: Smarter Preparation (Split Feature Showcase) -->
+<section class="smarter-prep-section">
+  <div class="smarter-prep-grid">
+    <div class="device-mockup-frame reveal reveal-delay-1">
+      <img src="{% static 'images/smarter_prep_tablet.jpg' %}" alt="Smarter Preparation Tablet Mockup" loading="lazy">
     </div>
-    <div class="access-step reveal reveal-delay-2">
-      <span class="access-num">02</span>
-      <h4>Attempt a mock test</h4>
-      <p>The first three are free, so you can see exactly how a mock test works. A quick login saves your attempt.</p>
+    <div class="smarter-prep-content reveal reveal-delay-2">
+      <h2>Smarter<br>Preparation</h2>
+      <div class="smarter-prep-list">
+        <div class="smarter-prep-item">
+          <h4>AI-Powered Analytics</h4>
+        </div>
+        <div class="smarter-prep-item">
+          <h4>Dynamic Daily Challenges</h4>
+        </div>
+        <div class="smarter-prep-item">
+          <h4>Real-Time Performance Tracking</h4>
+        </div>
+        <div class="smarter-prep-item">
+          <h4>Expert-Driven Content</h4>
+        </div>
+      </div>
     </div>
-    <div class="access-step reveal reveal-delay-3">
-      <span class="access-num">03</span>
-      <h4>Unlock your analysis &amp; rank</h4>
-      <p>Right after submitting, your sectional breakdown, percentile and leaderboard position appear — tied to your account.</p>
+  </div>
+</section>
+
+<!-- Section 2: Master Your Preparation (Dual Cards Grid) -->
+<section class="master-prep-section">
+  <div class="master-prep-head reveal reveal-delay-1">
+    <h2>Master Your<br>Preparation</h2>
+  </div>
+  <div class="master-prep-grid">
+    <div class="prep-card reveal reveal-delay-1">
+      <div class="prep-card-img">
+        <img src="{% static 'images/topic_mastery_tablet.jpg' %}" alt="Topic-Wise Mastery" loading="lazy">
+      </div>
+      <div>
+        <h3>Topic-Wise Mastery</h3>
+        <p>Deep-dive into specific subjects with our structured curriculum designed for maximum retention and performance.</p>
+        <a href="{% url 'courses' %}" class="prep-card-link">Explore Courses →</a>
+      </div>
+    </div>
+
+    <div class="prep-card reveal reveal-delay-2">
+      <div class="prep-card-img">
+        <img src="{% static 'images/mock_test_laptop.jpg' %}" alt="Realistic Mock Tests" loading="lazy">
+      </div>
+      <div>
+        <h3>Realistic Mock Tests</h3>
+        <p>Simulate the real exam environment with our high-fidelity mock tests to build stamina and refine your time management.</p>
+        <a href="{% url 'mock_test' %}" class="prep-card-link">Take a Test →</a>
+      </div>
     </div>
   </div>
 </section>
@@ -1316,46 +1771,18 @@
   </div>
 </section>
 
-<section class="compare-band" id="compare">
-  <div class="section">
-    <div class="section-head reveal reveal-delay-1">
-      <span class="section-tag">Transparent, always</span>
-      <h2>What needs a login, what doesn't</h2>
-      <p>Only one thing on PrepVerse ever asks you to sign in: attempting a mock test. Everything else stays open.</p>
+<!-- Section 3: Master Your Performance (Analytics Deep-Dive) -->
+<section class="master-perf-section">
+  <div class="master-perf-container">
+    <div class="device-mockup-frame reveal reveal-delay-1">
+      <img src="{% static 'images/performance_analytics_3d.jpg' %}" alt="Master Your Performance Analytics" loading="lazy">
     </div>
-    <div class="compare-grid">
-      <div class="compare-col reveal reveal-delay-1">
-        <span class="col-kicker">Step 1</span>
-        <h3>Just Browsing</h3>
-        <p class="price">₹0 · no account</p>
-        <ul>
-          <li>Daily challenge questions</li>
-          <li>All structured courses &amp; concept notes</li>
-          <li>Unlimited topic-wise practice questions</li>
-        </ul>
-      </div>
-      
-      <div class="compare-col recommended reveal reveal-delay-2">
-        <span class="col-kicker">Step 2</span>
-        <h3>Taking a Test</h3>
-        <p class="price">₹0 · requires login</p>
-        <ul>
-          <li>Attempt first 3 mock tests for free</li>
-          <li>Simulated exam timer and rules</li>
-          <li>Leaderboard position &amp; rank mapping</li>
-        </ul>
-      </div>
-
-      <div class="compare-col premium reveal reveal-delay-3">
-        <span class="col-kicker">Step 3</span>
-        <h3>Unlocking Stats</h3>
-        <p class="price">₹999 / year · premium</p>
-        <ul>
-          <li>Access to all proctored mock tests</li>
-          <li>Detailed sectional weak-spot diagnostics</li>
-          <li>Percentile analysis reports</li>
-        </ul>
-      </div>
+    <div class="master-perf-content reveal reveal-delay-2">
+      <h2>Master Your<br>Performance</h2>
+      <p>Gain deep insights into your preparation journey with our advanced analytics. Track your progress, identify weak areas, and optimize your study strategy with real-time performance data.</p>
+      <a href="{% url 'solved_questions' %}" class="btn-brand" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:14px 28px; border-radius:12px; background:#38bdf8; color:#000; font-weight:700; font-family:var(--font-mono, monospace);">
+        View Performance Analytics →
+      </a>
     </div>
   </div>
 </section>
