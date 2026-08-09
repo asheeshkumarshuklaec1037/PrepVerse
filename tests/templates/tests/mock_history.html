@@ -61,20 +61,183 @@
   .lift{transition:transform .18s ease, border-color .18s ease;}
   .lift:hover{transform:translateY(-2px);border-color:var(--border-hi);}
 
-  .reveal{opacity:0;transform:translateY(20px);animation:revealUp .6s cubic-bezier(.16,.84,.44,1) forwards;}
-  @keyframes revealUp{to{opacity:1;transform:translateY(0);}}
-  @media (prefers-reduced-motion: reduce){ .reveal{opacity:1;transform:none;animation:none;} }
+  /* Scroll Reveal Animation Styles (Matching Mock Test Arena) */
+  .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+  }
+  .reveal-on-scroll.is-visible {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+  }
 
-  .wrap{width:100%;max-width:1320px;margin:0 auto;padding:32px 24px 0;position:relative;z-index:1;box-sizing:border-box;overflow-x:hidden;}
+  /* Staggered delay helpers */
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+  @media (prefers-reduced-motion: reduce){ .reveal-on-scroll{opacity:1;transform:none;transition:none;} }
+
+  .wrap{width:100%;max-width:1320px;margin:15px auto 0;padding:0 24px 0;position:relative;z-index:10;box-sizing:border-box;overflow-x:hidden;}
   .eyebrow{font-family:var(--f-mono);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);}
 
-  /* ---------- Header ---------- */
-  .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px;width:100%;box-sizing:border-box;}
-  .page-head h1{font-family:var(--f-display);font-size:1.7rem;font-weight:600;letter-spacing:-.01em;margin-top:4px;}
-  .page-head p{color:var(--text-3);font-size:.83rem;margin-top:5px;max-width:480px;line-height:1.55;}
-  .schedule-link{font-size:.78rem;font-weight:700;color:var(--accent-2);display:flex;align-items:center;gap:7px;
-    border:1px solid var(--accent-border);background:var(--accent-soft);padding:9px 16px;border-radius:10px;white-space:nowrap;margin-top:6px;}
-  .schedule-link:hover{background:var(--accent);color:#fff;}
+  main { padding-top: 0 !important; }
+
+  /* ============ HERO SECTION (Full Viewport Width Edge-To-Edge with Bottom Fade) ============ */
+  .hero {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 360px;
+    padding: 115px 24px 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 0;
+    background: #08080b;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at center, transparent 20%, rgba(8,8,11,0.7) 70%),
+                linear-gradient(to bottom, rgba(8,8,11,0.5) 0%, transparent 25%, rgba(8,8,11,0.85) 75%, #08080b 100%);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .hero-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.38;
+    filter: brightness(0.5) contrast(1.1);
+    z-index: 1;
+    animation: subtleZoom 20s ease-in-out infinite alternate;
+  }
+  @keyframes subtleZoom {
+    from { transform: scale(1.05); filter: brightness(0.5); }
+    to { transform: scale(1.15); filter: brightness(0.5); }
+  }
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 820px;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    padding: 12px 28px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.45) 0%, rgba(42, 245, 152, 0.2) 100%);
+    border: 1px solid rgba(139, 124, 240, 0.5);
+    color: #ffffff;
+    font-family: var(--f-mono);
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 25px rgba(108, 92, 231, 0.3);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-cta-btn:hover {
+    background: linear-gradient(135deg, #6c5ce7 0%, #2af598 100%);
+    color: #08080b;
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 15px 35px rgba(42, 245, 152, 0.4);
+  }
+  .hero-cta-btn i {
+    color: #2af598;
+    transition: color 0.35s ease;
+  }
+  .hero-cta-btn:hover i {
+    color: #08080b;
+  }
+  .hero-tag {
+    display: inline-block;
+    padding: 5px 18px;
+    background: rgba(42, 245, 152, 0.12);
+    color: #2af598;
+    border: 1px solid rgba(42, 245, 152, 0.3);
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: var(--f-mono);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: var(--f-display);
+    font-size: 3.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -1.5px;
+    color: #ffffff;
+    margin-bottom: 14px;
+    background: linear-gradient(180deg, #ffffff 40%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 1.15rem;
+    opacity: 0.82;
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 680px;
+    margin: 0 auto;
+    color: var(--text-1);
+  }
+  .hero-back-link {
+    position: absolute;
+    top: 95px;
+    left: 4%;
+    z-index: 12;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.76rem;
+    font-family: var(--f-mono);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hero-back-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(-4px);
+  }
+
+  @media (max-width: 768px) {
+    .hero { height: 300px; border-radius: 20px; }
+    .hero h1 { font-size: 2.2rem; letter-spacing: -0.5px; }
+    .hero p { font-size: 0.95rem; }
+    .hero-back-link { top: 16px; left: 16px; font-size: 0.68rem; }
+  }
 
   /* ---------- Scope filter — always-visible, always-labeled ---------- */
   .scope-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:22px;width:100%;box-sizing:border-box;}
@@ -247,17 +410,22 @@
 {% block content %}
 <div class="orb-field" aria-hidden="true"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
 
-<div class="wrap">
-
-  <!-- ============ HEADER ============ -->
-  <div class="page-head reveal">
-    <div>
-      <div class="eyebrow">Your history, in one place</div>
-      <h1>Test Performance</h1>
-      <p>Every attempt you've made, how it's trending, and exactly where to focus next.</p>
-    </div>
-    <a href="{% url 'all_tests' %}" class="schedule-link"><i class="fa-solid fa-layer-group"></i> Explore All Tests Library</a>
+<!-- ============ HERO SECTION (Full Viewport Width Edge-To-Edge) ============ -->
+<section class="hero reveal-on-scroll reveal-delay-1">
+  <a href="{% url 'dashboard' %}" class="hero-back-link">
+    <i class="fa-solid fa-arrow-left"></i> BACK TO DASHBOARD
+  </a>
+  <img src="{% static 'images/performance_analytics_3d.jpg' %}" alt="Test Performance Background" class="hero-bg" loading="lazy">
+  <div class="hero-content">
+    <h1>TEST PERFORMANCE</h1>
+    <p>Every attempt you've made, how it's trending, and exactly where to focus next.</p>
+    <a href="{% url 'mock_test' %}" class="hero-cta-btn">
+      <i class="fa-solid fa-fire-flame-curved"></i> Explore All Mock Tests Library →
+    </a>
   </div>
+</section>
+
+<div class="wrap">
 
 
   <!-- ============ SCOPE FILTER — always labeled, defaults to everything ============ -->
@@ -272,7 +440,7 @@
 
   <!-- ============ OVERVIEW BENTO ============ -->
   <div class="bento">
-    <div class="surface metrics-card lift reveal">
+    <div class="surface metrics-card lift reveal-on-scroll reveal-delay-1">
       <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Overall Metrics <span style="font-size:.68rem;color:var(--text-3);font-weight:500;margin-left:auto;" id="metricsScopeLabel">All Tests</span></div>
       <div class="radial-row">
         <div class="radial">
@@ -288,7 +456,7 @@
       <div class="metric-row"><span>Best mock score</span><b id="bestScore">0/40</b></div>
     </div>
 
-    <div class="surface trend-card lift reveal">
+    <div class="surface trend-card lift reveal-on-scroll reveal-delay-2">
       <div class="card-title"><i class="fa-solid fa-chart-line"></i> Score Progression</div>
       <svg viewBox="0 0 560 170" style="width:100%;height:auto;">
         <line x1="0" y1="30" x2="560" y2="30" stroke="rgba(255,255,255,.05)"/>
@@ -305,13 +473,13 @@
   </div>
 
   <!-- ============ ATTEMPTED TESTS — the one place you pick an attempt ============ -->
-  <div class="sec-head reveal">
+  <div class="sec-head reveal-on-scroll reveal-delay-2">
     <div><h2>Attempted Tests</h2><div class="sec-sub">Tap any test to load its full analysis below</div></div>
   </div>
-  <div class="attempts-track reveal" id="attemptsTrack"></div>
+  <div class="attempts-track reveal-on-scroll reveal-delay-3" id="attemptsTrack"></div>
 
   <!-- ============ ANALYSIS PANEL ============ -->
-  <div class="surface analysis-panel reveal" id="analysisPanel">
+  <div class="surface analysis-panel reveal-on-scroll reveal-delay-3" id="analysisPanel">
     <div class="analysis-head">
       <div>
         <h3 id="analysisTitle">—</h3>
@@ -1486,10 +1654,23 @@ function saveSchedule() {
 renderScope();
 
 
-// staggered reveal for initial page elements
-let revealIndex = 0;
-document.querySelectorAll('.wrap > .reveal, .bento .reveal').forEach(el => {
-  el.style.animationDelay = (revealIndex++ * 70) + 'ms';
+document.addEventListener("DOMContentLoaded", () => {
+    // Scroll Reveal Intersection Observer (Matching Mock Test Arena)
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        revealObserver.observe(el);
+    });
 });
 </script>
 {% endblock %}
