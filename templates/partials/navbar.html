@@ -1,9 +1,38 @@
 {% load static %}
+<script>
+  window._lastSidebarToggleTime = 0;
+  window.togglePrepVerseSidebar = function(e) {
+    var now = Date.now();
+    if (now - window._lastSidebarToggleTime < 450) {
+      if (e) { if (e.cancelable) e.preventDefault(); e.stopPropagation(); }
+      return false;
+    }
+    window._lastSidebarToggleTime = now;
+
+    if (e) {
+      if (e.type === 'touchstart' && e.cancelable) { e.preventDefault(); }
+      e.stopPropagation();
+    }
+    var sidebar = document.getElementById('sidebarMenu');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) sidebar.classList.toggle('active');
+    if (overlay) overlay.classList.toggle('active');
+    return false;
+  };
+
+  window.closePrepVerseSidebar = function(e) {
+    if (e) { e.stopPropagation(); }
+    var sidebar = document.getElementById('sidebarMenu');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) sidebar.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+  };
+</script>
+
 <nav class="navbar" id="navbar">
     <div style="display: flex; align-items: center; gap: 12px;">
-        <div class="sidebar-hover-trigger {% if not user.is_authenticated %}mobile-only-trigger{% endif %}" id="sidebarHoverTrigger" role="button" aria-label="Open Navigation Menu" tabindex="0" title="Menu">
-            <i class="fas fa-bars"></i>
-            <span class="mobile-trigger-text">Menu</span>
+        <div class="sidebar-hover-trigger" id="sidebarHoverTrigger" role="button" aria-label="Open Navigation Menu" tabindex="0" onclick="togglePrepVerseSidebar(event)" ontouchstart="togglePrepVerseSidebar(event)">
+            <i class="fa-solid fa-bars-staggered"></i>
         </div>
         
         <a href="{% url 'home' %}" class="logo" aria-label="PrepVerse Home">

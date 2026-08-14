@@ -1,4 +1,34 @@
-// Global UI Interactivity Script for PrepVerse
+// Global Sidebar Toggle Handlers (Immune to Mobile Event Timing Delays)
+window.togglePrepVerseSidebar = function(e) {
+    if (e) {
+        if (e.type === 'touchstart' && e.cancelable) {
+            e.preventDefault();
+        }
+        e.stopPropagation();
+    }
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) {
+        sidebar.classList.toggle('active');
+    }
+    if (overlay) {
+        overlay.classList.toggle('active');
+    }
+};
+
+window.closePrepVerseSidebar = function(e) {
+    if (e) {
+        if (e.type === 'touchstart' && e.cancelable) {
+            e.preventDefault();
+        }
+        e.stopPropagation();
+    }
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) sidebar.classList.remove('active');
+    if (overlay) overlay.classList.remove('active');
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Set active nav link dynamically
     document.querySelectorAll('.nav-links a').forEach(link => {
@@ -25,44 +55,80 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. Sidebar Hover Toggle Logic
+    // 3. Sidebar Desktop Hover & Outside Click Logic (Harmonized with inline HTML handlers)
     const sidebarTrigger = document.getElementById('sidebarHoverTrigger');
     const sidebarMenu = document.getElementById('sidebarMenu');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
     
     if (sidebarTrigger && sidebarMenu) {
+        let hoverTimer = null;
+
         const openSidebar = () => {
-            clearTimeout(closeTimeout);
-            sidebarMenu.classList.add('active-hover');
+            if (hoverTimer) clearTimeout(hoverTimer);
+            sidebarMenu.classList.add('active');
+            if (sidebarOverlay) sidebarOverlay.classList.add('active');
         };
-        
+
         const closeSidebar = () => {
-            closeTimeout = setTimeout(() => {
-                sidebarMenu.classList.remove('active-hover');
-            }, 300);
+            if (hoverTimer) clearTimeout(hoverTimer);
+            sidebarMenu.classList.remove('active');
+            if (sidebarOverlay) sidebarOverlay.classList.remove('active');
         };
 
-        const toggleSidebar = (e) => {
-            e.stopPropagation();
-            sidebarMenu.classList.toggle('active-hover');
+        const handleHoverIn = () => {
+            if (window.innerWidth > 992) {
+                openSidebar();
+            }
         };
 
-        sidebarTrigger.addEventListener('mouseenter', openSidebar);
-        sidebarTrigger.addEventListener('mouseleave', closeSidebar);
-        sidebarTrigger.addEventListener('click', toggleSidebar);
-        sidebarTrigger.addEventListener('touchstart', toggleSidebar, { passive: true });
-        
-        sidebarMenu.addEventListener('mouseenter', openSidebar);
-        sidebarMenu.addEventListener('mouseleave', closeSidebar);
+        const handleHoverOut = () => {
+            if (window.innerWidth > 992) {
+                hoverTimer = setTimeout(() => {
+                    if (!sidebarMenu.matches(':hover') && !sidebarTrigger.matches(':hover')) {
+                        closeSidebar();
+                    }
+                }, 350);
+            }
+        };
 
-        document.addEventListener('click', (e) => {
-            if (!sidebarMenu.contains(e.target) && !sidebarTrigger.contains(e.target)) {
-                sidebarMenu.classList.remove('active-hover');
+        // Check desktop hover on page load
+        if (window.innerWidth > 992 && (sidebarTrigger.matches(':hover') || sidebarMenu.matches(':hover'))) {
+            openSidebar();
+        }
+
+        // Hover support for Desktop mouse users
+        sidebarTrigger.addEventListener('mouseenter', handleHoverIn);
+        sidebarTrigger.addEventListener('mouseover', handleHoverIn);
+        sidebarTrigger.addEventListener('mousemove', () => {
+            if (window.innerWidth > 992 && !sidebarMenu.classList.contains('active')) {
+                openSidebar();
+            }
+        });
+        sidebarTrigger.addEventListener('mouseleave', handleHoverOut);
+
+        sidebarMenu.addEventListener('mouseenter', () => {
+            if (window.innerWidth > 992 && hoverTimer) {
+                clearTimeout(hoverTimer);
             }
         });
 
+        sidebarMenu.addEventListener('mouseleave', handleHoverOut);
+
+        // Click outside closes sidebar
+        document.addEventListener('click', (e) => {
+            var now = Date.now();
+            if (now - (window._lastSidebarToggleTime || 0) < 450) return;
+            if (sidebarMenu.classList.contains('active')) {
+                if (!sidebarMenu.contains(e.target) && !sidebarTrigger.contains(e.target)) {
+                    closeSidebar();
+                }
+            }
+        });
+
+        // ESC key closes sidebar
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                sidebarMenu.classList.remove('active-hover');
+                closeSidebar();
                 if (dropdownMenu) dropdownMenu.classList.remove('show');
             }
         });

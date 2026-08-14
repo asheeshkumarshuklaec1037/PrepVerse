@@ -1,15 +1,35 @@
 /* Modern Floating Overlay Sidebar Styles */
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    z-index: 999998 !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.sidebar-overlay.active,
+.sidebar-overlay.is-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
 .sidebar-menu {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     width: var(--sidebar-width);
-    background: rgba(10, 10, 15, 0.55) !important;
+    background: rgba(10, 10, 15, 0.92) !important;
     border-right: 1px solid var(--border-glass);
     backdrop-filter: blur(35px) saturate(220%) !important;
     -webkit-backdrop-filter: blur(35px) saturate(220%) !important;
-    z-index: 2200;
+    z-index: 999999 !important;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -17,11 +37,39 @@
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     overflow-x: hidden;
     box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+    pointer-events: auto !important;
 }
 
-.sidebar-menu.active-hover {
-    transform: translateX(0);
+.sidebar-menu.active,
+.sidebar-menu.active-hover,
+.sidebar-menu.is-open {
+    transform: translateX(0) !important;
     box-shadow: 15px 0 50px rgba(0,0,0,0.7);
+}
+
+/* Pure CSS Hover Trigger for Desktop */
+@media (min-width: 993px) {
+    body:has(.sidebar-hover-trigger:hover) .sidebar-menu,
+    body:has(.sidebar-hover-trigger:hover) .sidebar-overlay,
+    .sidebar-menu:hover {
+        transform: translateX(0) !important;
+        box-shadow: 15px 0 50px rgba(0,0,0,0.7) !important;
+    }
+
+    body:has(.sidebar-hover-trigger:hover) .sidebar-overlay {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
+
+    body:has(.sidebar-hover-trigger:hover) .sidebar-menu .sidebar-link span,
+    body:has(.sidebar-hover-trigger:hover) .sidebar-menu .sidebar-user-info,
+    body:has(.sidebar-hover-trigger:hover) .sidebar-menu .sidebar-brand span,
+    .sidebar-menu:hover .sidebar-link span,
+    .sidebar-menu:hover .sidebar-user-info,
+    .sidebar-menu:hover .sidebar-brand span {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
 }
 
 @media (max-width: 768px) {
@@ -31,56 +79,53 @@
     }
 }
 
-/* Sidebar hover trigger in Navbar */
+/* Sidebar hover trigger button styling in Navbar */
 .sidebar-hover-trigger {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 0 10px;
-    width: auto;
-    min-width: 44px;
-    height: 44px;
-    min-height: 44px;
-    border-radius: var(--radius-sm, 8px);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-glass);
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     cursor: pointer;
-    color: var(--text-1, #ffffff);
-    font-size: 1.1rem;
+    color: #ffffff;
+    font-size: 1.15rem;
     z-index: 2100;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-hover-trigger i {
+    font-size: 1.15rem;
+    color: #38bdf8;
+    pointer-events: none;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-hover-trigger:hover,
+.sidebar-hover-trigger:active {
+    background: rgba(108, 92, 231, 0.25);
+    border-color: rgba(139, 124, 240, 0.5);
+    color: #ffffff;
+    box-shadow: 0 0 20px rgba(108, 92, 231, 0.35);
+    transform: translateY(-1px);
+}
+
+.sidebar-hover-trigger:hover i,
+.sidebar-hover-trigger:active i {
+    color: #2af598;
+    transform: scale(1.12);
 }
 
 .mobile-trigger-text {
-    display: none;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
-@media (max-width: 992px) {
-    .mobile-trigger-text {
-        display: inline-block;
-    }
-}
-
-.sidebar-hover-trigger:hover {
-    background: var(--accent-soft, rgba(108, 92, 231, 0.15));
-    border-color: var(--accent-border, rgba(108, 92, 231, 0.4));
-    color: var(--accent-2, #8b7cf0);
-    box-shadow: 0 0 15px var(--accent-glow);
-    transform: scale(1.03);
-}
-
-.sidebar-hover-trigger.mobile-only-trigger {
-    display: none;
-}
-
-@media (max-width: 992px) {
-    .sidebar-hover-trigger.mobile-only-trigger {
-        display: flex;
-    }
+    display: none !important;
 }
 
 .sidebar-explore-section {
@@ -96,8 +141,12 @@
         width: 100%;
         margin-top: 10px;
     }
+    .sidebar-menu.active .sidebar-link span,
     .sidebar-menu.active-hover .sidebar-link span,
-    .sidebar-menu.active-hover .sidebar-user-info {
+    .sidebar-menu.is-open .sidebar-link span,
+    .sidebar-menu.active .sidebar-user-info,
+    .sidebar-menu.active-hover .sidebar-user-info,
+    .sidebar-menu.is-open .sidebar-user-info {
         opacity: 1 !important;
         visibility: visible !important;
     }
@@ -147,7 +196,9 @@
     transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-.sidebar-menu.active-hover .sidebar-brand span {
+.sidebar-menu.active .sidebar-brand span,
+.sidebar-menu.active-hover .sidebar-brand span,
+.sidebar-menu.is-open .sidebar-brand span {
     opacity: 1;
     visibility: visible;
     transition-delay: 0.1s;
@@ -233,7 +284,9 @@
     color: var(--text-subtle);
 }
 
-.sidebar-menu.active-hover .sidebar-user-info {
+.sidebar-menu.active .sidebar-user-info,
+.sidebar-menu.active-hover .sidebar-user-info,
+.sidebar-menu.is-open .sidebar-user-info {
     opacity: 1;
     visibility: visible;
     transition-delay: 0.1s;
@@ -296,7 +349,9 @@
     display: inline-block !important;
 }
 
-.sidebar-menu.active-hover .sidebar-link span {
+.sidebar-menu.active .sidebar-link span,
+.sidebar-menu.active-hover .sidebar-link span,
+.sidebar-menu.is-open .sidebar-link span {
     opacity: 1;
     visibility: visible;
     transition-delay: 0.1s;
@@ -406,7 +461,9 @@
     display: inline-block !important;
 }
 
-.sidebar-menu.active-hover .sidebar-logout span {
+.sidebar-menu.active .sidebar-logout span,
+.sidebar-menu.active-hover .sidebar-logout span,
+.sidebar-menu.is-open .sidebar-logout span {
     opacity: 1;
     visibility: visible;
     transition-delay: 0.1s;
