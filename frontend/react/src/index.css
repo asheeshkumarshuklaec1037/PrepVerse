@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-dark: #08090e;
+    --surface-dark: #0f111a;
+    --surface-hover: #161826;
+    --border-dark: rgba(255, 255, 255, 0.08);
+    --border-highlight: rgba(255, 255, 255, 0.16);
+    
+    --accent-purple: #8b7cf0;
+    --accent-purple-glow: rgba(139, 124, 240, 0.25);
+    --accent-glow: rgba(108, 92, 231, 0.25);
+    
+    /* Apple-Grade Ultra-Smooth Bezier Curves */
+    --ease-ultra: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-bounce-subtle: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: #f3f4f6;
+    font-family: 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+}
+
+/* Site-Wide Ultra-Smooth Page & Hero Entrance Loading Animation (Mock Test Standard) */
+@keyframes pageFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.985);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+.animate-page-fade-in,
+.hero-entrance-fade {
+  opacity: 0;
+  animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform, filter;
+}
+
+.hero-entrance-delay-1 { animation-delay: 0.1s; }
+.hero-entrance-delay-2 { animation-delay: 0.2s; }
+.hero-entrance-delay-3 { animation-delay: 0.3s; }
+
+/* Site-Wide Hero Background Image Slow Zoom Animation (Sub-Pixel Glitch-Free) */
+@keyframes subtleHeroZoom {
+  0% {
+    transform: scale3d(1.1, 1.1, 1);
+    filter: brightness(0.45) contrast(1.15);
+  }
+  100% {
+    transform: scale3d(1.18, 1.18, 1);
+    filter: brightness(0.5) contrast(1.2);
+  }
+}
+
+.animate-hero-bg {
+  animation: subtleHeroZoom 20s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
+  will-change: transform;
+  transform-origin: center center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Site-Wide Global Hero Banner Layout Standard */
+.global-hero-banner {
+  position: relative;
+  width: 100%;
+  min-height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #08090e;
+  opacity: 0;
+  animation: pageFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.global-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.global-hero-vignette {
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(8, 9, 14, 0.85) 100%),
+              linear-gradient(to bottom, rgba(8, 9, 14, 0.6) 0%, transparent 40%, #08090e 98%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Site-Wide Ultra-Smooth Scroll Reveal System with Hardware Acceleration */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px) scale(0.985);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.reveal.is-visible,
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+}
+
+.reveal-delay-1 { transition-delay: 0.06s; }
+.reveal-delay-2 { transition-delay: 0.12s; }
+.reveal-delay-3 { transition-delay: 0.18s; }
+.reveal-delay-4 { transition-delay: 0.24s; }
+
+/* Site-Wide Ultra-Smooth Card Hover Lift & Ambient Glow System */
+.prepverse-card-hover {
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.38s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  will-change: transform, border-color, box-shadow;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.prepverse-card-hover:hover {
+  transform: translateY(-4px) scale(1.008) !important;
+  border-color: #8b7cf0 !important;
+  box-shadow: 0 16px 36px rgba(139, 124, 240, 0.28), 0 0 24px rgba(108, 92, 231, 0.35) !important;
+}
+
+/* Custom Scrollbar for sleek modern look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #08090e;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
