@@ -42,7 +42,7 @@ export const CandidateOverview: React.FC<CandidateOverviewProps> = ({
         <img
           src={timeOfDayConfig.bgImage}
           alt="Profile Cover Hero"
-          className="global-hero-img w-full h-full object-cover filter brightness-[0.68] scale-105"
+          className="w-full h-full object-cover filter brightness-[0.68] scale-105 transition-transform duration-1000 ease-out hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-[#08090e] pointer-events-none" />
 
