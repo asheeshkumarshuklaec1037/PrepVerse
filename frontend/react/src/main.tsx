@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { DashboardPage } from './pages/Dashboard/DashboardPage';
 import { AllTestsPage } from './pages/MockTests/AllTestsPage';
 import { CoursesPage } from './pages/Courses/CoursesPage';
+import { PracticeHubPage } from './pages/Practice/PracticeHubPage';
 import './index.css';
 
 const AppRouter: React.FC = () => {
@@ -13,6 +14,10 @@ const AppRouter: React.FC = () => {
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
+
+  if (currentPath.startsWith('/practice')) {
+    return <PracticeHubPage />;
+  }
 
   if (currentPath.startsWith('/courses') || currentPath.startsWith('/course')) {
     return <CoursesPage />;

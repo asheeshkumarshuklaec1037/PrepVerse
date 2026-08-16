@@ -4,7 +4,8 @@ import { mockDashboardData } from '../../data/mockDashboardData';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { coursesListData } from './CoursesPage';
 import { TopicDetailPage } from './TopicDetailPage';
-import { ArrowLeft, ArrowRight, Book, ExternalLink } from 'lucide-react';
+import { HeroBanner } from '../../components/ui/HeroBanner';
+import { ArrowRight, Book, ExternalLink } from 'lucide-react';
 
 interface BookItem {
   courseSlug: string;
@@ -89,11 +90,9 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
   });
 
   const setSelectedTopicSlug = (slug: string | null) => {
-    setSelectedTopicSlugState(slug);
     if (slug) {
-      window.history.pushState({}, '', `/courses/${courseSlug}/topic/${slug}/`);
-    } else {
-      window.history.pushState({}, '', `/courses/${courseSlug}/`);
+      // Redirect to practice page with selected course and topic filters
+      window.location.href = `/practice?course=${courseSlug}&topic=${slug}`;
     }
   };
 
@@ -151,49 +150,17 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
   return (
     <DashboardLayout profile={mockDashboardData.profile}>
       <div className="relative pb-20 overflow-x-hidden">
-        {/* 1. True Full-Bleed Parallax Cover Hero Banner */}
-        <div className="relative w-full h-[55vh] min-h-[440px] overflow-hidden bg-[#08080b] flex flex-col items-center justify-center text-center">
-          <img
-            src={currentCourse.bg_image}
-            alt={`${currentCourse.title} Background`}
-            className="absolute inset-0 w-full h-full object-cover filter brightness-[0.55] contrast-120 animate-hero-bg pointer-events-none"
-          />
-
-          {/* Vignette Overlay & Soft Top/Bottom Blends */}
-          <div className="global-hero-vignette" />
-
-          {/* Back to Courses Link (Matching Mock Test Arena 1:1) */}
-          {onBack ? (
-            <button
-              onClick={onBack}
-              className="absolute top-6 left-6 sm:left-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2 z-30 transition-all hover:-translate-x-1 cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              BACK TO COURSES
-            </button>
-          ) : (
-            <a
-              href="/courses/"
-              className="absolute top-6 left-6 sm:left-12 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider text-white flex items-center gap-2 z-30 transition-all hover:-translate-x-1"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              BACK TO COURSES
-            </a>
-          )}
-
-          {/* Hero Centered Content Box */}
-          <div className="relative z-20 text-center max-w-4xl mx-auto px-6 space-y-4 -mt-8 hero-entrance-fade hero-entrance-delay-1">
-            <div className="inline-block px-4 py-1.5 rounded-full bg-[#2af598]/10 border border-[#2af598]/25 text-[#2af598] font-mono text-[10px] font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(42,245,152,0.15)]">
-              FREE COURSE
-            </div>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-display text-white uppercase tracking-tight leading-none drop-shadow-2xl text-center">
-              {currentCourse.title}
-            </h1>
-            <p className="text-base sm:text-xl text-gray-200 font-light leading-relaxed max-w-3xl mx-auto opacity-90 text-center">
-              {currentCourse.description}
-            </p>
-          </div>
-        </div>
+        {/* Reusable Parallax Cover Hero Banner */}
+        <HeroBanner
+          bgImage={currentCourse.bg_image}
+          badgeText="FREE COURSE"
+          badgeColor="green"
+          title={currentCourse.title}
+          description={currentCourse.description}
+          backText="BACK TO COURSES"
+          onBack={onBack}
+          backUrl="/courses/"
+        />
 
         {/* 2. Main Overlapping Grid Container */}
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6 relative z-30 -mt-28 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
