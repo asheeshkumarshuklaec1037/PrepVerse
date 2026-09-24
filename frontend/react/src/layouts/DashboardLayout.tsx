@@ -339,7 +339,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
       {/* 3. Main Container Area (Allows Full-Bleed Hero Top) */}
       <div className="flex-1 w-full pb-8">
-        <main className="min-w-0">{children}</main>
+        <main className="min-w-0 animate-page-fade-in">{children}</main>
       </div>
 
       {/* Footer */}

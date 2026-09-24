@@ -23,7 +23,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   backUrl,
 }) => {
   return (
-    <div className="relative w-full h-[55vh] min-h-[440px] overflow-hidden bg-[#08080b] flex flex-col items-center justify-center text-center">
+    <div className="relative w-full h-[45vh] min-h-[380px] overflow-hidden bg-[#08080b] flex flex-col items-center justify-center text-center">
       {/* Background Image with slow zoom animation */}
       <img
         src={bgImage}
@@ -53,8 +53,8 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         </a>
       ) : null}
 
-      {/* Hero Centered Content Box */}
-      <div className="relative z-20 text-center max-w-4xl mx-auto px-6 space-y-4 -mt-8 hero-entrance-fade hero-entrance-delay-1">
+      {/* Hero Centered Content Box (Shifted Higher -mt-16 sm:-mt-20 to match all tests directory) */}
+      <div className="relative z-20 text-center max-w-4xl mx-auto px-6 space-y-4 -mt-16 sm:-mt-20 hero-entrance-fade hero-entrance-delay-1">
         {badgeText && (
           <div
             className={`inline-block px-4 py-1.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider ${
@@ -66,10 +66,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             {badgeText}
           </div>
         )}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-display text-white uppercase tracking-tight leading-none drop-shadow-2xl text-center">
+        <h1 className="text-3xl sm:text-5xl font-black font-display text-white uppercase tracking-tight leading-none drop-shadow-2xl text-center">
           {title}
         </h1>
-        <p className="text-base sm:text-xl text-gray-200 font-light leading-relaxed max-w-3xl mx-auto opacity-90 text-center">
+        <p className="text-sm sm:text-base text-gray-300 font-light leading-relaxed max-w-2xl mx-auto opacity-90 text-center">
           {description}
         </p>
       </div>

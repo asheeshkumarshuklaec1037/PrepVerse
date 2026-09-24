@@ -163,11 +163,11 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
         />
 
         {/* 2. Main Overlapping Grid Container */}
-        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 relative z-30 -mt-28 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 relative z-30 -mt-28 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 reveal">
           {/* Main Workspace Column */}
           <div className="space-y-8">
             {/* Course Overview & Topics Glass Card (Django 1:1 Transparent Look) */}
-            <div className="p-8 sm:p-10 rounded-[28px] bg-white/[0.025] backdrop-blur-2xl border border-white/[0.08] space-y-8 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+            <div className="p-8 sm:p-10 rounded-[28px] bg-white/[0.025] backdrop-blur-2xl border border-white/[0.08] space-y-8 shadow-[0_20px_50px_rgba(0,0,0,0.4)] reveal-delay-1">
               {/* Section Header with Horizontal Fading Line */}
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -180,7 +180,7 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
               </div>
 
               {/* Explore Topics Section */}
-              <div className="space-y-6 pt-2">
+              <div className="space-y-6 pt-2 reveal-delay-2">
                 <div className="flex items-center gap-4">
                   <h3 className="text-2xl font-extrabold text-white tracking-tight shrink-0 font-display">Explore Topics</h3>
                   <div className="h-[1px] flex-1 bg-gradient-to-r from-white/20 to-transparent" />
@@ -210,7 +210,7 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
 
             {/* Recommended Prep Reference Books Card */}
             {recommendedBooks.length > 0 && (
-              <div className="p-8 sm:p-10 rounded-[28px] bg-white/[0.025] backdrop-blur-2xl border border-white/[0.08] space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+              <div className="p-8 sm:p-10 rounded-[28px] bg-white/[0.025] backdrop-blur-2xl border border-white/[0.08] space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.4)] reveal-delay-3">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2.5 shrink-0">
                     <Book className="w-5 h-5 text-blue-400" />
@@ -245,7 +245,7 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
           </div>
 
           {/* Sidebar Right Column (Exact Screenshot 1:1 Match) */}
-          <div className="space-y-4">
+          <div className="space-y-4 reveal-delay-2">
             {/* Stat Card 1 */}
             <div className="p-6 sm:p-7 rounded-[22px] bg-white/[0.025] backdrop-blur-2xl border border-white/[0.08] space-y-5 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
               <div className="flex items-center gap-3.5">
@@ -289,7 +289,7 @@ export const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
         </div>
 
         {/* 3. Continue Learning Bottom Section */}
-        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 space-y-6 pt-16">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 space-y-6 pt-16 reveal">
           <div className="flex items-center gap-4">
             <h3 className="text-2xl font-extrabold text-white tracking-tight shrink-0 font-display">Continue Learning</h3>
             <div className="h-[1px] flex-1 bg-gradient-to-r from-white/20 to-transparent" />

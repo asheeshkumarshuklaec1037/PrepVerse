@@ -53,10 +53,23 @@
 .hero-entrance-delay-3 { animation-delay: 0.3s; }
 
 /* Site-Wide Hero Background Image Slow Zoom Animation (Sub-Pixel Glitch-Free) */
+@keyframes heroImageReveal {
+  0% {
+    opacity: 0;
+    transform: scale3d(1.25, 1.25, 1);
+    filter: brightness(0) contrast(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale3d(1.1, 1.1, 1);
+    filter: brightness(0.55) contrast(1.2);
+  }
+}
+
 @keyframes subtleHeroZoom {
   0% {
     transform: scale3d(1.1, 1.1, 1);
-    filter: brightness(0.45) contrast(1.15);
+    filter: brightness(0.55) contrast(1.2);
   }
   100% {
     transform: scale3d(1.18, 1.18, 1);
@@ -65,8 +78,9 @@
 }
 
 .animate-hero-bg {
-  animation: subtleHeroZoom 20s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
-  will-change: transform;
+  animation: heroImageReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+             subtleHeroZoom 20s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate 1.2s;
+  will-change: transform, opacity, filter;
   transform-origin: center center;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -143,6 +157,27 @@
   transform: translateY(-4px) scale(1.008) !important;
   border-color: #8b7cf0 !important;
   box-shadow: 0 16px 36px rgba(139, 124, 240, 0.28), 0 0 24px rgba(108, 92, 231, 0.35) !important;
+}
+
+/* Reusable Accordion Smooth Expand/Collapse transition matching Django course template specs */
+.accordion-content-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-content-wrapper.is-expanded {
+  grid-template-rows: 1fr;
+}
+
+.accordion-content-inner {
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.25s ease 0.05s;
+}
+
+.accordion-content-wrapper.is-expanded .accordion-content-inner {
+  opacity: 1;
 }
 
 /* Custom Scrollbar for sleek modern look */
